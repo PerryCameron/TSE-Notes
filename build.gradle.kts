@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id("java")
 }
@@ -7,6 +9,22 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+}
+
+val appVersion: String by project
+
+// Process and copy app.properties with version replacement
+tasks.register<Copy>("processAppProperties") {
+    from("src/main/resources")
+    into(layout.buildDirectory.dir("resources/"))
+    filter<ReplaceTokens>("tokens" to mapOf("version" to "test"))
+    into(layout.buildDirectory.dir("processedResources"))
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    doLast {
+        println("Processed app.properties:")
+        println(file(layout.buildDirectory.dir("processedResources").get().asFile).resolve("app.properties").readText())
+    }
 }
 
 dependencies {

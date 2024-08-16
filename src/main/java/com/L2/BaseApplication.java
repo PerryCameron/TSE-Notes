@@ -1,5 +1,6 @@
 package com.L2;
 
+import com.L2.mvci_main.MainController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -9,6 +10,10 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class BaseApplication extends Application {
 
     public static Stage primaryStage;
@@ -17,22 +22,30 @@ public class BaseApplication extends Application {
 
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
 
+    private static String logAppVersion() {
+        Properties properties = new Properties();
+        try (InputStream input = BaseApplication.class.getClassLoader().getResourceAsStream("app.properties")) {
+            if (input == null) {
+                logger.error("Sorry, unable to find app.properties");
+                return "unknown" ;
+            }
+            properties.load(input);
+            String appVersion = properties.getProperty("app.version");
+            logger.info("Starting GlobalSpares Application version: " + appVersion);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return properties.getProperty("app.version");
+    }
+
 
     @Override
     public void start(Stage stage) {
-        logger.info("Starting Application");
+        logAppVersion();
         primaryStage = stage;
         primaryStage.setTitle("Base Application");
         primaryStage.setResizable(false);
-        Button btn1 = new Button("Say, Hello World");
-        Pane root=new Pane();
-        HBox box=new HBox();
-        box.getChildren().add(btn1);
-        root.getChildren().add(box);
-        Scene scene=new Scene(root);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("First JavaFX Application");
-        primaryStage.show();
+        primaryStage.setScene(new Scene(new MainController().getView()));
         primaryStage.show();
     }
 }
