@@ -4,7 +4,7 @@ import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
 import javafx.scene.layout.Region;
 
-public class CaseController extends Controller {
+public class CaseController extends Controller<CaseMessage> {
 
     MainController mainController;
     CaseInteractor caseInteractor;
@@ -20,11 +20,14 @@ public class CaseController extends Controller {
 
     @Override
     public Region getView() {
-        return null;
+        return caseView.build();
     }
 
     @Override
-    public void action(Enum actionEnum) {
+    public void action(CaseMessage message) {
+        switch (message) {
+//            case OPEN -> mainController.openTab(welcomeInteractor.getTab());
 
+        };
     }
 }

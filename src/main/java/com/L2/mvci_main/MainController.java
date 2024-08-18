@@ -31,10 +31,6 @@ public class MainController extends Controller<MainMessage> {
     public void action(MainMessage action) {
         switch (action) {
             case OPEN_NEW_CASE -> openCaseTab("Case");
-//            case CLOSE_ALL_CONNECTIONS -> closeAllConnections();
-//            case CREATE_CONNECT_CONTROLLER -> createConnectController();
-//            case BACKUP_DATABASE -> backUpDatabase();
-//            case SHOW_LOG -> showDebugLog();
         }
     }
 

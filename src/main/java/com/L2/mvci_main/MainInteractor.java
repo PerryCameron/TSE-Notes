@@ -15,14 +15,14 @@ public class MainInteractor implements ApplicationPaths {
 
     }
 
-    public boolean tabIsNotOpen(int msId) {  // find if tab is open
-        if (PaneFx.tabIsOpen(msId, mainModel.getMainTabPane())) {
-            Platform.runLater(() -> {
-                mainModel.setMsId(msId);
-                mainModel.setReturnMessage(MainMessage.SELECT_TAB);
-            });
-            return false;
-        }
-        return true;
-    }
+//    public boolean tabIsNotOpen(int msId) {  // find if tab is open
+//        if (PaneFx.tabIsOpen(msId, mainModel.getMainTabPane())) {
+//            Platform.runLater(() -> {
+//                mainModel.setMsId(msId);
+//                mainModel.setReturnMessage(MainMessage.SELECT_TAB);
+//            });
+//            return false;
+//        }
+//        return true;
+//    }
 }

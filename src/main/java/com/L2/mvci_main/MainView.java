@@ -63,9 +63,9 @@ public class MainView implements Builder<Region> {
 
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
-        MenuItem backUp = MenuFx.menuItemOf("Backup DataBase", x -> action.accept(MainMessage.BACKUP_DATABASE), null);
-        MenuItem close = MenuFx.menuItemOf("Close Connection", x -> action.accept(MainMessage.CLOSE_ALL_CONNECTIONS), null);
-        menu.getItems().addAll(close,backUp);
+        MenuItem openNewCase = MenuFx.menuItemOf("Open New Case", x -> action.accept(MainMessage.OPEN_NEW_CASE), null);
+        MenuItem close = MenuFx.menuItemOf("Close Connection", x -> System.out.println("Cut"), null);
+        menu.getItems().addAll(close,openNewCase);
         return menu;
     }
 
