@@ -10,8 +10,6 @@ public class MainController extends Controller<MainMessage> {
 
     private final MainInteractor mainInteractor;
     private final MainView mainView;
-    //    private ConnectController connectController;
-//    private LoadingController loadingController;
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
 
@@ -19,7 +17,6 @@ public class MainController extends Controller<MainMessage> {
         MainModel mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::action);
-//        mainInteractor.setComplete();
     }
 
     @Override
@@ -44,7 +41,6 @@ public class MainController extends Controller<MainMessage> {
     }
 
     private void openCaseTab(String tabName) {
-//        if (mainInteractor.tabIsNotOpen(-4))
             mainView.addNewTab(tabName, new CaseController(this).getView());
     }
 

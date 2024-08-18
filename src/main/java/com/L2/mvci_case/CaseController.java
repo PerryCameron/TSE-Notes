@@ -15,7 +15,7 @@ public class CaseController extends Controller<CaseMessage> {
         CaseModel caseModel = new CaseModel();
         this.caseInteractor = new CaseInteractor(caseModel);
         this.caseView = new CaseView(caseModel, this::action);
-//        CaseInteractor.setComplete();
+        caseInteractor.setComplete(); // this is temporary to make fake data
     }
 
     @Override
