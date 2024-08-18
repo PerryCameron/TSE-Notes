@@ -3,9 +3,7 @@ package com.L2.static_tools;
 import com.L2.dto.CaseDTO;
 import com.L2.dto.PartDTO;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class FakeData {
 
@@ -33,6 +31,7 @@ public class FakeData {
         c.setZip("75044");
         c.setCountry("USA");
         c.setActiveServiceContract("None");
+        c.setUpsStatus("Online");
         c.getParts().add(createFakePart1());
         c.getParts().add(createFakePart2());
         return c;

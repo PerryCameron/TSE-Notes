@@ -112,21 +112,9 @@ public class CaseView implements Builder<Region> {
         gridPane.setPadding(new Insets(10)); // Optional, to add some padding around the GridPane
 
         // Define Labels and Controls
-        Label lblUnitUnderWarranty = new Label("Unit Under Warranty:");
-        RadioButton rbWarrantyYes = new RadioButton("Yes");
-        RadioButton rbWarrantyNo = new RadioButton("No");
-        ToggleGroup tgWarranty = new ToggleGroup();
-        rbWarrantyYes.setToggleGroup(tgWarranty);
-        rbWarrantyNo.setToggleGroup(tgWarranty);
-        rbWarrantyNo.setSelected(true); // Default to "No"
-        caseModel.getCurrentCase().underWarrantyProperty().bindBidirectional(rbWarrantyYes.selectedProperty());
-
-        rbWarrantyYes.setOnAction(e -> System.out.println("set to " + caseModel.getCurrentCase().underWarrantyProperty().get()) );
-        rbWarrantyNo.setOnAction(e -> System.out.println("set to " + caseModel.getCurrentCase().underWarrantyProperty().get()) );
-
-        Label lblActiveServiceContract = new Label("Active Service Contract:");
+        Label lblActiveServiceContract = new Label("Entitlement:");
         ComboBox<String> cbServiceContract = new ComboBox<>();
-        cbServiceContract.getItems().addAll("Advantage Plus", "Advantage Ultra", "None");
+        cbServiceContract.getItems().addAll( "Advantage Ultra","Advantage Plus","Advantage Prime", "None", "Warranty", "Warranty Extension");
         cbServiceContract.setValue("None"); // Default to "None"
 
         // Bind the valueProperty of the ComboBox to the activeServiceContractProperty of the CaseDTO
@@ -136,13 +124,20 @@ public class CaseView implements Builder<Region> {
         cbServiceContract.setOnAction(e -> System.out.println("Active service contract: " + caseModel.getCurrentCase().getActiveServiceContract()));
 
         Label lblServiceLevel = new Label("Service Level:");
-        TextField tfServiceLevel = new TextField("Vip Gold");
+        ComboBox<String> cbServiceLevel = new ComboBox<>();
+        cbServiceLevel.setPrefWidth(150);
+        cbServiceLevel.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
 
         Label lblStatusOfUPS = new Label("Status of the UPS:");
         ComboBox<String> cbStatusOfUPS = new ComboBox<>();
         cbStatusOfUPS.setPrefWidth(150);
         cbStatusOfUPS.getItems().addAll("Online", "Bypass", "Offline");
         cbStatusOfUPS.setValue("Online"); // Default to "Online"
+
+        cbStatusOfUPS.valueProperty().bindBidirectional(caseModel.getCurrentCase().upsStatusProperty());
+
+        // Optional: Add an action listener to observe changes
+        cbStatusOfUPS.setOnAction(e -> System.out.println("UPS Status: " + caseModel.getCurrentCase().getUpsStatus()));
 
         Label lblLoadSupported = new Label("Load Supported:");
         RadioButton rbLoadYes = new RadioButton("Yes");
@@ -154,36 +149,38 @@ public class CaseView implements Builder<Region> {
 
         caseModel.getCurrentCase().loadSupportedProperty().bindBidirectional(rbLoadYes.selectedProperty());
 
-        rbLoadYes.setOnAction(e -> System.out.println("load supported set to " + caseModel.getCurrentCase().loadSupportedProperty().get()) );
-        rbLoadNo.setOnAction(e -> System.out.println("load supported set to " + caseModel.getCurrentCase().loadSupportedProperty().get()) );
+        rbLoadYes.setOnAction(e -> System.out.println("load supported set to " + caseModel.getCurrentCase().loadSupportedProperty().get()));
+        rbLoadNo.setOnAction(e -> System.out.println("load supported set to " + caseModel.getCurrentCase().loadSupportedProperty().get()));
 
         // Add Labels and Controls to GridPane
-        gridPane.add(lblUnitUnderWarranty, 0, 0);
-        gridPane.add(rbWarrantyYes, 1, 0);
-        gridPane.add(rbWarrantyNo, 2, 0);
+        gridPane.add(lblActiveServiceContract, 0, 0);  // Moved to row 0
+        gridPane.add(cbServiceContract, 1, 0, 2, 1);  // Moved to row 0
 
-        gridPane.add(lblActiveServiceContract, 0, 1);
-        gridPane.add(cbServiceContract, 1, 1, 2, 1); // Span 2 columns for ComboBox
+        gridPane.add(lblServiceLevel, 0, 1);  // Moved to row 1
+        gridPane.add(cbServiceLevel, 1, 1, 2, 1);  // Moved to row 1
 
-        gridPane.add(lblServiceLevel, 0, 2);
-        gridPane.add(tfServiceLevel, 1, 2, 2, 1); // Span 2 columns for TextField
+        gridPane.add(lblStatusOfUPS, 0, 2);  // Moved to row 2
+        gridPane.add(cbStatusOfUPS, 1, 2, 2, 1);  // Moved to row 2
 
-        gridPane.add(lblStatusOfUPS, 0, 3);
-        gridPane.add(cbStatusOfUPS, 1, 3, 2, 1); // Span 2 columns for ComboBox
+        gridPane.add(lblLoadSupported, 0, 3);  // Moved to row 3
+        gridPane.add(rbLoadYes, 1, 3);  // Moved to row 3
+        gridPane.add(rbLoadNo, 2, 3);  // Moved to row 3
 
-        gridPane.add(lblLoadSupported, 0, 4);
-        gridPane.add(rbLoadYes, 1, 4);
-        gridPane.add(rbLoadNo, 2, 4);
 
         // Align Labels to the right
-        GridPane.setHalignment(lblUnitUnderWarranty, HPos.RIGHT);
         GridPane.setHalignment(lblActiveServiceContract, HPos.RIGHT);
         GridPane.setHalignment(lblServiceLevel, HPos.RIGHT);
         GridPane.setHalignment(lblStatusOfUPS, HPos.RIGHT);
         GridPane.setHalignment(lblLoadSupported, HPos.RIGHT);
 
+
         return gridPane;
     }
+
+
+
+
+
 
     private Node setIssueBox() {
         GridPane gridPane = new GridPane();

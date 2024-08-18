@@ -31,7 +31,7 @@ public class MainView implements Builder<Region> {
         borderPane.setCenter(setUpCenterPane());
         borderPane.setBottom(setUpBottomPane());
         BaseApplication.primaryStage.setOnHiding(event -> action.accept(MainMessage.CLOSE_ALL_CONNECTIONS_AND_EXIT));
-        BaseApplication.primaryStage.setTitle("Global Spares");
+        BaseApplication.primaryStage.setTitle("TSE Notes");
         return borderPane;
     }
 
