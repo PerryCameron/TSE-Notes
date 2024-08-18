@@ -1,6 +1,7 @@
 package com.L2.mvci_main;
 
 import com.L2.interfaces.Controller;
+import com.L2.mvci_case.CaseController;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,28 @@ public class MainController extends Controller<MainMessage> {
 
     @Override
     public void action(MainMessage action) {
-//        switch (action) {
-//            case CLOSE_ALL_CONNECTIONS_AND_EXIT -> connectController.closeConnection();
+        switch (action) {
+            case OPEN_NEW_CASE -> openCaseTab("Case");
 //            case CLOSE_ALL_CONNECTIONS -> closeAllConnections();
 //            case CREATE_CONNECT_CONTROLLER -> createConnectController();
 //            case BACKUP_DATABASE -> backUpDatabase();
 //            case SHOW_LOG -> showDebugLog();
-//        }
+        }
     }
+
+    public void openTab(String tabName) {
+        switch (tabName) {
+            case "Case" -> System.out.println("Displaying people list");
+            case "Notes" -> System.out.println("Displaying notes");
+            case "Jotform" -> System.out.println("Opening Jotform");
+            default -> System.out.println("Invalid input");
+        }
+    }
+
+    private void openCaseTab(String tabName) {
+//        if (mainInteractor.tabIsNotOpen(-4))
+            mainView.addNewTab(tabName, new CaseController(this).getView());
+    }
+
+
 }

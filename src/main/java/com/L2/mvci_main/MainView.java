@@ -103,4 +103,11 @@ public class MainView implements Builder<Region> {
         return tabPane;
     }
 
+    protected void addNewTab(String name, Region region) {
+            Tab newTab = new Tab(name, region);
+//            newTab.setUserData(msId);
+            mainModel.getMainTabPane().getTabs().add(newTab);
+            mainModel.getMainTabPane().getSelectionModel().select(newTab);
+    }
+
 }
