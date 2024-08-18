@@ -12,8 +12,6 @@ public class SettingsInteractor {
     }
 
     public void setComplete() {
-        CaseDTO caseDTO = FakeData.createFakeCase();
-        settingsModel.setCurrentCase(caseDTO);
-        System.out.println(settingsModel.getCurrentCase());
+
     }
 }

@@ -2,6 +2,7 @@ package com.L2.mvci_main;
 
 import com.L2.interfaces.Controller;
 import com.L2.mvci_case.CaseController;
+import com.L2.mvci_settings.SettingsController;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ public class MainController extends Controller<MainMessage> {
     public void action(MainMessage action) {
         switch (action) {
             case OPEN_NEW_CASE -> openCaseTab("Case");
+            case OPEN_SETTINGS -> openSettingsTab("Settings");
         }
     }
 
@@ -42,6 +44,10 @@ public class MainController extends Controller<MainMessage> {
 
     private void openCaseTab(String tabName) {
             mainView.addNewTab(tabName, new CaseController(this).getView());
+    }
+
+    private void openSettingsTab(String tabName) {
+            mainView.addNewTab(tabName, new SettingsController(this).getView());
     }
 
 

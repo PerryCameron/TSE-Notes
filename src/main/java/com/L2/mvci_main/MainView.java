@@ -30,7 +30,7 @@ public class MainView implements Builder<Region> {
         borderPane.setTop(setUpTopPane());
         borderPane.setCenter(setUpCenterPane());
         borderPane.setBottom(setUpBottomPane());
-        BaseApplication.primaryStage.setOnHiding(event -> action.accept(MainMessage.CLOSE_ALL_CONNECTIONS_AND_EXIT));
+        BaseApplication.primaryStage.setOnHiding(event -> System.out.println("Close all connections and exit"));
         BaseApplication.primaryStage.setTitle("TSE Notes");
         return borderPane;
     }
@@ -64,7 +64,7 @@ public class MainView implements Builder<Region> {
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
         MenuItem openNewCase = MenuFx.menuItemOf("Open New Case", x -> action.accept(MainMessage.OPEN_NEW_CASE), null);
-        MenuItem close = MenuFx.menuItemOf("Close Connection", x -> System.out.println("Cut"), null);
+        MenuItem close = MenuFx.menuItemOf("Settings", x -> action.accept(MainMessage.OPEN_SETTINGS), null);
         menu.getItems().addAll(close,openNewCase);
         return menu;
     }
@@ -98,8 +98,9 @@ public class MainView implements Builder<Region> {
 
     private Node setUpCenterPane() {
         TabPane tabPane = new TabPane();
-        tabPane.getTabs().add(new Tab("Log in"));
         mainModel.setMainTabPane(tabPane);
+        action.accept(MainMessage.OPEN_NEW_CASE);
+        action.accept(MainMessage.OPEN_SETTINGS);
         return tabPane;
     }
 
