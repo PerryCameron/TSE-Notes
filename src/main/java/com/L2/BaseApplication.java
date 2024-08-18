@@ -3,9 +3,6 @@ package com.L2;
 import com.L2.mvci_main.MainController;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +34,6 @@ public class BaseApplication extends Application {
         }
         return properties.getProperty("app.version");
     }
-
 
     @Override
     public void start(Stage stage) {
