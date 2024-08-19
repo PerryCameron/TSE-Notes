@@ -94,6 +94,13 @@ public class EntitlementDTO implements Serializable {
         return notIncludes;
     }
 
+    public void clear() {
+        id.set(0);
+        name.set("");
+        includes.set("");
+        notIncludes.set("");
+    }
+
 
     // Custom serialization logic
     private void writeObject(ObjectOutputStream out) throws IOException {

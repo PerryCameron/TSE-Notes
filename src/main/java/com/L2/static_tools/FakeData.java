@@ -32,6 +32,8 @@ public class FakeData {
         c.setCountry("USA");
         c.setActiveServiceContract("None");
         c.setUpsStatus("Online");
+        c.setServiceLevel("4-Hour");
+        // entitlements need filled
         c.getParts().add(createFakePart1());
         c.getParts().add(createFakePart2());
         return c;

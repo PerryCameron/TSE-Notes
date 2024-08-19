@@ -50,7 +50,11 @@ public class SettingsView implements Builder<Region> {
         btn1.setOnAction(event -> {
             action.accept(SettingsMessage.SAVE_ENTITLEMENTS);
         });
-        vBox.getChildren().addAll(tf1, tf2, tf3, btn1);
+        Button btn2 = new Button("Print all entitlements");
+        btn2.setOnAction(event -> {
+            action.accept(SettingsMessage.PRINT_ENTITLEMENTS);
+        });
+        vBox.getChildren().addAll(tf1, tf2, tf3, btn1, btn2);
         return vBox;
     }
 }

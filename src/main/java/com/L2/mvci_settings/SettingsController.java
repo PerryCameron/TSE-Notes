@@ -27,6 +27,7 @@ public class SettingsController extends Controller<SettingsMessage> {
     public void action(SettingsMessage message) {
         switch (message) {
             case SAVE_ENTITLEMENTS -> settingsInteractor.saveEntitlement();
+            case PRINT_ENTITLEMENTS -> settingsInteractor.printEntitlements();
         };
     }
 }
