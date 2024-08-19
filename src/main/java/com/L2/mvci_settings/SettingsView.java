@@ -39,11 +39,17 @@ public class SettingsView implements Builder<Region> {
         VBox vBox = new VBox(5);
         TextField tf1 = new TextField();
         tf1.setPromptText("Entitlement Name");
+        tf1.textProperty().bindBidirectional(settingsModel.getCurrentEntitlement().nameProperty());
         TextField tf2 = new TextField();
         tf2.setPromptText("Includes");
+        tf2.textProperty().bindBidirectional(settingsModel.getCurrentEntitlement().includesProperty());
         TextField tf3 = new TextField();
-        tf3.setPromptText("Entitlement Description");
+        tf3.setPromptText("Does Not Include");
+        tf3.textProperty().bindBidirectional(settingsModel.getCurrentEntitlement().notIncludesProperty());
         Button btn1 = new Button("Save");
+        btn1.setOnAction(event -> {
+            action.accept(SettingsMessage.SAVE_ENTITLEMENTS);
+        });
         vBox.getChildren().addAll(tf1, tf2, tf3, btn1);
         return vBox;
     }

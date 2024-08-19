@@ -1,59 +1,128 @@
 package com.L2.dto;
 
-import java.io.Serializable;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+import java.io.*;
+
 
 public class EntitlementDTO implements Serializable {
-    int id;
-    String name;
-    String includes;
-    String notIncludes;
 
-    public EntitlementDTO(int id, String name, String includes, String notIncludes) {
-        this.id = id;
-        this.name = name;
-        this.includes = includes;
-        this.notIncludes = notIncludes;
+    private static final long serialVersionUID = 1234567890123456789L;
+
+    private transient IntegerProperty id = new SimpleIntegerProperty();
+    private transient StringProperty name = new SimpleStringProperty();
+    private transient StringProperty includes = new SimpleStringProperty();
+    private transient StringProperty notIncludes = new SimpleStringProperty();
+
+
+    // Default constructor
+    public EntitlementDTO() {}
+
+
+    // Copy Constructor
+    public EntitlementDTO(EntitlementDTO original) {
+        this.id.set(original.getId());
+        this.name.set(original.getName());
+        this.includes.set(original.getIncludes());
+        this.notIncludes.set(original.getNotIncludes());
     }
 
+
+    // Getters and Setters for id
     public int getId() {
+        return id.get();
+    }
+
+
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
+
+    public IntegerProperty idProperty() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+
+    // Getters and Setters for name
+    public String getName() {
+        return name.get();
     }
 
-    public String getName() {
+
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
+
+    public StringProperty nameProperty() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+
+    // Getters and Setters for includes
+    public String getIncludes() {
+        return includes.get();
     }
 
-    public String getIncludes() {
+
+    public void setIncludes(String includes) {
+        this.includes.set(includes);
+    }
+
+
+    public StringProperty includesProperty() {
         return includes;
     }
 
-    public void setIncludes(String includes) {
-        this.includes = includes;
+
+    // Getters and Setters for notIncludes
+    public String getNotIncludes() {
+        return notIncludes.get();
     }
 
-    public String getNotIncludes() {
+
+    public void setNotIncludes(String notIncludes) {
+        this.notIncludes.set(notIncludes);
+    }
+
+
+    public StringProperty notIncludesProperty() {
         return notIncludes;
     }
 
-    public void setNotIncludes(String notIncludes) {
-        this.notIncludes = notIncludes;
+
+    // Custom serialization logic
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeInt(getId());
+        out.writeUTF(getName());
+        out.writeUTF(getIncludes());
+        out.writeUTF(getNotIncludes());
+    }
+
+
+    // Custom deserialization logic
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        id = new SimpleIntegerProperty(in.readInt());
+        name = new SimpleStringProperty(in.readUTF());
+        includes = new SimpleStringProperty(in.readUTF());
+        notIncludes = new SimpleStringProperty(in.readUTF());
     }
 
     @Override
     public String toString() {
         return "EntitlementDTO{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", includes='" + includes + '\'' +
-                ", notIncludes='" + notIncludes + '\'' +
+                ", name=" + name +
+                ", includes=" + includes +
+                ", notIncludes=" + notIncludes +
                 '}';
     }
 }
+
+

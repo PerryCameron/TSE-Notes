@@ -15,7 +15,7 @@ public class SettingsController extends Controller<SettingsMessage> {
         SettingsModel settingsModel = new SettingsModel();
         this.settingsInteractor = new SettingsInteractor(settingsModel);
         this.settingsView = new SettingsView(settingsModel, this::action);
-        settingsInteractor.setComplete(); // this is temporary to make fake data
+        settingsInteractor.loadCurrentEntitlement(); // this is temporary to make fake data
     }
 
     @Override
@@ -26,8 +26,7 @@ public class SettingsController extends Controller<SettingsMessage> {
     @Override
     public void action(SettingsMessage message) {
         switch (message) {
-//            case OPEN -> mainController.openTab(welcomeInteractor.getTab());
-
+            case SAVE_ENTITLEMENTS -> settingsInteractor.saveEntitlement();
         };
     }
 }

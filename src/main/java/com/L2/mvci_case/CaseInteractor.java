@@ -14,6 +14,6 @@ public class CaseInteractor {
     public void setComplete() {
         CaseDTO caseDTO = FakeData.createFakeCase();
         caseModel.setCurrentCase(caseDTO);
-        System.out.println(caseModel.getCurrentCase());
+//        System.out.println(caseModel.getCurrentCase());
     }
 }

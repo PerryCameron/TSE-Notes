@@ -28,7 +28,7 @@ public class MainController extends Controller<MainMessage> {
     @Override
     public void action(MainMessage action) {
         switch (action) {
-            case OPEN_NEW_CASE -> openCaseTab("Case");
+            case OPEN_NEW_CASE -> openCaseTab("Note");
             case OPEN_SETTINGS -> openSettingsTab("Settings");
         }
     }
