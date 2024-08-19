@@ -37,9 +37,38 @@ public class CaseView implements Builder<Region> {
         vBox.setPadding(new Insets(10, 0, 0, 10));
         vBox.setSpacing(10);
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(setBox1Info(), setBox2Info());
+        hBox.getChildren().addAll(setBox1Info(), setBox2Info(), setServicePlanDetails());
         vBox.getChildren().addAll(hBox, setIssueBox());
         return vBox;
+    }
+
+    private Node setServicePlanDetails() {
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(15, 0, 0, 40));
+        caseModel.setPlanDetailsBox(vBox);
+        updateDetails();
+        return vBox;
+    }
+
+    private void updateDetails() {
+        VBox vBox = caseModel.getPlanDetailsBox();
+        vBox.getChildren().clear();
+        Label label = new Label(caseModel.getCurrentEntitlement().getName());
+        label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ff0000;");
+        Label label1 = new Label("Includes");
+        label1.setStyle("-fx-font-weight: bold; -fx-text-fill: #000000;");
+        String[] includes = caseModel.getCurrentEntitlement().getIncludes().split(":");
+        String[] notIncludes = caseModel.getCurrentEntitlement().getNotIncludes().split(":");
+        vBox.getChildren().addAll(label, label1);
+        for(String include : includes) {
+            vBox.getChildren().add(new Label(include));
+        }
+        Label label2 = new Label("Does not include:");
+        label2.setStyle("-fx-font-weight: bold; -fx-text-fill: #000000;");
+        vBox.getChildren().add(label2);
+        for(String notInclude : notIncludes) {
+            vBox.getChildren().add(new Label(notInclude));
+        }
     }
 
     private Node setBox1Info() {
@@ -84,7 +113,7 @@ public class CaseView implements Builder<Region> {
         VBox vBox = new VBox(4);
         Label label = new Label("Status of the UPS:");
         ComboBox<String> comboBox = new ComboBox<>();
-        comboBox.setPrefWidth(150);
+        comboBox.setPrefWidth(200);
         comboBox.getItems().addAll("Online", "Bypass", "Offline");
         comboBox.setValue("Online"); // Default to "Online"
         comboBox.valueProperty().bindBidirectional(caseModel.getCurrentCase().upsStatusProperty());
@@ -97,7 +126,7 @@ public class CaseView implements Builder<Region> {
         VBox vBox = new VBox(4);
         Label label = new Label("Service Level:");
         ComboBox<String> comboBox = new ComboBox<>();
-        comboBox.setPrefWidth(150);
+        comboBox.setPrefWidth(200);
         comboBox.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
         comboBox.valueProperty().bindBidirectional(caseModel.getCurrentCase().serviceLevelProperty());
         vBox.getChildren().addAll(label, comboBox);
@@ -110,6 +139,7 @@ public class CaseView implements Builder<Region> {
         // Define Labels and Controls
         Label label = new Label("Service Plan:");
         ComboBox<EntitlementDTO> comboBox = new ComboBox<>();
+        comboBox.setPrefWidth(200);
         // I would like to replace the hard coded entitlements below with the ArrayList  caseModel.getEntitlements() using the field EntitlementDTO::name
         comboBox.getItems().addAll(caseModel.getEntitlements());
         // Optional: Set a default value if needed
@@ -126,7 +156,8 @@ public class CaseView implements Builder<Region> {
                 caseModel.getCurrentCase().setActiveServiceContract("");  // Or handle null appropriately
             }
         });
-        comboBox.setOnAction(e -> System.out.println("Active service contract: " + caseModel.getCurrentCase().getActiveServiceContract()));
+//        caseModel.setEntitlementComboBox(comboBox);
+        comboBox.setOnAction(e -> updateDetails());
         vBox.getChildren().addAll(label, comboBox);
         return vBox;
     }

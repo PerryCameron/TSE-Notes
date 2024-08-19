@@ -9,7 +9,7 @@ public class FakeData {
 
     public static CaseDTO createFakeCase() {
         CaseDTO c = new CaseDTO();
-        c.setId(1);
+        c.setId(234);
         c.setTimestamp(LocalDateTime.now());
         c.setWorkOrder("WO-10196741");
         c.setCaseNumber("12345678");
