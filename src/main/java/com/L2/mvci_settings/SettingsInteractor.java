@@ -44,8 +44,11 @@ public class SettingsInteractor {
     }
 
     public void saveEntitlement() {
+        // make a copy of object
         EntitlementDTO entitlementDTO = new EntitlementDTO(settingsModel.getCurrentEntitlement());
+        // add the new object to our list
         settingsModel.getEntitlements().add(entitlementDTO);
+        // this also clears the fields of the currentEntitlement
         saveAllEntitlements();
     }
 
@@ -58,6 +61,7 @@ public class SettingsInteractor {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(entitlementsFile.toFile()))) {
             oos.writeObject(settingsModel.getEntitlements());
             logger.info("Saved Entitlements");
+            // clear our current entitlement
             settingsModel.getCurrentEntitlement().clear();
         } catch (IOException e) {
             e.printStackTrace();

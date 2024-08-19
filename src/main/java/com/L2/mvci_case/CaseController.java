@@ -15,11 +15,13 @@ public class CaseController extends Controller<CaseMessage> {
         CaseModel caseModel = new CaseModel();
         this.caseInteractor = new CaseInteractor(caseModel);
         this.caseView = new CaseView(caseModel, this::action);
-        caseInteractor.setComplete(); // this is temporary to make fake data
     }
 
     @Override
     public Region getView() {
+        caseInteractor.loadEntitlements();
+        caseInteractor.setFakeTestData(); // this is temporary but will be where initial data comes from
+        caseInteractor.setCurrentEntitlement();
         return caseView.build();
     }
 

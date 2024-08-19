@@ -1,11 +1,24 @@
 package com.L2.mvci_case;
 
 import com.L2.dto.CaseDTO;
+import com.L2.dto.EntitlementDTO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.util.ArrayList;
+
 public class CaseModel {
     private ObjectProperty<CaseDTO> currentCase = new SimpleObjectProperty<>();
+    private ArrayList<EntitlementDTO> entitlements = new ArrayList<>();
+    private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
+
+    public ArrayList<EntitlementDTO> getEntitlements() {
+        return entitlements;
+    }
+
+    public void setEntitlements(ArrayList<EntitlementDTO> entitlements) {
+        this.entitlements = entitlements;
+    }
 
     public CaseDTO getCurrentCase() {
         return currentCase.get();
@@ -17,5 +30,17 @@ public class CaseModel {
 
     public void setCurrentCase(CaseDTO currentCase) {
         this.currentCase.set(currentCase);
+    }
+
+    public EntitlementDTO getCurrentEntitlement() {
+        return currentEntitlement.get();
+    }
+
+    public ObjectProperty<EntitlementDTO> currentEntitlementProperty() {
+        return currentEntitlement;
+    }
+
+    public void setCurrentEntitlement(EntitlementDTO currentEntitlement) {
+        this.currentEntitlement.set(currentEntitlement);
     }
 }

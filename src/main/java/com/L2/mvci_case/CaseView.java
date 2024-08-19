@@ -1,7 +1,8 @@
 package com.L2.mvci_case;
 
+import com.L2.dto.EntitlementDTO;
+import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.VBoxFx;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
@@ -13,15 +14,13 @@ import javafx.util.Builder;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-
 import java.util.function.Consumer;
 
 public class CaseView implements Builder<Region> {
-        private final CaseModel caseModel;
-        Consumer<CaseMessage> action;
+    private final CaseModel caseModel;
+    Consumer<CaseMessage> action;
 
     public CaseView(CaseModel caseModel, Consumer<CaseMessage> m) {
-
         this.caseModel = caseModel;
         action = m;
     }
@@ -34,152 +33,103 @@ public class CaseView implements Builder<Region> {
     }
 
     private Node setCenter() {
-        VBox vBox = VBoxFx.of(1024,768,true, true);
-        vBox.setPadding(new Insets(10,0,0,10));
+        VBox vBox = VBoxFx.of(1024, 768, true, true);
+        vBox.setPadding(new Insets(10, 0, 0, 10));
         vBox.setSpacing(10);
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(setBox1Info(),setBox2Info());
+        hBox.getChildren().addAll(setBox1Info(), setBox2Info());
         vBox.getChildren().addAll(hBox, setIssueBox());
         return vBox;
     }
 
     private Node setBox1Info() {
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(5);
-        gridPane.setPadding(new Insets(10)); // Optional, to add some padding around the GridPane
-
-        // Define Labels
-        Label label1 = new Label("WO-");
-        Label label2 = new Label("Model:");
-        Label label3 = new Label("Serial:");
-        Label label4 = new Label("Call in person:");
-        Label label5 = new Label("Phone:");
-        Label label6 = new Label("Email:");
-        Label label7 = new Label("Case:");
-
-        // Define TextFields
-        TextField tfWO = new TextField();
-        tfWO.textProperty().bindBidirectional(caseModel.getCurrentCase().workOrderProperty());
-        TextField tfModel = new TextField();
-        tfModel.textProperty().bindBidirectional(caseModel.getCurrentCase().modelNumberProperty());
-        TextField tfSerial = new TextField();
-        tfSerial.textProperty().bindBidirectional(caseModel.getCurrentCase().serialNumberProperty());
-        TextField tfCallInPerson = new TextField();
-        tfCallInPerson.textProperty().bindBidirectional(caseModel.getCurrentCase().callInPersonProperty());
-        TextField tfPhone = new TextField();
-        tfPhone.textProperty().bindBidirectional(caseModel.getCurrentCase().callInPhoneNumberProperty());
-        TextField tfEmail = new TextField();
-        tfEmail.textProperty().bindBidirectional(caseModel.getCurrentCase().callInEmailProperty());
-        TextField tfCase = new TextField();
-        tfCase.textProperty().bindBidirectional(caseModel.getCurrentCase().caseNumberProperty());
-
-        // Add Labels to GridPane
-        gridPane.add(label1, 0, 0);
-        gridPane.add(label2, 0, 1);
-        gridPane.add(label3, 0, 2);
-        gridPane.add(label4, 0, 3);
-        gridPane.add(label5, 0, 4);
-        gridPane.add(label6, 0, 5);
-        gridPane.add(label7, 2, 0);
-
-
-        // Align Labels to the right
-        GridPane.setHalignment(label1, HPos.RIGHT);
-        GridPane.setHalignment(label2, HPos.RIGHT);
-        GridPane.setHalignment(label3, HPos.RIGHT);
-        GridPane.setHalignment(label4, HPos.RIGHT);
-        GridPane.setHalignment(label5, HPos.RIGHT);
-        GridPane.setHalignment(label6, HPos.RIGHT);
-        GridPane.setHalignment(label7, HPos.RIGHT);
-
-        // Add TextFields to GridPane
-        gridPane.add(tfWO, 1, 0);
-        gridPane.add(tfModel, 1, 1);
-        gridPane.add(tfSerial, 1, 2);
-        gridPane.add(tfCallInPerson, 1, 3);
-        gridPane.add(tfPhone, 1, 4);
-        gridPane.add(tfEmail, 1, 5);
-        gridPane.add(tfCase, 3, 0);
-
-        return gridPane;
+        VBox vBox = VBoxFx.of(5.0, new Insets(15,40,0,20));
+        TextField tf1 = TextFieldFx.of(150, 30, "Work Order", caseModel.getCurrentCase().workOrderProperty());
+        TextField tf2 = TextFieldFx.of(150, 30, "Case", caseModel.getCurrentCase().caseNumberProperty());
+        TextField tf3 = TextFieldFx.of(150, 30, "Model", caseModel.getCurrentCase().modelNumberProperty());
+        TextField tf4 = TextFieldFx.of(150, 30, "Serial", caseModel.getCurrentCase().serialNumberProperty());
+        TextField tf5 = TextFieldFx.of(150, 30, "Call-in Contact", caseModel.getCurrentCase().callInPersonProperty());
+        TextField tf6 = TextFieldFx.of(150, 30, "Call-in Phone", caseModel.getCurrentCase().callInPhoneNumberProperty());
+        TextField tf7 = TextFieldFx.of(150, 30, "Call-in Email", caseModel.getCurrentCase().callInEmailProperty());
+        vBox.getChildren().addAll(tf1,tf2,tf3,tf4,tf5,tf6,tf7);
+        return vBox;
     }
 
     private Node setBox2Info() {
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(10)); // Optional, to add some padding around the GridPane
+        VBox vBox = VBoxFx.of(17.0, new Insets(15,0,0,20));
+        vBox.getChildren().addAll(setEntitlementBox(), setServiceLevelBox(), setStatusBox(), loadSupportedBox());
+        return vBox;
+    }
 
-        // Define Labels and Controls
-        Label lblActiveServiceContract = new Label("Entitlement:");
-        ComboBox<String> cbServiceContract = new ComboBox<>();
-        cbServiceContract.getItems().addAll( "Advantage Ultra","Advantage Plus","Advantage Prime", "None", "Warranty", "Warranty Extension");
-        cbServiceContract.setValue("None"); // Default to "None"
-
-        // Bind the valueProperty of the ComboBox to the activeServiceContractProperty of the CaseDTO
-        cbServiceContract.valueProperty().bindBidirectional(caseModel.getCurrentCase().activeServiceContractProperty());
-
-        // Optional: Add an action listener to observe changes
-        cbServiceContract.setOnAction(e -> System.out.println("Active service contract: " + caseModel.getCurrentCase().getActiveServiceContract()));
-
-        Label lblServiceLevel = new Label("Service Level:");
-        ComboBox<String> cbServiceLevel = new ComboBox<>();
-        cbServiceLevel.setPrefWidth(150);
-        cbServiceLevel.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
-
-        Label lblStatusOfUPS = new Label("Status of the UPS:");
-        ComboBox<String> cbStatusOfUPS = new ComboBox<>();
-        cbStatusOfUPS.setPrefWidth(150);
-        cbStatusOfUPS.getItems().addAll("Online", "Bypass", "Offline");
-        cbStatusOfUPS.setValue("Online"); // Default to "Online"
-
-        cbStatusOfUPS.valueProperty().bindBidirectional(caseModel.getCurrentCase().upsStatusProperty());
-
-        // Optional: Add an action listener to observe changes
-        cbStatusOfUPS.setOnAction(e -> System.out.println("UPS Status: " + caseModel.getCurrentCase().getUpsStatus()));
-
-        Label lblLoadSupported = new Label("Load Supported:");
+    private Node loadSupportedBox() {
+        VBox vBox = new VBox(4);
+        Label label = new Label("Load Supported:");
+        HBox hBox = new HBox(20);
         RadioButton rbLoadYes = new RadioButton("Yes");
         RadioButton rbLoadNo = new RadioButton("No");
         ToggleGroup tgLoadSupported = new ToggleGroup();
         rbLoadYes.setToggleGroup(tgLoadSupported);
         rbLoadNo.setToggleGroup(tgLoadSupported);
         rbLoadYes.setSelected(true); // Default to "Yes"
-
+        hBox.getChildren().addAll(rbLoadYes, rbLoadNo);
         caseModel.getCurrentCase().loadSupportedProperty().bindBidirectional(rbLoadYes.selectedProperty());
-
+        // for testing
         rbLoadYes.setOnAction(e -> System.out.println("load supported set to " + caseModel.getCurrentCase().loadSupportedProperty().get()));
         rbLoadNo.setOnAction(e -> System.out.println("load supported set to " + caseModel.getCurrentCase().loadSupportedProperty().get()));
-
-        // Add Labels and Controls to GridPane
-        gridPane.add(lblActiveServiceContract, 0, 0);  // Moved to row 0
-        gridPane.add(cbServiceContract, 1, 0, 2, 1);  // Moved to row 0
-
-        gridPane.add(lblServiceLevel, 0, 1);  // Moved to row 1
-        gridPane.add(cbServiceLevel, 1, 1, 2, 1);  // Moved to row 1
-
-        gridPane.add(lblStatusOfUPS, 0, 2);  // Moved to row 2
-        gridPane.add(cbStatusOfUPS, 1, 2, 2, 1);  // Moved to row 2
-
-        gridPane.add(lblLoadSupported, 0, 3);  // Moved to row 3
-        gridPane.add(rbLoadYes, 1, 3);  // Moved to row 3
-        gridPane.add(rbLoadNo, 2, 3);  // Moved to row 3
-
-
-        // Align Labels to the right
-        GridPane.setHalignment(lblActiveServiceContract, HPos.RIGHT);
-        GridPane.setHalignment(lblServiceLevel, HPos.RIGHT);
-        GridPane.setHalignment(lblStatusOfUPS, HPos.RIGHT);
-        GridPane.setHalignment(lblLoadSupported, HPos.RIGHT);
-
-
-        return gridPane;
+        vBox.getChildren().addAll(label, hBox);
+        return vBox;
     }
 
+    private Node setStatusBox() {
+        VBox vBox = new VBox(4);
+        Label label = new Label("Status of the UPS:");
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.setPrefWidth(150);
+        comboBox.getItems().addAll("Online", "Bypass", "Offline");
+        comboBox.setValue("Online"); // Default to "Online"
+        comboBox.valueProperty().bindBidirectional(caseModel.getCurrentCase().upsStatusProperty());
+        vBox.getChildren().addAll(label, comboBox);
+        comboBox.setOnAction(e -> System.out.println("UPS Status: " + caseModel.getCurrentCase().getUpsStatus()));
+        return vBox;
+    }
 
+    private Node setServiceLevelBox() {
+        VBox vBox = new VBox(4);
+        Label label = new Label("Service Level:");
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.setPrefWidth(150);
+        comboBox.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
+        comboBox.valueProperty().bindBidirectional(caseModel.getCurrentCase().serviceLevelProperty());
+        vBox.getChildren().addAll(label, comboBox);
+        comboBox.setOnAction(e -> System.out.println("Service level: " + caseModel.getCurrentCase().getServiceLevel()));
+        return vBox;
+    }
 
-
+    private Node setEntitlementBox() {
+        VBox vBox =  new VBox(4);
+        // Define Labels and Controls
+        Label label = new Label("Service Plan:");
+        ComboBox<EntitlementDTO> comboBox = new ComboBox<>();
+        // I would like to replace the hard coded entitlements below with the ArrayList  caseModel.getEntitlements() using the field EntitlementDTO::name
+        comboBox.getItems().addAll(caseModel.getEntitlements());
+        // Optional: Set a default value if needed
+        if (!comboBox.getItems().isEmpty()) {
+            comboBox.setValue(comboBox.getItems().get(0));  // Set the first item as selected by default
+        }
+        // Bind the valueProperty of the ComboBox to the activeEntitlementProperty of the CaseDTO
+        comboBox.valueProperty().bindBidirectional(caseModel.currentEntitlementProperty());
+        // Listener to update activeServiceContract when currentEntitlement changes
+        caseModel.currentEntitlementProperty().addListener((obs, oldEntitlement, newEntitlement) -> {
+            if (newEntitlement != null) {
+                caseModel.getCurrentCase().setActiveServiceContract(newEntitlement.getName());
+            } else {
+                caseModel.getCurrentCase().setActiveServiceContract("");  // Or handle null appropriately
+            }
+        });
+        comboBox.setOnAction(e -> System.out.println("Active service contract: " + caseModel.getCurrentCase().getActiveServiceContract()));
+        vBox.getChildren().addAll(label, comboBox);
+        return vBox;
+    }
 
 
     private Node setIssueBox() {

@@ -100,7 +100,7 @@ public class MainView implements Builder<Region> {
         TabPane tabPane = new TabPane();
         mainModel.setMainTabPane(tabPane);
         action.accept(MainMessage.OPEN_NEW_CASE);
-        action.accept(MainMessage.OPEN_SETTINGS);
+//        action.accept(MainMessage.OPEN_SETTINGS);
         return tabPane;
     }
 

@@ -123,13 +123,9 @@ public class EntitlementDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "EntitlementDTO{" +
-                "id=" + id +
-                ", name=" + name +
-                ", includes=" + includes +
-                ", notIncludes=" + notIncludes +
-                '}';
+        return name.get(); // This will be displayed in the ComboBox
     }
+
 }
 
 

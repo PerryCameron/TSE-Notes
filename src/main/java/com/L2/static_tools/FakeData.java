@@ -11,7 +11,7 @@ public class FakeData {
         CaseDTO c = new CaseDTO();
         c.setId(1);
         c.setTimestamp(LocalDateTime.now());
-        c.setWorkOrder("10196741");
+        c.setWorkOrder("WO-10196741");
         c.setCaseNumber("12345678");
         c.setModelNumber("PMM400-ALAX");
         c.setSerialNumber("N12402180025");
@@ -34,6 +34,7 @@ public class FakeData {
         c.setUpsStatus("Online");
         c.setServiceLevel("4-Hour");
         // entitlements need filled
+        c.setEntitlement("Advantage Ultra");
         c.getParts().add(createFakePart1());
         c.getParts().add(createFakePart2());
         return c;

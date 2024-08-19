@@ -36,6 +36,19 @@ public class CaseDTO implements Serializable {
     private ListProperty<PartDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
     private IntegerProperty createdWorkOrder = new SimpleIntegerProperty();
     private IntegerProperty partsOrder = new SimpleIntegerProperty();
+    private StringProperty entitlement = new SimpleStringProperty();
+
+    public String getEntitlement() {
+        return entitlement.get();
+    }
+
+    public StringProperty entitlementProperty() {
+        return entitlement;
+    }
+
+    public void setEntitlement(String entitlement) {
+        this.entitlement.set(entitlement);
+    }
 
     public int getId() {
         return id.get();
@@ -423,4 +436,4 @@ public class CaseDTO implements Serializable {
         caseDTO.setTimestamp(null);
     }
 
-} // change this to a javaFx dot with SimpleStringProperty and such
+}
