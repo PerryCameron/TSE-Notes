@@ -2,6 +2,7 @@ package com.L2.mvci_settings;
 
 import com.L2.dto.EntitlementDTO;
 import com.L2.static_tools.AppFileTools;
+import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,5 +83,9 @@ public class SettingsInteractor {
         for(EntitlementDTO entitlementDTO : settingsModel.getEntitlements()) {
             System.out.println(entitlementDTO.toFancyString());
         }
+    }
+
+    public void changeMenu(Region userRegion) {
+        settingsModel.setCurrentMenu(userRegion);
     }
 }

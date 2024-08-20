@@ -1,12 +1,12 @@
 package com.L2.mvci_settings;
 
+import com.L2.mvci_settings.menus.EntitlementsMenu;
+import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.VBoxFx;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import javafx.util.Builder;
 
 import java.util.function.Consumer;
@@ -23,38 +23,42 @@ public class SettingsView implements Builder<Region> {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
+        borderPane.setLeft(setMenu());
         borderPane.setCenter(setCenter());
         return borderPane;
     }
 
-    private Node setCenter() {
-        VBox vBox = VBoxFx.of(1024, 768, true, true);
-        vBox.setPadding(new Insets(10, 0, 0, 10));
-        vBox.setSpacing(10);
-        vBox.getChildren().add(setEntitlements());
+    private Node setMenu() {
+        VBox vBox = VBoxFx.of(150.0, 10.0, new Insets(30, 0, 0, 10));
+        Button button1 = ButtonFx.of("User", 130.0);
+        Button button2 = ButtonFx.of("Entitlements", 130.0);
+        button1.setOnAction(e -> action.accept(SettingsMessage.SHOW_USER));
+        button2.setOnAction(e -> action.accept(SettingsMessage.SHOW_ENTITLEMENTS));
+        vBox.getChildren().addAll(button1, button2);
         return vBox;
     }
 
-    private Node setEntitlements() {
-        VBox vBox = new VBox(5);
-        TextField tf1 = new TextField();
-        tf1.setPromptText("Entitlement Name");
-        tf1.textProperty().bindBidirectional(settingsModel.getCurrentEntitlement().nameProperty());
-        TextField tf2 = new TextField();
-        tf2.setPromptText("Includes");
-        tf2.textProperty().bindBidirectional(settingsModel.getCurrentEntitlement().includesProperty());
-        TextField tf3 = new TextField();
-        tf3.setPromptText("Does Not Include");
-        tf3.textProperty().bindBidirectional(settingsModel.getCurrentEntitlement().notIncludesProperty());
-        Button btn1 = new Button("Save");
-        btn1.setOnAction(event -> {
-            action.accept(SettingsMessage.SAVE_ENTITLEMENTS);
+    private Node setCenter() {
+        VBox vBox = new VBox();
+        vBox.setPrefSize(1024, 768);
+        vBox.setPadding(new Insets(10, 0, 0, 10));
+        vBox.setSpacing(10);
+        settingsModel.currentMenuProperty().addListener((obs, oldMenu, newMenu) -> {
+            vBox.getChildren().clear(); // Clear old content
+            if (newMenu != null) {
+                vBox.getChildren().add(newMenu); // Add the new menu
+            }
         });
-        Button btn2 = new Button("Print all entitlements");
-        btn2.setOnAction(event -> {
-            action.accept(SettingsMessage.PRINT_ENTITLEMENTS);
-        });
-        vBox.getChildren().addAll(tf1, tf2, tf3, btn1, btn2);
+        // default menu
+        settingsModel.setCurrentMenu(new EntitlementsMenu(this).build());
         return vBox;
+    }
+
+    public SettingsModel getSettingsModel() {
+        return settingsModel;
+    }
+
+    public Consumer<SettingsMessage> getAction() {
+        return action;
     }
 }

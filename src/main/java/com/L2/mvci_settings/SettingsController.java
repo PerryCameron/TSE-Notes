@@ -2,6 +2,8 @@ package com.L2.mvci_settings;
 
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
+import com.L2.mvci_settings.menus.EntitlementsMenu;
+import com.L2.mvci_settings.menus.UserMenu;
 import javafx.scene.layout.Region;
 
 public class SettingsController extends Controller<SettingsMessage> {
@@ -28,6 +30,8 @@ public class SettingsController extends Controller<SettingsMessage> {
         switch (message) {
             case SAVE_ENTITLEMENTS -> settingsInteractor.saveEntitlement();
             case PRINT_ENTITLEMENTS -> settingsInteractor.printEntitlements();
+            case SHOW_USER -> settingsInteractor.changeMenu(new UserMenu(settingsView).build());
+            case SHOW_ENTITLEMENTS -> settingsInteractor.changeMenu(new EntitlementsMenu(settingsView).build());
         };
     }
 }
