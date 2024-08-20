@@ -1,6 +1,7 @@
 package com.L2.mvci_case;
 
 import com.L2.dto.EntitlementDTO;
+import com.L2.widgetFx.RegionFx;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Insets;
@@ -63,9 +64,10 @@ public class CaseView implements Builder<Region> {
         for(String include : includes) {
             vBox.getChildren().add(new Label(include));
         }
+
         Label label2 = new Label("Does not include:");
         label2.setStyle("-fx-font-weight: bold; -fx-text-fill: #000000;");
-        vBox.getChildren().add(label2);
+        vBox.getChildren().addAll(RegionFx.regionHeightOf(15), label2);
         for(String notInclude : notIncludes) {
             vBox.getChildren().add(new Label(notInclude));
         }

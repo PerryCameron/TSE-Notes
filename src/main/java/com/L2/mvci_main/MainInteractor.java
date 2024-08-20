@@ -1,7 +1,6 @@
 package com.L2.mvci_main;
 
 import com.L2.static_tools.ApplicationPaths;
-import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

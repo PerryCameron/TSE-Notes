@@ -79,6 +79,8 @@ public class SettingsInteractor {
 
     public void printEntitlements() {
         System.out.println("Printing Entitlements.....");
-        settingsModel.getEntitlements().forEach(System.out::println);
+        for(EntitlementDTO entitlementDTO : settingsModel.getEntitlements()) {
+            System.out.println(entitlementDTO.toFancyString());
+        }
     }
 }

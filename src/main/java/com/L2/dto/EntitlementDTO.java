@@ -121,11 +121,19 @@ public class EntitlementDTO implements Serializable {
         notIncludes = new SimpleStringProperty(in.readUTF());
     }
 
+    public String toFancyString() {
+        return "EntitlementDTO{" +
+                "id=" + id +
+                ", name=" + name +
+                ", includes=" + includes +
+                ", notIncludes=" + notIncludes +
+                '}';
+    }
+
     @Override
     public String toString() {
         return name.get(); // This will be displayed in the ComboBox
     }
-
 }
 
 
