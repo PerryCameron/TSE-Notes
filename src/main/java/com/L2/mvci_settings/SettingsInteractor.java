@@ -2,6 +2,7 @@ package com.L2.mvci_settings;
 
 import com.L2.dto.EntitlementDTO;
 import com.L2.mvci_case.CaseModel;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +38,34 @@ public class SettingsInteractor {
             oos.writeObject(serializableList);
             logger.info("Saved Entitlements");
         } catch (IOException e) {
-            logger.error(e.getMessage());
-            e.printStackTrace();
+            logger.error("{} located in: SettingsInteractor::saveAllEntitlements", e.getMessage());
         }
+    }
+
+    public void createNewEntitlement() {
+        int id = settingsModel.getEntitlements().stream()
+                .mapToInt(EntitlementDTO::getId)
+                .max()
+                .orElse(0) + 1;
+
+        EntitlementDTO entitlementDTO = new EntitlementDTO(id);
+        settingsModel.getEntitlements().add(entitlementDTO);
+        // Automatically select the new entitlement in the TableView
+        TableView<EntitlementDTO> tableView = settingsModel.getEntitlementsTableView();
+        tableView.getSelectionModel().clearSelection(); // this is settingsInteractor.java:56
+        tableView.getSelectionModel().select(entitlementDTO);
+        tableView.scrollTo(entitlementDTO); // Optionally scroll to the new item
+        saveAllEntitlements();
+    }
+
+    public void deleteEntitlement() {
+        settingsModel.getEntitlements().remove(settingsModel.getCurrentEntitlement());
+        if(!settingsModel.getEntitlements().isEmpty()) {
+            settingsModel.setCurrentEntitlement(settingsModel.getEntitlements().get(0));
+        } else {
+            createNewEntitlement();
+        }
+        saveAllEntitlements();
     }
 
     public void printEntitlements() {
@@ -56,4 +82,6 @@ public class SettingsInteractor {
     public void referenceExternalModels(CaseModel caseModel) {
         settingsModel.setEntitlements(caseModel.getEntitlements());
     }
+
+
 }

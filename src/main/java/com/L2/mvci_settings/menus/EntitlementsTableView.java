@@ -25,6 +25,7 @@ public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>>
     @Override
     public TableView build() {
         TableView<EntitlementDTO> tableView = TableViewFx.tableViewOf(EntitlementDTO.class);
+        settingsModel.setEntitlementsTableView(tableView);
         tableView.setItems(settingsModel.getEntitlements()); // Set the ObservableList here
         tableView.getColumns().add(col1());
         tableView.setPrefWidth(400);

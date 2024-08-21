@@ -26,6 +26,12 @@ public class EntitlementDTO implements Serializable {
         this.notIncludes.set(original.getNotIncludes());
     }
 
+    public EntitlementDTO(Integer id) {
+        this.id.set(id);
+        this.name.set("New Entitlement");
+        this.includes.set("");
+        this.notIncludes.set("");
+    }
 
     // Getters and Setters for id
     public int getId() {

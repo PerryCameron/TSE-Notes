@@ -57,7 +57,7 @@ public class SettingsModel {
         this.tFIncludeNot.set(tFIncludeNot);
     }
 
-    public TableView getEntitlementsTableView() {
+    public TableView<EntitlementDTO> getEntitlementsTableView() {
         return entitlementsTableView.get();
     }
 

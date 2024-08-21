@@ -38,6 +38,8 @@ public class SettingsController extends Controller<SettingsMessage> {
             case PRINT_ENTITLEMENTS -> settingsInteractor.printEntitlements();
             case SHOW_USER -> settingsInteractor.changeMenu(new UserMenu(settingsView).build());
             case SHOW_ENTITLEMENTS -> settingsInteractor.changeMenu(new EntitlementsMenu(settingsView).build());
+            case NEW_ENTITLEMENT -> settingsInteractor.createNewEntitlement();
+            case DELETE_ENTITLEMENT -> settingsInteractor.deleteEntitlement();
         };
     }
 }
