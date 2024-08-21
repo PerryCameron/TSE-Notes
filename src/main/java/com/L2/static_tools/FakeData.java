@@ -37,6 +37,7 @@ public class FakeData {
         c.setEntitlement("Advantage Ultra");
         c.getParts().add(createFakePart1());
         c.getParts().add(createFakePart2());
+        c.setLoadSupported(true);
         return c;
     }
 

@@ -28,6 +28,8 @@ tasks.register<Copy>("processAppProperties") {
 }
 
 dependencies {
+    // theme
+    implementation ("io.github.mkpaz:atlantafx-base:2.0.1")
     // logging api
     implementation("org.slf4j:slf4j-api:2.0.16")
     // implementation of the SLF4J API for Logback, a reliable, generic, fast and flexible logging framework.

@@ -1,5 +1,6 @@
 package com.L2.mvci_case;
 
+import atlantafx.base.controls.ToggleSwitch;
 import com.L2.dto.EntitlementDTO;
 import com.L2.widgetFx.RegionFx;
 import com.L2.widgetFx.TextFieldFx;
@@ -61,19 +62,19 @@ public class CaseView implements Builder<Region> {
         String[] includes = caseModel.getCurrentEntitlement().getIncludes().split("\\R");
         String[] notIncludes = caseModel.getCurrentEntitlement().getNotIncludes().split("\\R");
         vBox.getChildren().addAll(label, label1);
-        for(String include : includes) {
+        for (String include : includes) {
             vBox.getChildren().add(new Label(include));
         }
         Label label2 = new Label("Does not include:");
         label2.setStyle("-fx-font-weight: bold; -fx-text-fill: #000000;");
         vBox.getChildren().addAll(RegionFx.regionHeightOf(15), label2);
-        for(String notInclude : notIncludes) {
+        for (String notInclude : notIncludes) {
             vBox.getChildren().add(new Label(notInclude));
         }
     }
 
     private Node setBox1Info() {
-        VBox vBox = VBoxFx.of(5.0, new Insets(15,40,0,20));
+        VBox vBox = VBoxFx.of(5.0, new Insets(15, 40, 0, 20));
         TextField tf1 = TextFieldFx.of(150, 30, "Work Order", caseModel.getCurrentCase().workOrderProperty());
         TextField tf2 = TextFieldFx.of(150, 30, "Case", caseModel.getCurrentCase().caseNumberProperty());
         TextField tf3 = TextFieldFx.of(150, 30, "Model", caseModel.getCurrentCase().modelNumberProperty());
@@ -81,33 +82,23 @@ public class CaseView implements Builder<Region> {
         TextField tf5 = TextFieldFx.of(150, 30, "Call-in Contact", caseModel.getCurrentCase().callInPersonProperty());
         TextField tf6 = TextFieldFx.of(150, 30, "Call-in Phone", caseModel.getCurrentCase().callInPhoneNumberProperty());
         TextField tf7 = TextFieldFx.of(150, 30, "Call-in Email", caseModel.getCurrentCase().callInEmailProperty());
-        vBox.getChildren().addAll(tf1,tf2,tf3,tf4,tf5,tf6,tf7);
+        vBox.getChildren().addAll(tf1, tf2, tf3, tf4, tf5, tf6, tf7);
         return vBox;
     }
 
     private Node setBox2Info() {
-        VBox vBox = VBoxFx.of(17.0, new Insets(15,0,0,20));
+        VBox vBox = VBoxFx.of(17.0, new Insets(15, 0, 0, 20));
         vBox.getChildren().addAll(setEntitlementBox(), setServiceLevelBox(), setStatusBox(), loadSupportedBox());
         return vBox;
     }
 
     private Node loadSupportedBox() {
-        VBox vBox = new VBox(4);
         Label label = new Label("Load Supported:");
-        HBox hBox = new HBox(20);
-        RadioButton rbLoadYes = new RadioButton("Yes");
-        RadioButton rbLoadNo = new RadioButton("No");
-        ToggleGroup tgLoadSupported = new ToggleGroup();
-        rbLoadYes.setToggleGroup(tgLoadSupported);
-        rbLoadNo.setToggleGroup(tgLoadSupported);
-        rbLoadYes.setSelected(true); // Default to "Yes"
-        hBox.getChildren().addAll(rbLoadYes, rbLoadNo);
-        caseModel.getCurrentCase().loadSupportedProperty().bindBidirectional(rbLoadYes.selectedProperty());
-        // for testing
-        rbLoadYes.setOnAction(e -> System.out.println("load supported set to " + caseModel.getCurrentCase().loadSupportedProperty().get()));
-        rbLoadNo.setOnAction(e -> System.out.println("load supported set to " + caseModel.getCurrentCase().loadSupportedProperty().get()));
-        vBox.getChildren().addAll(label, hBox);
-        return vBox;
+        HBox hBox = new HBox(10);
+        ToggleSwitch toggleSwitch = new ToggleSwitch();
+        toggleSwitch.selectedProperty().bindBidirectional(caseModel.getCurrentCase().loadSupportedProperty());
+        hBox.getChildren().addAll(label, toggleSwitch);
+        return hBox;
     }
 
     private Node setStatusBox() {
@@ -136,7 +127,7 @@ public class CaseView implements Builder<Region> {
     }
 
     private Node setEntitlementBox() {
-        VBox vBox =  new VBox(4);
+        VBox vBox = new VBox(4);
         // Define Labels and Controls
         Label label = new Label("Service Plan:");
         ComboBox<EntitlementDTO> comboBox = new ComboBox<>();
@@ -157,7 +148,6 @@ public class CaseView implements Builder<Region> {
                 caseModel.getCurrentCase().setActiveServiceContract("");  // Or handle null appropriately
             }
         });
-//        caseModel.setEntitlementComboBox(comboBox);
         comboBox.setOnAction(e -> updateDetails());
         vBox.getChildren().addAll(label, comboBox);
         return vBox;

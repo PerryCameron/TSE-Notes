@@ -1,5 +1,7 @@
 package com.L2;
 
+import atlantafx.base.theme.PrimerDark;
+import atlantafx.base.theme.PrimerLight;
 import com.L2.mvci_main.MainController;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -42,6 +44,8 @@ public class BaseApplication extends Application {
         primaryStage.setTitle("Base Application");
         primaryStage.setResizable(false);
         primaryStage.setScene(new Scene(new MainController().getView()));
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+//        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
         primaryStage.show();
     }
 }
