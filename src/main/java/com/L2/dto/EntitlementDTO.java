@@ -16,12 +16,8 @@ public class EntitlementDTO implements Serializable {
     private transient StringProperty name = new SimpleStringProperty();
     private transient StringProperty includes = new SimpleStringProperty();
     private transient StringProperty notIncludes = new SimpleStringProperty();
-
-
     // Default constructor
     public EntitlementDTO() {}
-
-
     // Copy Constructor
     public EntitlementDTO(EntitlementDTO original) {
         this.id.set(original.getId());
@@ -101,6 +97,14 @@ public class EntitlementDTO implements Serializable {
         notIncludes.set("");
     }
 
+    public void copy(EntitlementDTO original) {
+        System.out.println("Copying current entitlement");
+        id.set(original.getId());
+        name.set(original.getName());
+        includes.set(original.getIncludes());
+        notIncludes.set(original.getNotIncludes());
+        System.out.println(toFancyString());
+    }
 
     // Custom serialization logic
     private void writeObject(ObjectOutputStream out) throws IOException {

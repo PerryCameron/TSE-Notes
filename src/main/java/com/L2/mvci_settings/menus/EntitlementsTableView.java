@@ -7,7 +7,6 @@ import com.L2.mvci_settings.SettingsView;
 import com.L2.widgetFx.TableColumnFx;
 import com.L2.widgetFx.TableViewFx;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
 import javafx.util.Builder;
 
 import java.util.function.Consumer;
@@ -26,22 +25,18 @@ public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>>
     @Override
     public TableView build() {
         TableView<EntitlementDTO> tableView = TableViewFx.tableViewOf(EntitlementDTO.class);
-        settingsModel.setEntitlementsTableView(tableView);
+        tableView.setItems(settingsModel.getEntitlements()); // Set the ObservableList here
         tableView.getColumns().add(col1());
+        tableView.setPrefWidth(400);
         tableView.setPlaceholder(new Label(""));
         // auto selector
         TableView.TableViewSelectionModel<EntitlementDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) settingsModel.setCurrentEntitlement(newSelection);
-        });
-        tableView.setRowFactory(tv -> {
-            TableRow<EntitlementDTO> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
-                    // copy contents of tableviews selected EntitlementDTO to current EntitlementDTO
-                }
-            });
-            return row;
+            settingsModel.gettFEntitlement().setText(newSelection == null ? "" : newSelection.getName());
+            settingsModel.gettFInclude().setText(newSelection == null ? "" : newSelection.getIncludes());
+            settingsModel.gettFIncludeNot().setText(newSelection == null ? "" : newSelection.getNotIncludes());
+            System.out.println(settingsModel.getCurrentEntitlement());
         });
         return tableView;
     }

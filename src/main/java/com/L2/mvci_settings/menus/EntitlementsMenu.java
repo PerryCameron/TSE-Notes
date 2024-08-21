@@ -44,14 +44,14 @@ public class EntitlementsMenu implements Builder<Region> {
         VBox vBox = new VBox(5);
         TableView<EntitlementDTO> tableView = new EntitlementsTableView(view).build();
         TextField tf1 = new TextField();
+        settingsModel.settFEntitlement(tf1);
         tf1.setPromptText("Entitlement Name");
-        tf1.textProperty().bindBidirectional(settingsModel.getCurrentEntitlement().nameProperty());
         TextField tf2 = new TextField();
+        settingsModel.settFInclude(tf2);
         tf2.setPromptText("Includes");
-        tf2.textProperty().bindBidirectional(settingsModel.getCurrentEntitlement().includesProperty());
         TextField tf3 = new TextField();
         tf3.setPromptText("Does Not Include");
-        tf3.textProperty().bindBidirectional(settingsModel.getCurrentEntitlement().notIncludesProperty());
+        settingsModel.settFIncludeNot(tf3);
         vBox.getChildren().addAll(tableView,tf1, tf2, tf3, createButtonRow());
         return vBox;
     }
@@ -60,19 +60,13 @@ public class EntitlementsMenu implements Builder<Region> {
         HBox hBox = new HBox(5);
         Button btn1 = new Button("Save");
         btn1.setOnAction(event -> action.accept(SettingsMessage.SAVE_ENTITLEMENTS));
-        Button btn2 = new Button("<");
-        btn2.setOnAction(event -> action.accept(SettingsMessage.SELECT_PREVIOUS));
-        Button btn3 = new Button(">");
-        btn3.setOnAction(event -> action.accept(SettingsMessage.SELECT_AFTER));
-        Button btn4 = new Button("Delete");
-        btn3.setOnAction(event -> action.accept(SettingsMessage.DELETE_ENTITLEMENT));
-        Button btn5 = new Button("New");
-        btn5.setOnAction(event -> action.accept(SettingsMessage.NEW_ENTITLEMENT));
-        Button btn6 = new Button("Print Entitlements");
-        btn6.setOnAction(event -> action.accept(SettingsMessage.PRINT_ENTITLEMENTS));
-        hBox.getChildren().addAll(btn1, btn2, btn3, btn4, btn5, btn6);
+        Button btn2 = new Button("Delete");
+        btn2.setOnAction(event -> action.accept(SettingsMessage.DELETE_ENTITLEMENT));
+        Button btn3 = new Button("New");
+        btn3.setOnAction(event -> action.accept(SettingsMessage.NEW_ENTITLEMENT));
+        Button btn4 = new Button("Print Entitlements");
+        btn4.setOnAction(event -> action.accept(SettingsMessage.PRINT_ENTITLEMENTS));
+        hBox.getChildren().addAll(btn1, btn2, btn3, btn4);
         return hBox;
     }
-
-
 }

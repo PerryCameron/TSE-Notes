@@ -41,7 +41,7 @@ public class SettingsView implements Builder<Region> {
     private Node setCenter() {
         VBox vBox = new VBox();
         vBox.setPrefSize(1024, 768);
-        vBox.setPadding(new Insets(10, 0, 0, 10));
+        vBox.setPadding(new Insets(10, 20, 0, 10));
         vBox.setSpacing(10);
         settingsModel.currentMenuProperty().addListener((obs, oldMenu, newMenu) -> {
             vBox.getChildren().clear(); // Clear old content
