@@ -32,4 +32,8 @@ public class CaseController extends Controller<CaseMessage> {
 
         };
     }
+
+    public CaseView getCaseView() {
+        return caseView;
+    }
 }

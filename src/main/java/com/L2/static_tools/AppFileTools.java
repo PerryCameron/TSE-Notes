@@ -1,6 +1,8 @@
 package com.L2.static_tools;
 
 import com.L2.dto.EntitlementDTO;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,23 +24,14 @@ public class AppFileTools {
         }
     }
 
-    public static ArrayList<EntitlementDTO> getEntitlements(Path path) {
+    public static ObservableList<EntitlementDTO> getEntitlements(Path path) {
         if (Files.exists(path)) {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
-                // Attempt to read the object
                 Object object = ois.readObject();
-                // Ensure the object is an ArrayList of EntitlementDTO
-                if (object instanceof ArrayList<?> list) {
-                    // Check if all elements in the list are instances of EntitlementDTO
+                if (object instanceof ArrayList<?>) {
+                    ArrayList<EntitlementDTO> list = (ArrayList<EntitlementDTO>) object;
                     if (list.stream().allMatch(item -> item instanceof EntitlementDTO)) {
-                        @SuppressWarnings("unchecked")
-                        ArrayList<EntitlementDTO> entitlements = (ArrayList<EntitlementDTO>) list;
-                        // Optionally check for empty list or perform further validation
-                        if (!entitlements.isEmpty()) {
-                            return entitlements;
-                        } else {
-                            logger.info("No entitlements found.");
-                        }
+                        return FXCollections.observableArrayList(list);
                     } else {
                         logger.error("Invalid data in entitlements file.");
                     }
@@ -50,6 +43,7 @@ public class AppFileTools {
                 e.printStackTrace();
             }
         }
-        return null;
+        return FXCollections.observableArrayList(); // return an empty ObservableList if the file doesn't exist or an error occurs
     }
+
 }

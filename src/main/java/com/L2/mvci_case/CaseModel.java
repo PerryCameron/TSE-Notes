@@ -4,14 +4,13 @@ import com.L2.dto.CaseDTO;
 import com.L2.dto.EntitlementDTO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.control.ComboBox;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.layout.VBox;
-
-import java.util.ArrayList;
 
 public class CaseModel {
     private ObjectProperty<CaseDTO> currentCase = new SimpleObjectProperty<>();
-    private ArrayList<EntitlementDTO> entitlements = new ArrayList<>();
+    private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
     private ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
 
@@ -28,11 +27,11 @@ public class CaseModel {
         this.PlanDetailsBox.set(planDetailsBox);
     }
 
-    public ArrayList<EntitlementDTO> getEntitlements() {
+    public ObservableList<EntitlementDTO> getEntitlements() {
         return entitlements;
     }
 
-    public void setEntitlements(ArrayList<EntitlementDTO> entitlements) {
+    public void setEntitlements(ObservableList<EntitlementDTO> entitlements) {
         this.entitlements = entitlements;
     }
 

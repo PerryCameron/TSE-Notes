@@ -4,11 +4,11 @@ import com.L2.dto.CaseDTO;
 import com.L2.dto.EntitlementDTO;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.FakeData;
+import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static com.L2.static_tools.ApplicationPaths.entitlementsFile;
 import static com.L2.static_tools.ApplicationPaths.settingsDir;
@@ -27,7 +27,7 @@ public class CaseInteractor {
             // Ensure the directory and file exist
             AppFileTools.createFileIfNotExists(settingsDir);
             // Load the entitlements
-            ArrayList<EntitlementDTO> entitlements = AppFileTools.getEntitlements(entitlementsFile);
+            ObservableList<EntitlementDTO> entitlements = AppFileTools.getEntitlements(entitlementsFile);
             if (entitlements != null) {
                 caseModel.setEntitlements(entitlements);
                 logger.info("Loaded entitlements: " + entitlements.size());

@@ -1,6 +1,7 @@
 package com.L2.mvci_settings;
 
 import com.L2.interfaces.Controller;
+import com.L2.mvci_case.CaseModel;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_settings.menus.EntitlementsMenu;
 import com.L2.mvci_settings.menus.UserMenu;
@@ -17,7 +18,12 @@ public class SettingsController extends Controller<SettingsMessage> {
         SettingsModel settingsModel = new SettingsModel();
         this.settingsInteractor = new SettingsInteractor(settingsModel);
         this.settingsView = new SettingsView(settingsModel, this::action);
-        settingsInteractor.loadCurrentEntitlement(); // this is temporary to make fake data
+        referenceExternalModels();
+    }
+
+    private void referenceExternalModels() {
+        CaseModel caseModel = mainController.getCaseController().getCaseView().getCaseModel();
+        settingsInteractor.referenceExternalModels(caseModel);
     }
 
     @Override

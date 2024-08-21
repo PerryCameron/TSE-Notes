@@ -3,19 +3,31 @@ package com.L2.mvci_settings;
 import com.L2.dto.EntitlementDTO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
 
 import java.util.ArrayList;
 
 public class SettingsModel {
-    private ArrayList<EntitlementDTO> entitlements = new ArrayList<>();
+//    private ArrayList<EntitlementDTO> entitlements = new ArrayList<>();
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
     private ObjectProperty<Region> currentMenu = new SimpleObjectProperty<>();
+    private ObjectProperty<TableView> entitlementsTableView = new SimpleObjectProperty<>();
+    private ObservableList<EntitlementDTO> entitlements = null;
 
 
+    public TableView getEntitlementsTableView() {
+        return entitlementsTableView.get();
+    }
 
+    public ObjectProperty<TableView> entitlementsTableViewProperty() {
+        return entitlementsTableView;
+    }
 
-
+    public void setEntitlementsTableView(TableView entitlementsTableView) {
+        this.entitlementsTableView.set(entitlementsTableView);
+    }
 
     public Region getCurrentMenu() {
         return currentMenu.get();
@@ -41,11 +53,11 @@ public class SettingsModel {
         this.currentEntitlement.set(currentEntitlement);
     }
 
-    public ArrayList<EntitlementDTO> getEntitlements() {
+    public ObservableList<EntitlementDTO> getEntitlements() {
         return entitlements;
     }
 
-    public void setEntitlements(ArrayList<EntitlementDTO> entitlements) {
+    public void setEntitlements(ObservableList<EntitlementDTO> entitlements) {
         this.entitlements = entitlements;
     }
 }

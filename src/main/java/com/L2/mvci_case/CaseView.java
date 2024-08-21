@@ -47,17 +47,19 @@ public class CaseView implements Builder<Region> {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(15, 0, 0, 40));
         caseModel.setPlanDetailsBox(vBox);
-        updateDetails();
+//        updateDetails();
         return vBox;
     }
 
     private void updateDetails() {
         VBox vBox = caseModel.getPlanDetailsBox();
         vBox.getChildren().clear();
+        System.out.println("current entitlement -  updateDetails in CaseView: " + caseModel.getCurrentEntitlement());
         Label label = new Label(caseModel.getCurrentEntitlement().getName());
         label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ff0000;");
         Label label1 = new Label("Includes");
         label1.setStyle("-fx-font-weight: bold; -fx-text-fill: #000000;");
+        System.out.println("current entitlement -  updateDetails in CaseView: " + caseModel.getCurrentEntitlement());
         String[] includes = caseModel.getCurrentEntitlement().getIncludes().split(":");
         String[] notIncludes = caseModel.getCurrentEntitlement().getNotIncludes().split(":");
         vBox.getChildren().addAll(label, label1);
@@ -191,5 +193,9 @@ public class CaseView implements Builder<Region> {
         textAreaIssue.setPrefRowCount(5); // Optional: Set a preferred number of rows
 
         return gridPane;
+    }
+
+    public CaseModel getCaseModel() {
+        return caseModel;
     }
 }

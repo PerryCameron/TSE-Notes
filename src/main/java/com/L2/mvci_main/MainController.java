@@ -12,6 +12,9 @@ public class MainController extends Controller<MainMessage> {
     private final MainInteractor mainInteractor;
     private final MainView mainView;
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+    // sub-controllers
+    private CaseController caseController = null;
+    private SettingsController settingsController = null;
 
 
     public MainController() {
@@ -28,27 +31,26 @@ public class MainController extends Controller<MainMessage> {
     @Override
     public void action(MainMessage action) {
         switch (action) {
-            case OPEN_NEW_CASE -> openCaseTab("Note");
-            case OPEN_SETTINGS -> openSettingsTab("Settings");
+            case OPEN_NEW_CASE -> openCaseTab();
+            case OPEN_SETTINGS -> openSettingsTab();
         }
     }
 
-    public void openTab(String tabName) {
-        switch (tabName) {
-            case "Case" -> System.out.println("Displaying people list");
-            case "Notes" -> System.out.println("Displaying notes");
-            case "Jotform" -> System.out.println("Opening Jotform");
-            default -> System.out.println("Invalid input");
-        }
+    private void openCaseTab() {
+            caseController = new CaseController(this);
+            mainView.addNewTab("Note", caseController.getView());
     }
 
-    private void openCaseTab(String tabName) {
-            mainView.addNewTab(tabName, new CaseController(this).getView());
+    private void openSettingsTab() {
+            settingsController = new SettingsController(this);
+            mainView.addNewTab("Settings", settingsController.getView());
     }
 
-    private void openSettingsTab(String tabName) {
-            mainView.addNewTab(tabName, new SettingsController(this).getView());
+    public CaseController getCaseController() {
+        return caseController;
     }
 
-
+    public SettingsController getSettingsController() {
+        return settingsController;
+    }
 }
