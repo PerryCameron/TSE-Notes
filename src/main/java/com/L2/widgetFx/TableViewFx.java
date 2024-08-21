@@ -7,7 +7,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class TableViewFx {
-    public static <T> TableView<T> tableViewOf(Class<T> objectClass, double prefHeight) {
+    public static <T> TableView<T> of(Class<T> objectClass, double prefHeight) {
         TableView<T> tableView = new TableView<>();
         HBox.setHgrow(tableView, Priority.ALWAYS);
         tableView.setPrefHeight(prefHeight);
@@ -17,7 +17,7 @@ public class TableViewFx {
         return tableView;
     }
 
-    public static <T> TableView<T> tableViewOf(Class<T> objectClass) {
+    public static <T> TableView<T> of(Class<T> objectClass) {
         TableView<T> tableView = new TableView<>();
         VBox.setVgrow(tableView, Priority.ALWAYS);
         HBox.setHgrow(tableView, Priority.ALWAYS);

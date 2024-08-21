@@ -24,7 +24,7 @@ public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>>
 
     @Override
     public TableView build() {
-        TableView<EntitlementDTO> tableView = TableViewFx.tableViewOf(EntitlementDTO.class);
+        TableView<EntitlementDTO> tableView = TableViewFx.of(EntitlementDTO.class);
         settingsModel.setEntitlementsTableView(tableView);
         tableView.setItems(settingsModel.getEntitlements()); // Set the ObservableList here
         tableView.getColumns().add(col1());
@@ -43,7 +43,6 @@ public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>>
     private TableColumn<EntitlementDTO, String> col1() {
         TableColumn<EntitlementDTO, String> col = TableColumnFx.stringTableColumn(EntitlementDTO::nameProperty,"Entitlements");
         col.setStyle("-fx-alignment: center");
-//        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.15));
         return col;
     }
 }

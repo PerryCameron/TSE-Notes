@@ -50,7 +50,6 @@ public class CaseInteractor {
         EntitlementDTO entitlementDTO = caseModel.getEntitlements().stream().filter(DTO -> DTO.getName()
                 .equals(caseModel.getCurrentCase().getEntitlement())).findFirst().orElse(null);
         caseModel.setCurrentEntitlement(entitlementDTO);
-        logger.info("Current entitlement: " + caseModel.getCurrentCase().getEntitlement());
         return entitlementDTO;
     }
 }

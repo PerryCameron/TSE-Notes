@@ -58,8 +58,8 @@ public class CaseView implements Builder<Region> {
         label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ff0000;");
         Label label1 = new Label("Includes");
         label1.setStyle("-fx-font-weight: bold; -fx-text-fill: #000000;");
-        String[] includes = caseModel.getCurrentEntitlement().getIncludes().split(":");
-        String[] notIncludes = caseModel.getCurrentEntitlement().getNotIncludes().split(":");
+        String[] includes = caseModel.getCurrentEntitlement().getIncludes().split("\\R");
+        String[] notIncludes = caseModel.getCurrentEntitlement().getNotIncludes().split("\\R");
         vBox.getChildren().addAll(label, label1);
         for(String include : includes) {
             vBox.getChildren().add(new Label(include));
