@@ -5,10 +5,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
-
-import java.util.ArrayList;
 
 public class SettingsModel {
     // The one we wish to change
@@ -16,8 +15,8 @@ public class SettingsModel {
     private ObjectProperty<Region> currentMenu = new SimpleObjectProperty<>();
     private ObjectProperty<TableView> entitlementsTableView = new SimpleObjectProperty<>();
     private ObjectProperty<TextField> tFEntitlement = new SimpleObjectProperty<>();
-    private ObjectProperty<TextField> tFInclude = new SimpleObjectProperty<>();
-    private ObjectProperty<TextField> tFIncludeNot = new SimpleObjectProperty<>();
+    private ObjectProperty<TextArea> tFInclude = new SimpleObjectProperty<>();
+    private ObjectProperty<TextArea> tFIncludeNot = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = null;
 
 
@@ -33,27 +32,27 @@ public class SettingsModel {
         this.tFEntitlement.set(tFEntitlement);
     }
 
-    public TextField gettFInclude() {
+    public TextArea gettFInclude() {
         return tFInclude.get();
     }
 
-    public ObjectProperty<TextField> tFIncludeProperty() {
+    public ObjectProperty<TextArea> tFIncludeProperty() {
         return tFInclude;
     }
 
-    public void settFInclude(TextField tFInclude) {
+    public void settFInclude(TextArea tFInclude) {
         this.tFInclude.set(tFInclude);
     }
 
-    public TextField gettFIncludeNot() {
+    public TextArea gettFIncludeNot() {
         return tFIncludeNot.get();
     }
 
-    public ObjectProperty<TextField> tFIncludeNotProperty() {
+    public ObjectProperty<TextArea> tFIncludeNotProperty() {
         return tFIncludeNot;
     }
 
-    public void settFIncludeNot(TextField tFIncludeNot) {
+    public void settFIncludeNot(TextArea tFIncludeNot) {
         this.tFIncludeNot.set(tFIncludeNot);
     }
 

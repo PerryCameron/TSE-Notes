@@ -28,7 +28,6 @@ public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>>
         settingsModel.setEntitlementsTableView(tableView);
         tableView.setItems(settingsModel.getEntitlements()); // Set the ObservableList here
         tableView.getColumns().add(col1());
-        tableView.setPrefWidth(400);
         tableView.setPlaceholder(new Label(""));
         // auto selector
         TableView.TableViewSelectionModel<EntitlementDTO> selectionModel = tableView.getSelectionModel();
@@ -37,7 +36,6 @@ public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>>
             settingsModel.gettFEntitlement().setText(newSelection == null ? "" : newSelection.getName());
             settingsModel.gettFInclude().setText(newSelection == null ? "" : newSelection.getIncludes());
             settingsModel.gettFIncludeNot().setText(newSelection == null ? "" : newSelection.getNotIncludes());
-            System.out.println(settingsModel.getCurrentEntitlement());
         });
         return tableView;
     }
