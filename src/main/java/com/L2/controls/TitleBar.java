@@ -33,17 +33,16 @@ public class TitleBar implements Builder<Region> {
     public Region build() {
         HBox hbox = new HBox();
         hbox.setStyle("-fx-background-color: #3a6684;"); // Set the background color
-        hbox.setPadding(new Insets(0, 0, 0, 10));
-        hbox.setSpacing(10);
+        hbox.setPadding(new Insets(0, 0, 0, 5));
+        hbox.setSpacing(5);
         hbox.setAlignment(Pos.CENTER_LEFT);
-        hbox.setPrefHeight(45);
+        hbox.setPrefHeight(40);
 
 
         // Load the image
         ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/AppList.targetsize-40_altform-unplated.png")));
         imageView.setFitHeight(40);
         imageView.setFitWidth(40);
-
 
         // Create the title label
         Label titleLabel = new Label("TSE Notes");
@@ -54,7 +53,6 @@ public class TitleBar implements Builder<Region> {
         // Create an HBox to push the close button to the right
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
 
         // Create the close button
         Button closeButton = new Button("X");

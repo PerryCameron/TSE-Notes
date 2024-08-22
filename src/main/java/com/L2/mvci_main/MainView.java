@@ -33,8 +33,6 @@ public class MainView implements Builder<Region> {
         borderPane.setTop(setUpTopPane());
         borderPane.setCenter(setUpCenterPane());
         borderPane.setBottom(setUpBottomPane());
-        primaryStage.setOnHiding(event -> System.out.println("Close all connections and exit"));
-        primaryStage.setTitle("TSE Notes");
         root.getChildren().addAll(new TitleBar(this).build(), borderPane);
         return root;
     }
@@ -49,6 +47,8 @@ public class MainView implements Builder<Region> {
 
     private Node setUpMenuBar() {
         MenuBar menuBar = new MenuBar();
+        menuBar.setPadding(new Insets(0,0,0,0));
+        menuBar.setMaxHeight(15);
         menuBar.getMenus().addAll(createFileMenu(),createEditMenu(),createDebugMenu());
         return menuBar;
     }
@@ -108,9 +108,9 @@ public class MainView implements Builder<Region> {
         return tabPane;
     }
 
-    protected void addNewTab(String name, Region region) {
+    protected void addNewTab(String name, Region region, boolean closeable) {
             Tab newTab = new Tab(name, region);
-//            newTab.setUserData(msId);
+            newTab.setClosable(closeable);
             mainModel.getMainTabPane().getTabs().add(newTab);
             mainModel.getMainTabPane().getSelectionModel().select(newTab);
     }

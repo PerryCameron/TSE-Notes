@@ -76,13 +76,13 @@ public class CaseView implements Builder<Region> {
 
     private Node setBox1Info() {
         VBox vBox = VBoxFx.of(5.0, new Insets(15, 40, 0, 20));
-        TextField tf1 = TextFieldFx.of(150, 30, "Work Order", caseModel.getCurrentCase().workOrderProperty());
-        TextField tf2 = TextFieldFx.of(150, 30, "Case", caseModel.getCurrentCase().caseNumberProperty());
-        TextField tf3 = TextFieldFx.of(150, 30, "Model", caseModel.getCurrentCase().modelNumberProperty());
-        TextField tf4 = TextFieldFx.of(150, 30, "Serial", caseModel.getCurrentCase().serialNumberProperty());
-        TextField tf5 = TextFieldFx.of(150, 30, "Call-in Contact", caseModel.getCurrentCase().callInPersonProperty());
-        TextField tf6 = TextFieldFx.of(150, 30, "Call-in Phone", caseModel.getCurrentCase().callInPhoneNumberProperty());
-        TextField tf7 = TextFieldFx.of(150, 30, "Call-in Email", caseModel.getCurrentCase().callInEmailProperty());
+        TextField tf1 = TextFieldFx.of(200, 30, "Work Order", caseModel.getCurrentCase().workOrderProperty());
+        TextField tf2 = TextFieldFx.of(200, 30, "Case", caseModel.getCurrentCase().caseNumberProperty());
+        TextField tf3 = TextFieldFx.of(200, 30, "Model", caseModel.getCurrentCase().modelNumberProperty());
+        TextField tf4 = TextFieldFx.of(200, 30, "Serial", caseModel.getCurrentCase().serialNumberProperty());
+        TextField tf5 = TextFieldFx.of(200, 30, "Call-in Contact", caseModel.getCurrentCase().callInPersonProperty());
+        TextField tf6 = TextFieldFx.of(200, 30, "Call-in Phone", caseModel.getCurrentCase().callInPhoneNumberProperty());
+        TextField tf7 = TextFieldFx.of(200, 30, "Call-in Email", caseModel.getCurrentCase().callInEmailProperty());
         vBox.getChildren().addAll(tf1, tf2, tf3, tf4, tf5, tf6, tf7);
         return vBox;
     }

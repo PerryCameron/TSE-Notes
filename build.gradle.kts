@@ -28,6 +28,7 @@ tasks.register<Copy>("processAppProperties") {
 }
 
 dependencies {
+
     // theme
     implementation ("io.github.mkpaz:atlantafx-base:2.0.1")
     // logging api

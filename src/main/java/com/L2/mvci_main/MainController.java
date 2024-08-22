@@ -38,12 +38,12 @@ public class MainController extends Controller<MainMessage> {
 
     private void openCaseTab() {
             caseController = new CaseController(this);
-            mainView.addNewTab("Note", caseController.getView());
+            mainView.addNewTab("Note", caseController.getView(), false);
     }
 
     private void openSettingsTab() {
             settingsController = new SettingsController(this);
-            mainView.addNewTab("Settings", settingsController.getView());
+            mainView.addNewTab("Settings", settingsController.getView(), true);
     }
 
     public CaseController getCaseController() {

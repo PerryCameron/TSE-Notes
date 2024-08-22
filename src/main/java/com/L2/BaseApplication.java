@@ -45,6 +45,7 @@ public class BaseApplication extends Application {
         primaryStage.setResizable(true);
         primaryStage.setScene(new Scene(new MainController().getView()));
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        primaryStage.getScene().getStylesheets().add("css/dark/tabpane.css");
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.show();
     }
