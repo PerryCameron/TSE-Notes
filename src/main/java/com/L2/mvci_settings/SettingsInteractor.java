@@ -1,7 +1,7 @@
 package com.L2.mvci_settings;
 
 import com.L2.dto.EntitlementDTO;
-import com.L2.mvci_case.CaseModel;
+import com.L2.mvci_note.NoteModel;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
@@ -79,8 +79,8 @@ public class SettingsInteractor {
         settingsModel.setCurrentMenu(userRegion);
     }
 
-    public void referenceExternalModels(CaseModel caseModel) {
-        settingsModel.setEntitlements(caseModel.getEntitlements());
+    public void referenceExternalModels(NoteModel noteModel) {
+        settingsModel.setEntitlements(noteModel.getEntitlements());
     }
 
 

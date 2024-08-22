@@ -1,7 +1,8 @@
-package com.L2.mvci_case;
+package com.L2.mvci_note;
 
 import atlantafx.base.controls.ToggleSwitch;
 import atlantafx.base.theme.Styles;
+import com.L2.controls.DateTimePicker;
 import com.L2.dto.EntitlementDTO;
 import com.L2.widgetFx.RegionFx;
 import com.L2.widgetFx.TextFieldFx;
@@ -19,12 +20,12 @@ import javafx.scene.layout.GridPane;
 
 import java.util.function.Consumer;
 
-public class CaseView implements Builder<Region> {
-    private final CaseModel caseModel;
-    Consumer<CaseMessage> action;
+public class NoteView implements Builder<Region> {
+    private final NoteModel noteModel;
+    Consumer<NoteMessage> action;
 
-    public CaseView(CaseModel caseModel, Consumer<CaseMessage> m) {
-        this.caseModel = caseModel;
+    public NoteView(NoteModel noteModel, Consumer<NoteMessage> m) {
+        this.noteModel = noteModel;
         action = m;
     }
 
@@ -40,28 +41,44 @@ public class CaseView implements Builder<Region> {
         vBox.setPadding(new Insets(10, 0, 0, 10));
         vBox.setSpacing(10);
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(setBox1Info(), setBox2Info(), setServicePlanDetails());
+        hBox.getChildren().addAll(setBox1Info(), setBox2Info(), setBox3Info());
         vBox.getChildren().addAll(hBox, setIssueBox());
         return vBox;
+    }
+
+    private Node setBox3Info() {
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(setDateTimeBox(), setServicePlanDetails());
+        return vBox;
+    }
+
+    private Node setDateTimeBox() {
+        HBox hBox = new HBox(10);
+        hBox.setPadding(new Insets(0, 0, 0, 40));
+        DateTimePicker datePicker = new DateTimePicker();
+        Button button = new Button("Time Stamp");
+
+        hBox.getChildren().addAll(datePicker, button);
+        return hBox;
     }
 
     private Node setServicePlanDetails() {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(15, 0, 0, 40));
-        caseModel.setPlanDetailsBox(vBox);
+        noteModel.setPlanDetailsBox(vBox);
         updateDetails();
         return vBox;
     }
 
     private void updateDetails() {
-        VBox vBox = caseModel.getPlanDetailsBox();
+        VBox vBox = noteModel.getPlanDetailsBox();
         vBox.getChildren().clear();
-        Label label = new Label(caseModel.getCurrentEntitlement().getName());
+        Label label = new Label(noteModel.getCurrentEntitlement().getName());
         label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ff0000;");
         Label label1 = new Label("Includes");
         label1.getStyleClass().add(Styles.TEXT_BOLD);
-        String[] includes = caseModel.getCurrentEntitlement().getIncludes().split("\\R");
-        String[] notIncludes = caseModel.getCurrentEntitlement().getNotIncludes().split("\\R");
+        String[] includes = noteModel.getCurrentEntitlement().getIncludes().split("\\R");
+        String[] notIncludes = noteModel.getCurrentEntitlement().getNotIncludes().split("\\R");
         vBox.getChildren().addAll(label, label1);
         for (String include : includes) {
             vBox.getChildren().add(new Label(include));
@@ -76,13 +93,13 @@ public class CaseView implements Builder<Region> {
 
     private Node setBox1Info() {
         VBox vBox = VBoxFx.of(5.0, new Insets(15, 40, 0, 20));
-        TextField tf1 = TextFieldFx.of(200, 30, "Work Order", caseModel.getCurrentCase().workOrderProperty());
-        TextField tf2 = TextFieldFx.of(200, 30, "Case", caseModel.getCurrentCase().caseNumberProperty());
-        TextField tf3 = TextFieldFx.of(200, 30, "Model", caseModel.getCurrentCase().modelNumberProperty());
-        TextField tf4 = TextFieldFx.of(200, 30, "Serial", caseModel.getCurrentCase().serialNumberProperty());
-        TextField tf5 = TextFieldFx.of(200, 30, "Call-in Contact", caseModel.getCurrentCase().callInPersonProperty());
-        TextField tf6 = TextFieldFx.of(200, 30, "Call-in Phone", caseModel.getCurrentCase().callInPhoneNumberProperty());
-        TextField tf7 = TextFieldFx.of(200, 30, "Call-in Email", caseModel.getCurrentCase().callInEmailProperty());
+        TextField tf1 = TextFieldFx.of(200, 30, "Work Order", noteModel.getCurrentCase().workOrderProperty());
+        TextField tf2 = TextFieldFx.of(200, 30, "Case", noteModel.getCurrentCase().caseNumberProperty());
+        TextField tf3 = TextFieldFx.of(200, 30, "Model", noteModel.getCurrentCase().modelNumberProperty());
+        TextField tf4 = TextFieldFx.of(200, 30, "Serial", noteModel.getCurrentCase().serialNumberProperty());
+        TextField tf5 = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getCurrentCase().callInPersonProperty());
+        TextField tf6 = TextFieldFx.of(200, 30, "Call-in Phone", noteModel.getCurrentCase().callInPhoneNumberProperty());
+        TextField tf7 = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getCurrentCase().callInEmailProperty());
         vBox.getChildren().addAll(tf1, tf2, tf3, tf4, tf5, tf6, tf7);
         return vBox;
     }
@@ -97,7 +114,7 @@ public class CaseView implements Builder<Region> {
         Label label = new Label("Load Supported:");
         HBox hBox = new HBox(10);
         ToggleSwitch toggleSwitch = new ToggleSwitch();
-        toggleSwitch.selectedProperty().bindBidirectional(caseModel.getCurrentCase().loadSupportedProperty());
+        toggleSwitch.selectedProperty().bindBidirectional(noteModel.getCurrentCase().loadSupportedProperty());
         hBox.getChildren().addAll(label, toggleSwitch);
         return hBox;
     }
@@ -109,9 +126,9 @@ public class CaseView implements Builder<Region> {
         comboBox.setPrefWidth(200);
         comboBox.getItems().addAll("Online", "Bypass", "Offline");
         comboBox.setValue("Online"); // Default to "Online"
-        comboBox.valueProperty().bindBidirectional(caseModel.getCurrentCase().upsStatusProperty());
+        comboBox.valueProperty().bindBidirectional(noteModel.getCurrentCase().upsStatusProperty());
         vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> System.out.println("UPS Status: " + caseModel.getCurrentCase().getUpsStatus()));
+        comboBox.setOnAction(e -> System.out.println("UPS Status: " + noteModel.getCurrentCase().getUpsStatus()));
         return vBox;
     }
 
@@ -121,9 +138,9 @@ public class CaseView implements Builder<Region> {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setPrefWidth(200);
         comboBox.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
-        comboBox.valueProperty().bindBidirectional(caseModel.getCurrentCase().serviceLevelProperty());
+        comboBox.valueProperty().bindBidirectional(noteModel.getCurrentCase().serviceLevelProperty());
         vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> System.out.println("Service level: " + caseModel.getCurrentCase().getServiceLevel()));
+        comboBox.setOnAction(e -> System.out.println("Service level: " + noteModel.getCurrentCase().getServiceLevel()));
         return vBox;
     }
 
@@ -134,19 +151,19 @@ public class CaseView implements Builder<Region> {
         ComboBox<EntitlementDTO> comboBox = new ComboBox<>();
         comboBox.setPrefWidth(200);
         // I would like to replace the hard coded entitlements below with the ArrayList  caseModel.getEntitlements() using the field EntitlementDTO::name
-        comboBox.getItems().addAll(caseModel.getEntitlements());
+        comboBox.getItems().addAll(noteModel.getEntitlements());
         // Optional: Set a default value if needed
         if (!comboBox.getItems().isEmpty()) {
             comboBox.setValue(comboBox.getItems().get(0));  // Set the first item as selected by default
         }
         // Bind the valueProperty of the ComboBox to the activeEntitlementProperty of the CaseDTO
-        comboBox.valueProperty().bindBidirectional(caseModel.currentEntitlementProperty());
+        comboBox.valueProperty().bindBidirectional(noteModel.currentEntitlementProperty());
         // Listener to update activeServiceContract when currentEntitlement changes
-        caseModel.currentEntitlementProperty().addListener((obs, oldEntitlement, newEntitlement) -> {
+        noteModel.currentEntitlementProperty().addListener((obs, oldEntitlement, newEntitlement) -> {
             if (newEntitlement != null) {
-                caseModel.getCurrentCase().setActiveServiceContract(newEntitlement.getName());
+                noteModel.getCurrentCase().setActiveServiceContract(newEntitlement.getName());
             } else {
-                caseModel.getCurrentCase().setActiveServiceContract("");  // Or handle null appropriately
+                noteModel.getCurrentCase().setActiveServiceContract("");  // Or handle null appropriately
             }
         });
         comboBox.setOnAction(e -> updateDetails());
@@ -167,7 +184,7 @@ public class CaseView implements Builder<Region> {
         // Create the TextArea
         TextArea textAreaIssue = new TextArea();
         textAreaIssue.setWrapText(true); // Enable text wrapping within the TextArea
-        textAreaIssue.textProperty().bindBidirectional(caseModel.getCurrentCase().issueProperty());
+        textAreaIssue.textProperty().bindBidirectional(noteModel.getCurrentCase().issueProperty());
         textAreaIssue.setPrefHeight(200);
         textAreaIssue.setFont(Font.font(16));
 
@@ -183,7 +200,7 @@ public class CaseView implements Builder<Region> {
         return gridPane;
     }
 
-    public CaseModel getCaseModel() {
-        return caseModel;
+    public NoteModel getCaseModel() {
+        return noteModel;
     }
 }

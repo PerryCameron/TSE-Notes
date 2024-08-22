@@ -1,7 +1,7 @@
 package com.L2.mvci_main;
 
 import com.L2.interfaces.Controller;
-import com.L2.mvci_case.CaseController;
+import com.L2.mvci_note.NoteController;
 import com.L2.mvci_settings.SettingsController;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ public class MainController extends Controller<MainMessage> {
     private final MainView mainView;
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
     // sub-controllers
-    private CaseController caseController = null;
+    private NoteController noteController = null;
     private SettingsController settingsController = null;
 
 
@@ -37,8 +37,8 @@ public class MainController extends Controller<MainMessage> {
     }
 
     private void openCaseTab() {
-            caseController = new CaseController(this);
-            mainView.addNewTab("Note", caseController.getView(), false);
+            noteController = new NoteController(this);
+            mainView.addNewTab("Note", noteController.getView(), false);
     }
 
     private void openSettingsTab() {
@@ -46,8 +46,8 @@ public class MainController extends Controller<MainMessage> {
             mainView.addNewTab("Settings", settingsController.getView(), true);
     }
 
-    public CaseController getCaseController() {
-        return caseController;
+    public NoteController getCaseController() {
+        return noteController;
     }
 
     public SettingsController getSettingsController() {

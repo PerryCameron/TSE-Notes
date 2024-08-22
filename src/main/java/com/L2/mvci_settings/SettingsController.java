@@ -1,7 +1,7 @@
 package com.L2.mvci_settings;
 
 import com.L2.interfaces.Controller;
-import com.L2.mvci_case.CaseModel;
+import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_settings.menus.EntitlementsMenu;
 import com.L2.mvci_settings.menus.UserMenu;
@@ -22,8 +22,8 @@ public class SettingsController extends Controller<SettingsMessage> {
     }
 
     private void referenceExternalModels() {
-        CaseModel caseModel = mainController.getCaseController().getCaseView().getCaseModel();
-        settingsInteractor.referenceExternalModels(caseModel);
+        NoteModel noteModel = mainController.getCaseController().getCaseView().getCaseModel();
+        settingsInteractor.referenceExternalModels(noteModel);
     }
 
     @Override

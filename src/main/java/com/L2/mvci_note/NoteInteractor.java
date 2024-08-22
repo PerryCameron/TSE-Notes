@@ -1,4 +1,4 @@
-package com.L2.mvci_case;
+package com.L2.mvci_note;
 
 import com.L2.dto.CaseDTO;
 import com.L2.dto.EntitlementDTO;
@@ -13,13 +13,13 @@ import java.io.IOException;
 import static com.L2.static_tools.ApplicationPaths.entitlementsFile;
 import static com.L2.static_tools.ApplicationPaths.settingsDir;
 
-public class CaseInteractor {
+public class NoteInteractor {
 
-    private final CaseModel caseModel;
-    private static final Logger logger = LoggerFactory.getLogger(CaseInteractor.class);
+    private final NoteModel noteModel;
+    private static final Logger logger = LoggerFactory.getLogger(NoteInteractor.class);
 
-    public CaseInteractor(CaseModel caseModel) {
-        this.caseModel = caseModel;
+    public NoteInteractor(NoteModel noteModel) {
+        this.noteModel = noteModel;
     }
 
     public void loadEntitlements() {
@@ -29,7 +29,7 @@ public class CaseInteractor {
             // Load the entitlements
             ObservableList<EntitlementDTO> entitlements = AppFileTools.getEntitlements(entitlementsFile);
             if (entitlements != null) {
-                caseModel.setEntitlements(entitlements);
+                noteModel.setEntitlements(entitlements);
                 logger.info("Loaded entitlements: " + entitlements.size());
             } else {
                 // arrayList is already initialized so really we do nothing but warn
@@ -43,13 +43,13 @@ public class CaseInteractor {
 
     public void setFakeTestData() {
         CaseDTO caseDTO = FakeData.createFakeCase();
-        caseModel.setCurrentCase(caseDTO);
+        noteModel.setCurrentCase(caseDTO);
     }
 
     public EntitlementDTO setCurrentEntitlement() {
-        EntitlementDTO entitlementDTO = caseModel.getEntitlements().stream().filter(DTO -> DTO.getName()
-                .equals(caseModel.getCurrentCase().getEntitlement())).findFirst().orElse(null);
-        caseModel.setCurrentEntitlement(entitlementDTO);
+        EntitlementDTO entitlementDTO = noteModel.getEntitlements().stream().filter(DTO -> DTO.getName()
+                .equals(noteModel.getCurrentCase().getEntitlement())).findFirst().orElse(null);
+        noteModel.setCurrentEntitlement(entitlementDTO);
         return entitlementDTO;
     }
 }

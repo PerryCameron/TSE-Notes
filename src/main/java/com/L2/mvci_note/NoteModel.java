@@ -1,4 +1,4 @@
-package com.L2.mvci_case;
+package com.L2.mvci_note;
 
 import com.L2.dto.CaseDTO;
 import com.L2.dto.EntitlementDTO;
@@ -8,7 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.VBox;
 
-public class CaseModel {
+public class NoteModel {
     private ObjectProperty<CaseDTO> currentCase = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
