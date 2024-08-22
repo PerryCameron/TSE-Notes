@@ -6,6 +6,7 @@ import com.L2.mvci_main.MainController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,11 +42,10 @@ public class BaseApplication extends Application {
     public void start(Stage stage) {
         logAppVersion();
         primaryStage = stage;
-        primaryStage.setTitle("Base Application");
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.setScene(new Scene(new MainController().getView()));
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-//        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.show();
     }
 }

@@ -1,6 +1,7 @@
 package com.L2.mvci_case;
 
 import atlantafx.base.controls.ToggleSwitch;
+import atlantafx.base.theme.Styles;
 import com.L2.dto.EntitlementDTO;
 import com.L2.widgetFx.RegionFx;
 import com.L2.widgetFx.TextFieldFx;
@@ -58,7 +59,7 @@ public class CaseView implements Builder<Region> {
         Label label = new Label(caseModel.getCurrentEntitlement().getName());
         label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ff0000;");
         Label label1 = new Label("Includes");
-        label1.setStyle("-fx-font-weight: bold; -fx-text-fill: #000000;");
+        label1.getStyleClass().add(Styles.TEXT_BOLD);
         String[] includes = caseModel.getCurrentEntitlement().getIncludes().split("\\R");
         String[] notIncludes = caseModel.getCurrentEntitlement().getNotIncludes().split("\\R");
         vBox.getChildren().addAll(label, label1);
@@ -66,7 +67,7 @@ public class CaseView implements Builder<Region> {
             vBox.getChildren().add(new Label(include));
         }
         Label label2 = new Label("Does not include:");
-        label2.setStyle("-fx-font-weight: bold; -fx-text-fill: #000000;");
+        label2.getStyleClass().add(Styles.TEXT_BOLD);
         vBox.getChildren().addAll(RegionFx.regionHeightOf(15), label2);
         for (String notInclude : notIncludes) {
             vBox.getChildren().add(new Label(notInclude));

@@ -1,6 +1,6 @@
 package com.L2.mvci_main;
 
-import com.L2.BaseApplication;
+import com.L2.controls.TitleBar;
 import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -14,6 +14,8 @@ import javafx.util.Builder;
 
 import java.util.function.Consumer;
 
+import static com.L2.BaseApplication.primaryStage;
+
 public class MainView implements Builder<Region> {
     private final MainModel mainModel;
     Consumer<MainMessage> action;
@@ -25,14 +27,16 @@ public class MainView implements Builder<Region> {
 
     @Override
     public Region build() {
+        VBox root = new VBox();
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1028,830);
         borderPane.setTop(setUpTopPane());
         borderPane.setCenter(setUpCenterPane());
         borderPane.setBottom(setUpBottomPane());
-        BaseApplication.primaryStage.setOnHiding(event -> System.out.println("Close all connections and exit"));
-        BaseApplication.primaryStage.setTitle("TSE Notes");
-        return borderPane;
+        primaryStage.setOnHiding(event -> System.out.println("Close all connections and exit"));
+        primaryStage.setTitle("TSE Notes");
+        root.getChildren().addAll(new TitleBar(this).build(), borderPane);
+        return root;
     }
 
     private Node setUpTopPane() {
