@@ -28,9 +28,12 @@ public class NoteController extends Controller<NoteMessage> {
     @Override
     public void action(NoteMessage message) {
         switch (message) {
-//            case OPEN -> mainController.openTab(welcomeInteractor.getTab());
-
+            case STATUS_BAR_CHANGE -> changeStatusBar();
         };
+    }
+
+    private void changeStatusBar() {
+        mainController.setStatusBar(noteInteractor.getStatus());
     }
 
     public NoteView getCaseView() {

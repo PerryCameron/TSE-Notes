@@ -22,7 +22,7 @@ public class SettingsController extends Controller<SettingsMessage> {
     }
 
     private void referenceExternalModels() {
-        NoteModel noteModel = mainController.getCaseController().getCaseView().getCaseModel();
+        NoteModel noteModel = mainController.getCaseController().getCaseView().getNoteModel();
         settingsInteractor.referenceExternalModels(noteModel);
     }
 

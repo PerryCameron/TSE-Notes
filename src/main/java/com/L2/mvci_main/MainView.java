@@ -37,6 +37,8 @@ public class MainView implements Builder<Region> {
         return root;
     }
 
+
+
     private Node setUpTopPane() {
         VBox topElements = new VBox();
         topElements.getChildren().add(setUpMenuBar());

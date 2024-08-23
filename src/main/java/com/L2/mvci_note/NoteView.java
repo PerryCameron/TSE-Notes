@@ -4,6 +4,7 @@ import atlantafx.base.controls.ToggleSwitch;
 import atlantafx.base.theme.Styles;
 import com.L2.controls.DateTimePicker;
 import com.L2.dto.EntitlementDTO;
+import com.L2.mvci_main.MainMessage;
 import com.L2.widgetFx.RegionFx;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.VBoxFx;
@@ -33,7 +34,16 @@ public class NoteView implements Builder<Region> {
     public Region build() {
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(setCenter());
+        setUpStatusBarCommunication();
         return borderPane;
+    }
+
+    private void setUpStatusBarCommunication() {
+        noteModel.statusLabelProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                action.accept(NoteMessage.STATUS_BAR_CHANGE);
+            }
+        });
     }
 
     private Node setCenter() {
@@ -83,13 +93,13 @@ public class NoteView implements Builder<Region> {
 
     private Node setBox1Info() {
         VBox vBox = VBoxFx.of(5.0, new Insets(15, 40, 0, 20));
-        TextField tf1 = TextFieldFx.of(200, 30, "Work Order", noteModel.getCurrentCase().workOrderProperty());
-        TextField tf2 = TextFieldFx.of(200, 30, "Case", noteModel.getCurrentCase().caseNumberProperty());
-        TextField tf3 = TextFieldFx.of(200, 30, "Model", noteModel.getCurrentCase().modelNumberProperty());
-        TextField tf4 = TextFieldFx.of(200, 30, "Serial", noteModel.getCurrentCase().serialNumberProperty());
-        TextField tf5 = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getCurrentCase().callInPersonProperty());
-        TextField tf6 = TextFieldFx.of(200, 30, "Call-in Phone", noteModel.getCurrentCase().callInPhoneNumberProperty());
-        TextField tf7 = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getCurrentCase().callInEmailProperty());
+        TextField tf1 = TextFieldFx.of(200, 30, "Work Order", noteModel.getCurrentNote().workOrderProperty());
+        TextField tf2 = TextFieldFx.of(200, 30, "Case", noteModel.getCurrentNote().caseNumberProperty());
+        TextField tf3 = TextFieldFx.of(200, 30, "Model", noteModel.getCurrentNote().modelNumberProperty());
+        TextField tf4 = TextFieldFx.of(200, 30, "Serial", noteModel.getCurrentNote().serialNumberProperty());
+        TextField tf5 = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty());
+        TextField tf6 = TextFieldFx.of(200, 30, "Call-in Phone", noteModel.getCurrentNote().callInPhoneNumberProperty());
+        TextField tf7 = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getCurrentNote().callInEmailProperty());
         vBox.getChildren().addAll(tf1, tf2, tf3, tf4, tf5, tf6, tf7);
         return vBox;
     }
@@ -104,7 +114,7 @@ public class NoteView implements Builder<Region> {
         Label label = new Label("Load Supported:");
         HBox hBox = new HBox(10);
         ToggleSwitch toggleSwitch = new ToggleSwitch();
-        toggleSwitch.selectedProperty().bindBidirectional(noteModel.getCurrentCase().loadSupportedProperty());
+        toggleSwitch.selectedProperty().bindBidirectional(noteModel.getCurrentNote().loadSupportedProperty());
         hBox.getChildren().addAll(label, toggleSwitch);
         return hBox;
     }
@@ -116,9 +126,9 @@ public class NoteView implements Builder<Region> {
         comboBox.setPrefWidth(200);
         comboBox.getItems().addAll("Online", "Bypass", "Offline");
         comboBox.setValue("Online"); // Default to "Online"
-        comboBox.valueProperty().bindBidirectional(noteModel.getCurrentCase().upsStatusProperty());
+        comboBox.valueProperty().bindBidirectional(noteModel.getCurrentNote().upsStatusProperty());
         vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> System.out.println("UPS Status: " + noteModel.getCurrentCase().getUpsStatus()));
+        comboBox.setOnAction(e -> System.out.println("UPS Status: " + noteModel.getCurrentNote().getUpsStatus()));
         return vBox;
     }
 
@@ -128,9 +138,9 @@ public class NoteView implements Builder<Region> {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setPrefWidth(200);
         comboBox.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
-        comboBox.valueProperty().bindBidirectional(noteModel.getCurrentCase().serviceLevelProperty());
+        comboBox.valueProperty().bindBidirectional(noteModel.getCurrentNote().serviceLevelProperty());
         vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> System.out.println("Service level: " + noteModel.getCurrentCase().getServiceLevel()));
+        comboBox.setOnAction(e -> System.out.println("Service level: " + noteModel.getCurrentNote().getServiceLevel()));
         return vBox;
     }
 
@@ -151,9 +161,9 @@ public class NoteView implements Builder<Region> {
         // Listener to update activeServiceContract when currentEntitlement changes
         noteModel.currentEntitlementProperty().addListener((obs, oldEntitlement, newEntitlement) -> {
             if (newEntitlement != null) {
-                noteModel.getCurrentCase().setActiveServiceContract(newEntitlement.getName());
+                noteModel.getCurrentNote().setActiveServiceContract(newEntitlement.getName());
             } else {
-                noteModel.getCurrentCase().setActiveServiceContract("");  // Or handle null appropriately
+                noteModel.getCurrentNote().setActiveServiceContract("");  // Or handle null appropriately
             }
         });
         comboBox.setOnAction(e -> updateDetails());
@@ -174,7 +184,7 @@ public class NoteView implements Builder<Region> {
         // Create the TextArea
         TextArea textAreaIssue = new TextArea();
         textAreaIssue.setWrapText(true); // Enable text wrapping within the TextArea
-        textAreaIssue.textProperty().bindBidirectional(noteModel.getCurrentCase().issueProperty());
+        textAreaIssue.textProperty().bindBidirectional(noteModel.getCurrentNote().issueProperty());
         textAreaIssue.setPrefHeight(200);
         textAreaIssue.setFont(Font.font(16));
 
@@ -190,7 +200,7 @@ public class NoteView implements Builder<Region> {
         return gridPane;
     }
 
-    public NoteModel getCaseModel() {
+    public NoteModel getNoteModel() {
         return noteModel;
     }
 }

@@ -43,13 +43,17 @@ public class NoteInteractor {
 
     public void setFakeTestData() {
         CaseDTO caseDTO = FakeData.createFakeCase();
-        noteModel.setCurrentCase(caseDTO);
+        noteModel.setCurrentNote(caseDTO);
     }
 
     public EntitlementDTO setCurrentEntitlement() {
         EntitlementDTO entitlementDTO = noteModel.getEntitlements().stream().filter(DTO -> DTO.getName()
-                .equals(noteModel.getCurrentCase().getEntitlement())).findFirst().orElse(null);
+                .equals(noteModel.getCurrentNote().getEntitlement())).findFirst().orElse(null);
         noteModel.setCurrentEntitlement(entitlementDTO);
         return entitlementDTO;
+    }
+
+    public String getStatus() {
+        return noteModel.statusLabelProperty().get();
     }
 }

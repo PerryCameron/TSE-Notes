@@ -19,12 +19,14 @@ public class DateTimePicker implements Builder<Region> {
     private final Spinner<Integer> hourSpinner;
     private final Spinner<Integer> minuteSpinner;
     private final ObjectProperty<LocalDateTime> dateTimeProperty;
+    private final NoteView noteView;
 
     public DateTimePicker(NoteView noteView) {
         datePicker = new DatePicker(LocalDate.now());
         hourSpinner = new Spinner<>();
         minuteSpinner = new Spinner<>();
-        dateTimeProperty = noteView.getCaseModel().getCurrentCase().timestampProperty();
+        dateTimeProperty = noteView.getNoteModel().getCurrentNote().timestampProperty();
+        this.noteView = noteView;
     }
 
     private void updateDateTime() {
@@ -78,7 +80,10 @@ public class DateTimePicker implements Builder<Region> {
         datePicker.setOnAction(event -> updateDateTime());
         hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
         minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
-        button.setOnAction(event -> setDateTime(LocalDateTime.now()));
+        button.setOnAction(event -> {
+            noteView.getNoteModel().setStatusLabel("Time Stamped!");
+            setDateTime(LocalDateTime.now());
+        });
         // Initialize with the current date and time
         updateDateTime();
         return hBox;
