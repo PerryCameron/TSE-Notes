@@ -47,24 +47,14 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setBox3Info() {
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(setDateTimeBox(), setServicePlanDetails());
+        VBox vBox = new VBox(20);
+        vBox.setPadding(new Insets(0, 0, 0, 40));
+        vBox.getChildren().addAll(new DateTimePicker(this).build(), setServicePlanDetails());
         return vBox;
-    }
-
-    private Node setDateTimeBox() {
-        HBox hBox = new HBox(10);
-        hBox.setPadding(new Insets(0, 0, 0, 40));
-        DateTimePicker datePicker = new DateTimePicker();
-        Button button = new Button("Time Stamp");
-
-        hBox.getChildren().addAll(datePicker, button);
-        return hBox;
     }
 
     private Node setServicePlanDetails() {
         VBox vBox = new VBox();
-        vBox.setPadding(new Insets(15, 0, 0, 40));
         noteModel.setPlanDetailsBox(vBox);
         updateDetails();
         return vBox;

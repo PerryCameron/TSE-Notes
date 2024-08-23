@@ -38,6 +38,9 @@ public class CaseDTO implements Serializable {
     private IntegerProperty partsOrder = new SimpleIntegerProperty();
     private StringProperty entitlement = new SimpleStringProperty();
 
+
+
+
     public String getEntitlement() {
         return entitlement.get();
     }
