@@ -36,6 +36,10 @@ public class MainController extends Controller<MainMessage> {
         }
     }
 
+    public void setStatusBar(String status) {
+        mainInteractor.setStatusBar(status);
+    }
+
     private void openCaseTab() {
             noteController = new NoteController(this);
             mainView.addNewTab("Note", noteController.getView(), false);

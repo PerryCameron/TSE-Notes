@@ -10,6 +10,7 @@ public class MainModel {
     private StringProperty statusLabel = new SimpleStringProperty(""); // keeper here
     private ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
 
+
     public TabPane getMainTabPane() {
         return mainTabPane.get();
     }

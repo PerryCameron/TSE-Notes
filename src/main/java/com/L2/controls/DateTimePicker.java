@@ -2,7 +2,6 @@ package com.L2.controls;
 
 import com.L2.mvci_note.NoteView;
 import javafx.beans.property.ObjectProperty;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -84,8 +83,6 @@ public class DateTimePicker implements Builder<Region> {
         updateDateTime();
         return hBox;
     }
-
-
 }
 
 

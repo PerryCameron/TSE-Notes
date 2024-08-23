@@ -14,6 +14,10 @@ public class MainInteractor implements ApplicationPaths {
 
     }
 
+    public void setStatusBar(String status) {
+        mainModel.statusLabelProperty().set(status);
+    }
+
 //    public boolean tabIsNotOpen(int msId) {  // find if tab is open
 //        if (PaneFx.tabIsOpen(msId, mainModel.getMainTabPane())) {
 //            Platform.runLater(() -> {
