@@ -12,7 +12,7 @@ public class FakeData {
         c.setId(234);
         c.setTimestamp(LocalDateTime.now());
         c.setWorkOrder("WO-10196741");
-        c.setCaseNumber("12345678");
+        c.setCaseNumber("123456789");
         c.setModelNumber("PMM400-ALAX");
         c.setSerialNumber("N12402180025");
         c.setCallInPerson("Justin Stain");

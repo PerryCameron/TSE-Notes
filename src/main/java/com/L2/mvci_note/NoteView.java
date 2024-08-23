@@ -4,7 +4,7 @@ import atlantafx.base.controls.ToggleSwitch;
 import atlantafx.base.theme.Styles;
 import com.L2.controls.DateTimePicker;
 import com.L2.dto.EntitlementDTO;
-import com.L2.mvci_main.MainMessage;
+import com.L2.widgetFx.ListenerFx;
 import com.L2.widgetFx.RegionFx;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.VBoxFx;
@@ -93,13 +93,34 @@ public class NoteView implements Builder<Region> {
 
     private Node setBox1Info() {
         VBox vBox = VBoxFx.of(5.0, new Insets(15, 40, 0, 20));
-        TextField tf1 = TextFieldFx.of(200, 30, "Work Order", noteModel.getCurrentNote().workOrderProperty());
-        TextField tf2 = TextFieldFx.of(200, 30, "Case", noteModel.getCurrentNote().caseNumberProperty());
+
+        TextField tf1 = TextFieldFx.of(200,  "Work Order");
+        tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
+        ListenerFx.addFocusListener(tf1, "Work Order", noteModel.getCurrentNote().workOrderProperty(), noteModel.statusLabelProperty());
+
+        TextField tf2 = TextFieldFx.of(200, "Case");
+        tf2.textProperty().set(noteModel.getCurrentNote().getCaseNumber());
+        ListenerFx.addFocusListener(tf2, "Case", noteModel.getCurrentNote().caseNumberProperty(), noteModel.statusLabelProperty());
+
         TextField tf3 = TextFieldFx.of(200, 30, "Model", noteModel.getCurrentNote().modelNumberProperty());
+        tf3.textProperty().set(noteModel.getCurrentNote().getModelNumber());
+        ListenerFx.addFocusListener(tf3, "Model", noteModel.getCurrentNote().modelNumberProperty(), noteModel.statusLabelProperty());
+
         TextField tf4 = TextFieldFx.of(200, 30, "Serial", noteModel.getCurrentNote().serialNumberProperty());
+        tf4.textProperty().set(noteModel.getCurrentNote().getSerialNumber());
+        ListenerFx.addFocusListener(tf4, "Serial", noteModel.getCurrentNote().serialNumberProperty(), noteModel.statusLabelProperty());
+
         TextField tf5 = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty());
-        TextField tf6 = TextFieldFx.of(200, 30, "Call-in Phone", noteModel.getCurrentNote().callInPhoneNumberProperty());
+        tf5.textProperty().set(noteModel.getCurrentNote().getCallInPerson());
+        ListenerFx.addFocusListener(tf5, "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty(), noteModel.statusLabelProperty());
+
+        TextField tf6 = TextFieldFx.of(200, "Call-in Phone");
+        tf6.textProperty().set(noteModel.getCurrentNote().getCallInPhoneNumber());
+        ListenerFx.addFocusListener(tf6, "Call-in Phone", noteModel.getCurrentNote().callInPhoneNumberProperty(), noteModel.statusLabelProperty());
+
         TextField tf7 = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getCurrentNote().callInEmailProperty());
+        tf7.textProperty().set(noteModel.getCurrentNote().getCallInEmail());
+        ListenerFx.addFocusListener(tf7, "Call-in Email", noteModel.getCurrentNote().callInEmailProperty(), noteModel.statusLabelProperty());
         vBox.getChildren().addAll(tf1, tf2, tf3, tf4, tf5, tf6, tf7);
         return vBox;
     }
@@ -184,7 +205,8 @@ public class NoteView implements Builder<Region> {
         // Create the TextArea
         TextArea textAreaIssue = new TextArea();
         textAreaIssue.setWrapText(true); // Enable text wrapping within the TextArea
-        textAreaIssue.textProperty().bindBidirectional(noteModel.getCurrentNote().issueProperty());
+        textAreaIssue.setText(noteModel.getCurrentNote().issueProperty().get());
+        ListenerFx.addFocusListener(textAreaIssue, "Issue field", noteModel.getCurrentNote().issueProperty(), noteModel.statusLabelProperty());
         textAreaIssue.setPrefHeight(200);
         textAreaIssue.setFont(Font.font(16));
 
