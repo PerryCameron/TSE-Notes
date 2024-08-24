@@ -18,6 +18,8 @@ public class NoteView implements Builder<Region> {
     private final BasicInformation basicInformation;
     private final ServicePlanDetails servicePlanDetails;
     private final DateTimePicker dateTimePicker;
+    private final PartTableView partTableView;
+    private final SiteInformation siteInformation;
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -26,6 +28,8 @@ public class NoteView implements Builder<Region> {
         this.servicePlan = new ServicePlan(this);
         this.servicePlanDetails = new ServicePlanDetails(this);
         this.dateTimePicker = new DateTimePicker(this);
+        this.partTableView = new PartTableView(this);
+        this.siteInformation = new SiteInformation(this);
     }
 
     @Override
@@ -45,7 +49,7 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setCenter() {
-        VBox vBox = VBoxFx.of( true, 10, new Insets(10, 20, 0, 20));
+        VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 0, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), servicePlan.build(), setBox3Info());
         vBox.getChildren().addAll(hBox, setIssueBox(), rowThreeBox());
@@ -54,7 +58,7 @@ public class NoteView implements Builder<Region> {
 
     private Node rowThreeBox() {
         HBox hBox = new HBox();
-        hBox.getChildren().add(new SiteInformation(this).build());
+        hBox.getChildren().addAll(siteInformation.build(), partTableView.build());
         return hBox;
     }
 

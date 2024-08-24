@@ -35,6 +35,7 @@ public class CaseDTO implements Serializable {
     private StringProperty zip = new SimpleStringProperty();
     private StringProperty country = new SimpleStringProperty();
     private ListProperty<PartDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
     private IntegerProperty createdWorkOrder = new SimpleIntegerProperty();
     private IntegerProperty partsOrder = new SimpleIntegerProperty();
     private StringProperty entitlement = new SimpleStringProperty();
@@ -388,7 +389,17 @@ public class CaseDTO implements Serializable {
         this.partsOrder.set(partsOrder);
     }
 
+    public PartDTO getSelectedPart() {
+        return selectedPart.get();
+    }
 
+    public ObjectProperty<PartDTO> selectedPartProperty() {
+        return selectedPart;
+    }
+
+    public void setSelectedPart(PartDTO selectedPart) {
+        this.selectedPart.set(selectedPart);
+    }
 
     public void clearCase(CaseDTO caseDTO) {
         caseDTO.setWorkOrder("");

@@ -50,6 +50,7 @@ public class NoteInteractor {
         EntitlementDTO entitlementDTO = noteModel.getEntitlements().stream().filter(DTO -> DTO.getName()
                 .equals(noteModel.getCurrentNote().getEntitlement())).findFirst().orElse(null);
         noteModel.setCurrentEntitlement(entitlementDTO);
+        System.out.println("Entitlement DTO: " + entitlementDTO);
         return entitlementDTO;
     }
 

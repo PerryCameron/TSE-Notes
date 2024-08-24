@@ -15,17 +15,16 @@ import java.time.format.DateTimeFormatter;
 
 public class DateTimePicker implements Builder<Region> {
 
+    private final NoteView noteView;
     private final DatePicker datePicker;
     private final Spinner<Integer> hourSpinner;
     private final Spinner<Integer> minuteSpinner;
-    private final ObjectProperty<LocalDateTime> dateTimeProperty;
-    private final NoteView noteView;
+    private ObjectProperty<LocalDateTime> dateTimeProperty;
 
     public DateTimePicker(NoteView noteView) {
-        datePicker = new DatePicker(LocalDate.now());
-        hourSpinner = new Spinner<>();
-        minuteSpinner = new Spinner<>();
-        dateTimeProperty = noteView.getNoteModel().getCurrentNote().timestampProperty();
+        this.datePicker = new DatePicker(LocalDate.now());
+        this.hourSpinner = new Spinner<>();
+        this.minuteSpinner = new Spinner<>();
         this.noteView = noteView;
     }
 
@@ -58,6 +57,7 @@ public class DateTimePicker implements Builder<Region> {
 
     @Override
     public Region build() {
+        this.dateTimeProperty = noteView.getNoteModel().getCurrentNote().timestampProperty();
         HBox hBox = new HBox();
 
         // Configure the spinners
