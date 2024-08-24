@@ -29,7 +29,6 @@ public class ListenerFx {
     public static void addFocusListener(TextField textField, String controlName, StringProperty currentObject, StringProperty statusLabel) {
         textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
             ResultDTO resultDTO = StringChecker.checkString(controlName, textField.getText());
-
             textField.setText(resultDTO.getFieldName());
             Platform.runLater(() -> {
                 if (isNowFocused) {

@@ -86,6 +86,7 @@ public class MainView implements Builder<Region> {
     private Node setUpBottomPane() {
         HBox hBox = new HBox();
         hBox.getChildren().addAll(statusLabel());
+        hBox.getStyleClass().add("bottom-pane");
         return hBox;
     }
 
@@ -114,5 +115,4 @@ public class MainView implements Builder<Region> {
             mainModel.getMainTabPane().getTabs().add(newTab);
             mainModel.getMainTabPane().getSelectionModel().select(newTab);
     }
-
 }

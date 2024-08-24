@@ -11,7 +11,6 @@
 
 }
 
-
 /* Style for the selected tab */
 .tab:selected {
     -fx-background-color: #3a6684; /* Selected tab background color */     /* Selected tab text color */
@@ -31,4 +30,8 @@
 /* Optional: Remove focus border from tabs */
 .tab-pane:focused > .tab-header-area > .tab:selected {
     -fx-background-color: #2980b9; /* Match this to selected tab color to remove focus border */
+}
+
+.bottom-pane {
+    -fx-background-color: #dedfdf;
 }

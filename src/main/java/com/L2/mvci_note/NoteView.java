@@ -4,6 +4,7 @@ import atlantafx.base.controls.ToggleSwitch;
 import atlantafx.base.theme.Styles;
 import com.L2.mvci_note.components.DateTimePicker;
 import com.L2.dto.EntitlementDTO;
+import com.L2.mvci_note.components.SiteInformation;
 import com.L2.widgetFx.*;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -45,36 +46,14 @@ public class NoteView implements Builder<Region> {
         VBox vBox = VBoxFx.of( true, 10, new Insets(10, 20, 0, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(setBox1Info(), setBox2Info(), setBox3Info());
-        vBox.getChildren().addAll(hBox, setIssueBox(), setAddressBox());
+        vBox.getChildren().addAll(hBox, setIssueBox(), rowThreeBox());
         return vBox;
     }
 
-    private Node setAddressBox() {
+    private Node rowThreeBox() {
         HBox hBox = new HBox();
-        hBox.getChildren().add(siteInfoBox());
+        hBox.getChildren().add(new SiteInformation(this).build());
         return hBox;
-    }
-
-    private Node siteInfoBox() {
-        VBox vBox = new VBox(5);
-        TextField tf1 = TextFieldFx.of(200,  "Installed At");
-        tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
-
-        TextArea ta1 = new TextArea();
-
-        TextField tf2 = TextFieldFx.of(200,  "City");
-        tf2.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
-
-        TextField tf3 = TextFieldFx.of(200,  "State/Province");
-        tf3.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
-
-        TextField tf4 = TextFieldFx.of(200,  "zip Code");
-        tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
-
-        TextField tf5 = TextFieldFx.of(200,  "Country");
-        tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
-        vBox.getChildren().addAll(tf1, ta1, tf2, tf3, tf4, tf5);
-        return vBox;
     }
 
     private Node setBox3Info() {
@@ -246,7 +225,7 @@ public class NoteView implements Builder<Region> {
         VBox vBox = new VBox(4);
         Label lblIssue = new Label("Issue:");
         TextArea textAreaIssue = TextAreaFx.of(true, 200, 16, 5);
-        textAreaIssue.setPrefWidth(990);
+        textAreaIssue.setPrefWidth(980);
         textAreaIssue.setText(noteModel.getCurrentNote().issueProperty().get());
         ListenerFx.addFocusListener(textAreaIssue, "Issue field", noteModel.getCurrentNote().issueProperty(), noteModel.statusLabelProperty());
         vBox.getChildren().addAll(lblIssue, textAreaIssue);

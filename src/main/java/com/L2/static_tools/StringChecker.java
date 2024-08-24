@@ -13,7 +13,7 @@ public class StringChecker {
             case "Work Order" -> formatWorkOrder(fieldValue);
             case "Case" -> formatCaseNumber(fieldValue);
             case "Call-in Email" -> formatEmail(fieldValue);
-            default -> new ResultDTO(fieldValue, Boolean.FALSE);
+            default -> new ResultDTO(fieldValue, Boolean.TRUE);
         };
     }
 

@@ -24,8 +24,8 @@ public class FakeData {
         c.setContactPhoneNumber("(540)-478-9741");
         c.setContactEmail("gteague@email.com");
         c.setContactName("Greg League");
-        c.setAddressLine1("1589 Ferris Rd");
-        c.setAddressLine2(null);
+        c.setStreet("1589 Ferris Rd");
+        c.setInstalledAt("Tierpoint - Oklahoma City, OK");
         c.setCity("Garland");
         c.setState("TX");
         c.setZip("75044");
