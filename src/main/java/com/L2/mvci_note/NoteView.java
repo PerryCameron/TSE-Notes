@@ -4,20 +4,15 @@ import atlantafx.base.controls.ToggleSwitch;
 import atlantafx.base.theme.Styles;
 import com.L2.mvci_note.components.DateTimePicker;
 import com.L2.dto.EntitlementDTO;
-import com.L2.widgetFx.ListenerFx;
-import com.L2.widgetFx.RegionFx;
-import com.L2.widgetFx.TextFieldFx;
-import com.L2.widgetFx.VBoxFx;
+import com.L2.widgetFx.*;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import javafx.util.Builder;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 
 import java.util.function.Consumer;
 
@@ -32,10 +27,10 @@ public class NoteView implements Builder<Region> {
 
     @Override
     public Region build() {
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(setCenter());
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(setCenter());
         setUpStatusBarCommunication();
-        return borderPane;
+        return scrollPane;
     }
 
     private void setUpStatusBarCommunication() {
@@ -47,12 +42,38 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setCenter() {
-        VBox vBox = VBoxFx.of(1024, 768, true, true);
-        vBox.setPadding(new Insets(10, 0, 0, 10));
-        vBox.setSpacing(10);
+        VBox vBox = VBoxFx.of( true, 10, new Insets(10, 20, 0, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(setBox1Info(), setBox2Info(), setBox3Info());
-        vBox.getChildren().addAll(hBox, setIssueBox());
+        vBox.getChildren().addAll(hBox, setIssueBox(), setAddressBox());
+        return vBox;
+    }
+
+    private Node setAddressBox() {
+        HBox hBox = new HBox();
+        hBox.getChildren().add(siteInfoBox());
+        return hBox;
+    }
+
+    private Node siteInfoBox() {
+        VBox vBox = new VBox(5);
+        TextField tf1 = TextFieldFx.of(200,  "Installed At");
+        tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
+
+        TextArea ta1 = new TextArea();
+
+        TextField tf2 = TextFieldFx.of(200,  "City");
+        tf2.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
+
+        TextField tf3 = TextFieldFx.of(200,  "State/Province");
+        tf3.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
+
+        TextField tf4 = TextFieldFx.of(200,  "zip Code");
+        tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
+
+        TextField tf5 = TextFieldFx.of(200,  "Country");
+        tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
+        vBox.getChildren().addAll(tf1, ta1, tf2, tf3, tf4, tf5);
         return vBox;
     }
 
@@ -71,7 +92,7 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setBox1Info() {
-        VBox vBox = VBoxFx.of(5.0, new Insets(15, 40, 0, 20));
+        VBox vBox = VBoxFx.of(5.5, new Insets(15, 40, 0, 0));
 
         TextField tf1 = TextFieldFx.of(200,  "Work Order");
         tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
@@ -105,7 +126,7 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setBox2Info() {
-        VBox vBox = VBoxFx.of(8.0, new Insets(15, 0, 0, 20));
+        VBox vBox = VBoxFx.of(8.0, new Insets(15, 0, 0, 0));
         vBox.getChildren().addAll(setEntitlementBox(), setSchedulingTermsBox(), setServiceLevelBox(), setStatusBox(), loadSupportedBox());
         return vBox;
     }
@@ -222,32 +243,14 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setIssueBox() {
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(5);
-        gridPane.setPadding(new Insets(10)); // Optional padding around the GridPane
-
-        // Create the Label
+        VBox vBox = new VBox(4);
         Label lblIssue = new Label("Issue:");
-
-        // Create the TextArea
-        TextArea textAreaIssue = new TextArea();
-        textAreaIssue.setWrapText(true); // Enable text wrapping within the TextArea
+        TextArea textAreaIssue = TextAreaFx.of(true, 200, 16, 5);
+        textAreaIssue.setPrefWidth(990);
         textAreaIssue.setText(noteModel.getCurrentNote().issueProperty().get());
         ListenerFx.addFocusListener(textAreaIssue, "Issue field", noteModel.getCurrentNote().issueProperty(), noteModel.statusLabelProperty());
-        textAreaIssue.setPrefHeight(200);
-        textAreaIssue.setFont(Font.font(16));
-
-        // Add the Label and TextArea to the GridPane
-        gridPane.add(lblIssue, 0, 0); // Label in the upper left corner
-        gridPane.add(textAreaIssue, 0, 1); // TextArea below the label
-
-        // Ensure the TextArea takes up the full width of the GridPane
-        GridPane.setHgrow(textAreaIssue, Priority.ALWAYS);
-        textAreaIssue.setMaxWidth(Double.MAX_VALUE);
-        textAreaIssue.setPrefRowCount(5); // Optional: Set a preferred number of rows
-
-        return gridPane;
+        vBox.getChildren().addAll(lblIssue, textAreaIssue);
+        return vBox;
     }
 
     public NoteModel getNoteModel() {

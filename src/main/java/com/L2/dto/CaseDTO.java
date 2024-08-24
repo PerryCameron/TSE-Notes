@@ -28,8 +28,8 @@ public class CaseDTO implements Serializable {
     private StringProperty contactName = new SimpleStringProperty();
     private StringProperty contactPhoneNumber = new SimpleStringProperty();
     private StringProperty contactEmail = new SimpleStringProperty();
-    private StringProperty addressLine1 = new SimpleStringProperty();
-    private StringProperty addressLine2 = new SimpleStringProperty();
+    private StringProperty street = new SimpleStringProperty();
+    private StringProperty installedAt = new SimpleStringProperty();
     private StringProperty city = new SimpleStringProperty();
     private StringProperty state = new SimpleStringProperty();
     private StringProperty zip = new SimpleStringProperty();
@@ -280,28 +280,28 @@ public class CaseDTO implements Serializable {
         this.contactEmail.set(contactEmail);
     }
 
-    public String getAddressLine1() {
-        return addressLine1.get();
+    public String getStreet() {
+        return street.get();
     }
 
-    public StringProperty addressLine1Property() {
-        return addressLine1;
+    public StringProperty streetProperty() {
+        return street;
     }
 
-    public void setAddressLine1(String addressLine1) {
-        this.addressLine1.set(addressLine1);
+    public void setStreet(String street) {
+        this.street.set(street);
     }
 
-    public String getAddressLine2() {
-        return addressLine2.get();
+    public String getInstalledAt() {
+        return installedAt.get();
     }
 
-    public StringProperty addressLine2Property() {
-        return addressLine2;
+    public StringProperty installedAtProperty() {
+        return installedAt;
     }
 
-    public void setAddressLine2(String addressLine2) {
-        this.addressLine2.set(addressLine2);
+    public void setInstalledAt(String installedAt) {
+        this.installedAt.set(installedAt);
     }
 
     public String getCity() {
@@ -388,38 +388,7 @@ public class CaseDTO implements Serializable {
         this.partsOrder.set(partsOrder);
     }
 
-    @Override
-    public String toString() {
-        return "CaseDTO{" +
-                "id=" + id +
-                ", timestamp=" + timestamp +
-                ", workOrder=" + workOrder +
-                ", caseNumber=" + caseNumber +
-                ", serialNumber=" + serialNumber +
-                ", modelNumber=" + modelNumber +
-                ", callInPerson=" + callInPerson +
-                ", callInPhoneNumber=" + callInPhoneNumber +
-                ", callInEmail=" + callInEmail +
-                ", underWarranty=" + underWarranty +
-                ", activeServiceContract=" + activeServiceContract +
-                ", serviceLevel=" + serviceLevel +
-                ", upsStatus=" + upsStatus +
-                ", loadSupported=" + loadSupported +
-                ", issue=" + issue +
-                ", contactName=" + contactName +
-                ", contactPhoneNumber=" + contactPhoneNumber +
-                ", contactEmail=" + contactEmail +
-                ", addressLine1=" + addressLine1 +
-                ", addressLine2=" + addressLine2 +
-                ", city=" + city +
-                ", state=" + state +
-                ", zip=" + zip +
-                ", country=" + country +
-                ", parts=" + parts +
-                ", createdWorkOrder=" + createdWorkOrder +
-                ", partsOrder=" + partsOrder +
-                '}';
-    }
+
 
     public void clearCase(CaseDTO caseDTO) {
         caseDTO.setWorkOrder("");
@@ -432,14 +401,15 @@ public class CaseDTO implements Serializable {
         caseDTO.setUnderWarranty(false);
         caseDTO.setActiveServiceContract("");
         caseDTO.setServiceLevel("");
+        caseDTO.setSchedulingTerms("");
         caseDTO.setUpsStatus("");
         caseDTO.setLoadSupported(false);
         caseDTO.setIssue("");
         caseDTO.setContactName("");
         caseDTO.setContactPhoneNumber("");
         caseDTO.setContactEmail("");
-        caseDTO.setAddressLine1("");
-        caseDTO.setAddressLine2("");
+        caseDTO.setStreet("");
+        caseDTO.setInstalledAt("");
         caseDTO.setCity("");
         caseDTO.setState("");
         caseDTO.setZip("");
