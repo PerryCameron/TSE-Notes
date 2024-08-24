@@ -1,4 +1,4 @@
-package com.L2.controls;
+package com.L2.mvci_note.components;
 
 import com.L2.mvci_note.NoteView;
 import javafx.beans.property.ObjectProperty;

@@ -1,6 +1,6 @@
 package com.L2.mvci_main;
 
-import com.L2.controls.TitleBar;
+import com.L2.mvci_main.components.TitleBar;
 import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -13,8 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 
 import java.util.function.Consumer;
-
-import static com.L2.BaseApplication.primaryStage;
 
 public class MainView implements Builder<Region> {
     private final MainModel mainModel;
