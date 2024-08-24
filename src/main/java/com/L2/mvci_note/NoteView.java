@@ -19,6 +19,7 @@ import javafx.util.Builder;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
+import java.sql.SQLOutput;
 import java.util.function.Consumer;
 
 public class NoteView implements Builder<Region> {
@@ -70,27 +71,6 @@ public class NoteView implements Builder<Region> {
         return vBox;
     }
 
-    private void updateDetails() {
-        VBox vBox = noteModel.getPlanDetailsBox();
-        vBox.getChildren().clear();
-        Label label = new Label(noteModel.getCurrentEntitlement().getName());
-        label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ff0000;");
-        Label label1 = new Label("Includes");
-        label1.getStyleClass().add(Styles.TEXT_BOLD);
-        String[] includes = noteModel.getCurrentEntitlement().getIncludes().split("\\R");
-        String[] notIncludes = noteModel.getCurrentEntitlement().getNotIncludes().split("\\R");
-        vBox.getChildren().addAll(label, label1);
-        for (String include : includes) {
-            vBox.getChildren().add(new Label(include));
-        }
-        Label label2 = new Label("Does not include:");
-        label2.getStyleClass().add(Styles.TEXT_BOLD);
-        vBox.getChildren().addAll(RegionFx.regionHeightOf(15), label2);
-        for (String notInclude : notIncludes) {
-            vBox.getChildren().add(new Label(notInclude));
-        }
-    }
-
     private Node setBox1Info() {
         VBox vBox = VBoxFx.of(5.0, new Insets(15, 40, 0, 20));
 
@@ -135,7 +115,11 @@ public class NoteView implements Builder<Region> {
         Label label = new Label("Load Supported:");
         HBox hBox = new HBox(10);
         ToggleSwitch toggleSwitch = new ToggleSwitch();
-        toggleSwitch.selectedProperty().bindBidirectional(noteModel.getCurrentNote().loadSupportedProperty());
+        toggleSwitch.selectedProperty().set(noteModel.getCurrentNote().isLoadSupported());
+        toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            noteModel.getCurrentNote().setLoadSupported(newValue);
+            System.out.println("Load Supported: " + noteModel.getCurrentNote().isLoadSupported());
+        });
         hBox.getChildren().addAll(label, toggleSwitch);
         return hBox;
     }
@@ -146,10 +130,13 @@ public class NoteView implements Builder<Region> {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setPrefWidth(200);
         comboBox.getItems().addAll("Online", "Bypass", "Offline");
-        comboBox.setValue("Online"); // Default to "Online"
-        comboBox.valueProperty().bindBidirectional(noteModel.getCurrentNote().upsStatusProperty());
+        // sets initial value
+        comboBox.valueProperty().set(noteModel.getCurrentNote().getUpsStatus());
         vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> System.out.println("UPS Status: " + noteModel.getCurrentNote().getUpsStatus()));
+        comboBox.setOnAction(e -> {
+            noteModel.getCurrentNote().setUpsStatus(comboBox.getValue());
+            System.out.println("UPS Status: " + noteModel.getCurrentNote().getUpsStatus());
+        });
         return vBox;
     }
 
@@ -159,9 +146,12 @@ public class NoteView implements Builder<Region> {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setPrefWidth(200);
         comboBox.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
-        comboBox.valueProperty().bindBidirectional(noteModel.getCurrentNote().serviceLevelProperty());
+        comboBox.valueProperty().set(noteModel.getCurrentNote().getServiceLevel());
         vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> System.out.println("Service level: " + noteModel.getCurrentNote().getServiceLevel()));
+        comboBox.setOnAction(e -> {
+            noteModel.getCurrentNote().setServiceLevel(comboBox.getValue());
+            System.out.println("Service level: " + noteModel.getCurrentNote().getServiceLevel());
+        });
         return vBox;
     }
 
@@ -177,8 +167,7 @@ public class NoteView implements Builder<Region> {
         if (!comboBox.getItems().isEmpty()) {
             comboBox.setValue(comboBox.getItems().get(0));  // Set the first item as selected by default
         }
-        // Bind the valueProperty of the ComboBox to the activeEntitlementProperty of the CaseDTO
-        comboBox.valueProperty().bindBidirectional(noteModel.currentEntitlementProperty());
+        comboBox.valueProperty().set(noteModel.getCurrentEntitlement());
         // Listener to update activeServiceContract when currentEntitlement changes
         noteModel.currentEntitlementProperty().addListener((obs, oldEntitlement, newEntitlement) -> {
             if (newEntitlement != null) {
@@ -187,11 +176,35 @@ public class NoteView implements Builder<Region> {
                 noteModel.getCurrentNote().setActiveServiceContract("");  // Or handle null appropriately
             }
         });
-        comboBox.setOnAction(e -> updateDetails());
+        comboBox.setOnAction(e -> {
+            noteModel.setCurrentEntitlement(comboBox.getValue());
+            System.out.println("Current entitlement set to: " + noteModel.getCurrentEntitlement());
+            updateDetails();
+        });
         vBox.getChildren().addAll(label, comboBox);
         return vBox;
     }
 
+    private void updateDetails() {
+        VBox vBox = noteModel.getPlanDetailsBox();
+        vBox.getChildren().clear();
+        Label label = new Label(noteModel.getCurrentEntitlement().getName());
+        label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ff0000;");
+        Label label1 = new Label("Includes");
+        label1.getStyleClass().add(Styles.TEXT_BOLD);
+        String[] includes = noteModel.getCurrentEntitlement().getIncludes().split("\\R");
+        String[] notIncludes = noteModel.getCurrentEntitlement().getNotIncludes().split("\\R");
+        vBox.getChildren().addAll(label, label1);
+        for (String include : includes) {
+            vBox.getChildren().add(new Label(include));
+        }
+        Label label2 = new Label("Does not include:");
+        label2.getStyleClass().add(Styles.TEXT_BOLD);
+        vBox.getChildren().addAll(RegionFx.regionHeightOf(15), label2);
+        for (String notInclude : notIncludes) {
+            vBox.getChildren().add(new Label(notInclude));
+        }
+    }
 
     private Node setIssueBox() {
         GridPane gridPane = new GridPane();

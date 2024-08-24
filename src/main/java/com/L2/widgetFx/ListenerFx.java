@@ -3,9 +3,9 @@ package com.L2.widgetFx;
 import com.L2.static_tools.StringChecker;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-
 
 public class ListenerFx {
 
