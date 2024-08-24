@@ -3,8 +3,8 @@ package com.L2.mvci_settings;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_main.MainController;
-import com.L2.mvci_settings.menus.EntitlementsMenu;
-import com.L2.mvci_settings.menus.UserMenu;
+import com.L2.mvci_settings.components.EntitlementsMenu;
+import com.L2.mvci_settings.components.UserMenu;
 import javafx.scene.layout.Region;
 
 public class SettingsController extends Controller<SettingsMessage> {

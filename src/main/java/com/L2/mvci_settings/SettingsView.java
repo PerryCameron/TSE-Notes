@@ -1,6 +1,6 @@
 package com.L2.mvci_settings;
 
-import com.L2.mvci_settings.menus.EntitlementsMenu;
+import com.L2.mvci_settings.components.EntitlementsMenu;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Insets;

@@ -1,4 +1,4 @@
-package com.L2.mvci_settings.menus;
+package com.L2.mvci_settings.components;
 
 import com.L2.dto.EntitlementDTO;
 import com.L2.mvci_settings.SettingsMessage;

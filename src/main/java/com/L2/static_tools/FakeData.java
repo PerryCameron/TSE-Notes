@@ -58,4 +58,13 @@ public class FakeData {
         partDTO.setPartEditable(Boolean.TRUE);
         return partDTO;
     }
+
+    public static PartDTO createFakePart3() {
+        PartDTO partDTO = new PartDTO();
+        partDTO.setPartNumber("LIBSMG95MODA");
+        partDTO.setPartDescription("Battery Module Type A");
+        partDTO.setPartQuantity(8);
+        partDTO.setPartEditable(Boolean.TRUE);
+        return partDTO;
+    }
 }
