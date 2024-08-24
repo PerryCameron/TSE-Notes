@@ -35,11 +35,12 @@ public class NoteView implements Builder<Region> {
     @Override
     public Region build() {
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(setCenter());
+        scrollPane.setContent(setMainVBox());
         setUpStatusBarCommunication();
         return scrollPane;
     }
 
+    // writing to this StringProperty will automatically update the status bar
     private void setUpStatusBarCommunication() {
         noteModel.statusLabelProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -48,18 +49,12 @@ public class NoteView implements Builder<Region> {
         });
     }
 
-    private Node setCenter() {
+    private Node setMainVBox() {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 0, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), servicePlan.build(), setBox3Info());
         vBox.getChildren().addAll(hBox, setIssueBox(), rowThreeBox());
         return vBox;
-    }
-
-    private Node rowThreeBox() {
-        HBox hBox = new HBox();
-        hBox.getChildren().addAll(siteInformation.build(), partTableView.build());
-        return hBox;
     }
 
     private Node setBox3Info() {
@@ -79,6 +74,14 @@ public class NoteView implements Builder<Region> {
         vBox.getChildren().addAll(lblIssue, textAreaIssue);
         return vBox;
     }
+
+    private Node rowThreeBox() {
+        HBox hBox = new HBox(10);
+        hBox.getChildren().addAll(siteInformation.build(), partTableView.build());
+        return hBox;
+    }
+
+    // CLASS GETTERS
 
     public NoteModel getNoteModel() {
         return noteModel;

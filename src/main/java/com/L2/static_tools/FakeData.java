@@ -2,6 +2,7 @@ package com.L2.static_tools;
 
 import com.L2.dto.CaseDTO;
 import com.L2.dto.PartDTO;
+import com.L2.dto.PartOrderDTO;
 
 import java.time.LocalDateTime;
 
@@ -36,8 +37,16 @@ public class FakeData {
         c.setSchedulingTerms("7x24");
         // entitlements need filled
         c.setEntitlement("Advantage Ultra");
-        c.getParts().add(createFakePart1());
-        c.getParts().add(createFakePart2());
+        // create a part order
+        PartOrderDTO partOrderDTO = new PartOrderDTO(12345678);
+        // add it to the list
+        c.getPartOrders().add(partOrderDTO);
+        // make it the selected one
+        c.setSelectedPartOrder(partOrderDTO);
+        // add some parts to it
+        c.getSelectedPartOrder().getParts().add(createFakePart1());
+        c.getSelectedPartOrder().getParts().add(createFakePart2());
+        c.getSelectedPartOrder().getParts().add(createFakePart3());
         c.setLoadSupported(true);
         return c;
     }

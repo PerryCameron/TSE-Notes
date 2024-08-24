@@ -4,11 +4,16 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CaseDTO implements Serializable {
+    private static final long serialVersionUID = 13897650298347L;
+
     private IntegerProperty id = new SimpleIntegerProperty();
     private ObjectProperty<LocalDateTime> timestamp = new SimpleObjectProperty<>();
     private StringProperty workOrder = new SimpleStringProperty();
@@ -34,8 +39,8 @@ public class CaseDTO implements Serializable {
     private StringProperty state = new SimpleStringProperty();
     private StringProperty zip = new SimpleStringProperty();
     private StringProperty country = new SimpleStringProperty();
-    private ListProperty<PartDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
+    private ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
     private IntegerProperty createdWorkOrder = new SimpleIntegerProperty();
     private IntegerProperty partsOrder = new SimpleIntegerProperty();
     private StringProperty entitlement = new SimpleStringProperty();
@@ -353,18 +358,6 @@ public class CaseDTO implements Serializable {
         this.country.set(country);
     }
 
-    public ObservableList<PartDTO> getParts() {
-        return parts.get();
-    }
-
-    public ListProperty<PartDTO> partsProperty() {
-        return parts;
-    }
-
-    public void setParts(ObservableList<PartDTO> parts) {
-        this.parts.set(parts);
-    }
-
     public int getCreatedWorkOrder() {
         return createdWorkOrder.get();
     }
@@ -389,46 +382,53 @@ public class CaseDTO implements Serializable {
         this.partsOrder.set(partsOrder);
     }
 
-    public PartDTO getSelectedPart() {
-        return selectedPart.get();
+    public ObservableList<PartOrderDTO> getPartOrders() {
+        return partOrders.get();
     }
 
-    public ObjectProperty<PartDTO> selectedPartProperty() {
-        return selectedPart;
+    public ListProperty<PartOrderDTO> partOrdersProperty() {
+        return partOrders;
     }
 
-    public void setSelectedPart(PartDTO selectedPart) {
-        this.selectedPart.set(selectedPart);
+    public void setPartOrders(ObservableList<PartOrderDTO> partOrders) {
+        this.partOrders.set(partOrders);
     }
 
-    public void clearCase(CaseDTO caseDTO) {
-        caseDTO.setWorkOrder("");
-        caseDTO.setCaseNumber("");
-        caseDTO.setSerialNumber("");
-        caseDTO.setModelNumber("");
-        caseDTO.setCallInPerson("");
-        caseDTO.setCallInPhoneNumber("");
-        caseDTO.setCallInEmail("");
-        caseDTO.setUnderWarranty(false);
-        caseDTO.setActiveServiceContract("");
-        caseDTO.setServiceLevel("");
-        caseDTO.setSchedulingTerms("");
-        caseDTO.setUpsStatus("");
-        caseDTO.setLoadSupported(false);
-        caseDTO.setIssue("");
-        caseDTO.setContactName("");
-        caseDTO.setContactPhoneNumber("");
-        caseDTO.setContactEmail("");
-        caseDTO.setStreet("");
-        caseDTO.setInstalledAt("");
-        caseDTO.setCity("");
-        caseDTO.setState("");
-        caseDTO.setZip("");
-        caseDTO.setCountry("");
-        caseDTO.getParts().clear();
-        caseDTO.setCreatedWorkOrder(0);
-        caseDTO.setPartsOrder(0);
-        caseDTO.setTimestamp(null);
+    public PartOrderDTO getSelectedPartOrder() {
+        return selectedPartOrder.get();
     }
 
+    public ObjectProperty<PartOrderDTO> selectedPartOrderProperty() {
+        return selectedPartOrder;
+    }
+
+    public void setSelectedPartOrder(PartOrderDTO selectedPartOrder) {
+        this.selectedPartOrder.set(selectedPartOrder);
+    }
+
+    private transient ListProperty<PartOrderDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+
+    public List<PartOrderDTO> getPartsList() {
+        return parts.get();
+    }
+
+
+    public void setPartsList(List<PartOrderDTO> partsList) {
+        this.parts.set(FXCollections.observableArrayList(partsList));
+    }
+
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeObject(new ArrayList<>(parts.get()));
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        List<PartOrderDTO> savedParts = (List<PartOrderDTO>) in.readObject();
+        this.parts = new SimpleListProperty<>(FXCollections.observableArrayList(savedParts));
+    }
 }

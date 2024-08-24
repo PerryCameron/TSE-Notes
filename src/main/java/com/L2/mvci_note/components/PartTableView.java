@@ -1,6 +1,5 @@
 package com.L2.mvci_note.components;
 
-import com.L2.dto.EntitlementDTO;
 import com.L2.dto.PartDTO;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
@@ -23,27 +22,35 @@ public class PartTableView implements Builder<TableView<PartDTO>> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public TableView<PartDTO> build() {
         this.tableView = TableViewFx.of(PartDTO.class);
-        tableView.setItems(noteModel.getCurrentNote().getParts()); // Set the ObservableList here
-        tableView.getColumns().add(col1());
+        tableView.setItems(noteModel.getCurrentNote().getSelectedPartOrder().getParts()); // Set the ObservableList here
+        tableView.getColumns().addAll(col1(),col2(),col3());
         tableView.setPlaceholder(new Label(""));
         // auto selector
         TableView.TableViewSelectionModel<PartDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) noteModel.getCurrentNote().setSelectedPart(newSelection);
-//            settingsModel.gettFEntitlement().setText(newSelection == null ? "" : newSelection.getName());
-//            settingsModel.gettFInclude().setText(newSelection == null ? "" : newSelection.getIncludes());
-//            settingsModel.gettFIncludeNot().setText(newSelection == null ? "" : newSelection.getNotIncludes());
+            if (newSelection != null) noteModel.getCurrentNote().getSelectedPartOrder().setSelectedPart(newSelection);
         });
-
-
         return tableView;
     }
 
     private TableColumn<PartDTO, String> col1() {
         TableColumn<PartDTO, String> col = TableColumnFx.stringTableColumn(PartDTO::partNumberProperty,"Part Number");
-        col.setStyle("-fx-alignment: center");
+        col.setStyle("-fx-alignment: center-left");
+        return col;
+    }
+
+    private TableColumn<PartDTO, String> col2() {
+        TableColumn<PartDTO, String> col = TableColumnFx.stringTableColumn(PartDTO::partDescriptionProperty,"Part Description");
+        col.setStyle("-fx-alignment: center-left");
+        return col;
+    }
+
+    private TableColumn<PartDTO, Integer> col3() {
+        TableColumn<PartDTO, Integer> col = TableColumnFx.integerTableColumn(PartDTO::partQuantityProperty,"Qty");
+        col.setStyle("-fx-alignment: center-right");
         return col;
     }
 }
