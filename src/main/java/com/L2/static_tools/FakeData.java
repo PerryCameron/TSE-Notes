@@ -33,6 +33,7 @@ public class FakeData {
         c.setActiveServiceContract("None");
         c.setUpsStatus("Online");
         c.setServiceLevel("4-Hour");
+        c.setSchedulingTerms("7x24");
         // entitlements need filled
         c.setEntitlement("Advantage Ultra");
         c.getParts().add(createFakePart1());

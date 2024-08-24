@@ -105,8 +105,24 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setBox2Info() {
-        VBox vBox = VBoxFx.of(17.0, new Insets(15, 0, 0, 20));
-        vBox.getChildren().addAll(setEntitlementBox(), setServiceLevelBox(), setStatusBox(), loadSupportedBox());
+        VBox vBox = VBoxFx.of(8.0, new Insets(15, 0, 0, 20));
+        vBox.getChildren().addAll(setEntitlementBox(), setSchedulingTermsBox(), setServiceLevelBox(), setStatusBox(), loadSupportedBox());
+        return vBox;
+    }
+
+    private Node setSchedulingTermsBox() {
+        VBox vBox = new VBox(4);
+        Label label = new Label("Scheduling terms:");
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.setPrefWidth(200);
+        comboBox.getItems().addAll("5x8", "5x24", "7x24");
+        // sets initial value
+        comboBox.valueProperty().set(noteModel.getCurrentNote().getSchedulingTerms());
+        vBox.getChildren().addAll(label, comboBox);
+        comboBox.setOnAction(e -> {
+            noteModel.getCurrentNote().setSchedulingTerms(comboBox.getValue());
+            System.out.println("Scheduling Terms: " + noteModel.getCurrentNote().getSchedulingTerms());
+        });
         return vBox;
     }
 
