@@ -1,68 +1,82 @@
 package com.L2.static_tools;
 
+import com.L2.dto.ResultDTO;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringChecker {
 
-    public static String checkString(String type, String fieldValue) {
+    public static ResultDTO checkString(String type, String fieldValue) {
         return switch (type) {
             case "Call-in Phone" -> formatPhoneNumber(fieldValue);
             case "Work Order" -> formatWorkOrder(fieldValue);
             case "Case" -> formatCaseNumber(fieldValue);
             case "Call-in Email" -> formatEmail(fieldValue);
-            default -> fieldValue;
+            default -> new ResultDTO(fieldValue, Boolean.FALSE);
         };
     }
 
-    public static String formatEmail(String email)  {
-        String EMAIL_REGEX = "^[\\w-\\.]+@[\\w-]+\\.[a-zA-Z]{2,}$";
+    public static ResultDTO formatEmail(String email) {
+        String EMAIL_REGEX = "^[\\w-.]+@[\\w-]+\\.[a-zA-Z]{2,}$";
         Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
-
-        if (email == null || email.isEmpty()) {
-            return "Invalid email address";
+        ResultDTO resultDTO = new ResultDTO();
+        if (email == null) {
+            resultDTO.setFieldName("Null email");
+            resultDTO.setSuccess(Boolean.FALSE);
+            return resultDTO;
         }
         Matcher matcher = EMAIL_PATTERN.matcher(email);
         if (!matcher.matches()) {
-            return "Invalid email address";
-        }
-        return email.toLowerCase();
+            resultDTO.setSuccess(Boolean.FALSE);
+        } else resultDTO.setSuccess(Boolean.TRUE);
+        resultDTO.setFieldName(email.toLowerCase());
+        return resultDTO;
     }
 
-public static String formatCaseNumber(String input) {
+    public static ResultDTO formatCaseNumber(String input) {
+        ResultDTO resultDTO = new ResultDTO();
         if (input == null) {
-            return "Improper case number";
+            resultDTO.setFieldName("Null Case Number");
+            resultDTO.setSuccess(Boolean.FALSE);
+            return resultDTO;
         }
         // Remove all non-digit characters
         String digits = input.replaceAll("\\D", "");
         // Check if the string has exactly 8 digits
         if (digits.length() == 9) {
-            return digits;
+            resultDTO.setSuccess(Boolean.TRUE);
         } else {
-            return "Improper case number";
+            resultDTO.setSuccess(Boolean.FALSE);
         }
+        resultDTO.setFieldName(digits);
+        return resultDTO;
     }
 
 
-    public static String formatWorkOrder(String input) {
+    public static ResultDTO formatWorkOrder(String input) {
+        ResultDTO resultDTO = new ResultDTO();
         if (input == null) {
-            return "Improper Work Order";
+            resultDTO.setFieldName("Null Work Order");
+            resultDTO.setSuccess(Boolean.FALSE);
+            return resultDTO;
         }
         // Remove all non-digit characters
         String digits = input.replaceAll("\\D", "");
         // Check if the length of the digits is exactly 8
-        if (digits.length() == 8) {
-            return "WO-" + digits;
-        } else {
-            return "Improper Work Order";
-        }
+        if (digits.length() == 8) resultDTO.setSuccess(Boolean.TRUE);
+        else resultDTO.setSuccess(Boolean.FALSE);
+        resultDTO.setFieldName("WO-" + digits);
+        return resultDTO;
     }
 
 
-    public static String formatPhoneNumber(String phoneNumber) {
-        System.out.println("formatting phone number");
+    public static ResultDTO formatPhoneNumber(String phoneNumber) {
+        ResultDTO resultDTO = new ResultDTO();
         if (phoneNumber == null) {
-            return("Phone number cannot be null");
+            resultDTO.setFieldName("Null Phone Number");
+            resultDTO.setSuccess(Boolean.FALSE);
+            return resultDTO;
         }
         // Remove all non-digit characters
         String digits = phoneNumber.replaceAll("\\D", "");
@@ -72,11 +86,12 @@ public static String formatCaseNumber(String input) {
         }
         // Ensure the phone number has exactly 10 digits
         if (digits.length() != 10) {
-            return("Invalid phone number");
-        }
+            resultDTO.setFieldName(phoneNumber);
+            resultDTO.setSuccess(Boolean.FALSE);
+            return resultDTO;
+        } else resultDTO.setSuccess(Boolean.TRUE);
         // Format the number as (123)-456-7890
-        return String.format("(%s)-%s-%s", digits.substring(0, 3), digits.substring(3, 6), digits.substring(6, 10));
+        resultDTO.setFieldName(String.format("(%s)-%s-%s", digits.substring(0, 3), digits.substring(3, 6), digits.substring(6, 10)));
+        return resultDTO;
     }
-
-
 }

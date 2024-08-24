@@ -21,6 +21,7 @@ public class CaseDTO implements Serializable {
     private BooleanProperty underWarranty = new SimpleBooleanProperty();
     private StringProperty activeServiceContract = new SimpleStringProperty();
     private StringProperty serviceLevel = new SimpleStringProperty();
+    private StringProperty schedulingTerms = new SimpleStringProperty();
     private StringProperty upsStatus = new SimpleStringProperty();
     private BooleanProperty loadSupported = new SimpleBooleanProperty();
     private StringProperty issue = new SimpleStringProperty();
@@ -39,7 +40,17 @@ public class CaseDTO implements Serializable {
     private StringProperty entitlement = new SimpleStringProperty();
 
 
+    public String getSchedulingTerms() {
+        return schedulingTerms.get();
+    }
 
+    public StringProperty schedulingTermsProperty() {
+        return schedulingTerms;
+    }
+
+    public void setSchedulingTerms(String schedulingTerms) {
+        this.schedulingTerms.set(schedulingTerms);
+    }
 
     public String getEntitlement() {
         return entitlement.get();

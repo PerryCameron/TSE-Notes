@@ -1,5 +1,6 @@
 package com.L2.widgetFx;
 
+import com.L2.dto.ResultDTO;
 import com.L2.static_tools.StringChecker;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
@@ -27,7 +28,9 @@ public class ListenerFx {
 
     public static void addFocusListener(TextField textField, String controlName, StringProperty currentObject, StringProperty statusLabel) {
         textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-            textField.setText(StringChecker.checkString(controlName, textField.getText()));
+            ResultDTO resultDTO = StringChecker.checkString(controlName, textField.getText());
+
+            textField.setText(resultDTO.getFieldName());
             Platform.runLater(() -> {
                 if (isNowFocused) {
                     textField.selectAll();
@@ -36,7 +39,8 @@ public class ListenerFx {
                 if (wasFocused) {
                     textField.deselect();
                     currentObject.set(textField.textProperty().get());
-                    statusLabel.set(controlName + " field successfully saved.");
+                    if(resultDTO.isSuccess()) statusLabel.set(controlName + " field successfully saved.");
+                    else statusLabel.set(controlName + " field has incorrect value.");
                 }
             });
         });
