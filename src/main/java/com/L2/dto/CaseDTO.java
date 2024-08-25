@@ -41,7 +41,7 @@ public class CaseDTO implements Serializable {
     private StringProperty country = new SimpleStringProperty();
     private ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
     private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
-    private IntegerProperty createdWorkOrder = new SimpleIntegerProperty();
+    private StringProperty createdWorkOrder = new SimpleStringProperty();
     private IntegerProperty partsOrder = new SimpleIntegerProperty();
     private StringProperty entitlement = new SimpleStringProperty();
 
@@ -358,15 +358,15 @@ public class CaseDTO implements Serializable {
         this.country.set(country);
     }
 
-    public int getCreatedWorkOrder() {
+    public String getCreatedWorkOrder() {
         return createdWorkOrder.get();
     }
 
-    public IntegerProperty createdWorkOrderProperty() {
+    public StringProperty createdWorkOrderProperty() {
         return createdWorkOrder;
     }
 
-    public void setCreatedWorkOrder(int createdWorkOrder) {
+    public void setCreatedWorkOrder(String createdWorkOrder) {
         this.createdWorkOrder.set(createdWorkOrder);
     }
 

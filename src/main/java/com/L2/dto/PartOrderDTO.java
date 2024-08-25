@@ -6,23 +6,23 @@ import javafx.collections.ObservableList;
 
 public class PartOrderDTO {
 
-    private IntegerProperty orderNumber = new SimpleIntegerProperty();
+    private StringProperty orderNumber = new SimpleStringProperty();
     private ListProperty<PartDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
     private ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
 
-    public PartOrderDTO(Integer orderNumber) {
-        this.orderNumber = new SimpleIntegerProperty(orderNumber);
+    public PartOrderDTO(String orderNumber) {
+        this.orderNumber = new SimpleStringProperty(orderNumber);
     }
 
-    public int getOrderNumber() {
+    public String getOrderNumber() {
         return orderNumber.get();
     }
 
-    public IntegerProperty orderNumberProperty() {
+    public StringProperty orderNumberProperty() {
         return orderNumber;
     }
 
-    public void setOrderNumber(int orderNumber) {
+    public void setOrderNumber(String orderNumber) {
         this.orderNumber.set(orderNumber);
     }
 

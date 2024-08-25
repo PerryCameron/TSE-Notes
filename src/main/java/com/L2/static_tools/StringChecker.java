@@ -64,9 +64,15 @@ public class StringChecker {
         // Remove all non-digit characters
         String digits = input.replaceAll("\\D", "");
         // Check if the length of the digits is exactly 8
-        if (digits.length() == 8) resultDTO.setSuccess(Boolean.TRUE);
-        else resultDTO.setSuccess(Boolean.FALSE);
-        resultDTO.setFieldName("WO-" + digits);
+        if (digits.length() == 8) {
+            resultDTO.setFieldName("WO-" + digits);
+            resultDTO.setSuccess(Boolean.TRUE);
+        }
+        else {
+            resultDTO.setFieldName(input);
+            resultDTO.setSuccess(Boolean.FALSE);
+        }
+
         return resultDTO;
     }
 

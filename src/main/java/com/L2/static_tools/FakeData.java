@@ -38,7 +38,7 @@ public class FakeData {
         // entitlements need filled
         c.setEntitlement("Advantage Ultra");
         // create a part order
-        PartOrderDTO partOrderDTO = new PartOrderDTO(12345678);
+        PartOrderDTO partOrderDTO = new PartOrderDTO("12345678");
         // add it to the list
         c.getPartOrders().add(partOrderDTO);
         // make it the selected one
@@ -46,6 +46,9 @@ public class FakeData {
         // add some parts to it
         c.getSelectedPartOrder().getParts().add(createFakePart1());
         c.getSelectedPartOrder().getParts().add(createFakePart2());
+        c.getSelectedPartOrder().getParts().add(createFakePart3());
+        c.getSelectedPartOrder().getParts().add(createFakePart3());
+        c.getSelectedPartOrder().getParts().add(createFakePart3());
         c.getSelectedPartOrder().getParts().add(createFakePart3());
         c.setLoadSupported(true);
         return c;

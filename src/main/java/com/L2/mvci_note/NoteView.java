@@ -1,10 +1,10 @@
 package com.L2.mvci_note;
 
+import com.L2.dto.PartOrderDTO;
 import com.L2.mvci_note.components.*;
 import com.L2.widgetFx.*;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
 import javafx.scene.control.*;
@@ -20,6 +20,8 @@ public class NoteView implements Builder<Region> {
     private final DateTimePicker dateTimePicker;
     private final PartTableView partTableView;
     private final SiteInformation siteInformation;
+    private final WorkOrderBox workOrderBox;
+
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -30,6 +32,7 @@ public class NoteView implements Builder<Region> {
         this.dateTimePicker = new DateTimePicker(this);
         this.partTableView = new PartTableView(this);
         this.siteInformation = new SiteInformation(this);
+        this.workOrderBox = new WorkOrderBox(this);
     }
 
     @Override
@@ -53,7 +56,12 @@ public class NoteView implements Builder<Region> {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 0, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), servicePlan.build(), setBox3Info());
-        vBox.getChildren().addAll(hBox, setIssueBox(), rowThreeBox());
+        vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build());
+        System.out.println(noteModel.getCurrentNote());
+        for(PartOrderDTO partOrderDTO: noteModel.getCurrentNote().getPartOrders()) {
+            vBox.getChildren().add(new PartOrderBox(this, partOrderDTO));
+        }
+        vBox.getChildren().add(rowThreeBox());
         return vBox;
     }
 
@@ -65,24 +73,25 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setIssueBox() {
-        VBox vBox = new VBox(4);
-        Label lblIssue = new Label("Issue:");
+        TitledPane titledPane = new TitledPane();
+        titledPane.setText("Issue");
+        titledPane.getStyleClass().add("titledPane");
+        titledPane.setCollapsible(false);
         TextArea textAreaIssue = TextAreaFx.of(true, 200, 16, 5);
-        textAreaIssue.setPrefWidth(980);
+        textAreaIssue.setPrefWidth(900);
         textAreaIssue.setText(noteModel.getCurrentNote().issueProperty().get());
         ListenerFx.addFocusListener(textAreaIssue, "Issue field", noteModel.getCurrentNote().issueProperty(), noteModel.statusLabelProperty());
-        vBox.getChildren().addAll(lblIssue, textAreaIssue);
-        return vBox;
+        titledPane.setContent(textAreaIssue);
+        return titledPane;
     }
 
     private Node rowThreeBox() {
         HBox hBox = new HBox(10);
-        hBox.getChildren().addAll(siteInformation.build(), partTableView.build());
+        hBox.getChildren().add(siteInformation.build());
         return hBox;
     }
 
     // CLASS GETTERS
-
     public NoteModel getNoteModel() {
         return noteModel;
     }

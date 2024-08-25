@@ -28,6 +28,7 @@ public class PartTableView implements Builder<TableView<PartDTO>> {
         tableView.setItems(noteModel.getCurrentNote().getSelectedPartOrder().getParts()); // Set the ObservableList here
         tableView.getColumns().addAll(col1(),col2(),col3());
         tableView.setPlaceholder(new Label(""));
+        tableView.setPrefHeight(160);
         // auto selector
         TableView.TableViewSelectionModel<PartDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
