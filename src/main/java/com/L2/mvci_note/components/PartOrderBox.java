@@ -8,6 +8,7 @@ import com.L2.widgetFx.TableColumnFx;
 import com.L2.widgetFx.TableViewFx;
 import com.L2.widgetFx.TextFieldFx;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,32 +18,59 @@ public class PartOrderBox extends VBox {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private final PartOrderDTO partOrderDTO;
+    private final TextField partNameTextField;
 
     public PartOrderBox(NoteView noteView, PartOrderDTO partOrderDTO) {
         this.noteView = noteView;
         this.noteModel = new NoteModel();
         this.partOrderDTO = partOrderDTO;
+        this.partNameTextField = createPartOrderText();
         this.getStyleClass().add("decorative-hbox");
         this.setPadding(new Insets(5, 5, 10, 5));
+
+        HBox hBox = new HBox(5);
+        hBox.getChildren().addAll(buildTable());
+        this.setSpacing(5);
+        this.getChildren().addAll(setLabel(), hBox);
+    }
+
+    private TextField createPartOrderText() {
+        TextField textField = TextFieldFx.of(250, "Order Number");
+        textField.textProperty().set(partOrderDTO.getOrderNumber());
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                partOrderDTO.setOrderNumber(textField.getText());
+            }
+        });
+        return textField;
+    }
+
+    private Node setLabel() {
+        HBox hBox = new HBox(5);
         Label label = new Label("Part Order");
         label.setPadding(new Insets(0, 0, 2, 5));
-        TextField tf1 = TextFieldFx.of(250, "Order Number");
-        tf1.textProperty().set(partOrderDTO.getOrderNumber());
-        tf1.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !newValue.isEmpty()) {
-                partOrderDTO.setOrderNumber(newValue);
+        if(partOrderDTO.getOrderNumber() == "" || partOrderDTO.getOrderNumber() == null) {
+            hBox.getChildren().add(partNameTextField);
+        } else {
+            label.setText("Part Order: " + partOrderDTO.getOrderNumber());
+            hBox.getChildren().add(label);
+        }
+        label.setOnMouseClicked(event -> {
+            if(event.getClickCount() == 2) {
+                hBox.getChildren().clear();
+                hBox.getChildren().add(partNameTextField);
             }
         });
         partOrderDTO.orderNumberProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
+            if (newValue != null && !newValue.equals("")) {
                 label.setText("Part Order: " + newValue);
+                hBox.getChildren().clear();
+                hBox.getChildren().add(label);
             }
         });
-        HBox hBox = new HBox(5);
-        hBox.getChildren().addAll(buildTable(), tf1);
-        this.getChildren().addAll(label, hBox);
+        return hBox;
     }
-    
+
     @SuppressWarnings("unchecked")
     public TableView<PartDTO> buildTable() {
         TableView<PartDTO> tableView = TableViewFx.of(PartDTO.class);

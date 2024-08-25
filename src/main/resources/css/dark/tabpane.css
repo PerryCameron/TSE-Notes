@@ -59,4 +59,9 @@
 
 .decorative-hbox .label {
     -fx-font-size: 12px;
+    -fx-text-fill: black;
+}
+
+.decorative-hbox .label:hover {
+    -fx-text-fill: blue;
 }

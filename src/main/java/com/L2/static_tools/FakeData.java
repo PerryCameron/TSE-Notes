@@ -39,6 +39,7 @@ public class FakeData {
         c.setEntitlement("Advantage Ultra");
         // create a part order
         PartOrderDTO partOrderDTO = new PartOrderDTO("12345678");
+        partOrderDTO.setOrderNumber("");
         // add it to the list
         c.getPartOrders().add(partOrderDTO);
         // make it the selected one

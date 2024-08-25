@@ -79,7 +79,7 @@ public class WorkOrderBox implements Builder<Region> {
         Button button = new Button("New Part Order");
         button.setOnAction(event -> {
             System.out.println("copy to clipboard");
-            TestCopy.copyHTML();
+//            TestCopy.copyHTML();
         });
         vbox.getChildren().add(button);
         return vbox;

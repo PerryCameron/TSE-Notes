@@ -84,6 +84,15 @@ public class ClipboardUtils2 {
 
     public static void main(String[] args) {
         copyHtmlToClipboard("""
+                <b>Site Information:</b><br>
+                Contact Name: David Smith<br>
+                Contact Phone: (314) 393-0042<br>
+                Contact Email: none<br>
+                Shipping Address:<br>
+                235 WEST GALENA STREET<br>
+                Milwaukee, Wisconsin 53212-3948<br>
+                USA<br>
+                <br>
                 <table border="1">
                     <tr>
                         <th>Part Number</th>
@@ -99,6 +108,16 @@ public class ClipboardUtils2 {
                         <td>PN-002</td>
                         <td>Widget B</td>
                         <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>PN-003</td>
+                        <td>Widget C</td>
+                        <td>30</td>
+                    </tr>
+                    <tr>
+                        <td>PN-004</td>
+                        <td>Widget D</td>
+                        <td>40</td>
                     </tr>
                 </table>
                 """);
