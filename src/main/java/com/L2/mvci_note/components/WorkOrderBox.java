@@ -26,15 +26,15 @@ public class WorkOrderBox implements Builder<Region> {
 
     @Override
     public Region build() {
-        HBox hbox = new HBox();
-        hbox.getStyleClass().add("decorative-hbox");
-        hbox.setAlignment(Pos.BOTTOM_CENTER);
-        hbox.setSpacing(110);
-        hbox.getChildren().add(followUpWorkOrderTextField());
-        hbox.getChildren().add(relatedCase());
-        hbox.getChildren().add(tex());
-        hbox.getChildren().add(newPartOrder());
-        return hbox;
+        HBox hBox = new HBox();
+        hBox.getStyleClass().add("decorative-hbox");
+        hBox.setAlignment(Pos.BOTTOM_CENTER);
+        hBox.setSpacing(110);
+        hBox.getChildren().add(followUpWorkOrderTextField());
+        hBox.getChildren().add(relatedCase());
+        hBox.getChildren().add(tex());
+        hBox.getChildren().add(newPartOrder());
+        return hBox;
     }
 
     private Node tex() {
@@ -77,6 +77,10 @@ public class WorkOrderBox implements Builder<Region> {
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(20, 0, 0, 60));
         Button button = new Button("New Part Order");
+        button.setOnAction(event -> {
+            System.out.println("copy to clipboard");
+            TestCopy.copyHTML();
+        });
         vbox.getChildren().add(button);
         return vbox;
     }

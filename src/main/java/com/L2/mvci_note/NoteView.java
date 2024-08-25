@@ -18,10 +18,8 @@ public class NoteView implements Builder<Region> {
     private final BasicInformation basicInformation;
     private final ServicePlanDetails servicePlanDetails;
     private final DateTimePicker dateTimePicker;
-    private final PartTableView partTableView;
     private final SiteInformation siteInformation;
     private final WorkOrderBox workOrderBox;
-
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -30,7 +28,6 @@ public class NoteView implements Builder<Region> {
         this.servicePlan = new ServicePlan(this);
         this.servicePlanDetails = new ServicePlanDetails(this);
         this.dateTimePicker = new DateTimePicker(this);
-        this.partTableView = new PartTableView(this);
         this.siteInformation = new SiteInformation(this);
         this.workOrderBox = new WorkOrderBox(this);
     }
@@ -53,11 +50,10 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setMainVBox() {
-        VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 0, 20));
+        VBox vBox = VBoxFx.of(true, 10, new Insets(10, 0, 20, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), servicePlan.build(), setBox3Info());
         vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build());
-        System.out.println(noteModel.getCurrentNote());
         for(PartOrderDTO partOrderDTO: noteModel.getCurrentNote().getPartOrders()) {
             vBox.getChildren().add(new PartOrderBox(this, partOrderDTO));
         }
@@ -73,16 +69,16 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setIssueBox() {
-        TitledPane titledPane = new TitledPane();
-        titledPane.setText("Issue");
-        titledPane.getStyleClass().add("titledPane");
-        titledPane.setCollapsible(false);
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(0, 5, 5, 5));
+        vBox.getStyleClass().add("decorative-hbox");
+        Label label = new Label("Issue");
         TextArea textAreaIssue = TextAreaFx.of(true, 200, 16, 5);
         textAreaIssue.setPrefWidth(900);
         textAreaIssue.setText(noteModel.getCurrentNote().issueProperty().get());
         ListenerFx.addFocusListener(textAreaIssue, "Issue field", noteModel.getCurrentNote().issueProperty(), noteModel.statusLabelProperty());
-        titledPane.setContent(textAreaIssue);
-        return titledPane;
+        vBox.getChildren().addAll(label, textAreaIssue);
+        return vBox;
     }
 
     private Node rowThreeBox() {

@@ -10,7 +10,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -28,13 +27,12 @@ public class SiteInformation implements Builder<Region> {
 
     @Override
     public Region build() {
-        TitledPane titledPane = new TitledPane();
-        titledPane.setCollapsible(false);
-        titledPane.setText("Site Information");
-        titledPane.getStyleClass().add("titledPane");
-        VBox vBox = VBoxFx.of(10.0, new Insets(5, 0, 20, 0));
+
+        VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
+        Label label = new Label("Site Information");
+        label.setPadding(new Insets(0, 0, 0, 5));
+        vBox.getStyleClass().add("decorative-hbox");
         HBox hBox = new HBox(5);
-//        Label label = new Label("Site Information:");
         TextField tf1 = TextFieldFx.of(200, "Related Account / Installed at");
         tf1.textProperty().set(noteModel.getCurrentNote().getInstalledAt());
         ListenerFx.addFocusListener(tf1, "Related Account", noteModel.getCurrentNote().installedAtProperty(), noteModel.statusLabelProperty());
@@ -61,9 +59,9 @@ public class SiteInformation implements Builder<Region> {
         ListenerFx.addFocusListener(tf5, "Country", noteModel.getCurrentNote().countryProperty(), noteModel.statusLabelProperty());
 
         hBox.getChildren().addAll(tf2, tf3, tf4);
-        vBox.getChildren().addAll(tf1, ta1, hBox, tf5);
-        titledPane.setContent(vBox);
-        return titledPane;
+        vBox.getChildren().addAll(label, tf1, ta1, hBox, tf5);
+
+        return vBox;
     }
 }
 

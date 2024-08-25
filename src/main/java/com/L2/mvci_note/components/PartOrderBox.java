@@ -7,23 +7,25 @@ import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.TableColumnFx;
 import com.L2.widgetFx.TableViewFx;
 import com.L2.widgetFx.TextFieldFx;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
-public class PartOrderBox extends TitledPane {
+public class PartOrderBox extends VBox {
 
     private final NoteView noteView;
     private final NoteModel noteModel;
     private final PartOrderDTO partOrderDTO;
 
-
     public PartOrderBox(NoteView noteView, PartOrderDTO partOrderDTO) {
         this.noteView = noteView;
         this.noteModel = new NoteModel();
         this.partOrderDTO = partOrderDTO;
-        this.setText("Part Order");
-        this.setCollapsible(false);
-        this.getStyleClass().add("titledPane");
+        this.getStyleClass().add("decorative-hbox");
+        this.setPadding(new Insets(5, 5, 10, 5));
+        Label label = new Label("Part Order");
+        label.setPadding(new Insets(0, 0, 2, 5));
         TextField tf1 = TextFieldFx.of(250, "Order Number");
         tf1.textProperty().set(partOrderDTO.getOrderNumber());
         tf1.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -33,12 +35,12 @@ public class PartOrderBox extends TitledPane {
         });
         partOrderDTO.orderNumberProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                this.setText("Part Order: " + newValue);
+                label.setText("Part Order: " + newValue);
             }
         });
         HBox hBox = new HBox(5);
         hBox.getChildren().addAll(buildTable(), tf1);
-        this.setContent(hBox);
+        this.getChildren().addAll(label, hBox);
     }
     
     @SuppressWarnings("unchecked")

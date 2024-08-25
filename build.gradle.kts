@@ -28,7 +28,10 @@ tasks.register<Copy>("processAppProperties") {
 }
 
 dependencies {
-
+    // Allows use of clipboard API
+    implementation("net.java.dev.jna:jna:5.14.0")
+    // https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform
+    implementation("net.java.dev.jna:jna-platform:5.14.0")
     // theme
     implementation ("io.github.mkpaz:atlantafx-base:2.0.1")
     // logging api
