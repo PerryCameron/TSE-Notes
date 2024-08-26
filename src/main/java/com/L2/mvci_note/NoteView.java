@@ -3,6 +3,7 @@ package com.L2.mvci_note;
 import com.L2.dto.PartOrderDTO;
 import com.L2.mvci_note.components.*;
 import com.L2.widgetFx.*;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
@@ -52,12 +53,31 @@ public class NoteView implements Builder<Region> {
     private Node setMainVBox() {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 0, 20, 20));
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(basicInformation.build(), servicePlan.build(), setBox3Info());
-        vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build());
+        hBox.getChildren().addAll(setBasicInformation(), setBox3Info());
+        vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build(), partOrders(), rowThreeBox());
+        return vBox;
+    }
+
+    private Node setBasicInformation() {
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(0, 5, 5, 5));
+        hBox.getStyleClass().add("decorative-hbox");
+        hBox.getChildren().addAll(basicInformation.build(), servicePlan.build());
+        return hBox;
+    }
+
+    private Node partOrders() {
+        VBox vBox = new VBox(10);
         for(PartOrderDTO partOrderDTO: noteModel.getCurrentNote().getPartOrders()) {
-            vBox.getChildren().add(new PartOrderBox(partOrderDTO));
+            vBox.getChildren().add(new PartOrderBox(partOrderDTO, this));
         }
-        vBox.getChildren().add(rowThreeBox());
+        noteModel.getCurrentNote().getPartOrders().addListener((ListChangeListener<PartOrderDTO>) change -> {
+            while (change.next()) {
+                if(change.wasAdded()) {
+                    vBox.getChildren().add(new PartOrderBox(noteModel.getCurrentNote().getPartOrders().getLast(),this));
+                }
+            }
+        });
         return vBox;
     }
 

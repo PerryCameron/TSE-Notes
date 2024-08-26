@@ -8,8 +8,11 @@ import com.L2.widgetFx.TableColumnFx;
 import com.L2.widgetFx.TableViewFx;
 import com.L2.widgetFx.TextFieldFx;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -17,13 +20,14 @@ public class PartOrderBox extends VBox {
 
     private final PartOrderDTO partOrderDTO;
     private final TextField partNameTextField;
+    private final NoteModel noteModel;
 
-    public PartOrderBox(PartOrderDTO partOrderDTO) {
+    public PartOrderBox(PartOrderDTO partOrderDTO, NoteView noteView) {
         this.partOrderDTO = partOrderDTO;
+        this.noteModel = noteView.getNoteModel();
         this.partNameTextField = createPartOrderText();
         this.getStyleClass().add("decorative-hbox");
         this.setPadding(new Insets(5, 5, 10, 5));
-
         HBox hBox = new HBox(5);
         hBox.getChildren().addAll(buildTable(), menu());
         this.setSpacing(5);
@@ -62,7 +66,11 @@ public class PartOrderBox extends VBox {
     }
 
     private Node setLabel() {
+        HBox outerBox = new HBox();
         HBox hBox = new HBox(5);
+        hBox.setPrefWidth(900);
+        outerBox.getChildren().addAll(hBox, createTrashButton());
+        outerBox.setAlignment(Pos.CENTER_LEFT);
         Label label = new Label("Part Order");
         label.setPadding(new Insets(0, 0, 2, 5));
         if(partOrderDTO.getOrderNumber().isEmpty() || partOrderDTO.getOrderNumber() == null) {
@@ -73,17 +81,36 @@ public class PartOrderBox extends VBox {
         }
         label.setOnMouseClicked(event -> {
             if(event.getClickCount() == 2) {
-                hBox.getChildren().clear();
+                hBox.getChildren().remove(label);
                 hBox.getChildren().add(partNameTextField);
             }
         });
         partOrderDTO.orderNumberProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.isEmpty()) {
                 label.setText("Part Order: " + newValue);
-                hBox.getChildren().clear();
+                hBox.getChildren().remove(partNameTextField);
                 hBox.getChildren().add(label);
             }
         });
+        return outerBox;
+    }
+
+    private Node createTrashButton() {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        Button trashButton = new Button();
+        trashButton.getStyleClass().add("invisible-button");
+        Image trashIcon = new Image(getClass().getResourceAsStream("/images/delete-16.png"));
+        ImageView imageView = new ImageView(trashIcon);
+        trashButton.setGraphic(imageView);
+        trashButton.setOnAction(e -> {
+            noteModel.getCurrentNote().getPartOrders().remove(partOrderDTO);
+            if(this.getParent() instanceof VBox) {
+                VBox parent = (VBox) this.getParent();
+                parent.getChildren().remove(this);
+            }
+        });
+        hBox.getChildren().add(trashButton);
         return hBox;
     }
 

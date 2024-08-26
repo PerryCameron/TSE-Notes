@@ -1,5 +1,6 @@
 package com.L2.mvci_note.components;
 
+import com.L2.dto.PartOrderDTO;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.ListenerFx;
@@ -78,8 +79,7 @@ public class WorkOrderBox implements Builder<Region> {
         vbox.setPadding(new Insets(20, 0, 0, 60));
         Button button = new Button("New Part Order");
         button.setOnAction(event -> {
-            System.out.println("copy to clipboard");
-//            TestCopy.copyHTML();
+            noteModel.getCurrentNote().getPartOrders().add(new PartOrderDTO(""));
         });
         vbox.getChildren().add(button);
         return vbox;
