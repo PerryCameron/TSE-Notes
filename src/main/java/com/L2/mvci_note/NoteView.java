@@ -76,6 +76,7 @@ public class NoteView implements Builder<Region> {
                 if(change.wasAdded()) {
                     vBox.getChildren().add(new PartOrderBox(noteModel.getCurrentNote().getPartOrders().getLast(),this));
                 }
+                action.accept(NoteMessage.REPORT_NUMBER_OF_PART_ORDERS);
             }
         });
         return vBox;

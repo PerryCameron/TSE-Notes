@@ -29,6 +29,7 @@ public class NoteController extends Controller<NoteMessage> {
     public void action(NoteMessage message) {
         switch (message) {
             case STATUS_BAR_CHANGE -> changeStatusBar();
+            case REPORT_NUMBER_OF_PART_ORDERS -> noteInteractor.reportNumberOfPartOrders();
         };
     }
 

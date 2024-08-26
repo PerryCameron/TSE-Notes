@@ -58,4 +58,8 @@ public class NoteInteractor {
     public String getStatus() {
         return noteModel.statusLabelProperty().get();
     }
+
+    public void reportNumberOfPartOrders() {
+        logger.info("Number of part orders changed to: " + noteModel.getCurrentNote().getPartOrders().size());
+    }
 }
