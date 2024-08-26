@@ -17,15 +17,15 @@ public class PartDTO implements Serializable {
 
     private final StringProperty partNumber;
     private final StringProperty partDescription;
-    private final IntegerProperty partQuantity;
+    private final StringProperty partQuantity;
     private final StringProperty serialReplaced;
     private final BooleanProperty partEditable;
 
 
-    public PartDTO(String partNumber, String partDescription, int partQuantity, String serialReplaced, boolean partEditable) {
+    public PartDTO(String partNumber, String partDescription, String partQuantity, String serialReplaced, boolean partEditable) {
         this.partNumber = new SimpleStringProperty(partNumber);
         this.partDescription = new SimpleStringProperty(partDescription);
-        this.partQuantity = new SimpleIntegerProperty(partQuantity);
+        this.partQuantity = new SimpleStringProperty(partQuantity);
         this.serialReplaced = new SimpleStringProperty(serialReplaced);
         this.partEditable = new SimpleBooleanProperty(partEditable);
     }
@@ -33,7 +33,7 @@ public class PartDTO implements Serializable {
     public PartDTO() {
         this.partNumber = new SimpleStringProperty("");
         this.partDescription = new SimpleStringProperty("");
-        this.partQuantity = new SimpleIntegerProperty(0);
+        this.partQuantity = new SimpleStringProperty("");
         this.serialReplaced = new SimpleStringProperty("");
         this.partEditable = new SimpleBooleanProperty(false);
     }
@@ -70,21 +70,17 @@ public class PartDTO implements Serializable {
     }
 
 
-    // Getters and setters for partQuantity
-    public IntegerProperty partQuantityProperty() {
-        return partQuantity;
-    }
-
-
-    public int getPartQuantity() {
+    public String getPartQuantity() {
         return partQuantity.get();
     }
 
-
-    public void setPartQuantity(int partQuantity) {
-        this.partQuantity.set(partQuantity);
+    public StringProperty partQuantityProperty() {
+        return partQuantity;
     }
 
+    public void setPartQuantity(String partQuantity) {
+        this.partQuantity.set(partQuantity);
+    }
 
     // Getters and setters for serialReplaced
     public StringProperty serialReplacedProperty() {

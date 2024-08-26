@@ -15,27 +15,43 @@ import javafx.scene.layout.VBox;
 
 public class PartOrderBox extends VBox {
 
-    private final NoteView noteView;
-    private final NoteModel noteModel;
     private final PartOrderDTO partOrderDTO;
     private final TextField partNameTextField;
 
-    public PartOrderBox(NoteView noteView, PartOrderDTO partOrderDTO) {
-        this.noteView = noteView;
-        this.noteModel = new NoteModel();
+    public PartOrderBox(PartOrderDTO partOrderDTO) {
         this.partOrderDTO = partOrderDTO;
         this.partNameTextField = createPartOrderText();
         this.getStyleClass().add("decorative-hbox");
         this.setPadding(new Insets(5, 5, 10, 5));
 
         HBox hBox = new HBox(5);
-        hBox.getChildren().addAll(buildTable());
+        hBox.getChildren().addAll(buildTable(), menu());
         this.setSpacing(5);
         this.getChildren().addAll(setLabel(), hBox);
     }
 
+    private Node menu() {
+        VBox vBox = new VBox(5);
+        vBox.setPadding(new Insets(5, 5, 5, 5));
+        vBox.setPrefWidth(300);
+        Button addPart = new Button("Add Part");
+        addPart.setPrefWidth(100);
+        addPart.setOnAction(e -> {
+            partOrderDTO.getParts().add(new PartDTO());
+        });
+        Button deletePart = new Button("Delete Part");
+        deletePart.setPrefWidth(100);
+        deletePart.setOnAction(e -> {
+            partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart());
+        });
+        TextField textField = TextFieldFx.of(250, "Search");
+
+        vBox.getChildren().addAll(textField, addPart, deletePart);
+        return vBox;
+    }
+
     private TextField createPartOrderText() {
-        TextField textField = TextFieldFx.of(250, "Order Number");
+        TextField textField = TextFieldFx.of(250, "Part Order Number");
         textField.textProperty().set(partOrderDTO.getOrderNumber());
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -49,7 +65,7 @@ public class PartOrderBox extends VBox {
         HBox hBox = new HBox(5);
         Label label = new Label("Part Order");
         label.setPadding(new Insets(0, 0, 2, 5));
-        if(partOrderDTO.getOrderNumber() == "" || partOrderDTO.getOrderNumber() == null) {
+        if(partOrderDTO.getOrderNumber().isEmpty() || partOrderDTO.getOrderNumber() == null) {
             hBox.getChildren().add(partNameTextField);
         } else {
             label.setText("Part Order: " + partOrderDTO.getOrderNumber());
@@ -62,7 +78,7 @@ public class PartOrderBox extends VBox {
             }
         });
         partOrderDTO.orderNumberProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !newValue.equals("")) {
+            if (newValue != null && !newValue.isEmpty()) {
                 label.setText("Part Order: " + newValue);
                 hBox.getChildren().clear();
                 hBox.getChildren().add(label);
@@ -87,20 +103,22 @@ public class PartOrderBox extends VBox {
     }
 
     private TableColumn<PartDTO, String> col1() {
-        TableColumn<PartDTO, String> col = TableColumnFx.stringTableColumn(PartDTO::partNumberProperty,"Part Number");
+        TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partNumberProperty,"Part Number");
         col.setStyle("-fx-alignment: center-left");
         return col;
     }
 
     private TableColumn<PartDTO, String> col2() {
-        TableColumn<PartDTO, String> col = TableColumnFx.stringTableColumn(PartDTO::partDescriptionProperty,"Part Description");
+        TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partDescriptionProperty,"Part Description");
         col.setStyle("-fx-alignment: center-left");
         return col;
     }
 
-    private TableColumn<PartDTO, Integer> col3() {
-        TableColumn<PartDTO, Integer> col = TableColumnFx.integerTableColumn(PartDTO::partQuantityProperty,"Qty");
-        col.setStyle("-fx-alignment: center-right");
+    private TableColumn<PartDTO, String> col3() {
+        TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partQuantityProperty,"Qty");
+        col.setStyle("-fx-alignment: center-left");
+        col.setMaxWidth(70.0);
         return col;
     }
+
 }

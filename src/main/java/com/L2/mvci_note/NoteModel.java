@@ -2,6 +2,7 @@ package com.L2.mvci_note;
 
 import com.L2.dto.CaseDTO;
 import com.L2.dto.EntitlementDTO;
+import com.L2.dto.UserDTO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,7 +17,20 @@ public class NoteModel {
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
     private ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
     private StringProperty statusLabel = new SimpleStringProperty();
+    private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
 
+
+    public UserDTO getUser() {
+        return user.get();
+    }
+
+    public ObjectProperty<UserDTO> userProperty() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user.set(user);
+    }
 
     public String getStatusLabel() {
         return statusLabel.get();

@@ -43,6 +43,7 @@ public class NoteInteractor {
 
     public void setFakeTestData() {
         CaseDTO caseDTO = FakeData.createFakeCase();
+        noteModel.setUser(FakeData.createPerson());
         noteModel.setCurrentNote(caseDTO);
     }
 

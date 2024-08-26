@@ -23,6 +23,7 @@ public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>>
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public TableView build() {
         TableView<EntitlementDTO> tableView = TableViewFx.of(EntitlementDTO.class);
         settingsModel.setEntitlementsTableView(tableView);

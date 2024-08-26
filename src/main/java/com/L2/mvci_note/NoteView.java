@@ -55,7 +55,7 @@ public class NoteView implements Builder<Region> {
         hBox.getChildren().addAll(basicInformation.build(), servicePlan.build(), setBox3Info());
         vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build());
         for(PartOrderDTO partOrderDTO: noteModel.getCurrentNote().getPartOrders()) {
-            vBox.getChildren().add(new PartOrderBox(this, partOrderDTO));
+            vBox.getChildren().add(new PartOrderBox(partOrderDTO));
         }
         vBox.getChildren().add(rowThreeBox());
         return vBox;

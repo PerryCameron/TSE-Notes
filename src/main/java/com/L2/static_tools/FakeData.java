@@ -3,10 +3,16 @@ package com.L2.static_tools;
 import com.L2.dto.CaseDTO;
 import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
+import com.L2.dto.UserDTO;
 
 import java.time.LocalDateTime;
 
 public class FakeData {
+
+    public static UserDTO createPerson() {
+        UserDTO userDTO = new UserDTO("Parrish","Cameron","parrish.cameron@se.com", "91827");
+        return userDTO;
+    }
 
     public static CaseDTO createFakeCase() {
         CaseDTO c = new CaseDTO();
@@ -48,9 +54,6 @@ public class FakeData {
         c.getSelectedPartOrder().getParts().add(createFakePart1());
         c.getSelectedPartOrder().getParts().add(createFakePart2());
         c.getSelectedPartOrder().getParts().add(createFakePart3());
-        c.getSelectedPartOrder().getParts().add(createFakePart3());
-        c.getSelectedPartOrder().getParts().add(createFakePart3());
-        c.getSelectedPartOrder().getParts().add(createFakePart3());
         c.setLoadSupported(true);
         return c;
     }
@@ -59,7 +62,7 @@ public class FakeData {
         PartDTO partDTO = new PartDTO();
         partDTO.setPartNumber("0J-0P8153");
         partDTO.setPartDescription("ASSY PCB PDU HMI-NMC INTERFACE BOARD");
-        partDTO.setPartQuantity(1);
+        partDTO.setPartQuantity("1");
         partDTO.setPartEditable(Boolean.TRUE);
         return partDTO;
     }
@@ -68,7 +71,7 @@ public class FakeData {
         PartDTO partDTO = new PartDTO();
         partDTO.setPartNumber("0G-SBS50KD");
         partDTO.setPartDescription("SBS50KW MODULE");
-        partDTO.setPartQuantity(2);
+        partDTO.setPartQuantity("2");
         partDTO.setPartEditable(Boolean.TRUE);
         return partDTO;
     }
@@ -77,7 +80,7 @@ public class FakeData {
         PartDTO partDTO = new PartDTO();
         partDTO.setPartNumber("LIBSMG95MODA");
         partDTO.setPartDescription("Battery Module Type A");
-        partDTO.setPartQuantity(8);
+        partDTO.setPartQuantity("8");
         partDTO.setPartEditable(Boolean.TRUE);
         return partDTO;
     }
