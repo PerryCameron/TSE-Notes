@@ -86,7 +86,7 @@
 /* On hover, show a selection effect */
 .invisible-button:hover {
     -fx-background-color: rgba(0, 0, 0, 0.1); /* Light transparent background on hover */
-    -fx-border-color: #aaa; /* Optional: add a border on hover */
+    -fx-border-color: #2980b9; /* Optional: add a border on hover */
     -fx-border-radius: 5; /* Optional: rounded corners on hover */
     -fx-cursor: hand; /* Change cursor to pointer */
 }

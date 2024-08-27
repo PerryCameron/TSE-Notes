@@ -3,6 +3,7 @@ package com.L2.mvci_note;
 import com.L2.dto.CaseDTO;
 import com.L2.dto.EntitlementDTO;
 import com.L2.static_tools.AppFileTools;
+import com.L2.static_tools.ClipboardUtils2;
 import com.L2.static_tools.FakeData;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
@@ -60,6 +61,35 @@ public class NoteInteractor {
     }
 
     public void reportNumberOfPartOrders() {
-        logger.info("Number of part orders changed to: " + noteModel.getCurrentNote().getPartOrders().size());
+        logger.info("Number of part orders changed to: {}", noteModel.getCurrentNote().getPartOrders().size());
     }
+
+    public void copyPartOrder() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if(!noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber().isEmpty())
+            stringBuilder.append("<b>Part Order: ").append(noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber()).append("</b>");
+        // Start the table and add headers
+        stringBuilder.append("<table border=\"1\">")
+                .append("<tr>")
+                .append("<th>Part Number</th>")
+                .append("<th>Description</th>")
+                .append("<th>Qty</th>")
+                .append("</tr>");
+        // Loop through each PartDTO to add table rows
+        noteModel.getCurrentNote().getSelectedPartOrder().getParts().forEach(partDTO -> {
+            stringBuilder.append("<tr>")
+                    .append("<td>").append(partDTO.getPartNumber()).append("</td>")
+                    .append("<td>").append(partDTO.getPartDescription()).append("</td>")
+                    .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
+                    .append("</tr>");
+        });
+        // Close the table
+        stringBuilder.append("</table>");
+        // Convert StringBuilder to String (if you need to use it as a String)
+        String htmlTable = stringBuilder.toString();
+        // Now you can use htmlTable wherever needed, such as copying it to the clipboard, displaying in UI, etc.
+        ClipboardUtils2.copyHtmlToClipboard(htmlTable);
+    }
+
 }

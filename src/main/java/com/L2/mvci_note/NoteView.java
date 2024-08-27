@@ -36,6 +36,7 @@ public class NoteView implements Builder<Region> {
     @Override
     public Region build() {
         ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
         scrollPane.setContent(setMainVBox());
         setUpStatusBarCommunication();
         return scrollPane;
@@ -51,7 +52,9 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setMainVBox() {
-        VBox vBox = VBoxFx.of(true, 10, new Insets(10, 0, 20, 20));
+        // for some reason this vBox is not filling the entire scrollPane that it is set in
+        VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
+//        vBox.setStyle("-fx-background-color: #feffab;");
         HBox hBox = new HBox();
         hBox.getChildren().addAll(setBasicInformation(), setBox3Info());
         vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build(), partOrders(), rowThreeBox());
@@ -115,5 +118,9 @@ public class NoteView implements Builder<Region> {
 
     public ServicePlanDetails getServicePlanDetails() {
         return servicePlanDetails;
+    }
+
+    public Consumer<NoteMessage> getAction() {
+        return action;
     }
 }

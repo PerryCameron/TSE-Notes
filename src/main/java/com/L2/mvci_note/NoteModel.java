@@ -2,6 +2,7 @@ package com.L2.mvci_note;
 
 import com.L2.dto.CaseDTO;
 import com.L2.dto.EntitlementDTO;
+import com.L2.dto.PartOrderDTO;
 import com.L2.dto.UserDTO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,10 +16,23 @@ public class NoteModel {
     private ObjectProperty<CaseDTO> currentNote = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
+    private ObjectProperty<PartOrderDTO> currentPartOrder = new SimpleObjectProperty<>();
     private ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
     private StringProperty statusLabel = new SimpleStringProperty();
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
 
+
+    public PartOrderDTO getCurrentPartOrder() {
+        return currentPartOrder.get();
+    }
+
+    public ObjectProperty<PartOrderDTO> currentPartOrderProperty() {
+        return currentPartOrder;
+    }
+
+    public void setCurrentPartOrder(PartOrderDTO currentPartOrder) {
+        this.currentPartOrder.set(currentPartOrder);
+    }
 
     public UserDTO getUser() {
         return user.get();
