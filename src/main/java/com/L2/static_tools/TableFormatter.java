@@ -7,10 +7,19 @@ import java.util.List;
 
 public class TableFormatter {
 
-    public static String buildPartsTableString(String[] headers, List<PartDTO> rows) {
+    public static String buildPartsTableString(List<PartDTO> rows, String orderNumber) {
+        String[] headers = {"Part Number", "Description", "Qty"};
         int[] columnWidths = calculateColumnWidths(headers, rows);
         StringBuilder stringBuilder = new StringBuilder();
 
+        if(orderNumber != null && !orderNumber.isEmpty()) {
+            stringBuilder.append("Part Order: ").append(orderNumber).append("\r\n");
+            for (int i = 0; i < headers.length; i++) {
+                stringBuilder.append("-".repeat(columnWidths[i]));
+                if (i < headers.length - 1) stringBuilder.append("---");
+            }
+            stringBuilder.append("\r\n");
+        }
         // Build the headers
         for (int i = 0; i < headers.length; i++) {
             stringBuilder.append(String.format("%-" + columnWidths[i] + "s", headers[i]));
@@ -24,7 +33,6 @@ public class TableFormatter {
             if (i < headers.length - 1) stringBuilder.append("-+-");
         }
         stringBuilder.append("\r\n");
-
         // Build the rows
         for (PartDTO part : rows) {
             stringBuilder.append(String.format("%-" + columnWidths[0] + "s", part.getPartNumber()));
@@ -34,7 +42,6 @@ public class TableFormatter {
             stringBuilder.append(String.format("%-" + columnWidths[2] + "s", part.getPartQuantity()));
             stringBuilder.append("\r\n");
         }
-
         return stringBuilder.toString();
     }
 
@@ -44,7 +51,6 @@ public class TableFormatter {
         for (int i = 0; i < headers.length; i++) {
             columnWidths[i] = headers[i].length();
         }
-
         // Calculate widths for the rows
         for (PartDTO part : rows) {
             columnWidths[0] = Math.max(columnWidths[0], part.getPartNumber().length());

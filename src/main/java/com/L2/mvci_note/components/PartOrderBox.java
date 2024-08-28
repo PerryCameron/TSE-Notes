@@ -8,6 +8,7 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.widgetFx.TableColumnFx;
 import com.L2.widgetFx.TableViewFx;
 import com.L2.widgetFx.TextFieldFx;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -16,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.util.Objects;
 
@@ -110,19 +112,31 @@ public class PartOrderBox extends VBox {
         ImageView imageViewCopy = new ImageView(copyIcon);
         trashButton.setGraphic(imageView);
         copyButton.setGraphic(imageViewCopy);
+
         trashButton.setOnAction(e -> {
             noteModel.getCurrentNote().getPartOrders().remove(partOrderDTO);
-            if(this.getParent() instanceof VBox parent) {
+            if (this.getParent() instanceof VBox parent) {
                 parent.getChildren().remove(this);
             }
         });
+
         copyButton.setOnAction(e -> {
             noteModel.getCurrentNote().setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
+            // Apply a blue border to the VBox
+            this.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-radius: 5px");
+            // Use a PauseTransition to remove the border after 0.5 seconds
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+            pause.setOnFinished(event -> this.setStyle("")); // Reset the style
+            pause.play();
         });
+
         hBox.getChildren().addAll(copyButton, trashButton);
         return hBox;
     }
+
+
+
 
     @SuppressWarnings("unchecked")
     public TableView<PartDTO> buildTable() {

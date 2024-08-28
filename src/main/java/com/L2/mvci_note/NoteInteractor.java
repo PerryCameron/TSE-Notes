@@ -74,7 +74,7 @@ public class NoteInteractor {
         StringBuilder stringBuilder = new StringBuilder();
         // Start the table and add headers
         stringBuilder.append("<table border=\"1\">");
-        logger.info("Printing PO: {}", noteModel.getCurrentNote().getPartOrders().size());
+        logger.info("Copying Part Order");
         if (!noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber().isEmpty()) {
             logger.info("Adding order: {}", noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber());
             stringBuilder.append("<tr><th colspan=\"3\" style=\"background-color: lightgrey;\">")
@@ -103,8 +103,8 @@ public class NoteInteractor {
 
     private String buildPartOrderToPlainText() {
         ObservableList<PartDTO> parts = noteModel.getCurrentNote().getSelectedPartOrder().getParts();
-        String[] headers = {"Part Number", "Description", "Qty"};
-        return TableFormatter.buildPartsTableString(headers, parts);
+        String orderNumber = noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber();
+        return TableFormatter.buildPartsTableString(parts, orderNumber);
     }
 
     public void logPartOrderNumberChange() {
