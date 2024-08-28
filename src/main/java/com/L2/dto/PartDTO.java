@@ -30,6 +30,14 @@ public class PartDTO implements Serializable {
         this.partEditable = new SimpleBooleanProperty(partEditable);
     }
 
+    public PartDTO(String partNumber, String partDescription, String partQuantity) {
+        this.partNumber = new SimpleStringProperty(partNumber);
+        this.partDescription = new SimpleStringProperty(partDescription);
+        this.partQuantity = new SimpleStringProperty(partQuantity);
+        this.serialReplaced = new SimpleStringProperty("");
+        this.partEditable = new SimpleBooleanProperty(false);
+    }
+
     public PartDTO() {
         this.partNumber = new SimpleStringProperty("");
         this.partDescription = new SimpleStringProperty("");

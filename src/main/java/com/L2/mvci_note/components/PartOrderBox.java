@@ -17,6 +17,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.Objects;
+
 public class PartOrderBox extends VBox {
 
     private final PartOrderDTO partOrderDTO;
@@ -43,14 +45,10 @@ public class PartOrderBox extends VBox {
         vBox.setPrefWidth(300);
         Button addPart = new Button("Add Part");
         addPart.setPrefWidth(100);
-        addPart.setOnAction(e -> {
-            partOrderDTO.getParts().add(new PartDTO());
-        });
+        addPart.setOnAction(e -> partOrderDTO.getParts().add(new PartDTO()));
         Button deletePart = new Button("Delete Part");
         deletePart.setPrefWidth(100);
-        deletePart.setOnAction(e -> {
-            partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart());
-        });
+        deletePart.setOnAction(e -> partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart()));
         TextField textField = TextFieldFx.of(250, "Search");
 
         vBox.getChildren().addAll(textField, addPart, deletePart);
@@ -63,6 +61,7 @@ public class PartOrderBox extends VBox {
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 partOrderDTO.setOrderNumber(textField.getText());
+                noteView.getAction().accept(NoteMessage.LOG_ORDER_NUMBER_CHANGE);
             }
         });
         return textField;
@@ -105,16 +104,15 @@ public class PartOrderBox extends VBox {
         Button copyButton = new Button();
         trashButton.getStyleClass().add("invisible-button");
         copyButton.getStyleClass().add("invisible-button");
-        Image trashIcon = new Image(getClass().getResourceAsStream("/images/delete-16.png"));
-        Image copyIcon = new Image(getClass().getResourceAsStream("/images/copy-16.png"));
+        Image trashIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/delete-16.png")));
+        Image copyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/copy-16.png")));
         ImageView imageView = new ImageView(trashIcon);
         ImageView imageViewCopy = new ImageView(copyIcon);
         trashButton.setGraphic(imageView);
         copyButton.setGraphic(imageViewCopy);
         trashButton.setOnAction(e -> {
             noteModel.getCurrentNote().getPartOrders().remove(partOrderDTO);
-            if(this.getParent() instanceof VBox) {
-                VBox parent = (VBox) this.getParent();
+            if(this.getParent() instanceof VBox parent) {
                 parent.getChildren().remove(this);
             }
         });

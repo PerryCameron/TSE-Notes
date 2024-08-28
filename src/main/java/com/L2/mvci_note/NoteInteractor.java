@@ -2,9 +2,11 @@ package com.L2.mvci_note;
 
 import com.L2.dto.CaseDTO;
 import com.L2.dto.EntitlementDTO;
+import com.L2.dto.PartDTO;
 import com.L2.static_tools.AppFileTools;
-import com.L2.static_tools.ClipboardUtils2;
+import com.L2.static_tools.ClipboardUtils;
 import com.L2.static_tools.FakeData;
+import com.L2.static_tools.TableFormatter;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,13 +67,22 @@ public class NoteInteractor {
     }
 
     public void copyPartOrder() {
-        StringBuilder stringBuilder = new StringBuilder();
+        ClipboardUtils.copyHtmlToClipboard(buildPartOrderToHTML(), buildPartOrderToPlainText());
+    }
 
-        if(!noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber().isEmpty())
-            stringBuilder.append("<b>Part Order: ").append(noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber()).append("</b>");
+    private String buildPartOrderToHTML() {
+        StringBuilder stringBuilder = new StringBuilder();
         // Start the table and add headers
-        stringBuilder.append("<table border=\"1\">")
-                .append("<tr>")
+        stringBuilder.append("<table border=\"1\">");
+        logger.info("Printing PO: {}", noteModel.getCurrentNote().getPartOrders().size());
+        if (!noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber().isEmpty()) {
+            logger.info("Adding order: {}", noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber());
+            stringBuilder.append("<tr><th colspan=\"3\" style=\"background-color: lightgrey;\">")
+                    .append("Part Order: ")
+                    .append(noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber())
+                    .append("</th></tr>");
+        }
+        stringBuilder.append("<tr>")
                 .append("<th>Part Number</th>")
                 .append("<th>Description</th>")
                 .append("<th>Qty</th>")
@@ -87,9 +98,16 @@ public class NoteInteractor {
         // Close the table
         stringBuilder.append("</table>");
         // Convert StringBuilder to String (if you need to use it as a String)
-        String htmlTable = stringBuilder.toString();
-        // Now you can use htmlTable wherever needed, such as copying it to the clipboard, displaying in UI, etc.
-        ClipboardUtils2.copyHtmlToClipboard(htmlTable);
+        return stringBuilder.toString();
     }
 
+    private String buildPartOrderToPlainText() {
+        ObservableList<PartDTO> parts = noteModel.getCurrentNote().getSelectedPartOrder().getParts();
+        String[] headers = {"Part Number", "Description", "Qty"};
+        return TableFormatter.buildPartsTableString(headers, parts);
+    }
+
+    public void logPartOrderNumberChange() {
+        logger.info("Part Order Number Changed to: {}", noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber());
+    }
 }
