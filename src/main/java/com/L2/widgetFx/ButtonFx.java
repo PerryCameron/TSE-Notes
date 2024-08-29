@@ -1,8 +1,10 @@
 package com.L2.widgetFx;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 
 public class ButtonFx {
     public static Button bigButton(String text) {
@@ -30,6 +32,13 @@ public class ButtonFx {
         ToggleButton button = new ToggleButton(text);
         button.setPrefWidth(width);
         button.setToggleGroup(tg);
+        return button;
+    }
+
+    public static Button of(ImageView image, String cssClass) {
+        Button button = new Button();
+        button.setGraphic(image);
+        button.getStyleClass().add(cssClass);
         return button;
     }
 }

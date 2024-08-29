@@ -118,4 +118,9 @@ public class HBoxFx {
         hBox.setAlignment(position);
         return hBox;
     }
+
+    public static HBox iconBox() {
+        HBox hBox = new HBox(5);
+        return hBox;
+    }
 }

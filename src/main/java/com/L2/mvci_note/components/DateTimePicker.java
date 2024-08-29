@@ -2,7 +2,9 @@ package com.L2.mvci_note.components;
 
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteView;
+import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HBoxFx;
+import com.L2.widgetFx.ToolTipFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
@@ -31,6 +33,7 @@ public class DateTimePicker implements Builder<Region> {
     private final DatePicker datePicker;
     private final Spinner<Integer> hourSpinner;
     private final Spinner<Integer> minuteSpinner;
+    private VBox dateBox;
 
 
     public DateTimePicker(NoteView noteView) {
@@ -56,28 +59,48 @@ public class DateTimePicker implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
-        vBox.getStyleClass().add("decorative-hbox");
-        Button copyButton = new Button();
+        this.dateBox = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
+        dateBox.getStyleClass().add("decorative-hbox");
+        dateBox.getChildren().addAll(toolBar() ,dateTimePicker());
+        return dateBox;
+    }
+
+    private Node toolBar() {
+        HBox hBox = HBoxFx.of(Pos.CENTER_LEFT, new Insets(0, 5, 0, 0));
+        Label label = new Label("Call Date/Time");
+        label.setPadding(new Insets(0, 210, 0, 5));
+        HBox iconBox = HBoxFx.iconBox();
+        iconBox.getChildren().addAll(refreshButton(),copyButton());
+        hBox.getChildren().addAll(label,iconBox);
+        return hBox;
+    }
+
+    private Node refreshButton() {
+        Image copyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/refresh-16.png")));
+        ImageView imageViewRefresh = new ImageView(copyIcon);
+        Button refreshButton = ButtonFx.of(imageViewRefresh, "invisible-button");
+        refreshButton.setTooltip(ToolTipFx.of("Refresh time to now"));
+        refreshButton.setOnAction(event -> {
+            noteView.getNoteModel().setStatusLabel("Set Call date/time to now!");
+            setDateTime(LocalDateTime.now());
+        });
+        return refreshButton;
+    }
+
+    private Node copyButton() {
         Image copyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/copy-16.png")));
         ImageView imageViewCopy = new ImageView(copyIcon);
-        copyButton.setGraphic(imageViewCopy);
-        copyButton.getStyleClass().add("invisible-button");
+        Button copyButton = ButtonFx.of(imageViewCopy, "invisible-button");
+        copyButton.setTooltip(ToolTipFx.of("Copy User with date/time to clipboard"));
         copyButton.setOnAction(e -> {
-//            noteModel.getCurrentNote().setSelectedPartOrder(partOrderDTO);
-//            noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
-            // Apply a blue border to the VBox
-            vBox.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-radius: 5px");
-            // Use a PauseTransition to remove the border after 0.5 seconds
+            dateBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+            // Use a PauseTransition to remove the border after 0.2 seconds
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-            pause.setOnFinished(event -> vBox.setStyle("")); // Reset the style
+            pause.setOnFinished(event -> dateBox.setStyle("")); // Reset the style
             pause.play();
             noteView.getAction().accept(NoteMessage.COPY_NAME_DATE);
         });
-        HBox hBox = HBoxFx.of(Pos.CENTER_RIGHT, new Insets(0, 5, 0, 0));
-        hBox.getChildren().add(copyButton);
-        vBox.getChildren().addAll(hBox ,dateTimePicker());
-        return vBox;
+        return copyButton;
     }
 
     private Node dateTimePicker() {
@@ -92,19 +115,16 @@ public class DateTimePicker implements Builder<Region> {
 
         // Label for separating hours and minutes
         Label colonLabel = new Label(":");
+        colonLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16");
 
-        Button button = new Button("Stamp Now");
         // Add components to the HBox
-        hBox.getChildren().addAll(datePicker, hourSpinner, colonLabel, minuteSpinner, button);
+        hBox.getChildren().addAll(datePicker, hourSpinner, colonLabel, minuteSpinner);
+        hBox.setAlignment(Pos.CENTER);
 
         // Bind the dateTimeProperty to the current selection
         datePicker.setOnAction(event -> updateDateTime());
         hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
         minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
-        button.setOnAction(event -> {
-            noteView.getNoteModel().setStatusLabel("Time Stamped!");
-            setDateTime(LocalDateTime.now());
-        });
         // Initialize with the current date and time
         updateDateTime();
         return hBox;
