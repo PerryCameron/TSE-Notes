@@ -5,12 +5,25 @@ public class UserDTO {
     String lastName;
     String email;
     String sesa;
+    String profileLink;
 
     public UserDTO(String firstName, String lastName, String email, String sesa) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.sesa = sesa;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    public String getProfileLink() {
+        return profileLink;
+    }
+
+    public void setProfileLink(String profileLink) {
+        this.profileLink = profileLink;
     }
 
     public String getFirstName() {

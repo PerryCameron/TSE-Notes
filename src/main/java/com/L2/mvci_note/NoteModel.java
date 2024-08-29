@@ -12,6 +12,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.VBox;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class NoteModel {
     private ObjectProperty<CaseDTO> currentNote = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
@@ -20,7 +25,36 @@ public class NoteModel {
     private ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
     private StringProperty statusLabel = new SimpleStringProperty();
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
+    private ObjectProperty<LocalDateTime> dateTimeProperty = new SimpleObjectProperty<>();
 
+
+    public String formattedDate() {
+        LocalDateTime dateTime = dateTimeProperty.get();
+        if (dateTime == null) {
+            return "";
+        }
+        // Use a formatter that includes the short time zone name
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy h:mm a z");
+        // Assuming you want to format it with the system's default time zone
+        ZoneId zone = ZoneId.systemDefault();
+        ZonedDateTime zonedDateTime = dateTime.atZone(zone);
+        // Format the date and time with the short time zone name
+        return zonedDateTime.format(formatter);
+    }
+
+
+
+    public LocalDateTime getDateTimeProperty() {
+        return dateTimeProperty.get();
+    }
+
+    public ObjectProperty<LocalDateTime> dateTimePropertyProperty() {
+        return dateTimeProperty;
+    }
+
+    public void setDateTimeProperty(LocalDateTime dateTimeProperty) {
+        this.dateTimeProperty.set(dateTimeProperty);
+    }
 
     public PartOrderDTO getCurrentPartOrder() {
         return currentPartOrder.get();

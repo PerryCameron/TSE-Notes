@@ -19,7 +19,7 @@ public class DateTimePicker implements Builder<Region> {
     private final DatePicker datePicker;
     private final Spinner<Integer> hourSpinner;
     private final Spinner<Integer> minuteSpinner;
-    private ObjectProperty<LocalDateTime> dateTimeProperty;
+
 
     public DateTimePicker(NoteView noteView) {
         this.datePicker = new DatePicker(LocalDate.now());
@@ -31,15 +31,7 @@ public class DateTimePicker implements Builder<Region> {
     private void updateDateTime() {
         LocalDate date = datePicker.getValue();
         LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
-        dateTimeProperty.set(LocalDateTime.of(date, time));
-    }
-
-    public ObjectProperty<LocalDateTime> dateTimeProperty() {
-        return dateTimeProperty;
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTimeProperty.get();
+        noteView.getNoteModel().dateTimePropertyProperty().set(LocalDateTime.of(date, time));
     }
 
     public void setDateTime(LocalDateTime dateTime) {
@@ -50,14 +42,8 @@ public class DateTimePicker implements Builder<Region> {
         }
     }
 
-    // Example method to get the formatted DateTime as a String
-    public String getFormattedDateTime() {
-        return getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-    }
-
     @Override
     public Region build() {
-        this.dateTimeProperty = noteView.getNoteModel().getCurrentNote().timestampProperty();
         HBox hBox = new HBox();
 
         // Configure the spinners

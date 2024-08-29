@@ -11,10 +11,6 @@ import com.sun.jna.platform.win32.WinDef.HWND;
 
 public class ClipboardUtils {
 
-// For some reason when this class is called once it works fine and I can paste HTML to salesforce, Word, and Teams, and Notepad++ gets plain text
-    // however , when I hit the copy button a second time and this method is called again it crashes the application after a few seconds
-//    private static final int GMEM_MOVEABLE = 0x0002;
-
     public interface Kernel32 extends StdCallLibrary {
         Kernel32 INSTANCE = Native.load("kernel32", Kernel32.class, W32APIOptions.DEFAULT_OPTIONS);
         HANDLE GlobalAlloc(int uFlags, int dwBytes);
@@ -81,8 +77,6 @@ public class ClipboardUtils {
             } finally {
                 Kernel32.INSTANCE.GlobalUnlock(hGlobal);
             }
-
-
             HANDLE result = User32.INSTANCE.SetClipboardData(format, hGlobal);
             if (result == null) {
                 throw new RuntimeException("SetClipboardData failed");

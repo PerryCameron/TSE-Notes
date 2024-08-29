@@ -15,6 +15,7 @@ public class NoteController extends Controller<NoteMessage> {
         NoteModel noteModel = new NoteModel();
         this.noteInteractor = new NoteInteractor(noteModel);
         this.noteView = new NoteView(noteModel, this::action);
+        action(NoteMessage.LOAD_USER);
     }
 
     @Override
@@ -28,10 +29,12 @@ public class NoteController extends Controller<NoteMessage> {
     @Override
     public void action(NoteMessage message) {
         switch (message) {
+            case LOAD_USER -> noteInteractor.loadUser();
             case STATUS_BAR_CHANGE -> changeStatusBar();
             case REPORT_NUMBER_OF_PART_ORDERS -> noteInteractor.reportNumberOfPartOrders();
             case COPY_PART_ORDER -> noteInteractor.copyPartOrder();
             case LOG_ORDER_NUMBER_CHANGE -> noteInteractor.logPartOrderNumberChange();
+            case COPY_NAME_DATE -> noteInteractor.copyNameDate();
         };
     }
 

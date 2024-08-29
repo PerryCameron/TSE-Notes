@@ -46,7 +46,6 @@ public class NoteInteractor {
 
     public void setFakeTestData() {
         CaseDTO caseDTO = FakeData.createFakeCase();
-        noteModel.setUser(FakeData.createPerson());
         noteModel.setCurrentNote(caseDTO);
     }
 
@@ -54,7 +53,6 @@ public class NoteInteractor {
         EntitlementDTO entitlementDTO = noteModel.getEntitlements().stream().filter(DTO -> DTO.getName()
                 .equals(noteModel.getCurrentNote().getEntitlement())).findFirst().orElse(null);
         noteModel.setCurrentEntitlement(entitlementDTO);
-        System.out.println("Entitlement DTO: " + entitlementDTO);
         return entitlementDTO;
     }
 
@@ -109,5 +107,40 @@ public class NoteInteractor {
 
     public void logPartOrderNumberChange() {
         logger.info("Part Order Number Changed to: {}", noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber());
+    }
+
+    public void loadUser() {
+        // will eventually pull user off of hard disk
+        noteModel.setUser(FakeData.createPerson());
+        logger.info("Loading user: {}", noteModel.getUser().getSesa());
+    }
+
+    public void copyNameDate() {
+        ClipboardUtils.copyHtmlToClipboard(buildNameDateToHTML(), buildNameDateToPlainText());
+    }
+
+    private String buildNameDateToPlainText() {
+        return noteModel.getUser().getFullName() + "\t\t" + noteModel.formattedDate();
+    }
+
+    private String buildNameDateToHTML() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("<table style=\"width: 100%; font-size: 13px; background-color: #F5F5F5;\" class=\"ql-table-blob\">")
+                .append("<tbody><tr><td class=\"slds-cell-edit cellContainer\">")
+                .append("<span class=\"slds-grid slds-grid--align-spread\">")
+                .append("<a href=\"")
+                .append(noteModel.getUser().getProfileLink())
+                .append("\" target=\"_blank\" title=\"FirstName LastName\" class=\"slds-truncate outputLookupLink\">")
+                .append(noteModel.getUser().getFullName())
+                .append("</a>")
+                .append("</span></td>")
+                .append("<td class=\"slds-cell-edit cellContainer\">")
+                .append("<span class=\"slds-grid slds-grid--align-spread\">")
+                .append("<span class=\"slds-truncate uiOutputDateTime\">")
+                .append(noteModel.formattedDate())
+                .append("</span>")
+                .append("</span></td></tr></tbody></table>");
+        return stringBuilder.toString();
     }
 }
