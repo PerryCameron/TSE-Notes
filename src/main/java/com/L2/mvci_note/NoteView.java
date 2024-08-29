@@ -3,19 +3,13 @@ package com.L2.mvci_note;
 import com.L2.dto.PartOrderDTO;
 import com.L2.mvci_note.components.*;
 import com.L2.widgetFx.*;
-import javafx.animation.PauseTransition;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
 import javafx.scene.control.*;
-import javafx.util.Duration;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public class NoteView implements Builder<Region> {
@@ -94,35 +88,7 @@ public class NoteView implements Builder<Region> {
     private Node setBox3Info() {
         VBox vBox = new VBox(20);
         vBox.setPadding(new Insets(0, 0, 0, 40));
-        vBox.getChildren().addAll(clockBox(), servicePlanDetails.build());
-        return vBox;
-    }
-
-    private Node clockBox() {
-        VBox vBox = new VBox(5);
-        vBox.setPadding(new Insets(5, 5, 5, 5));
-        vBox.getStyleClass().add("decorative-hbox");
-        Button copyButton = new Button();
-        Image copyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/copy-16.png")));
-        ImageView imageViewCopy = new ImageView(copyIcon);
-        copyButton.setGraphic(imageViewCopy);
-        copyButton.getStyleClass().add("invisible-button");
-        copyButton.setOnAction(e -> {
-//            noteModel.getCurrentNote().setSelectedPartOrder(partOrderDTO);
-//            noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
-            // Apply a blue border to the VBox
-            vBox.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-radius: 5px");
-            // Use a PauseTransition to remove the border after 0.5 seconds
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-            pause.setOnFinished(event -> vBox.setStyle("")); // Reset the style
-            pause.play();
-            action.accept(NoteMessage.COPY_NAME_DATE);
-        });
-        HBox hBox = new HBox();
-        hBox.getChildren().add(copyButton);
-        hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.setPadding(new Insets(0, 5, 0, 0));
-        vBox.getChildren().addAll(hBox ,dateTimePicker.build());
+        vBox.getChildren().addAll(dateTimePicker.build(), servicePlanDetails.build());
         return vBox;
     }
 

@@ -135,9 +135,6 @@ public class PartOrderBox extends VBox {
         return hBox;
     }
 
-
-
-
     @SuppressWarnings("unchecked")
     public TableView<PartDTO> buildTable() {
         TableView<PartDTO> tableView = TableViewFx.of(PartDTO.class);
@@ -171,5 +168,4 @@ public class PartOrderBox extends VBox {
         col.setMaxWidth(70.0);
         return col;
     }
-
 }
