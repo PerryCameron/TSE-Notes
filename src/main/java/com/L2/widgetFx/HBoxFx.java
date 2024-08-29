@@ -120,7 +120,11 @@ public class HBoxFx {
     }
 
     public static HBox iconBox() {
-        HBox hBox = new HBox(5);
+        HBox hBox = new HBox(10);
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        hBox.setPadding(new Insets(0, 10, 0, 0));
+        HBox.setHgrow(hBox, Priority.ALWAYS);
+//        hBox.setStyle("-fx-background-color: #4d6955;");
         return hBox;
     }
 }

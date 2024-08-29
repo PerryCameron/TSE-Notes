@@ -68,7 +68,7 @@ public class DateTimePicker implements Builder<Region> {
     private Node toolBar() {
         HBox hBox = HBoxFx.of(Pos.CENTER_LEFT, new Insets(0, 5, 0, 0));
         Label label = new Label("Call Date/Time");
-        label.setPadding(new Insets(0, 210, 0, 5));
+        label.setPadding(new Insets(0, 0, 0, 5));
         HBox iconBox = HBoxFx.iconBox();
         iconBox.getChildren().addAll(refreshButton(),copyButton());
         hBox.getChildren().addAll(label,iconBox);

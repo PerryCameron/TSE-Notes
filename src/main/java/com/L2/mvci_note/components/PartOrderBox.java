@@ -5,9 +5,7 @@ import com.L2.dto.PartOrderDTO;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.mvci_note.NoteMessage;
-import com.L2.widgetFx.TableColumnFx;
-import com.L2.widgetFx.TableViewFx;
-import com.L2.widgetFx.TextFieldFx;
+import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -38,7 +36,7 @@ public class PartOrderBox extends VBox {
         HBox hBox = new HBox(5);
         hBox.getChildren().addAll(buildTable(), menu());
         this.setSpacing(5);
-        this.getChildren().addAll(setLabel(), hBox);
+        this.getChildren().addAll(toolbar(), hBox);
     }
 
     private Node menu() {
@@ -69,10 +67,9 @@ public class PartOrderBox extends VBox {
         return textField;
     }
 
-    private Node setLabel() {
+    private Node toolbar() {
         HBox outerBox = new HBox();
         HBox hBox = new HBox(5);
-        hBox.setPrefWidth(900);
         outerBox.getChildren().addAll(hBox, createTrashButton());
         outerBox.setAlignment(Pos.CENTER_LEFT);
         Label label = new Label("Part Order");
@@ -100,8 +97,7 @@ public class PartOrderBox extends VBox {
     }
 
     private Node createTrashButton() {
-        HBox hBox = new HBox(10);
-        hBox.setAlignment(Pos.CENTER_RIGHT);
+        HBox iconBox = HBoxFx.iconBox();
         Button trashButton = new Button();
         Button copyButton = new Button();
         trashButton.getStyleClass().add("invisible-button");
@@ -111,8 +107,9 @@ public class PartOrderBox extends VBox {
         ImageView imageView = new ImageView(trashIcon);
         ImageView imageViewCopy = new ImageView(copyIcon);
         trashButton.setGraphic(imageView);
+        trashButton.setTooltip(ToolTipFx.of("Delete part order"));
         copyButton.setGraphic(imageViewCopy);
-
+        copyButton.setTooltip(ToolTipFx.of("Copy part order to clipboard"));
         trashButton.setOnAction(e -> {
             noteModel.getCurrentNote().getPartOrders().remove(partOrderDTO);
             if (this.getParent() instanceof VBox parent) {
@@ -131,8 +128,8 @@ public class PartOrderBox extends VBox {
             pause.play();
         });
 
-        hBox.getChildren().addAll(copyButton, trashButton);
-        return hBox;
+        iconBox.getChildren().addAll(copyButton, trashButton);
+        return iconBox;
     }
 
     @SuppressWarnings("unchecked")
