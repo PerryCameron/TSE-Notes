@@ -150,9 +150,16 @@ public class NoteInteractor {
 
     private String siteInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Site Information").append("\r\n");
+        stringBuilder.append("Contact Name: ").append(noteModel.getCurrentNote().getContactName()).append("\r\n");
+        stringBuilder.append("Contact Email: ").append(noteModel.getCurrentNote().getContactEmail()).append("\r\n");
+        stringBuilder.append("Contact Phone: ").append(noteModel.getCurrentNote().getContactPhoneNumber())
+                .append("\r\n").append("\r\n");
         stringBuilder
-                .append(noteModel.getCurrentNote().getInstalledAt()).append("\r\n")
-                .append(noteModel.getCurrentNote().getStreet()).append("\r\n")
+                .append("Shipping Address:").append("\r\n");
+        if (!noteModel.getCurrentNote().getInstalledAt().isEmpty())
+            stringBuilder.append(noteModel.getCurrentNote().getInstalledAt()).append("\r\n");
+        stringBuilder.append(noteModel.getCurrentNote().getStreet()).append("\r\n")
                 .append(noteModel.getCurrentNote().getCity()).append(" ")
                 .append(noteModel.getCurrentNote().getState()).append(" ")
                 .append(noteModel.getCurrentNote().getZip()).append("\r\n")
@@ -161,6 +168,22 @@ public class NoteInteractor {
     }
 
     private String siteInformationToHTML() {
-        return "";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("<b>Site Information</b><br>")
+                .append("<b><span style=\"color: #455A64;\">Contact Name: </span></b>").append(noteModel.getCurrentNote().getContactName()).append("<br>")
+                .append("<b><span style=\"color: #455A64;\">Contact Email: </span></b>").append(noteModel.getCurrentNote().getContactEmail()).append("<br>")
+                .append("<b><span style=\"color: #455A64;\">Contact Phone: </span></b>").append(noteModel.getCurrentNote().getContactPhoneNumber()).append("<br><br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">Shipping Address: </span></b>").append("<br>");
+        if (!noteModel.getCurrentNote().getInstalledAt().isEmpty())
+            stringBuilder.append(noteModel.getCurrentNote().getInstalledAt()).append("<br>");
+        stringBuilder
+                .append(noteModel.getCurrentNote().getStreet()).append("<br>")
+                .append(noteModel.getCurrentNote().getCity()).append(" ")
+                .append(noteModel.getCurrentNote().getState()).append(" ")
+                .append(noteModel.getCurrentNote().getZip()).append("<br>")
+                .append(noteModel.getCurrentNote().getCountry());
+        System.out.println(stringBuilder.toString());
+        return stringBuilder.toString();
     }
 }
