@@ -143,4 +143,24 @@ public class NoteInteractor {
                 .append("</span></td></tr></tbody></table>");
         return stringBuilder.toString();
     }
+
+    public void copySiteInformation() {
+        ClipboardUtils.copyHtmlToClipboard(siteInformationToHTML(), siteInformationToPlainText());
+    }
+
+    private String siteInformationToPlainText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append(noteModel.getCurrentNote().getInstalledAt()).append("\r\n")
+                .append(noteModel.getCurrentNote().getStreet()).append("\r\n")
+                .append(noteModel.getCurrentNote().getCity()).append(" ")
+                .append(noteModel.getCurrentNote().getState()).append(" ")
+                .append(noteModel.getCurrentNote().getZip()).append("\r\n")
+                .append(noteModel.getCurrentNote().getCountry()).append("\r\n");
+        return stringBuilder.toString();
+    }
+
+    private String siteInformationToHTML() {
+        return "";
+    }
 }

@@ -25,6 +25,7 @@ public class SiteInformation implements Builder<Region> {
 
     private final NoteView noteView;
     private final NoteModel noteModel;
+    private VBox shippingBox;
 
     public SiteInformation(NoteView noteView) {
         this.noteView = noteView;
@@ -33,9 +34,33 @@ public class SiteInformation implements Builder<Region> {
 
     @Override
     public Region build() {
+        this.shippingBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
+        HBox hBox =  HBoxFx.of(new Insets(5, 5, 10, 5), 5.0);
+        shippingBox.getStyleClass().add("decorative-hbox");
+        hBox.getChildren().addAll(contact(), address());
+        shippingBox.getChildren().addAll(toolBox(), hBox);
+        return shippingBox;
+    }
 
+    private Node contact() {
         VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
-        vBox.getStyleClass().add("decorative-hbox");
+        TextField tf6 = TextFieldFx.of(250, "Contact Name");
+        tf6.textProperty().set(noteModel.getCurrentNote().getContactName());
+        ListenerFx.addFocusListener(tf6, "Contact Name", noteModel.getCurrentNote().contactNameProperty(), noteModel.statusLabelProperty());
+
+        TextField tf7 = TextFieldFx.of(250, "Contact Phone");
+        tf7.textProperty().set(noteModel.getCurrentNote().getContactPhoneNumber());
+        ListenerFx.addFocusListener(tf7, "Contact Phone", noteModel.getCurrentNote().contactPhoneNumberProperty(), noteModel.statusLabelProperty());
+
+        TextField tf8 = TextFieldFx.of(250, "Contact Email");
+        tf8.textProperty().set(noteModel.getCurrentNote().getContactEmail());
+        ListenerFx.addFocusListener(tf8, "Contact Email", noteModel.getCurrentNote().contactEmailProperty(), noteModel.statusLabelProperty());
+        vBox.getChildren().addAll(LabelFx.of("Contact"), tf6, tf7, tf8);
+        return vBox;
+    }
+
+    private Node address() {
+        VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         HBox hBox = new HBox(5);
         TextField tf1 = TextFieldFx.of(200, "Related Account / Installed at");
         tf1.textProperty().set(noteModel.getCurrentNote().getInstalledAt());
@@ -63,14 +88,13 @@ public class SiteInformation implements Builder<Region> {
         ListenerFx.addFocusListener(tf5, "Country", noteModel.getCurrentNote().countryProperty(), noteModel.statusLabelProperty());
 
         hBox.getChildren().addAll(tf2, tf3, tf4);
-        vBox.getChildren().addAll(toolBox() , tf1, ta1, hBox, tf5);
-
+        vBox.getChildren().addAll(LabelFx.of("Address"), tf1, ta1, hBox, tf5);
         return vBox;
     }
 
     private Node toolBox() {
         HBox hBox = new HBox(5);
-        Label label = new Label("Site Information");
+        Label label = LabelFx.of("Shipping Information");
         label.setPadding(new Insets(0, 0, 0, 5));
         HBox iconBox = HBoxFx.iconBox();
         iconBox.getChildren().add(copyButton());
@@ -82,14 +106,14 @@ public class SiteInformation implements Builder<Region> {
         Image copyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/copy-16.png")));
         ImageView imageViewCopy = new ImageView(copyIcon);
         Button copyButton = ButtonFx.of(imageViewCopy, "invisible-button");
-        copyButton.setTooltip(ToolTipFx.of("Copy User with date/time to clipboard"));
+        copyButton.setTooltip(ToolTipFx.of("Copy shipping contact / address"));
         copyButton.setOnAction(e -> {
-//            dateBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+            shippingBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
 //            // Use a PauseTransition to remove the border after 0.2 seconds
-//            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-//            pause.setOnFinished(event -> dateBox.setStyle("")); // Reset the style
-//            pause.play();
-//            noteView.getAction().accept(NoteMessage.COPY_NAME_DATE);
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+            pause.setOnFinished(event -> shippingBox.setStyle("")); // Reset the style
+            pause.play();
+            noteView.getAction().accept(NoteMessage.SITE_INFORMATION);
         });
         return copyButton;
     }
