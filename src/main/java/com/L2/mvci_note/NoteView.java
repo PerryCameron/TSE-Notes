@@ -15,7 +15,6 @@ import java.util.function.Consumer;
 public class NoteView implements Builder<Region> {
     private final NoteModel noteModel;
     private final Consumer<NoteMessage> action;
-    private final ServicePlan servicePlan;
     private final BasicInformation basicInformation;
     private final ServicePlanDetails servicePlanDetails;
     private final DateTimePicker dateTimePicker;
@@ -26,7 +25,6 @@ public class NoteView implements Builder<Region> {
         this.noteModel = noteModel;
         this.action = message;
         this.basicInformation = new BasicInformation(this);
-        this.servicePlan = new ServicePlan(this);
         this.servicePlanDetails = new ServicePlanDetails(this);
         this.dateTimePicker = new DateTimePicker(this);
         this.siteInformation = new SiteInformation(this);
@@ -56,17 +54,9 @@ public class NoteView implements Builder<Region> {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
 //        vBox.setStyle("-fx-background-color: #feffab;");
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(setBasicInformation(), setBox3Info());
+        hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
         vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build(), partOrders(), rowThreeBox());
         return vBox;
-    }
-
-    private Node setBasicInformation() {
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(0, 5, 5, 5));
-        hBox.getStyleClass().add("decorative-hbox");
-        hBox.getChildren().addAll(basicInformation.build(), servicePlan.build());
-        return hBox;
     }
 
     private Node partOrders() {
