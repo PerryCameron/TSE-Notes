@@ -186,4 +186,20 @@ public class NoteInteractor {
         System.out.println(stringBuilder.toString());
         return stringBuilder.toString();
     }
+
+    public void copyBasicInformation() {
+        ClipboardUtils.copyHtmlToClipboard(basicInformationToHTML(), basicInformationToPlainText());
+    }
+
+    private String basicInformationToPlainText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Basic Information");
+        return stringBuilder.toString();
+    }
+
+    private String basicInformationToHTML() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<b>Basic Information</b><br>");
+        return stringBuilder.toString();
+    }
 }

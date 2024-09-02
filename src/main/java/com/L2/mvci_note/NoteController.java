@@ -36,6 +36,7 @@ public class NoteController extends Controller<NoteMessage> {
             case LOG_ORDER_NUMBER_CHANGE -> noteInteractor.logPartOrderNumberChange();
             case COPY_NAME_DATE -> noteInteractor.copyNameDate();
             case SITE_INFORMATION -> noteInteractor.copySiteInformation();
+            case COPY_BASIC_INFORMATION -> noteInteractor.copyBasicInformation();
         };
     }
 
