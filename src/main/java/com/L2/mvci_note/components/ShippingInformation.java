@@ -21,13 +21,13 @@ import javafx.util.Duration;
 
 import java.util.Objects;
 
-public class SiteInformation implements Builder<Region> {
+public class ShippingInformation implements Builder<Region> {
 
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox shippingBox;
 
-    public SiteInformation(NoteView noteView) {
+    public ShippingInformation(NoteView noteView) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
     }

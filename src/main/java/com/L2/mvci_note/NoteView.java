@@ -18,7 +18,7 @@ public class NoteView implements Builder<Region> {
     private final BasicInformation basicInformation;
     private final ServicePlanDetails servicePlanDetails;
     private final DateTimePicker dateTimePicker;
-    private final SiteInformation siteInformation;
+    private final ShippingInformation shippingInformation;
     private final WorkOrderBox workOrderBox;
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
@@ -27,7 +27,7 @@ public class NoteView implements Builder<Region> {
         this.basicInformation = new BasicInformation(this);
         this.servicePlanDetails = new ServicePlanDetails(this);
         this.dateTimePicker = new DateTimePicker(this);
-        this.siteInformation = new SiteInformation(this);
+        this.shippingInformation = new ShippingInformation(this);
         this.workOrderBox = new WorkOrderBox(this);
     }
 
@@ -55,8 +55,18 @@ public class NoteView implements Builder<Region> {
 //        vBox.setStyle("-fx-background-color: #feffab;");
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
-        vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build(), partOrders(), rowThreeBox());
+        vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build(), partOrders(), rowThreeBox(), controls());
         return vBox;
+    }
+
+    private Node controls() {
+        HBox hBox = new HBox();
+        Button button = new Button("Customer Request");
+        button.setOnAction(event -> {
+            action.accept(NoteMessage.COPY_CUSTOMER_REQUEST);
+        });
+        hBox.getChildren().add(button);
+        return hBox;
     }
 
     private Node partOrders() {
@@ -97,7 +107,7 @@ public class NoteView implements Builder<Region> {
 
     private Node rowThreeBox() {
         HBox hBox = new HBox(10);
-        hBox.getChildren().add(siteInformation.build());
+        hBox.getChildren().add(shippingInformation.build());
         return hBox;
     }
 
