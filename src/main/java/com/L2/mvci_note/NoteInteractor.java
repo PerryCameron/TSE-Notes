@@ -150,13 +150,13 @@ public class NoteInteractor {
 
     private String shippingInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Site Information").append("\r\n");
-        stringBuilder.append("Contact Name: ").append(noteModel.getCurrentNote().getContactName()).append("\r\n");
-        stringBuilder.append("Contact Email: ").append(noteModel.getCurrentNote().getContactEmail()).append("\r\n");
-        stringBuilder.append("Contact Phone: ").append(noteModel.getCurrentNote().getContactPhoneNumber())
+        stringBuilder.append("--- Shipping Contact ---").append("\r\n");
+        stringBuilder.append("Name: ").append(noteModel.getCurrentNote().getContactName()).append("\r\n");
+        stringBuilder.append("Email: ").append(noteModel.getCurrentNote().getContactEmail()).append("\r\n");
+        stringBuilder.append("Phone: ").append(noteModel.getCurrentNote().getContactPhoneNumber())
                 .append("\r\n").append("\r\n");
         stringBuilder
-                .append("Shipping Address:").append("\r\n");
+                .append("--- Shipping Address ---").append("\r\n");
         if (!noteModel.getCurrentNote().getInstalledAt().isEmpty())
             stringBuilder.append(noteModel.getCurrentNote().getInstalledAt()).append("\r\n");
         stringBuilder.append(noteModel.getCurrentNote().getStreet()).append("\r\n")
@@ -170,11 +170,11 @@ public class NoteInteractor {
     private String shippingInformationToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
-                .append("<b>Site Information</b><br>")
-                .append("<b><span style=\"color: #455A64;\">Contact Name: </span></b>").append(noteModel.getCurrentNote().getContactName()).append("<br>")
-                .append("<b><span style=\"color: #455A64;\">Contact Email: </span></b>").append(noteModel.getCurrentNote().getContactEmail()).append("<br>")
-                .append("<b><span style=\"color: #455A64;\">Contact Phone: </span></b>").append(noteModel.getCurrentNote().getContactPhoneNumber()).append("<br><br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">Shipping Address: </span></b>").append("<br>");
+                .append("<b>Shipping Contact</b><br>")
+                .append("<b><span style=\"color: #455A64;\">Name: </span></b>").append(noteModel.getCurrentNote().getContactName()).append("<br>")
+                .append("<b><span style=\"color: #455A64;\">Email: </span></b>").append(noteModel.getCurrentNote().getContactEmail()).append("<br>")
+                .append("<b><span style=\"color: #455A64;\">Phone: </span></b>").append(noteModel.getCurrentNote().getContactPhoneNumber()).append("<br><br>");
+        stringBuilder.append("<b>Shipping Address</b>").append("<br>");
         if (!noteModel.getCurrentNote().getInstalledAt().isEmpty())
             stringBuilder.append(noteModel.getCurrentNote().getInstalledAt()).append("<br>");
         stringBuilder
@@ -183,7 +183,6 @@ public class NoteInteractor {
                 .append(noteModel.getCurrentNote().getState()).append(" ")
                 .append(noteModel.getCurrentNote().getZip()).append("<br>")
                 .append(noteModel.getCurrentNote().getCountry());
-        System.out.println(stringBuilder.toString());
         return stringBuilder.toString();
     }
 
@@ -203,7 +202,7 @@ public class NoteInteractor {
         stringBuilder.append(noteModel.getCurrentNote().getWorkOrder()).append("\r\n");
         stringBuilder.append("Model: ").append(noteModel.getCurrentNote().getModelNumber()).append("\r\n");
         stringBuilder.append("S/N: ").append(noteModel.getCurrentNote().getSerialNumber()).append("\r\n").append("\r\n");
-        stringBuilder.append("Call-in person: ").append("\r\n");
+        stringBuilder.append("--- Call-in person ---").append("\r\n");
         stringBuilder.append("Name: ").append(noteModel.getCurrentNote().getCallInPerson()).append("\r\n");
         stringBuilder.append("Phone: ").append(noteModel.getCurrentNote().getCallInPhoneNumber()).append("\r\n");
         stringBuilder.append("Email: ").append(noteModel.getCurrentNote().getCallInEmail()).append("\r\n");
@@ -222,7 +221,7 @@ public class NoteInteractor {
 
     private String basicInformationToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Case/WO # ");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">Case/WO # </span></b>");
         if(!noteModel.getCurrentNote().getCaseNumber().isEmpty()) {
             stringBuilder.append(noteModel.getCurrentNote().getCaseNumber());
             if(!noteModel.getCurrentNote().getWorkOrder().isEmpty()) {
@@ -231,8 +230,8 @@ public class NoteInteractor {
         }
         stringBuilder.append(noteModel.getCurrentNote().getWorkOrder()).append("<br>");
         stringBuilder.append("<b><span style=\"color: #455A64;\">Model: </span></b>").append(noteModel.getCurrentNote().getModelNumber()).append("<br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">S/N: </span></b>").append(noteModel.getCurrentNote().getSerialNumber()).append("<br>");
-        stringBuilder.append("<br>Call-in person: </br>").append("<br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">S/N: </span></b>").append(noteModel.getCurrentNote().getSerialNumber()).append("<br><br>");
+        stringBuilder.append("<b>Call-in person</b> </br>").append("<br>");
         stringBuilder.append("<b><span style=\"color: #455A64;\">Name: </span></b>").append(noteModel.getCurrentNote().getCallInPerson()).append("<br>");
         stringBuilder.append("<b><span style=\"color: #455A64;\">Phone: </span></b>").append(noteModel.getCurrentNote().getCallInPhoneNumber()).append("<br>");
         stringBuilder.append("<b><span style=\"color: #455A64;\">Email: </span></b>").append(noteModel.getCurrentNote().getCallInEmail()).append("<br>");
@@ -250,19 +249,23 @@ public class NoteInteractor {
 
     private String customerRequestToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(buildNameDateToHTML()).append("\r\n");
-        stringBuilder.append(basicInformationToHTML()).append("\r\n");
-        stringBuilder.append(buildPartOrderToHTML()).append("\r\n");
-        stringBuilder.append(shippingInformationToHTML()).append("\r\n");
+        stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
+        stringBuilder.append(basicInformationToPlainText()).append("\r\n");
+        stringBuilder.append("--- Parts Needed ---").append("\r\n");
+        stringBuilder.append(buildPartOrderToPlainText()).append("\r\n");
+        stringBuilder.append(shippingInformationToPlainText()).append("\r\n");
         return stringBuilder.toString();
     }
 
     private String customerRequestToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(buildNameDateToHTML()).append("<br>");
-        stringBuilder.append(basicInformationToHTML()).append("<br>");
-        stringBuilder.append(buildPartOrderToHTML()).append("<br>");
-        stringBuilder.append(shippingInformationToHTML()).append("<br>");
+        stringBuilder.append(buildNameDateToHTML()).append("<br>").append("\r\n");
+        stringBuilder.append(basicInformationToHTML()).append("<br>").append("\r\n");
+        stringBuilder.append("<b>Parts Needed</b>").append("\r\n");
+        stringBuilder.append(buildPartOrderToHTML()).append("<br>").append("\r\n");
+        stringBuilder.append(shippingInformationToHTML()).append("<br>").append("\r\n");
+        System.out.println(stringBuilder.toString());
         return stringBuilder.toString();
+
     }
 }
