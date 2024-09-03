@@ -73,7 +73,7 @@ public class BasicInformation implements Builder<Region> {
     }
 
     private Node servicePlan() {
-        VBox vBox = VBoxFx.of(8.0, new Insets(15, 0, 0, 0));
+        VBox vBox = VBoxFx.of(8.0, new Insets(0, 0, 0, 0));
         vBox.getChildren().addAll(setEntitlementBox(), setSchedulingTermsBox(), setServiceLevelBox(), setStatusBox(), loadSupportedBox());
         return vBox;
     }
@@ -169,7 +169,7 @@ public class BasicInformation implements Builder<Region> {
     }
 
     private Node callInInfo() {
-        VBox vBox = VBoxFx.of(5.5, new Insets(15, 40, 0, 0));
+        VBox vBox = VBoxFx.of(5.5, new Insets(0, 40, 0, 0));
 
         TextField tf1 = TextFieldFx.of(200,  "Work Order");
         tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());

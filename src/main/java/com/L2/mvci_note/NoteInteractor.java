@@ -145,10 +145,10 @@ public class NoteInteractor {
     }
 
     public void copySiteInformation() {
-        ClipboardUtils.copyHtmlToClipboard(siteInformationToHTML(), siteInformationToPlainText());
+        ClipboardUtils.copyHtmlToClipboard(shippingInformationToHTML(), shippingInformationToPlainText());
     }
 
-    private String siteInformationToPlainText() {
+    private String shippingInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Site Information").append("\r\n");
         stringBuilder.append("Contact Name: ").append(noteModel.getCurrentNote().getContactName()).append("\r\n");
@@ -167,7 +167,7 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
-    private String siteInformationToHTML() {
+    private String shippingInformationToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append("<b>Site Information</b><br>")
@@ -193,13 +193,76 @@ public class NoteInteractor {
 
     private String basicInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Basic Information");
+        stringBuilder.append("Case/WO # ");
+        if(!noteModel.getCurrentNote().getCaseNumber().isEmpty()) {
+            stringBuilder.append(noteModel.getCurrentNote().getCaseNumber());
+            if(!noteModel.getCurrentNote().getWorkOrder().isEmpty()) {
+                stringBuilder.append(" / ");
+            }
+        }
+        stringBuilder.append(noteModel.getCurrentNote().getWorkOrder()).append("\r\n");
+        stringBuilder.append("Model: ").append(noteModel.getCurrentNote().getModelNumber()).append("\r\n");
+        stringBuilder.append("S/N: ").append(noteModel.getCurrentNote().getSerialNumber()).append("\r\n").append("\r\n");
+        stringBuilder.append("Call-in person: ").append("\r\n");
+        stringBuilder.append("Name: ").append(noteModel.getCurrentNote().getCallInPerson()).append("\r\n");
+        stringBuilder.append("Phone: ").append(noteModel.getCurrentNote().getCallInPhoneNumber()).append("\r\n");
+        stringBuilder.append("Email: ").append(noteModel.getCurrentNote().getCallInEmail()).append("\r\n");
+        stringBuilder.append("\r\n");
+        stringBuilder.append("Entitlement: ").append(noteModel.getCurrentNote().getEntitlement()).append("\r\n");
+        stringBuilder.append("Service Level: ").append(noteModel.getCurrentNote().getServiceLevel()).append("\r\n");
+        stringBuilder.append("Status of the UPS: ").append(noteModel.getCurrentNote().getUpsStatus()).append("\r\n");
+        stringBuilder.append("Load Supported: ").append(convertBool(noteModel.getCurrentNote().isLoadSupported())).append("\r\n");
         return stringBuilder.toString();
+    }
+
+    private String convertBool(boolean convert) {
+        if(convert) return "Yes";
+        else return "No";
     }
 
     private String basicInformationToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<b>Basic Information</b><br>");
+        stringBuilder.append("Case/WO # ");
+        if(!noteModel.getCurrentNote().getCaseNumber().isEmpty()) {
+            stringBuilder.append(noteModel.getCurrentNote().getCaseNumber());
+            if(!noteModel.getCurrentNote().getWorkOrder().isEmpty()) {
+                stringBuilder.append(" / ");
+            }
+        }
+        stringBuilder.append(noteModel.getCurrentNote().getWorkOrder()).append("<br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">Model: </span></b>").append(noteModel.getCurrentNote().getModelNumber()).append("<br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">S/N: </span></b>").append(noteModel.getCurrentNote().getSerialNumber()).append("<br>");
+        stringBuilder.append("<br>Call-in person: </br>").append("<br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">Name: </span></b>").append(noteModel.getCurrentNote().getCallInPerson()).append("<br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">Phone: </span></b>").append(noteModel.getCurrentNote().getCallInPhoneNumber()).append("<br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">Email: </span></b>").append(noteModel.getCurrentNote().getCallInEmail()).append("<br>");
+        stringBuilder.append("<br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">Entitlement: </span></b>").append(noteModel.getCurrentNote().getEntitlement()).append("<br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">Service Level: </span></b>").append(noteModel.getCurrentNote().getServiceLevel()).append("<br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">Status of the UPS: </span></b>").append(noteModel.getCurrentNote().getUpsStatus()).append("<br>");
+        stringBuilder.append("<b><span style=\"color: #455A64;\">Load Supported: </span></b>").append(convertBool(noteModel.getCurrentNote().isLoadSupported())).append("<br>");
+        return stringBuilder.toString();
+    }
+
+    public void copyCustomerRequest() {
+        ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), customerRequestToPlainText());
+    }
+
+    private String customerRequestToPlainText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(buildNameDateToHTML()).append("\r\n");
+        stringBuilder.append(basicInformationToHTML()).append("\r\n");
+        stringBuilder.append(buildPartOrderToHTML()).append("\r\n");
+        stringBuilder.append(shippingInformationToHTML()).append("\r\n");
+        return stringBuilder.toString();
+    }
+
+    private String customerRequestToHTML() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(buildNameDateToHTML()).append("<br>");
+        stringBuilder.append(basicInformationToHTML()).append("<br>");
+        stringBuilder.append(buildPartOrderToHTML()).append("<br>");
+        stringBuilder.append(shippingInformationToHTML()).append("<br>");
         return stringBuilder.toString();
     }
 }
