@@ -38,7 +38,13 @@ public class ShippingInformation implements Builder<Region> {
         HBox hBox =  HBoxFx.of(new Insets(5, 5, 10, 5), 5.0);
         shippingBox.getStyleClass().add("decorative-hbox");
         hBox.getChildren().addAll(contact(), address());
-        shippingBox.getChildren().addAll(toolBox(), hBox);
+        shippingBox.getChildren().addAll(TitleBarFx.of(() -> {
+            shippingBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+            pause.setOnFinished(event -> shippingBox.setStyle("")); // Reset the style
+            pause.play();
+            noteView.getAction().accept(NoteMessage.SITE_INFORMATION);
+        }), hBox);
         return shippingBox;
     }
 
@@ -93,33 +99,5 @@ public class ShippingInformation implements Builder<Region> {
         vBox.getChildren().addAll(LabelFx.of("Address"), tf1, textArea, hBox, tf5);
         return vBox;
     }
-
-    private Node toolBox() {
-        HBox hBox = new HBox(5);
-        Label label = LabelFx.of("Shipping Information");
-        label.setPadding(new Insets(0, 0, 0, 5));
-        HBox iconBox = HBoxFx.iconBox();
-        iconBox.getChildren().add(copyButton());
-        hBox.getChildren().addAll(label, iconBox);
-        return hBox;
-    }
-
-    private Node copyButton() {
-        Image copyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/copy-16.png")));
-        ImageView imageViewCopy = new ImageView(copyIcon);
-        Button copyButton = ButtonFx.of(imageViewCopy, "invisible-button");
-        copyButton.setTooltip(ToolTipFx.of("Copy shipping contact / address"));
-        copyButton.setOnAction(e -> {
-            shippingBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
-//            // Use a PauseTransition to remove the border after 0.2 seconds
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-            pause.setOnFinished(event -> shippingBox.setStyle("")); // Reset the style
-            pause.play();
-            noteView.getAction().accept(NoteMessage.SITE_INFORMATION);
-        });
-        return copyButton;
-    }
-
-
 }
 

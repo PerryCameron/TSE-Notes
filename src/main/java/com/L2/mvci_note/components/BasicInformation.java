@@ -8,21 +8,15 @@ import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import javafx.util.Duration;
-
-import java.util.Objects;
 
 public class BasicInformation implements Builder<Region> {
 
@@ -42,34 +36,14 @@ public class BasicInformation implements Builder<Region> {
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
         hBox.getChildren().addAll(callInInfo(), servicePlan());
-        root.getChildren().addAll(toolBar(), hBox);
-        return root;
-    }
-
-    private Node toolBar() {
-        HBox toolBar = HBoxFx.of(Pos.CENTER_LEFT, new Insets(0, 5, 0, 0));
-        HBox iconBox = HBoxFx.iconBox(); // to hold icons
-        iconBox.getChildren().add(copyButton());
-        Label label = new Label("Basic Information");
-        label.setPadding(new Insets(0, 0, 0, 5));
-        toolBar.getChildren().addAll(label, iconBox);
-        return toolBar;
-    }
-
-    private Node copyButton() {
-        Image copyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/copy-16.png")));
-        ImageView imageViewCopy = new ImageView(copyIcon);
-        Button copyButton = ButtonFx.of(imageViewCopy, "invisible-button");
-        copyButton.setTooltip(ToolTipFx.of("Copy part basic information to clipboard"));
-        copyButton.setOnAction(e -> {
+        root.getChildren().addAll(TitleBarFx.of(() -> {
             root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
-            // Use a PauseTransition to remove the border after 0.2 seconds
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> root.setStyle("")); // Reset the style
             pause.play();
             noteView.getAction().accept(NoteMessage.COPY_BASIC_INFORMATION);
-        });
-        return copyButton;
+        }), hBox);
+        return root;
     }
 
     private Node servicePlan() {
@@ -171,7 +145,7 @@ public class BasicInformation implements Builder<Region> {
     private Node callInInfo() {
         VBox vBox = VBoxFx.of(5.5, new Insets(0, 40, 0, 0));
 
-        TextField tf1 = TextFieldFx.of(200,  "Work Order");
+        TextField tf1 = TextFieldFx.of(200, "Work Order");
         tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
         ListenerFx.addFocusListener(tf1, "Work Order", noteModel.getCurrentNote().workOrderProperty(), noteModel.statusLabelProperty());
 
