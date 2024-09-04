@@ -2,10 +2,7 @@ package com.L2.mvci_note.components;
 
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteView;
-import com.L2.widgetFx.ButtonFx;
-import com.L2.widgetFx.HBoxFx;
-import com.L2.widgetFx.ToolTipFx;
-import com.L2.widgetFx.VBoxFx;
+import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
@@ -61,38 +58,13 @@ public class DateTimePicker implements Builder<Region> {
     public Region build() {
         this.dateBox = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
         dateBox.getStyleClass().add("decorative-hbox");
-        dateBox.getChildren().addAll(toolBar() ,dateTimePicker());
+        Button[] buttons = new Button[] { refreshButton(), copyButton() };
+        dateBox.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons) ,dateTimePicker());
         return dateBox;
     }
 
-    private Node toolBar() {
-        HBox hBox = HBoxFx.of(Pos.CENTER_LEFT, new Insets(0, 5, 0, 0));
-        Label label = new Label("Call Date/Time");
-        label.setPadding(new Insets(0, 0, 0, 5));
-        HBox iconBox = HBoxFx.iconBox();
-        iconBox.getChildren().addAll(refreshButton(),copyButton());
-        hBox.getChildren().addAll(label,iconBox);
-        return hBox;
-    }
-
-    private Node refreshButton() {
-        Image copyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/refresh-16.png")));
-        ImageView imageViewRefresh = new ImageView(copyIcon);
-        Button refreshButton = ButtonFx.of(imageViewRefresh, "invisible-button");
-        refreshButton.setTooltip(ToolTipFx.of("Refresh time to now"));
-        refreshButton.setOnAction(event -> {
-            noteView.getNoteModel().setStatusLabel("Set Call date/time to now!");
-            setDateTime(LocalDateTime.now());
-        });
-        return refreshButton;
-    }
-
-    private Node copyButton() {
-        Image copyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/copy-16.png")));
-        ImageView imageViewCopy = new ImageView(copyIcon);
-        Button copyButton = ButtonFx.of(imageViewCopy, "invisible-button");
-        copyButton.setTooltip(ToolTipFx.of("Copy User with date/time to clipboard"));
-        copyButton.setOnAction(e -> {
+    private Button copyButton() {
+        Button copyButton = ButtonFx.utilityButton("/images/copy-16.png", () -> {
             dateBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
             // Use a PauseTransition to remove the border after 0.2 seconds
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
@@ -100,7 +72,17 @@ public class DateTimePicker implements Builder<Region> {
             pause.play();
             noteView.getAction().accept(NoteMessage.COPY_NAME_DATE);
         });
+        copyButton.setTooltip(ToolTipFx.of("Copy User and Date/Time"));
         return copyButton;
+    }
+
+    private Button refreshButton() {
+        Button refreshButton = ButtonFx.utilityButton("/images/refresh-16.png", () -> {
+            noteView.getNoteModel().setStatusLabel("Refreshing date and time to now.");
+            setDateTime(LocalDateTime.now());
+        });
+        refreshButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
+        return refreshButton;
     }
 
     private Node dateTimePicker() {
