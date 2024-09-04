@@ -36,7 +36,8 @@ public class BasicInformation implements Builder<Region> {
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
         hBox.getChildren().addAll(callInInfo(), servicePlan());
-        root.getChildren().addAll(TitleBarFx.of(() -> {
+        String[] boxInfo = {"Basic Information","Copy Basic Information"};
+        root.getChildren().addAll(TitleBarFx.of(boxInfo, () -> {
             root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> root.setStyle("")); // Reset the style

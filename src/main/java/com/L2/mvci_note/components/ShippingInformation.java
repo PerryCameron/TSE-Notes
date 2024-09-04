@@ -38,7 +38,8 @@ public class ShippingInformation implements Builder<Region> {
         HBox hBox =  HBoxFx.of(new Insets(5, 5, 10, 5), 5.0);
         shippingBox.getStyleClass().add("decorative-hbox");
         hBox.getChildren().addAll(contact(), address());
-        shippingBox.getChildren().addAll(TitleBarFx.of(() -> {
+        String[] boxInfo = {"Shipping Information","Copy Shipping Information"};
+        shippingBox.getChildren().addAll(TitleBarFx.of(boxInfo, () -> {
             shippingBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> shippingBox.setStyle("")); // Reset the style
