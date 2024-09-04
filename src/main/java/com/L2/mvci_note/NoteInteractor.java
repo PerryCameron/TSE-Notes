@@ -254,6 +254,7 @@ public class NoteInteractor {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
         stringBuilder.append(basicInformationToPlainText()).append("\r\n");
+        stringBuilder.append(issueToPlainText()).append("\r\n");
         stringBuilder.append("--- Parts Needed ---").append("\r\n");
         stringBuilder.append(buildPartOrderToPlainText()).append("\r\n");
         stringBuilder.append(shippingInformationToPlainText()).append("\r\n");
@@ -264,8 +265,27 @@ public class NoteInteractor {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToHTML()).append("<br>").append("\r\n");
         stringBuilder.append(basicInformationToHTML()).append("<br>").append("\r\n");
+        stringBuilder.append(issueToHTML()).append("<br>").append("\r\n");
         stringBuilder.append(buildPartOrderToHTML()).append("<br>").append("\r\n");
         stringBuilder.append(shippingInformationToHTML()).append("<br>").append("\r\n");
+        return stringBuilder.toString();
+    }
+
+    public void copyIssue() {
+        ClipboardUtils.copyHtmlToClipboard(issueToHTML(), issueToPlainText());
+    }
+
+    private String issueToPlainText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("--- Issue ---").append("\r\n");
+        stringBuilder.append(noteModel.getCurrentNote().getIssue()).append("\r\n");
+        return stringBuilder.toString();
+    }
+
+    private String issueToHTML() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<strong>Issue</strong>").append("\r\n");
+        stringBuilder.append(noteModel.getCurrentNote().getIssue());
         return stringBuilder.toString();
     }
 }

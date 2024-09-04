@@ -7,10 +7,7 @@ import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -51,6 +48,7 @@ public class ShippingInformation implements Builder<Region> {
 
     private Node contact() {
         VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
+
         TextField tf6 = TextFieldFx.of(250, "Contact Name");
         tf6.textProperty().set(noteModel.getCurrentNote().getContactName());
         ListenerFx.addFocusListener(tf6, "Contact Name", noteModel.getCurrentNote().contactNameProperty(), noteModel.statusLabelProperty());
@@ -62,7 +60,13 @@ public class ShippingInformation implements Builder<Region> {
         TextField tf8 = TextFieldFx.of(250, "Contact Email");
         tf8.textProperty().set(noteModel.getCurrentNote().getContactEmail());
         ListenerFx.addFocusListener(tf8, "Contact Email", noteModel.getCurrentNote().contactEmailProperty(), noteModel.statusLabelProperty());
-        vBox.getChildren().addAll(LabelFx.of("Contact"), tf6, tf7, tf8);
+
+        Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
+            // do something here
+        });
+
+        Button[] buttons = new Button[] { pasteButton };
+        vBox.getChildren().addAll(TitleBarFx.of("Contact", buttons), tf6, tf7, tf8);
         return vBox;
     }
 
@@ -96,8 +100,14 @@ public class ShippingInformation implements Builder<Region> {
         tf5.textProperty().set(noteModel.getCurrentNote().getCountry());
         ListenerFx.addFocusListener(tf5, "Country", noteModel.getCurrentNote().countryProperty(), noteModel.statusLabelProperty());
 
+        Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
+            // do something here
+        });
+
+        Button[] buttons = new Button[] { pasteButton };
+
         hBox.getChildren().addAll(tf2, tf3, tf4);
-        vBox.getChildren().addAll(LabelFx.of("Address"), tf1, textArea, hBox, tf5);
+        vBox.getChildren().addAll(TitleBarFx.of("Contact", buttons), tf1, textArea, hBox, tf5);
         return vBox;
     }
 }

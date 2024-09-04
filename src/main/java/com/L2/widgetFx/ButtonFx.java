@@ -4,7 +4,10 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.util.Objects;
 
 public class ButtonFx {
     public static Button bigButton(String text) {
@@ -39,6 +42,14 @@ public class ButtonFx {
         Button button = new Button();
         button.setGraphic(image);
         button.getStyleClass().add(cssClass);
+        return button;
+    }
+
+    public static Button utilityButton(String image, Runnable runnable) {
+        Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(image)));
+        ImageView imageViewCopy = new ImageView(copyIcon);
+        Button button = ButtonFx.of(imageViewCopy, "invisible-button");
+        button.setOnAction(event -> runnable.run());
         return button;
     }
 }

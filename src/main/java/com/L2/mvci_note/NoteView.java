@@ -3,12 +3,14 @@ package com.L2.mvci_note;
 import com.L2.dto.PartOrderDTO;
 import com.L2.mvci_note.components.*;
 import com.L2.widgetFx.*;
+import javafx.animation.PauseTransition;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
 import javafx.scene.control.*;
+import javafx.util.Duration;
 
 import java.util.function.Consumer;
 
@@ -94,12 +96,18 @@ public class NoteView implements Builder<Region> {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(0, 5, 5, 5));
         vBox.getStyleClass().add("decorative-hbox");
-        Label label = new Label("Issue");
         TextArea textAreaIssue = TextAreaFx.of(true, 200, 16, 5);
         textAreaIssue.setPrefWidth(900);
         textAreaIssue.setText(noteModel.getCurrentNote().issueProperty().get());
         ListenerFx.addFocusListener(textAreaIssue, "Issue field", noteModel.getCurrentNote().issueProperty(), noteModel.statusLabelProperty());
-        vBox.getChildren().addAll(label, textAreaIssue);
+        String[] boxInfo = {"Issue","Copy Issue"};
+        vBox.getChildren().addAll(TitleBarFx.of(boxInfo, () -> {
+            vBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+            pause.setOnFinished(event -> vBox.setStyle("")); // Reset the style
+            pause.play();
+            action.accept(NoteMessage.COPY_ISSUE);
+        }), textAreaIssue);
         return vBox;
     }
 

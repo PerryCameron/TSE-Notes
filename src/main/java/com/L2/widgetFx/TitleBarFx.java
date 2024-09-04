@@ -26,4 +26,16 @@ public class TitleBarFx {
         hBox.getChildren().addAll(label, iconBox);
         return hBox;
     }
+
+    public static HBox of(String boxInfo, Button[] buttons) {
+        HBox hBox = new HBox(5);
+        Label label = LabelFx.of(boxInfo);
+        label.setPadding(new Insets(0, 0, 0, 5));
+        HBox iconBox = HBoxFx.iconBox();
+        for (Button button : buttons) {
+            iconBox.getChildren().add(button);
+        }
+        hBox.getChildren().addAll(label, iconBox);
+        return hBox;
+    }
 }
