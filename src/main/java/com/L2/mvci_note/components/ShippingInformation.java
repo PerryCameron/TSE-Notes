@@ -62,14 +62,16 @@ public class ShippingInformation implements Builder<Region> {
     private Node address() {
         VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         HBox hBox = new HBox(5);
+
         TextField tf1 = TextFieldFx.of(200, "Related Account / Installed at");
         tf1.textProperty().set(noteModel.getCurrentNote().getInstalledAt());
         ListenerFx.addFocusListener(tf1, "Related Account", noteModel.getCurrentNote().installedAtProperty(), noteModel.statusLabelProperty());
 
-        TextArea ta1 = TextAreaFx.of(true, 70, 16, 2);
-        ta1.setPrefWidth(400);
-        ta1.setPromptText("Street");
-        ta1.textProperty().set(noteModel.getCurrentNote().getStreet());
+        TextArea textArea = TextAreaFx.of(true, 70, 16, 2);
+        textArea.setPrefWidth(400);
+        textArea.setPromptText("Street");
+        textArea.textProperty().set(noteModel.getCurrentNote().getStreet());
+        ListenerFx.addFocusListener(textArea, "Street", noteModel.getCurrentNote().streetProperty(), noteModel.statusLabelProperty());
 
         TextField tf2 = TextFieldFx.of(250, "City");
         tf2.textProperty().set(noteModel.getCurrentNote().getCity());
@@ -88,7 +90,7 @@ public class ShippingInformation implements Builder<Region> {
         ListenerFx.addFocusListener(tf5, "Country", noteModel.getCurrentNote().countryProperty(), noteModel.statusLabelProperty());
 
         hBox.getChildren().addAll(tf2, tf3, tf4);
-        vBox.getChildren().addAll(LabelFx.of("Address"), tf1, ta1, hBox, tf5);
+        vBox.getChildren().addAll(LabelFx.of("Address"), tf1, textArea, hBox, tf5);
         return vBox;
     }
 

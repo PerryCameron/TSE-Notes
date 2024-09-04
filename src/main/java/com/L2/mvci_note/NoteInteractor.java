@@ -71,30 +71,33 @@ public class NoteInteractor {
     private String buildPartOrderToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
         // Start the table and add headers
-        stringBuilder.append("<table border=\"1\">");
         logger.info("Copying Part Order");
-        if (!noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber().isEmpty()) {
+        if (!noteModel.getCurrentNote().getSelectedPartOrder().getParts().isEmpty()) {
+            stringBuilder.append("<b>Parts Needed</b><br>");
+            stringBuilder.append("<table border=\"1\">");
             logger.info("Adding order: {}", noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber());
+            if(!noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber().isEmpty()) {
             stringBuilder.append("<tr><th colspan=\"3\" style=\"background-color: lightgrey;\">")
                     .append("Part Order: ")
                     .append(noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber())
                     .append("</th></tr>");
-        }
-        stringBuilder.append("<tr>")
-                .append("<th>Part Number</th>")
-                .append("<th>Description</th>")
-                .append("<th>Qty</th>")
-                .append("</tr>");
-        // Loop through each PartDTO to add table rows
-        noteModel.getCurrentNote().getSelectedPartOrder().getParts().forEach(partDTO -> {
+            }
             stringBuilder.append("<tr>")
-                    .append("<td>").append(partDTO.getPartNumber()).append("</td>")
-                    .append("<td>").append(partDTO.getPartDescription()).append("</td>")
-                    .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
+                    .append("<th>Part Number</th>")
+                    .append("<th>Description</th>")
+                    .append("<th>Qty</th>")
                     .append("</tr>");
-        });
-        // Close the table
-        stringBuilder.append("</table>");
+            // Loop through each PartDTO to add table rows
+            noteModel.getCurrentNote().getSelectedPartOrder().getParts().forEach(partDTO -> {
+                stringBuilder.append("<tr>")
+                        .append("<td>").append(partDTO.getPartNumber()).append("</td>")
+                        .append("<td>").append(partDTO.getPartDescription()).append("</td>")
+                        .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
+                        .append("</tr>");
+            });
+            // Close the table
+            stringBuilder.append("</table>");
+        }
         // Convert StringBuilder to String (if you need to use it as a String)
         return stringBuilder.toString();
     }
@@ -171,9 +174,9 @@ public class NoteInteractor {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append("<b>Shipping Contact</b><br>")
-                .append("<b><span style=\"color: #455A64;\">Name: </span></b>").append(noteModel.getCurrentNote().getContactName()).append("<br>")
-                .append("<b><span style=\"color: #455A64;\">Email: </span></b>").append(noteModel.getCurrentNote().getContactEmail()).append("<br>")
-                .append("<b><span style=\"color: #455A64;\">Phone: </span></b>").append(noteModel.getCurrentNote().getContactPhoneNumber()).append("<br><br>");
+                .append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(noteModel.getCurrentNote().getContactName()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getCurrentNote().getContactEmail()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getCurrentNote().getContactPhoneNumber()).append("<br><br>");
         stringBuilder.append("<b>Shipping Address</b>").append("<br>");
         if (!noteModel.getCurrentNote().getInstalledAt().isEmpty())
             stringBuilder.append(noteModel.getCurrentNote().getInstalledAt()).append("<br>");
@@ -221,7 +224,7 @@ public class NoteInteractor {
 
     private String basicInformationToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<b><span style=\"color: #455A64;\">Case/WO # </span></b>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Case/WO # </span>");
         if(!noteModel.getCurrentNote().getCaseNumber().isEmpty()) {
             stringBuilder.append(noteModel.getCurrentNote().getCaseNumber());
             if(!noteModel.getCurrentNote().getWorkOrder().isEmpty()) {
@@ -229,17 +232,17 @@ public class NoteInteractor {
             }
         }
         stringBuilder.append(noteModel.getCurrentNote().getWorkOrder()).append("<br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">Model: </span></b>").append(noteModel.getCurrentNote().getModelNumber()).append("<br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">S/N: </span></b>").append(noteModel.getCurrentNote().getSerialNumber()).append("<br><br>");
-        stringBuilder.append("<b>Call-in person</b> </br>").append("<br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">Name: </span></b>").append(noteModel.getCurrentNote().getCallInPerson()).append("<br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">Phone: </span></b>").append(noteModel.getCurrentNote().getCallInPhoneNumber()).append("<br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">Email: </span></b>").append(noteModel.getCurrentNote().getCallInEmail()).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Model: </span>").append(noteModel.getCurrentNote().getModelNumber()).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">S/N: </span>").append(noteModel.getCurrentNote().getSerialNumber()).append("<br><br>");
+        stringBuilder.append("<b>Call-in person</b><br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(noteModel.getCurrentNote().getCallInPerson()).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getCurrentNote().getCallInPhoneNumber()).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getCurrentNote().getCallInEmail()).append("<br>");
         stringBuilder.append("<br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">Entitlement: </span></b>").append(noteModel.getCurrentNote().getEntitlement()).append("<br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">Service Level: </span></b>").append(noteModel.getCurrentNote().getServiceLevel()).append("<br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">Status of the UPS: </span></b>").append(noteModel.getCurrentNote().getUpsStatus()).append("<br>");
-        stringBuilder.append("<b><span style=\"color: #455A64;\">Load Supported: </span></b>").append(convertBool(noteModel.getCurrentNote().isLoadSupported())).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Entitlement: </span>").append(noteModel.getCurrentNote().getEntitlement()).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(noteModel.getCurrentNote().getServiceLevel()).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Status of the UPS: </span>").append(noteModel.getCurrentNote().getUpsStatus()).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Load Supported: </span>").append(convertBool(noteModel.getCurrentNote().isLoadSupported())).append("<br>");
         return stringBuilder.toString();
     }
 
@@ -261,11 +264,8 @@ public class NoteInteractor {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToHTML()).append("<br>").append("\r\n");
         stringBuilder.append(basicInformationToHTML()).append("<br>").append("\r\n");
-        stringBuilder.append("<b>Parts Needed</b>").append("\r\n");
         stringBuilder.append(buildPartOrderToHTML()).append("<br>").append("\r\n");
         stringBuilder.append(shippingInformationToHTML()).append("<br>").append("\r\n");
-        System.out.println(stringBuilder.toString());
         return stringBuilder.toString();
-
     }
 }

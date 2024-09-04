@@ -50,9 +50,7 @@ public class NoteView implements Builder<Region> {
     }
 
     private Node setMainVBox() {
-        // for some reason this vBox is not filling the entire scrollPane that it is set in
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
-//        vBox.setStyle("-fx-background-color: #feffab;");
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
         vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build(), partOrders(), rowThreeBox(), controls());
