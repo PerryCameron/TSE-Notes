@@ -46,6 +46,21 @@ public class CaseDTO implements Serializable {
     private StringProperty entitlement = new SimpleStringProperty();
 
 
+    public void clearAddress() {
+        installedAt.set("");
+        street.set("");
+        city.set("");
+        state.set("");
+        zip.set("");
+        country.set("");
+    }
+
+    public void clearContact() {
+        contactName.set("");
+        contactPhoneNumber.set("");
+        contactEmail.set("");
+    }
+
     public String getSchedulingTerms() {
         return schedulingTerms.get();
     }

@@ -38,7 +38,7 @@ public class ShippingInformation implements Builder<Region> {
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> shippingBox.setStyle("")); // Reset the style
             pause.play();
-            noteView.getAction().accept(NoteMessage.SITE_INFORMATION);
+            noteView.getAction().accept(NoteMessage.SHIPPING_INFORMATION);
         }), hBox);
         return shippingBox;
     }
@@ -58,6 +58,14 @@ public class ShippingInformation implements Builder<Region> {
         tf8.textProperty().set(noteModel.getCurrentNote().getContactEmail());
         ListenerFx.addFocusListener(tf8, "Contact Email", noteModel.getCurrentNote().contactEmailProperty(), noteModel.statusLabelProperty());
 
+        Button clearButton = ButtonFx.utilityButton("/images/clear-16.png", () -> {
+            noteModel.getCurrentNote().clearContact();
+            tf6.textProperty().set("");
+            tf7.textProperty().set("");
+            tf8.textProperty().set("");
+        });
+        clearButton.setTooltip(ToolTipFx.of("Clear Shipping Contact"));
+
         Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
             String[] contactInfo = CopyPasteParser.extractContactInfo();
                 noteModel.getCurrentNote().setContactName(contactInfo[0]);
@@ -67,8 +75,9 @@ public class ShippingInformation implements Builder<Region> {
                 noteModel.getCurrentNote().setContactEmail(contactInfo[2]);
                 tf8.textProperty().set(contactInfo[2]);
         });
+        pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Contact Information"));
 
-        Button[] buttons = new Button[] { pasteButton };
+        Button[] buttons = new Button[] { clearButton, pasteButton };
         vBox.getChildren().addAll(TitleBarFx.of("Contact", buttons), tf6, tf7, tf8);
         return vBox;
     }
@@ -103,6 +112,17 @@ public class ShippingInformation implements Builder<Region> {
         tf5.textProperty().set(noteModel.getCurrentNote().getCountry());
         ListenerFx.addFocusListener(tf5, "Country", noteModel.getCurrentNote().countryProperty(), noteModel.statusLabelProperty());
 
+        Button clearButton = ButtonFx.utilityButton("/images/clear-16.png", () -> {
+            noteModel.getCurrentNote().clearAddress();
+            tf1.textProperty().set("");
+            textArea.textProperty().set("");
+            tf2.textProperty().set("");
+            tf3.textProperty().set("");
+            tf4.textProperty().set("");
+            tf5.textProperty().set("");
+        });
+        clearButton.setTooltip(ToolTipFx.of("Clear Shipping Address"));
+
         Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
             String[] addressInfo = CopyPasteParser.parseAddress();
             noteModel.getCurrentNote().setInstalledAt(addressInfo[0]);
@@ -118,8 +138,8 @@ public class ShippingInformation implements Builder<Region> {
             tf4.textProperty().set(addressInfo[4]);
             tf5.textProperty().set(addressInfo[5]);
         });
-
-        Button[] buttons = new Button[] { pasteButton };
+        pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Address Information"));
+        Button[] buttons = new Button[] { clearButton, pasteButton };
 
         hBox.getChildren().addAll(tf2, tf3, tf4);
         vBox.getChildren().addAll(TitleBarFx.of("Contact", buttons), tf1, textArea, hBox, tf5);

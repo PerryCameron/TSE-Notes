@@ -147,7 +147,7 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
-    public void copySiteInformation() {
+    public void copyShippingInformation() {
         ClipboardUtils.copyHtmlToClipboard(shippingInformationToHTML(), shippingInformationToPlainText());
     }
 
