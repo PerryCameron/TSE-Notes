@@ -3,7 +3,7 @@ package com.L2.mvci_note.components;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
-import com.L2.static_tools.CopyPasteParser;
+import com.L2.static_tools.CopyPastaParser;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
@@ -67,7 +67,7 @@ public class ShippingInformation implements Builder<Region> {
         clearButton.setTooltip(ToolTipFx.of("Clear Shipping Contact"));
 
         Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
-            String[] contactInfo = CopyPasteParser.extractContactInfo();
+            String[] contactInfo = CopyPastaParser.extractContactInfo();
                 noteModel.getCurrentNote().setContactName(contactInfo[0]);
                 tf6.textProperty().set(contactInfo[0]);
                 noteModel.getCurrentNote().setContactPhoneNumber(contactInfo[1]);
@@ -124,7 +124,7 @@ public class ShippingInformation implements Builder<Region> {
         clearButton.setTooltip(ToolTipFx.of("Clear Shipping Address"));
 
         Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
-            String[] addressInfo = CopyPasteParser.parseAddress();
+            String[] addressInfo = CopyPastaParser.parseAddress();
             noteModel.getCurrentNote().setInstalledAt(addressInfo[0]);
             noteModel.getCurrentNote().setStreet(addressInfo[1]);
             noteModel.getCurrentNote().setCity(addressInfo[2]);

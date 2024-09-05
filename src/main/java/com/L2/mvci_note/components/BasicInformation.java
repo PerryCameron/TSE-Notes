@@ -9,6 +9,7 @@ import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -23,6 +24,7 @@ public class BasicInformation implements Builder<Region> {
     private final NoteModel noteModel;
     private final NoteView noteView;
     private VBox root;
+    private final TextField[] textFields = new TextField[7];
 
     public BasicInformation(NoteView noteView) {
         this.noteView = noteView;
@@ -36,14 +38,29 @@ public class BasicInformation implements Builder<Region> {
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
         hBox.getChildren().addAll(callInInfo(), servicePlan());
-        String[] boxInfo = {"Basic Information","Copy Basic Information"};
-        root.getChildren().addAll(TitleBarFx.of(boxInfo, () -> {
+
+        Button copyButton = ButtonFx.utilityButton("/images/copy-16.png", () -> {
             root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> root.setStyle("")); // Reset the style
             pause.play();
             noteView.getAction().accept(NoteMessage.COPY_BASIC_INFORMATION);
-        }), hBox);
+        });
+        copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
+
+        Button clearButton = ButtonFx.utilityButton("/images/clear-16.png", () -> {
+            for(TextField textField : textFields) {
+                textField.setText("");
+            }
+        });
+        clearButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
+
+        Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
+        });
+        clearButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
+
+        Button[] buttons = new Button[] { clearButton, pasteButton, copyButton };
+        root.getChildren().addAll(TitleBarFx.of("Basic Information", buttons), hBox);
         return root;
     }
 
@@ -63,7 +80,7 @@ public class BasicInformation implements Builder<Region> {
         comboBox.getItems().addAll(noteModel.getEntitlements());
         // Optional: Set a default value if needed
         if (!comboBox.getItems().isEmpty()) {
-            comboBox.setValue(comboBox.getItems().get(0));  // Set the first item as selected by default
+            comboBox.setValue(comboBox.getItems().getFirst());  // Set the first item as selected by default
         }
         comboBox.valueProperty().set(noteModel.getCurrentEntitlement());
         // Listener to update activeServiceContract when currentEntitlement changes
@@ -92,10 +109,7 @@ public class BasicInformation implements Builder<Region> {
         // sets initial value
         comboBox.valueProperty().set(noteModel.getCurrentNote().getSchedulingTerms());
         vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> {
-            noteModel.getCurrentNote().setSchedulingTerms(comboBox.getValue());
-            System.out.println("Scheduling Terms: " + noteModel.getCurrentNote().getSchedulingTerms());
-        });
+        comboBox.setOnAction(e -> noteModel.getCurrentNote().setSchedulingTerms(comboBox.getValue()));
         return vBox;
     }
 
@@ -104,10 +118,7 @@ public class BasicInformation implements Builder<Region> {
         HBox hBox = new HBox(10);
         ToggleSwitch toggleSwitch = new ToggleSwitch();
         toggleSwitch.selectedProperty().set(noteModel.getCurrentNote().isLoadSupported());
-        toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            noteModel.getCurrentNote().setLoadSupported(newValue);
-            System.out.println("Load Supported: " + noteModel.getCurrentNote().isLoadSupported());
-        });
+        toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> noteModel.getCurrentNote().setLoadSupported(newValue));
         hBox.getChildren().addAll(label, toggleSwitch);
         return hBox;
     }
@@ -121,10 +132,7 @@ public class BasicInformation implements Builder<Region> {
         // sets initial value
         comboBox.valueProperty().set(noteModel.getCurrentNote().getUpsStatus());
         vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> {
-            noteModel.getCurrentNote().setUpsStatus(comboBox.getValue());
-            System.out.println("UPS Status: " + noteModel.getCurrentNote().getUpsStatus());
-        });
+        comboBox.setOnAction(e -> noteModel.getCurrentNote().setUpsStatus(comboBox.getValue()));
         return vBox;
     }
 
@@ -136,44 +144,43 @@ public class BasicInformation implements Builder<Region> {
         comboBox.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
         comboBox.valueProperty().set(noteModel.getCurrentNote().getServiceLevel());
         vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> {
-            noteModel.getCurrentNote().setServiceLevel(comboBox.getValue());
-            System.out.println("Service level: " + noteModel.getCurrentNote().getServiceLevel());
-        });
+        comboBox.setOnAction(e -> noteModel.getCurrentNote().setServiceLevel(comboBox.getValue()));
         return vBox;
     }
 
     private Node callInInfo() {
         VBox vBox = VBoxFx.of(5.5, new Insets(0, 40, 0, 0));
 
-        TextField tf1 = TextFieldFx.of(200, "Work Order");
-        tf1.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
-        ListenerFx.addFocusListener(tf1, "Work Order", noteModel.getCurrentNote().workOrderProperty(), noteModel.statusLabelProperty());
+        textFields[0] = TextFieldFx.of(200, "Work Order");
+        textFields[0].textProperty().set(noteModel.getCurrentNote().getWorkOrder());
+        ListenerFx.addFocusListener(textFields[0], "Work Order", noteModel.getCurrentNote().workOrderProperty(), noteModel.statusLabelProperty());
 
-        TextField tf2 = TextFieldFx.of(200, "Case");
-        tf2.textProperty().set(noteModel.getCurrentNote().getCaseNumber());
-        ListenerFx.addFocusListener(tf2, "Case", noteModel.getCurrentNote().caseNumberProperty(), noteModel.statusLabelProperty());
+        textFields[1] = TextFieldFx.of(200, "Case");
+        textFields[1].textProperty().set(noteModel.getCurrentNote().getCaseNumber());
+        ListenerFx.addFocusListener(textFields[1], "Case", noteModel.getCurrentNote().caseNumberProperty(), noteModel.statusLabelProperty());
 
-        TextField tf3 = TextFieldFx.of(200, 30, "Model", noteModel.getCurrentNote().modelNumberProperty());
-        tf3.textProperty().set(noteModel.getCurrentNote().getModelNumber());
-        ListenerFx.addFocusListener(tf3, "Model", noteModel.getCurrentNote().modelNumberProperty(), noteModel.statusLabelProperty());
+        textFields[2] = TextFieldFx.of(200, 30, "Model", noteModel.getCurrentNote().modelNumberProperty());
+        textFields[2].textProperty().set(noteModel.getCurrentNote().getModelNumber());
+        ListenerFx.addFocusListener(textFields[2], "Model", noteModel.getCurrentNote().modelNumberProperty(), noteModel.statusLabelProperty());
 
-        TextField tf4 = TextFieldFx.of(200, 30, "Serial", noteModel.getCurrentNote().serialNumberProperty());
-        tf4.textProperty().set(noteModel.getCurrentNote().getSerialNumber());
-        ListenerFx.addFocusListener(tf4, "Serial", noteModel.getCurrentNote().serialNumberProperty(), noteModel.statusLabelProperty());
+        textFields[3] = TextFieldFx.of(200, 30, "Serial", noteModel.getCurrentNote().serialNumberProperty());
+        textFields[3].textProperty().set(noteModel.getCurrentNote().getSerialNumber());
+        ListenerFx.addFocusListener(textFields[3], "Serial", noteModel.getCurrentNote().serialNumberProperty(), noteModel.statusLabelProperty());
 
-        TextField tf5 = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty());
-        tf5.textProperty().set(noteModel.getCurrentNote().getCallInPerson());
-        ListenerFx.addFocusListener(tf5, "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty(), noteModel.statusLabelProperty());
+        textFields[4] = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty());
+        textFields[4].textProperty().set(noteModel.getCurrentNote().getCallInPerson());
+        ListenerFx.addFocusListener(textFields[4], "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty(), noteModel.statusLabelProperty());
 
-        TextField tf6 = TextFieldFx.of(200, "Call-in Phone");
-        tf6.textProperty().set(noteModel.getCurrentNote().getCallInPhoneNumber());
-        ListenerFx.addFocusListener(tf6, "Call-in Phone", noteModel.getCurrentNote().callInPhoneNumberProperty(), noteModel.statusLabelProperty());
+        textFields[5]= TextFieldFx.of(200, "Call-in Phone");
+        textFields[5].textProperty().set(noteModel.getCurrentNote().getCallInPhoneNumber());
+        ListenerFx.addFocusListener(textFields[5], "Call-in Phone", noteModel.getCurrentNote().callInPhoneNumberProperty(), noteModel.statusLabelProperty());
 
-        TextField tf7 = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getCurrentNote().callInEmailProperty());
-        tf7.textProperty().set(noteModel.getCurrentNote().getCallInEmail());
-        ListenerFx.addFocusListener(tf7, "Call-in Email", noteModel.getCurrentNote().callInEmailProperty(), noteModel.statusLabelProperty());
-        vBox.getChildren().addAll(tf1, tf2, tf3, tf4, tf5, tf6, tf7);
+        textFields[6] = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getCurrentNote().callInEmailProperty());
+        textFields[6].textProperty().set(noteModel.getCurrentNote().getCallInEmail());
+        ListenerFx.addFocusListener(textFields[6], "Call-in Email", noteModel.getCurrentNote().callInEmailProperty(), noteModel.statusLabelProperty());
+        for(TextField textField : textFields) {
+            vBox.getChildren().add(textField);
+        }
         return vBox;
     }
 }
