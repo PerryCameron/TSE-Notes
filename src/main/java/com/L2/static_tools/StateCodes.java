@@ -58,7 +58,6 @@ public class StateCodes {
         STATE_ABBREVIATIONS.put("Wisconsin", "WI");
         STATE_ABBREVIATIONS.put("Wyoming", "WY");
 
-
         // Canada Province abbreviations
         STATE_ABBREVIATIONS.put("Alberta", "AB");
         STATE_ABBREVIATIONS.put("British Columbia", "BC");

@@ -3,22 +3,17 @@ package com.L2.mvci_note.components;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
-import com.L2.static_tools.ClipboardUtils;
 import com.L2.static_tools.CopyPasteParser;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import javafx.util.Duration;
-
-import java.util.Objects;
 
 public class ShippingInformation implements Builder<Region> {
 
@@ -110,9 +105,18 @@ public class ShippingInformation implements Builder<Region> {
 
         Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
             String[] addressInfo = CopyPasteParser.parseAddress();
-            for(String info : addressInfo) {
-                System.out.println(info);
-            }
+            noteModel.getCurrentNote().setInstalledAt(addressInfo[0]);
+            noteModel.getCurrentNote().setStreet(addressInfo[1]);
+            noteModel.getCurrentNote().setCity(addressInfo[2]);
+            noteModel.getCurrentNote().setState(addressInfo[3]);
+            noteModel.getCurrentNote().setZip(addressInfo[4]);
+            noteModel.getCurrentNote().setCountry(addressInfo[5]);
+            tf1.textProperty().set(addressInfo[0]);
+            textArea.textProperty().set(addressInfo[1]);
+            tf2.textProperty().set(addressInfo[2]);
+            tf3.textProperty().set(addressInfo[3]);
+            tf4.textProperty().set(addressInfo[4]);
+            tf5.textProperty().set(addressInfo[5]);
         });
 
         Button[] buttons = new Button[] { pasteButton };
