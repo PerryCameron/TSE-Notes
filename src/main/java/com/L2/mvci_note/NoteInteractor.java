@@ -211,6 +211,7 @@ public class NoteInteractor {
         stringBuilder.append("Email: ").append(noteModel.getCurrentNote().getCallInEmail()).append("\r\n");
         stringBuilder.append("\r\n");
         stringBuilder.append("Entitlement: ").append(noteModel.getCurrentNote().getEntitlement()).append("\r\n");
+        stringBuilder.append("Scheduling Terms: ").append(noteModel.getCurrentNote().getSchedulingTerms()).append("\r\n");
         stringBuilder.append("Service Level: ").append(noteModel.getCurrentNote().getServiceLevel()).append("\r\n");
         stringBuilder.append("Status of the UPS: ").append(noteModel.getCurrentNote().getUpsStatus()).append("\r\n");
         stringBuilder.append("Load Supported: ").append(convertBool(noteModel.getCurrentNote().isLoadSupported())).append("\r\n");
@@ -240,6 +241,7 @@ public class NoteInteractor {
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getCurrentNote().getCallInEmail()).append("<br>");
         stringBuilder.append("<br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Entitlement: </span>").append(noteModel.getCurrentNote().getEntitlement()).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(noteModel.getCurrentNote().getSchedulingTerms()).append("<br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(noteModel.getCurrentNote().getServiceLevel()).append("<br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Status of the UPS: </span>").append(noteModel.getCurrentNote().getUpsStatus()).append("<br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Load Supported: </span>").append(convertBool(noteModel.getCurrentNote().isLoadSupported())).append("<br>");

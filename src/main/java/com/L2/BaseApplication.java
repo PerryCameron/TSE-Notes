@@ -5,6 +5,8 @@ import atlantafx.base.theme.PrimerLight;
 import com.L2.mvci_main.MainController;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
@@ -44,6 +46,9 @@ public class BaseApplication extends Application {
         primaryStage = stage;
         primaryStage.setResizable(true);
         primaryStage.setScene(new Scene(new MainController().getView()));
+
+
+
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         primaryStage.getScene().getStylesheets().add("css/dark/tabpane.css");
         primaryStage.initStyle(StageStyle.UNDECORATED);

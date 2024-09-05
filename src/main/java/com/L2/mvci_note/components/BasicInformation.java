@@ -71,6 +71,8 @@ public class BasicInformation implements Builder<Region> {
     }
 
     private Node setEntitlementBox() {
+        // the name of the entitlement is saved in the CaseDTO (String)
+        // a list of Entitlements is pulled from hard disk (EntitlementDTO)
         VBox vBox = new VBox(4);
         // Define Labels and Controls
         Label label = new Label("Service Plan:");
@@ -92,8 +94,11 @@ public class BasicInformation implements Builder<Region> {
             }
         });
         comboBox.setOnAction(e -> {
+            noteModel.getCurrentNote().setEntitlement(comboBox.getValue().toString());
             noteModel.setCurrentEntitlement(comboBox.getValue());
+            // no longer setting current entitlement
             System.out.println("Current entitlement set to: " + noteModel.getCurrentEntitlement());
+            System.out.println(noteModel.getCurrentNote().getEntitlement());
             noteView.getServicePlanDetails().updateDetails();
         });
         vBox.getChildren().addAll(label, comboBox);
