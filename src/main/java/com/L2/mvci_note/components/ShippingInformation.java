@@ -3,6 +3,8 @@ package com.L2.mvci_note.components;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
+import com.L2.static_tools.ClipboardUtils;
+import com.L2.static_tools.CopyPasteParser;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
@@ -62,7 +64,13 @@ public class ShippingInformation implements Builder<Region> {
         ListenerFx.addFocusListener(tf8, "Contact Email", noteModel.getCurrentNote().contactEmailProperty(), noteModel.statusLabelProperty());
 
         Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
-            // do something here
+            String[] contactInfo = CopyPasteParser.extractContactInfo();
+                noteModel.getCurrentNote().setContactName(contactInfo[0]);
+                tf6.textProperty().set(contactInfo[0]);
+                noteModel.getCurrentNote().setContactPhoneNumber(contactInfo[1]);
+                tf7.textProperty().set(contactInfo[1]);
+                noteModel.getCurrentNote().setContactEmail(contactInfo[2]);
+                tf8.textProperty().set(contactInfo[2]);
         });
 
         Button[] buttons = new Button[] { pasteButton };
@@ -101,7 +109,10 @@ public class ShippingInformation implements Builder<Region> {
         ListenerFx.addFocusListener(tf5, "Country", noteModel.getCurrentNote().countryProperty(), noteModel.statusLabelProperty());
 
         Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
-            // do something here
+            String[] addressInfo = CopyPasteParser.parseAddress();
+            for(String info : addressInfo) {
+                System.out.println(info);
+            }
         });
 
         Button[] buttons = new Button[] { pasteButton };

@@ -7,9 +7,19 @@ import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.platform.win32.WinDef.HWND;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 
 public class ClipboardUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClipboardUtils.class);
 
     public interface Kernel32 extends StdCallLibrary {
         Kernel32 INSTANCE = Native.load("kernel32", Kernel32.class, W32APIOptions.DEFAULT_OPTIONS);
@@ -87,6 +97,30 @@ public class ClipboardUtils {
             Kernel32.INSTANCE.GlobalFree(hGlobal);
             throw e;
         }
+    }
+
+    // Method to retrieve text from clipboard
+    public static String getClipboardText() {
+        try {
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Transferable data = clipboard.getContents(null);
+            // Check if the clipboard contains text data
+            if (data != null && data.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                try {
+                    return (String) data.getTransferData(DataFlavor.stringFlavor);
+                } catch (UnsupportedFlavorException | IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                logger.error("Clipboard does not contain string data.");
+            }
+        } catch (Exception e) {
+            // Catch any exception that isn't related to text data (optional)
+            logger.error("An error occurred while retrieving clipboard data.");
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 
