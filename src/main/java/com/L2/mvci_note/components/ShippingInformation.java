@@ -142,7 +142,7 @@ public class ShippingInformation implements Builder<Region> {
         Button[] buttons = new Button[] { clearButton, pasteButton };
 
         hBox.getChildren().addAll(tf2, tf3, tf4);
-        vBox.getChildren().addAll(TitleBarFx.of("Contact", buttons), tf1, textArea, hBox, tf5);
+        vBox.getChildren().addAll(TitleBarFx.of("Address", buttons), tf1, textArea, hBox, tf5);
         return vBox;
     }
 }

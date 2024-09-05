@@ -22,6 +22,7 @@ public class NoteView implements Builder<Region> {
     private final DateTimePicker dateTimePicker;
     private final ShippingInformation shippingInformation;
     private final WorkOrderBox workOrderBox;
+    private final IssueBox issueBox;
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -31,6 +32,7 @@ public class NoteView implements Builder<Region> {
         this.dateTimePicker = new DateTimePicker(this);
         this.shippingInformation = new ShippingInformation(this);
         this.workOrderBox = new WorkOrderBox(this);
+        this.issueBox = new IssueBox(this);
     }
 
     @Override
@@ -55,7 +57,7 @@ public class NoteView implements Builder<Region> {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
-        vBox.getChildren().addAll(hBox, setIssueBox(), workOrderBox.build(), partOrders(), rowThreeBox(), controls());
+        vBox.getChildren().addAll(hBox, issueBox.build(), workOrderBox.build(), partOrders(), rowThreeBox(), controls());
         return vBox;
     }
 
@@ -89,25 +91,6 @@ public class NoteView implements Builder<Region> {
         VBox vBox = new VBox(20);
         vBox.setPadding(new Insets(0, 0, 0, 40));
         vBox.getChildren().addAll(dateTimePicker.build(), servicePlanDetails.build());
-        return vBox;
-    }
-
-    private Node setIssueBox() {
-        VBox vBox = new VBox();
-        vBox.setPadding(new Insets(0, 5, 5, 5));
-        vBox.getStyleClass().add("decorative-hbox");
-        TextArea textAreaIssue = TextAreaFx.of(true, 200, 16, 5);
-        textAreaIssue.setPrefWidth(900);
-        textAreaIssue.setText(noteModel.getCurrentNote().issueProperty().get());
-        ListenerFx.addFocusListener(textAreaIssue, "Issue field", noteModel.getCurrentNote().issueProperty(), noteModel.statusLabelProperty());
-        String[] boxInfo = {"Issue","Copy Issue"};
-        vBox.getChildren().addAll(TitleBarFx.of(boxInfo, () -> {
-            vBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-            pause.setOnFinished(event -> vBox.setStyle("")); // Reset the style
-            pause.play();
-            action.accept(NoteMessage.COPY_ISSUE);
-        }), textAreaIssue);
         return vBox;
     }
 
