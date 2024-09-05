@@ -280,14 +280,14 @@ public class NoteInteractor {
     private String issueToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("--- Issue ---").append("\r\n");
-        stringBuilder.append(noteModel.getCurrentNote().getIssue()).append("\r\n");
+        stringBuilder.append(noteModel.getCurrentNote().getIssue());
         return stringBuilder.toString();
     }
 
     private String issueToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<strong>Issue</strong>").append("\r\n");
-        stringBuilder.append(noteModel.getCurrentNote().getIssue());
+        stringBuilder.append("<strong>Issue</strong>").append("<br>");
+        stringBuilder.append(noteModel.getCurrentNote().getIssue()).append("<br>");
         return stringBuilder.toString();
     }
 }

@@ -34,7 +34,7 @@ public class WorkOrderBox implements Builder<Region> {
         hBox.getChildren().add(followUpWorkOrderTextField());
         hBox.getChildren().add(relatedCase());
         hBox.getChildren().add(tex());
-        hBox.getChildren().add(newPartOrder());
+//        hBox.getChildren().add(newPartOrder());
         return hBox;
     }
 
@@ -48,7 +48,6 @@ public class WorkOrderBox implements Builder<Region> {
         vbox.getChildren().addAll(label, tf);
         return vbox;
     }
-
 
     private Node relatedCase() {
         VBox vbox = new VBox();
@@ -74,15 +73,15 @@ public class WorkOrderBox implements Builder<Region> {
         return vbox;
     }
 
-    private Node newPartOrder() {
-        VBox vbox = new VBox();
-        vbox.setPadding(new Insets(20, 0, 0, 60));
-        Button button = new Button("New Part Order");
-        button.setOnAction(event -> {
-            noteModel.getCurrentNote().getPartOrders().add(new PartOrderDTO(""));
-        });
-        vbox.getChildren().add(button);
-        return vbox;
-    }
+//    private Node newPartOrder() {
+//        VBox vbox = new VBox();
+//        vbox.setPadding(new Insets(20, 0, 0, 60));
+//        Button button = new Button("New Part Order");
+//        button.setOnAction(event -> {
+//            noteModel.getCurrentNote().getPartOrders().add(new PartOrderDTO(""));
+//        });
+//        vbox.getChildren().add(button);
+//        return vbox;
+//    }
 }
 

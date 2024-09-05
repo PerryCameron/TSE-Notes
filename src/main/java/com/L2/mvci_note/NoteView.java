@@ -23,6 +23,7 @@ public class NoteView implements Builder<Region> {
     private final ShippingInformation shippingInformation;
     private final WorkOrderBox workOrderBox;
     private final IssueBox issueBox;
+    private final PartOrderHeader partOrderHeader;
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -33,6 +34,7 @@ public class NoteView implements Builder<Region> {
         this.shippingInformation = new ShippingInformation(this);
         this.workOrderBox = new WorkOrderBox(this);
         this.issueBox = new IssueBox(this);
+        this.partOrderHeader = new PartOrderHeader(this);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class NoteView implements Builder<Region> {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
-        vBox.getChildren().addAll(hBox, issueBox.build(), workOrderBox.build(), partOrders(), rowThreeBox(), controls());
+        vBox.getChildren().addAll(hBox, issueBox.build(), partOrderHeader.build(), partOrders(), rowThreeBox(), controls(), workOrderBox.build());
         return vBox;
     }
 
