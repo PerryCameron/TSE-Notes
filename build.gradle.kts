@@ -28,6 +28,8 @@ tasks.register<Copy>("processAppProperties") {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+    implementation("org.xerial:sqlite-jdbc:3.46.1.0")
     // Allows use of clipboard API
     implementation("net.java.dev.jna:jna:5.14.0")
     // https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform

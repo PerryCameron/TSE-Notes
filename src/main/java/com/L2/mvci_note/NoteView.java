@@ -59,7 +59,7 @@ public class NoteView implements Builder<Region> {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
-        vBox.getChildren().addAll(hBox, issueBox.build(), partOrderHeader.build(), partOrders(), rowThreeBox(), controls(), workOrderBox.build());
+        vBox.getChildren().addAll(hBox, issueBox.build(), partOrderHeader.build(), partOrders(), rowThreeBox(), controls());
         return vBox;
     }
 
@@ -98,7 +98,7 @@ public class NoteView implements Builder<Region> {
 
     private Node rowThreeBox() {
         HBox hBox = new HBox(10);
-        hBox.getChildren().add(shippingInformation.build());
+        hBox.getChildren().addAll(shippingInformation.build(), workOrderBox.build());
         return hBox;
     }
 
