@@ -3,14 +3,12 @@ package com.L2.mvci_note;
 import com.L2.dto.PartOrderDTO;
 import com.L2.mvci_note.components.*;
 import com.L2.widgetFx.*;
-import javafx.animation.PauseTransition;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
 import javafx.scene.control.*;
-import javafx.util.Duration;
 
 import java.util.function.Consumer;
 
@@ -69,7 +67,11 @@ public class NoteView implements Builder<Region> {
         button.setOnAction(event -> {
             action.accept(NoteMessage.COPY_CUSTOMER_REQUEST);
         });
-        hBox.getChildren().add(button);
+        Button button1 = new Button("Corrective Action");
+        button1.setOnAction(event -> {
+           action.accept(NoteMessage.COPY_CORRECTIVE_ACTION);
+        });
+        hBox.getChildren().addAll(button, button1);
         return hBox;
     }
 

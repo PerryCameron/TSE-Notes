@@ -42,6 +42,7 @@ public class CaseDTO implements Serializable {
     private ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
     private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
     private StringProperty createdWorkOrder = new SimpleStringProperty();
+    private StringProperty tex = new SimpleStringProperty();
     private IntegerProperty partsOrder = new SimpleIntegerProperty();
     private StringProperty entitlement = new SimpleStringProperty();
 
@@ -59,6 +60,21 @@ public class CaseDTO implements Serializable {
         contactName.set("");
         contactPhoneNumber.set("");
         contactEmail.set("");
+    }
+
+    /////////////////////////////////////////////////////////////
+
+
+    public String getTex() {
+        return tex.get();
+    }
+
+    public StringProperty texProperty() {
+        return tex;
+    }
+
+    public void setTex(String tex) {
+        this.tex.set(tex);
     }
 
     public String getSchedulingTerms() {

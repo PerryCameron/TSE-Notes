@@ -66,7 +66,7 @@ public class WorkOrderBox implements Builder<Region> {
         Label label = new Label("Follow Up Work Order");
         label.setPadding(new Insets(0,0,0,5));
         TextField tf = TextFieldFx.of(200,  "WO-");
-        tf.textProperty().set(noteModel.getCurrentNote().getWorkOrder());
+        tf.textProperty().set(noteModel.getCurrentNote().getCreatedWorkOrder());
         ListenerFx.addFocusListener(tf, "Work Order", noteModel.getCurrentNote().createdWorkOrderProperty(), noteModel.statusLabelProperty());
         vbox.getChildren().addAll(label, tf);
         return vbox;
