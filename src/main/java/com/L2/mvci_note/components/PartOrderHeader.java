@@ -27,9 +27,9 @@ public class PartOrderHeader implements Builder<Region> {
     public Region build() {
         VBox root = VBoxFx.of(true,5.0, new Insets(3, 5, 3, 5));
         root.getStyleClass().add("decorative-header-box");
-        Button newButton = ButtonFx.utilityButton("/images/new-16.png", () -> {
+        Button newButton = ButtonFx.utilityButton( () -> {
             noteModel.getCurrentNote().getPartOrders().add(new PartOrderDTO(""));
-        });
+        },"New Part Order", "/images/new-16.png");
         newButton.setTooltip(ToolTipFx.of("Create New Part Order"));
         Button[] buttons = new Button[] { newButton };
         root.getChildren().addAll(TitleBarFx.of("Part Orders", buttons));

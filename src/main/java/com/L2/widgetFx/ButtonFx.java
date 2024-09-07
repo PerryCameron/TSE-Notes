@@ -44,6 +44,15 @@ public class ButtonFx {
         return button;
     }
 
+    public static Button utilityButton(Runnable runnable, String... strings) {
+        Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(strings[1])));
+        ImageView imageViewCopy = new ImageView(copyIcon);
+        Button button = ButtonFx.of(imageViewCopy, "invisible-button");
+        button.setText(strings[0]);
+        button.setOnAction(event -> runnable.run());
+        return button;
+    }
+
     public static Button utilityButton(String image, Runnable runnable) {
         Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(image)));
         ImageView imageViewCopy = new ImageView(copyIcon);

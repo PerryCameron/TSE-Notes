@@ -39,24 +39,24 @@ public class BasicInformation implements Builder<Region> {
         hBox.setPadding(new Insets(0, 5, 5, 5));
         hBox.getChildren().addAll(callInInfo(), servicePlan());
 
-        Button copyButton = ButtonFx.utilityButton("/images/copy-16.png", () -> {
+        Button copyButton = ButtonFx.utilityButton(() -> {
             root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> root.setStyle("")); // Reset the style
             pause.play();
             noteView.getAction().accept(NoteMessage.COPY_BASIC_INFORMATION);
-        });
+        }, "Copy","/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
 
-        Button clearButton = ButtonFx.utilityButton("/images/clear-16.png", () -> {
+        Button clearButton = ButtonFx.utilityButton(() -> {
             for(TextField textField : textFields) {
                 textField.setText("");
             }
-        });
+        }, "Clear", "/images/clear-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
 
-        Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
-        });
+        Button pasteButton = ButtonFx.utilityButton(() -> {
+        }, "Pasta", "/images/paste-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
 
         Button[] buttons = new Button[] { clearButton, pasteButton, copyButton };

@@ -32,14 +32,16 @@ public class ShippingInformation implements Builder<Region> {
         HBox hBox =  HBoxFx.of(new Insets(5, 5, 10, 5), 5.0);
         shippingBox.getStyleClass().add("decorative-hbox");
         hBox.getChildren().addAll(contact(), address());
-        String[] boxInfo = {"Shipping Information","Copy Shipping Information"};
-        shippingBox.getChildren().addAll(TitleBarFx.of(boxInfo, () -> {
+        Button copyButton = ButtonFx.utilityButton( () -> {
             shippingBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> shippingBox.setStyle("")); // Reset the style
             pause.play();
             noteView.getAction().accept(NoteMessage.SHIPPING_INFORMATION);
-        }), hBox);
+        }, "Copy", "/images/copy-16.png");
+        copyButton.setTooltip(ToolTipFx.of("Copy Shipping Information"));
+        Button[] buttons = new Button[] { copyButton };
+        shippingBox.getChildren().addAll(TitleBarFx.of("Issue", buttons), hBox);
         return shippingBox;
     }
 
@@ -58,15 +60,15 @@ public class ShippingInformation implements Builder<Region> {
         tf8.textProperty().set(noteModel.getCurrentNote().getContactEmail());
         ListenerFx.addFocusListener(tf8, "Contact Email", noteModel.getCurrentNote().contactEmailProperty(), noteModel.statusLabelProperty());
 
-        Button clearButton = ButtonFx.utilityButton("/images/clear-16.png", () -> {
+        Button clearButton = ButtonFx.utilityButton(() -> {
             noteModel.getCurrentNote().clearContact();
             tf6.textProperty().set("");
             tf7.textProperty().set("");
             tf8.textProperty().set("");
-        });
+        },"Clear","/images/clear-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Shipping Contact"));
 
-        Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
+        Button pasteButton = ButtonFx.utilityButton(() -> {
             String[] contactInfo = CopyPastaParser.extractContactInfo();
                 noteModel.getCurrentNote().setContactName(contactInfo[0]);
                 tf6.textProperty().set(contactInfo[0]);
@@ -74,7 +76,7 @@ public class ShippingInformation implements Builder<Region> {
                 tf7.textProperty().set(contactInfo[1]);
                 noteModel.getCurrentNote().setContactEmail(contactInfo[2]);
                 tf8.textProperty().set(contactInfo[2]);
-        });
+        },"Paste","/images/paste-16.png");
         pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Contact Information"));
 
         Button[] buttons = new Button[] { clearButton, pasteButton };
@@ -112,7 +114,7 @@ public class ShippingInformation implements Builder<Region> {
         tf5.textProperty().set(noteModel.getCurrentNote().getCountry());
         ListenerFx.addFocusListener(tf5, "Country", noteModel.getCurrentNote().countryProperty(), noteModel.statusLabelProperty());
 
-        Button clearButton = ButtonFx.utilityButton("/images/clear-16.png", () -> {
+        Button clearButton = ButtonFx.utilityButton( () -> {
             noteModel.getCurrentNote().clearAddress();
             tf1.textProperty().set("");
             textArea.textProperty().set("");
@@ -120,10 +122,10 @@ public class ShippingInformation implements Builder<Region> {
             tf3.textProperty().set("");
             tf4.textProperty().set("");
             tf5.textProperty().set("");
-        });
+        },"Clear","/images/clear-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Shipping Address"));
 
-        Button pasteButton = ButtonFx.utilityButton("/images/paste-16.png", () -> {
+        Button pasteButton = ButtonFx.utilityButton(() -> {
             String[] addressInfo = CopyPastaParser.parseAddress();
             noteModel.getCurrentNote().setInstalledAt(addressInfo[0]);
             noteModel.getCurrentNote().setStreet(addressInfo[1]);
@@ -137,7 +139,7 @@ public class ShippingInformation implements Builder<Region> {
             tf3.textProperty().set(addressInfo[3]);
             tf4.textProperty().set(addressInfo[4]);
             tf5.textProperty().set(addressInfo[5]);
-        });
+        }, "Paste","/images/paste-16.png");
         pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Address Information"));
         Button[] buttons = new Button[] { clearButton, pasteButton };
 

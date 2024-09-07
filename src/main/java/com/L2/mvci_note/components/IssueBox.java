@@ -33,18 +33,18 @@ public class IssueBox implements Builder<Region> {
         textAreaIssue.setText(noteModel.getCurrentNote().issueProperty().get());
         ListenerFx.addFocusListener(textAreaIssue, "Issue field", noteModel.getCurrentNote().issueProperty(), noteModel.statusLabelProperty());
 
-        Button clearButton = ButtonFx.utilityButton("/images/clear-16.png", () -> {
+        Button clearButton = ButtonFx.utilityButton( () -> {
         textAreaIssue.setText("");
-        });
+        }, "Clear", "/images/clear-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Issue"));
 
-        Button copyButton = ButtonFx.utilityButton("/images/copy-16.png", () -> {
+        Button copyButton = ButtonFx.utilityButton( () -> {
             vBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> vBox.setStyle("")); // Reset the style
             pause.play();
             noteView.getAction().accept(NoteMessage.COPY_ISSUE);
-        });
+        }, "Copy", "/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy Issue"));
 
         Button[] buttons = new Button[] { clearButton, copyButton };

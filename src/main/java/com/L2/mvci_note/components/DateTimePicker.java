@@ -64,23 +64,23 @@ public class DateTimePicker implements Builder<Region> {
     }
 
     private Button copyButton() {
-        Button copyButton = ButtonFx.utilityButton("/images/copy-16.png", () -> {
+        Button copyButton = ButtonFx.utilityButton( () -> {
             dateBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
             // Use a PauseTransition to remove the border after 0.2 seconds
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> dateBox.setStyle("")); // Reset the style
             pause.play();
             noteView.getAction().accept(NoteMessage.COPY_NAME_DATE);
-        });
+        }, "Copy", "/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy User and Date/Time"));
         return copyButton;
     }
 
     private Button refreshButton() {
-        Button refreshButton = ButtonFx.utilityButton("/images/refresh-16.png", () -> {
+        Button refreshButton = ButtonFx.utilityButton( () -> {
             noteView.getNoteModel().setStatusLabel("Refreshing date and time to now.");
             setDateTime(LocalDateTime.now());
-        });
+        }, "Refresh", "/images/refresh-16.png");
         refreshButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
         return refreshButton;
     }

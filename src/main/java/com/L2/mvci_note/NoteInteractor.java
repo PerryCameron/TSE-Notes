@@ -330,6 +330,16 @@ public class NoteInteractor {
 
     private String correctiveActionToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(buildNameDateToPlainText()).append("<br>").append("<br>");
+        if(!noteModel.getCurrentNote().getCreatedWorkOrder().isEmpty()) {
+            stringBuilder.append("Created ");
+            stringBuilder.append(noteModel.getCurrentNote().getCreatedWorkOrder()).append("<br>");
+        }
+        stringBuilder.append(copyAllPartOrdersToPlainText()).append("<br>");
+        if(!noteModel.getCurrentNote().getTex().isEmpty()) {
+            stringBuilder.append("Created ");
+            stringBuilder.append(noteModel.getCurrentNote().getTex()).append("<br>");
+        }
         return stringBuilder.toString();
     }
 }
