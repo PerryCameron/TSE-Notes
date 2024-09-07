@@ -43,15 +43,16 @@ public class PartOrderBox extends VBox {
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(5, 5, 5, 5));
         vBox.setPrefWidth(300);
-        Button addPart = new Button("Add Part");
-        addPart.setPrefWidth(100);
-        addPart.setOnAction(e -> partOrderDTO.getParts().add(new PartDTO()));
-        Button deletePart = new Button("Delete Part");
-        deletePart.setPrefWidth(100);
-        deletePart.setOnAction(e -> partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart()));
-        TextField textField = TextFieldFx.of(250, "Search");
 
-        vBox.getChildren().addAll(textField, addPart, deletePart);
+        Button addPartButton = ButtonFx.utilityButton( () -> {
+            partOrderDTO.getParts().add(new PartDTO());
+        }, "Add Part", "/images/create-16.png");
+
+        Button deleteButton = ButtonFx.utilityButton( () -> {
+            partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart());
+        }, "Delete", "/images/delete-16.png");
+        TextField textField = TextFieldFx.of(250, "Search");
+        vBox.getChildren().addAll(textField, addPartButton, deleteButton);
         return vBox;
     }
 
@@ -98,26 +99,14 @@ public class PartOrderBox extends VBox {
 
     private Node createTrashButton() {
         HBox iconBox = HBoxFx.iconBox();
-        Button trashButton = new Button();
-        Button copyButton = new Button();
-        trashButton.getStyleClass().add("invisible-button");
-        copyButton.getStyleClass().add("invisible-button");
-        Image trashIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/delete-16.png")));
-        Image copyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/copy-16.png")));
-        ImageView imageView = new ImageView(trashIcon);
-        ImageView imageViewCopy = new ImageView(copyIcon);
-        trashButton.setGraphic(imageView);
-        trashButton.setTooltip(ToolTipFx.of("Delete part order"));
-        copyButton.setGraphic(imageViewCopy);
-        copyButton.setTooltip(ToolTipFx.of("Copy part order to clipboard"));
-        trashButton.setOnAction(e -> {
+        Button deleteButton = ButtonFx.utilityButton( () -> {
             noteModel.getCurrentNote().getPartOrders().remove(partOrderDTO);
             if (this.getParent() instanceof VBox parent) {
                 parent.getChildren().remove(this);
             }
-        });
+        }, "Delete PO", "/images/delete-16.png");
 
-        copyButton.setOnAction(e -> {
+        Button copyButton = ButtonFx.utilityButton( () -> {
             noteModel.getCurrentNote().setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
             // Apply a blue border to the VBox
@@ -126,9 +115,8 @@ public class PartOrderBox extends VBox {
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> this.setStyle("")); // Reset the style
             pause.play();
-        });
-
-        iconBox.getChildren().addAll(copyButton, trashButton);
+        }, "Copy", "/images/copy-16.png");
+        iconBox.getChildren().addAll(copyButton, deleteButton);
         return iconBox;
     }
 

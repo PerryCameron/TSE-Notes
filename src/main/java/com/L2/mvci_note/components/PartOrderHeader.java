@@ -29,7 +29,7 @@ public class PartOrderHeader implements Builder<Region> {
         root.getStyleClass().add("decorative-header-box");
         Button newButton = ButtonFx.utilityButton( () -> {
             noteModel.getCurrentNote().getPartOrders().add(new PartOrderDTO(""));
-        },"New Part Order", "/images/new-16.png");
+        },"New Part Order", "/images/create-16.png");
         newButton.setTooltip(ToolTipFx.of("Create New Part Order"));
         Button[] buttons = new Button[] { newButton };
         root.getChildren().addAll(TitleBarFx.of("Part Orders", buttons));

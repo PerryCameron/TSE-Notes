@@ -80,7 +80,7 @@ public class DateTimePicker implements Builder<Region> {
         Button refreshButton = ButtonFx.utilityButton( () -> {
             noteView.getNoteModel().setStatusLabel("Refreshing date and time to now.");
             setDateTime(LocalDateTime.now());
-        }, "Refresh", "/images/refresh-16.png");
+        }, "Sync", "/images/sync-16.png");
         refreshButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
         return refreshButton;
     }
