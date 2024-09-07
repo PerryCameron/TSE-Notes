@@ -5,13 +5,11 @@ import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.util.Builder;
 
 import java.util.function.Consumer;
@@ -29,7 +27,7 @@ public class MainView implements Builder<Region> {
     public Region build() {
         VBox root = new VBox();
         BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(1028,830);
+//        borderPane.setPrefSize(1028, 830);
         borderPane.setTop(setUpTopPane());
         borderPane.setCenter(setUpCenterPane());
         borderPane.setBottom(setUpBottomPane());
@@ -37,8 +35,6 @@ public class MainView implements Builder<Region> {
         root.setStyle("-fx-border-color: #878484; -fx-border-width: 1;");
         return root;
     }
-
-
 
     private Node setUpTopPane() {
         VBox topElements = new VBox();
@@ -50,9 +46,9 @@ public class MainView implements Builder<Region> {
 
     private Node setUpMenuBar() {
         MenuBar menuBar = new MenuBar();
-        menuBar.setPadding(new Insets(0,0,0,0));
+        menuBar.setPadding(new Insets(0, 0, 0, 0));
         menuBar.setMaxHeight(15);
-        menuBar.getMenus().addAll(createFileMenu(),createEditMenu(),createDebugMenu());
+        menuBar.getMenus().addAll(createFileMenu(), createEditMenu(), createDebugMenu());
         return menuBar;
     }
 
@@ -72,7 +68,7 @@ public class MainView implements Builder<Region> {
         Menu menu = new Menu("File");
         MenuItem openNewCase = MenuFx.menuItemOf("Open New Case", x -> action.accept(MainMessage.OPEN_NEW_CASE), null);
         MenuItem close = MenuFx.menuItemOf("Settings", x -> action.accept(MainMessage.OPEN_SETTINGS), null);
-        menu.getItems().addAll(close,openNewCase);
+        menu.getItems().addAll(close, openNewCase);
         return menu;
     }
 
@@ -113,9 +109,9 @@ public class MainView implements Builder<Region> {
     }
 
     protected void addNewTab(String name, Region region, boolean closeable) {
-            Tab newTab = new Tab(name, region);
-            newTab.setClosable(closeable);
-            mainModel.getMainTabPane().getTabs().add(newTab);
-            mainModel.getMainTabPane().getSelectionModel().select(newTab);
+        Tab newTab = new Tab(name, region);
+        newTab.setClosable(closeable);
+        mainModel.getMainTabPane().getTabs().add(newTab);
+        mainModel.getMainTabPane().getSelectionModel().select(newTab);
     }
 }
