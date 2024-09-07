@@ -4,13 +4,10 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
-import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -21,8 +18,6 @@ import javafx.util.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 public class DateTimePicker implements Builder<Region> {
 
@@ -30,7 +25,7 @@ public class DateTimePicker implements Builder<Region> {
     private final DatePicker datePicker;
     private final Spinner<Integer> hourSpinner;
     private final Spinner<Integer> minuteSpinner;
-    private VBox dateBox;
+    private VBox root;
 
 
     public DateTimePicker(NoteView noteView) {
@@ -56,20 +51,16 @@ public class DateTimePicker implements Builder<Region> {
 
     @Override
     public Region build() {
-        this.dateBox = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
-        dateBox.getStyleClass().add("decorative-hbox");
+        this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
+        root.getStyleClass().add("decorative-hbox");
         Button[] buttons = new Button[] { refreshButton(), copyButton() };
-        dateBox.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons) ,dateTimePicker());
-        return dateBox;
+        root.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons) ,dateTimePicker());
+        return root;
     }
 
     private Button copyButton() {
         Button copyButton = ButtonFx.utilityButton( () -> {
-            dateBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
-            // Use a PauseTransition to remove the border after 0.2 seconds
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-            pause.setOnFinished(event -> dateBox.setStyle("")); // Reset the style
-            pause.play();
+            flashBorder();
             noteView.getAction().accept(NoteMessage.COPY_NAME_DATE);
         }, "Copy", "/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy User and Date/Time"));
@@ -110,6 +101,13 @@ public class DateTimePicker implements Builder<Region> {
         // Initialize with the current date and time
         updateDateTime();
         return hBox;
+    }
+
+    public void flashBorder() {
+        root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        pause.setOnFinished(event -> root.setStyle("")); // Reset the style
+        pause.play();
     }
 }
 

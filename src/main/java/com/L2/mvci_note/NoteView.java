@@ -63,15 +63,15 @@ public class NoteView implements Builder<Region> {
 
     private Node controls() {
         HBox hBox = new HBox();
-        Button button = new Button("Customer Request");
-        button.setOnAction(event -> {
+        Button customerRequestButton = ButtonFx.utilityButton( () -> {
             action.accept(NoteMessage.COPY_CUSTOMER_REQUEST);
-        });
-        Button button1 = new Button("Corrective Action");
-        button1.setOnAction(event -> {
-           action.accept(NoteMessage.COPY_CORRECTIVE_ACTION);
-        });
-        hBox.getChildren().addAll(button, button1);
+        }, "Customer Request", "/images/about-16.png");
+
+        Button correctiveActionButton = ButtonFx.utilityButton( () -> {
+            action.accept(NoteMessage.COPY_CORRECTIVE_ACTION);
+        }, "Corrective Action", "/images/apply-16.png");
+
+        hBox.getChildren().addAll(customerRequestButton, correctiveActionButton);
         return hBox;
     }
 

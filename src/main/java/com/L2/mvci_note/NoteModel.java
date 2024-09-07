@@ -10,12 +10,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class NoteModel {
     private ObjectProperty<CaseDTO> currentNote = new SimpleObjectProperty<>();
@@ -26,8 +28,9 @@ public class NoteModel {
     private StringProperty statusLabel = new SimpleStringProperty();
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
     private ObjectProperty<LocalDateTime> dateTimeProperty = new SimpleObjectProperty<>();
+    private ArrayList<Region> groupA = new ArrayList<>();
 
-
+   // Custom
     public String formattedDate() {
         LocalDateTime dateTime = dateTimeProperty.get();
         if (dateTime == null) {
@@ -43,6 +46,16 @@ public class NoteModel {
     }
 
 
+    // basic
+
+
+    public ArrayList<Region> getGroupA() {
+        return groupA;
+    }
+
+    public void setGroupA(ArrayList<Region> groupA) {
+        this.groupA = groupA;
+    }
 
     public LocalDateTime getDateTimeProperty() {
         return dateTimeProperty.get();

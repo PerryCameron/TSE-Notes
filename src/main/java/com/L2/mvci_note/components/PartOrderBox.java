@@ -11,13 +11,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-
-import java.util.Objects;
 
 public class PartOrderBox extends VBox {
 
@@ -109,15 +105,17 @@ public class PartOrderBox extends VBox {
         Button copyButton = ButtonFx.utilityButton( () -> {
             noteModel.getCurrentNote().setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
-            // Apply a blue border to the VBox
-            this.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-radius: 5px");
-            // Use a PauseTransition to remove the border after 0.5 seconds
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-            pause.setOnFinished(event -> this.setStyle("")); // Reset the style
-            pause.play();
+            flashBorder();
         }, "Copy", "/images/copy-16.png");
         iconBox.getChildren().addAll(copyButton, deleteButton);
         return iconBox;
+    }
+
+    public void flashBorder() {
+        this.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        pause.setOnFinished(event -> this.setStyle("")); // Reset the style
+        pause.play();
     }
 
     @SuppressWarnings("unchecked")

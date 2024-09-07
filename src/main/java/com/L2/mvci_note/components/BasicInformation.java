@@ -40,10 +40,7 @@ public class BasicInformation implements Builder<Region> {
         hBox.getChildren().addAll(callInInfo(), servicePlan());
 
         Button copyButton = ButtonFx.utilityButton(() -> {
-            root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-            pause.setOnFinished(event -> root.setStyle("")); // Reset the style
-            pause.play();
+            flashBorder();
             noteView.getAction().accept(NoteMessage.COPY_BASIC_INFORMATION);
         }, "Copy","/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
@@ -187,5 +184,12 @@ public class BasicInformation implements Builder<Region> {
             vBox.getChildren().add(textField);
         }
         return vBox;
+    }
+
+    public void flashBorder() {
+        root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        pause.setOnFinished(event -> root.setStyle("")); // Reset the style
+        pause.play();
     }
 }

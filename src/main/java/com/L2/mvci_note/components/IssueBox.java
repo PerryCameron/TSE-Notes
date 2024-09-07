@@ -17,7 +17,7 @@ public class IssueBox implements Builder<Region> {
 
     private final NoteView noteView;
     private final NoteModel noteModel;
-//    private VBox issueBox;
+    private VBox root;
 
     public IssueBox(NoteView noteView) {
         this.noteView = noteView;
@@ -26,8 +26,8 @@ public class IssueBox implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
-        vBox.getStyleClass().add("decorative-hbox");
+        this.root = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
+        root.getStyleClass().add("decorative-hbox");
         TextArea textAreaIssue = TextAreaFx.of(true, 200, 16, 5);
         textAreaIssue.setPrefWidth(900);
         textAreaIssue.setText(noteModel.getCurrentNote().issueProperty().get());
@@ -39,16 +39,20 @@ public class IssueBox implements Builder<Region> {
         clearButton.setTooltip(ToolTipFx.of("Clear Issue"));
 
         Button copyButton = ButtonFx.utilityButton( () -> {
-            vBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-            pause.setOnFinished(event -> vBox.setStyle("")); // Reset the style
-            pause.play();
+            flashBorder();
             noteView.getAction().accept(NoteMessage.COPY_ISSUE);
         }, "Copy", "/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy Issue"));
 
         Button[] buttons = new Button[] { clearButton, copyButton };
-        vBox.getChildren().addAll(TitleBarFx.of("Issue", buttons), textAreaIssue);
-        return vBox;
+        root.getChildren().addAll(TitleBarFx.of("Issue", buttons), textAreaIssue);
+        return root;
+    }
+
+    public void flashBorder() {
+        root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        pause.setOnFinished(event -> root.setStyle("")); // Reset the style
+        pause.play();
     }
 }

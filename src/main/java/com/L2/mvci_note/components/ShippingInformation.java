@@ -19,7 +19,7 @@ public class ShippingInformation implements Builder<Region> {
 
     private final NoteView noteView;
     private final NoteModel noteModel;
-    private VBox shippingBox;
+    private VBox root;
 
     public ShippingInformation(NoteView noteView) {
         this.noteView = noteView;
@@ -28,21 +28,18 @@ public class ShippingInformation implements Builder<Region> {
 
     @Override
     public Region build() {
-        this.shippingBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
+        this.root = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         HBox hBox =  HBoxFx.of(new Insets(5, 5, 10, 5), 5.0);
-        shippingBox.getStyleClass().add("decorative-hbox");
+        root.getStyleClass().add("decorative-hbox");
         hBox.getChildren().addAll(contact(), address());
         Button copyButton = ButtonFx.utilityButton( () -> {
-            shippingBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-            pause.setOnFinished(event -> shippingBox.setStyle("")); // Reset the style
-            pause.play();
+            flashBorder();
             noteView.getAction().accept(NoteMessage.SHIPPING_INFORMATION);
         }, "Copy", "/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy Shipping Information"));
         Button[] buttons = new Button[] { copyButton };
-        shippingBox.getChildren().addAll(TitleBarFx.of("Issue", buttons), hBox);
-        return shippingBox;
+        root.getChildren().addAll(TitleBarFx.of("Shipping Information", buttons), hBox);
+        return root;
     }
 
     private Node contact() {
@@ -146,6 +143,13 @@ public class ShippingInformation implements Builder<Region> {
         hBox.getChildren().addAll(tf2, tf3, tf4);
         vBox.getChildren().addAll(TitleBarFx.of("Address", buttons), tf1, textArea, hBox, tf5);
         return vBox;
+    }
+
+    public void flashBorder() {
+        root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        pause.setOnFinished(event -> root.setStyle("")); // Reset the style
+        pause.play();
     }
 }
 
