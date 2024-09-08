@@ -47,6 +47,7 @@ public class NoteInteractor {
 
     public void setFakeTestData() {
         CaseDTO caseDTO = FakeData.createFakeCase();
+        noteModel.getNotes().add(caseDTO);
         noteModel.setCurrentNote(caseDTO);
     }
 
@@ -370,7 +371,9 @@ public class NoteInteractor {
     public void createNewNote() {
         int noteNumber = noteModel.getCurrentNote().getId() + 1;
         noteModel.setCurrentEntitlement(noteModel.getEntitlements().getLast());
-        noteModel.setCurrentNote(new CaseDTO(noteNumber, false));
+        noteModel.getNotes().add(new CaseDTO(noteNumber, false));
+        noteModel.setCurrentNote(noteModel.getNotes().getLast());
         logger.info("Created new note {}", noteNumber);
+        logger.info("There are now {} notes in memory", noteModel.getNotes().size() );
     }
 }

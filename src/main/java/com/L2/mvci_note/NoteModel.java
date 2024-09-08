@@ -10,16 +10,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 public class NoteModel {
+    private ObservableList<CaseDTO> notes = FXCollections.observableArrayList();
     private ObjectProperty<CaseDTO> currentNote = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
@@ -48,6 +47,13 @@ public class NoteModel {
     // basic
 
 
+    public ObservableList<CaseDTO> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(ObservableList<CaseDTO> notes) {
+        this.notes = notes;
+    }
 
     public LocalDateTime getDateTimeProperty() {
         return dateTimeProperty.get();
