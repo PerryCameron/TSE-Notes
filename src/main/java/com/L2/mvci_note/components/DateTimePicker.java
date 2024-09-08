@@ -1,5 +1,6 @@
 package com.L2.mvci_note.components;
 
+import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.*;
@@ -11,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.util.Builder;
 import javafx.util.Duration;
 
 
@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class DateTimePicker implements Builder<Region> {
+public class DateTimePicker implements Component<Region> {
 
     private final NoteView noteView;
     private final DatePicker datePicker;
@@ -60,7 +60,7 @@ public class DateTimePicker implements Builder<Region> {
 
     private Button copyButton() {
         Button copyButton = ButtonFx.utilityButton( () -> {
-            flashBorder();
+            flash();
             noteView.getAction().accept(NoteMessage.COPY_NAME_DATE);
         }, "Copy", "/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy User and Date/Time"));
@@ -103,11 +103,21 @@ public class DateTimePicker implements Builder<Region> {
         return hBox;
     }
 
-    public void flashBorder() {
+    @Override
+    public void flash() {
         root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
         PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
         pause.setOnFinished(event -> root.setStyle("")); // Reset the style
         pause.play();
+    }
+
+    @Override
+    public void refreshFields() {
+        LocalDateTime localDateTime = noteView.getNoteModel().getCurrentNote().getTimestamp();
+        datePicker.setValue(localDateTime.toLocalDate());
+        hourSpinner.getValueFactory().setValue(localDateTime.getHour());
+        minuteSpinner.getValueFactory().setValue(localDateTime.getMinute());
+        setDateTime(noteView.getNoteModel().getDateTimeProperty());
     }
 }
 

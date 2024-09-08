@@ -45,7 +45,7 @@ public class BasicInformation implements Component<Region> {
         hBox.getChildren().addAll(callInInfo(), servicePlan());
 
         Button copyButton = ButtonFx.utilityButton(() -> {
-            flashBorder();
+            flash();
             noteView.getAction().accept(NoteMessage.COPY_BASIC_INFORMATION);
         }, "Copy","/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
@@ -172,12 +172,12 @@ public class BasicInformation implements Component<Region> {
         for(TextField textField : textFields) {
             vBox.getChildren().add(textField);
         }
-        populateFields();
+        refreshFields();
         return vBox;
     }
 
     @Override
-    public void populateFields() {
+    public void refreshFields() {
         textFields[0].textProperty().set(noteModel.getCurrentNote().getWorkOrder());
         textFields[1].textProperty().set(noteModel.getCurrentNote().getCaseNumber());
         textFields[2].textProperty().set(noteModel.getCurrentNote().getModelNumber());
@@ -193,7 +193,7 @@ public class BasicInformation implements Component<Region> {
     }
 
     @Override
-    public void flashBorder() {
+    public void flash() {
         root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
         PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
         pause.setOnFinished(event -> root.setStyle("")); // Reset the style

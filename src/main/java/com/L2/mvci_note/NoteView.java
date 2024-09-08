@@ -51,7 +51,9 @@ public class NoteView implements Builder<Region> {
     private void setUpCurrentCaseListener() {
         noteModel.currentNoteProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                basicInformation.populateFields();
+                basicInformation.refreshFields();
+                System.out.println(noteModel.getCurrentNote().timestampProperty().toString());
+                dateTimePicker.refreshFields();
             }
         });
     }
@@ -74,8 +76,8 @@ public class NoteView implements Builder<Region> {
     }
 
     public void flashGroupA() {
-        basicInformation.flashBorder();
-        dateTimePicker.flashBorder();
+        basicInformation.flash();
+        dateTimePicker.flash();
         issueBox.flashBorder();
         partOrderContainer.getChildren().forEach(partOrder -> {
             if(partOrder instanceof PartOrderBox) {
