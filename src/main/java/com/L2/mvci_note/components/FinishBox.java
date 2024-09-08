@@ -1,0 +1,70 @@
+package com.L2.mvci_note.components;
+
+import com.L2.mvci_note.NoteMessage;
+import com.L2.mvci_note.NoteModel;
+import com.L2.mvci_note.NoteView;
+import com.L2.widgetFx.ButtonFx;
+import com.L2.widgetFx.TitleBarFx;
+import com.L2.widgetFx.VBoxFx;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.util.Builder;
+
+public class FinishBox implements Builder<Region> {
+
+    private final NoteView noteView;
+    private final NoteModel noteModel;
+    private VBox root;
+
+    public FinishBox(NoteView noteView) {
+        this.noteView = noteView;
+        this.noteModel = noteView.getNoteModel();
+    }
+
+    @Override
+    public Region build() {
+        this.root = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
+        root.getStyleClass().add("decorative-hbox");
+        HBox hBox = new HBox(); // box to hold basic info and service plan
+        hBox.setPadding(new Insets(0, 5, 5, 5));
+        Button[] buttons = new Button[] {  };
+        hBox.getChildren().addAll(correctiveText(), buttonBox());
+        root.getChildren().addAll(TitleBarFx.of("Final", buttons), hBox);
+        return root;
+    }
+
+    private Node correctiveText() {
+        TextArea textArea = new TextArea();
+        textArea.setPromptText("Extra corrective action text");
+        textArea.setPrefHeight(100);
+        HBox.setHgrow(textArea, Priority.ALWAYS);
+        return textArea;
+    }
+
+    private Node buttonBox() {
+        VBox vBox = new VBox(10);
+        vBox.setPrefWidth(200);
+        vBox.setPadding(new Insets(0, 0, 0, 10));
+        Button customerRequestButton = ButtonFx.utilityButton( () -> {
+            noteView.flashGroupA();
+            noteView.getAction().accept(NoteMessage.COPY_CUSTOMER_REQUEST);
+        }, "Customer Request", "/images/about-16.png");
+
+        Button correctiveActionButton = ButtonFx.utilityButton( () -> {
+            noteView.flashGroupB();
+            noteView.getAction().accept(NoteMessage.COPY_CORRECTIVE_ACTION);
+        }, "Corrective Action", "/images/corrective-16.png");
+
+        Button setCompletedButton = ButtonFx.utilityButton( () -> {
+            noteView.getAction().accept(NoteMessage.SET_COMPLETE);
+        }, "Set Completed", "/images/thumbs-16.png");
+        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, setCompletedButton);
+        return vBox;
+    }
+}

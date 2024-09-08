@@ -28,7 +28,6 @@ public class NoteModel {
     private StringProperty statusLabel = new SimpleStringProperty();
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
     private ObjectProperty<LocalDateTime> dateTimeProperty = new SimpleObjectProperty<>();
-    private ArrayList<Region> groupA = new ArrayList<>();
 
    // Custom
     public String formattedDate() {
@@ -49,13 +48,6 @@ public class NoteModel {
     // basic
 
 
-    public ArrayList<Region> getGroupA() {
-        return groupA;
-    }
-
-    public void setGroupA(ArrayList<Region> groupA) {
-        this.groupA = groupA;
-    }
 
     public LocalDateTime getDateTimeProperty() {
         return dateTimeProperty.get();

@@ -22,6 +22,8 @@ public class NoteView implements Builder<Region> {
     private final WorkOrderBox workOrderBox;
     private final IssueBox issueBox;
     private final PartOrderHeader partOrderHeader;
+    private final FinishBox finishBox;
+    private VBox partOrderContainer;
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -33,6 +35,7 @@ public class NoteView implements Builder<Region> {
         this.workOrderBox = new WorkOrderBox(this);
         this.issueBox = new IssueBox(this);
         this.partOrderHeader = new PartOrderHeader(this);
+        this.finishBox = new FinishBox(this);
     }
 
     @Override
@@ -57,38 +60,45 @@ public class NoteView implements Builder<Region> {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
-        vBox.getChildren().addAll(hBox, issueBox.build(), partOrderHeader.build(), partOrders(), rowThreeBox(), controls());
+        vBox.getChildren().addAll(hBox, issueBox.build(), partOrderHeader.build(), partOrders(), rowThreeBox(), finishBox.build());
         return vBox;
     }
 
-    private Node controls() {
-        HBox hBox = new HBox();
-        Button customerRequestButton = ButtonFx.utilityButton( () -> {
-            action.accept(NoteMessage.COPY_CUSTOMER_REQUEST);
-        }, "Customer Request", "/images/about-16.png");
+    public void flashGroupA() {
+        basicInformation.flashBorder();
+        dateTimePicker.flashBorder();
+        issueBox.flashBorder();
+        partOrderContainer.getChildren().forEach(partOrder -> {
+            if(partOrder instanceof PartOrderBox) {
+                ((PartOrderBox) partOrder).flashBorder();
+            }
+        });
+        shippingInformation.flashBorder();
+    }
 
-        Button correctiveActionButton = ButtonFx.utilityButton( () -> {
-            action.accept(NoteMessage.COPY_CORRECTIVE_ACTION);
-        }, "Corrective Action", "/images/apply-16.png");
-
-        hBox.getChildren().addAll(customerRequestButton, correctiveActionButton);
-        return hBox;
+    public void flashGroupB() {
+        workOrderBox.flashBorder();
+        partOrderContainer.getChildren().forEach(partOrder -> {
+            if(partOrder instanceof PartOrderBox) {
+                ((PartOrderBox) partOrder).flashBorder();
+            }
+        });
     }
 
     private Node partOrders() {
-        VBox vBox = new VBox(10);
+        this.partOrderContainer = new VBox(10);
         for(PartOrderDTO partOrderDTO: noteModel.getCurrentNote().getPartOrders()) {
-            vBox.getChildren().add(new PartOrderBox(partOrderDTO, this));
+            partOrderContainer.getChildren().add(new PartOrderBox(partOrderDTO, this));
         }
         noteModel.getCurrentNote().getPartOrders().addListener((ListChangeListener<PartOrderDTO>) change -> {
             while (change.next()) {
                 if(change.wasAdded()) {
-                    vBox.getChildren().add(new PartOrderBox(noteModel.getCurrentNote().getPartOrders().getLast(),this));
+                    partOrderContainer.getChildren().add(new PartOrderBox(noteModel.getCurrentNote().getPartOrders().getLast(),this));
                 }
                 action.accept(NoteMessage.REPORT_NUMBER_OF_PART_ORDERS);
             }
         });
-        return vBox;
+        return partOrderContainer;
     }
 
     private Node setBox3Info() {

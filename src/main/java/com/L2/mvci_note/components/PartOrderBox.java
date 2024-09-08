@@ -111,13 +111,6 @@ public class PartOrderBox extends VBox {
         return iconBox;
     }
 
-    public void flashBorder() {
-        this.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
-        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-        pause.setOnFinished(event -> this.setStyle("")); // Reset the style
-        pause.play();
-    }
-
     @SuppressWarnings("unchecked")
     public TableView<PartDTO> buildTable() {
         TableView<PartDTO> tableView = TableViewFx.of(PartDTO.class);
@@ -150,5 +143,12 @@ public class PartOrderBox extends VBox {
         col.setStyle("-fx-alignment: center-left");
         col.setMaxWidth(70.0);
         return col;
+    }
+
+    public void flashBorder() {
+        this.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        pause.setOnFinished(event -> this.setStyle("")); // Reset the style
+        pause.play();
     }
 }
