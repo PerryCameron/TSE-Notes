@@ -44,6 +44,7 @@ public class FakeData {
         c.setSchedulingTerms("7x24");
         c.setCreatedWorkOrder("WO-12345678");
         c.setTex("TEX-12344567895454");
+        c.setAdditionalCorrectiveActionText("Here is some extra text");
         // entitlements need filled
         c.setEntitlement("Advantage Ultra");
         // create a part order

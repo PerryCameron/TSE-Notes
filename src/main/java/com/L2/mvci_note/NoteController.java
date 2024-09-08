@@ -40,6 +40,7 @@ public class NoteController extends Controller<NoteMessage> {
             case COPY_CUSTOMER_REQUEST -> noteInteractor.copyCustomerRequest();
             case COPY_ISSUE -> noteInteractor.copyIssue();
             case COPY_CORRECTIVE_ACTION -> noteInteractor.copyCorrectiveAction();
+            case SET_COMPLETE -> noteInteractor.setComplete();
         };
     }
 

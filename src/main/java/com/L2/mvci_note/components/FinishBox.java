@@ -4,6 +4,7 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.ButtonFx;
+import com.L2.widgetFx.ListenerFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Insets;
@@ -47,6 +48,7 @@ public class FinishBox implements Builder<Region> {
         this.textArea = new TextArea();
         textArea.setPromptText("Additional corrective action text");
         textArea.setPrefHeight(100);
+        ListenerFx.addFocusListener(textArea, "Additional Info", noteModel.getCurrentNote().additionalCorrectiveActionTextProperty(), noteModel.statusLabelProperty());
         HBox.setHgrow(textArea, Priority.ALWAYS);
         return textArea;
     }

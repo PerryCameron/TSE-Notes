@@ -46,6 +46,7 @@ public class CaseDTO implements Serializable {
     private IntegerProperty partsOrder = new SimpleIntegerProperty();
     private StringProperty entitlement = new SimpleStringProperty();
     private BooleanProperty completed = new SimpleBooleanProperty();
+    private BooleanProperty isEmail = new SimpleBooleanProperty();
     private StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
 
 
@@ -66,6 +67,18 @@ public class CaseDTO implements Serializable {
 
     /////////////////////////////////////////////////////////////
 
+
+    public boolean isIsEmail() {
+        return isEmail.get();
+    }
+
+    public BooleanProperty isEmailProperty() {
+        return isEmail;
+    }
+
+    public void setIsEmail(boolean isEmail) {
+        this.isEmail.set(isEmail);
+    }
 
     public boolean isCompleted() {
         return completed.get();
