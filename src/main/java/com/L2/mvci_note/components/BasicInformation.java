@@ -17,10 +17,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.util.Builder;
 import javafx.util.Duration;
 
-public class BasicInformation implements Builder<Region>, Component {
+public class BasicInformation implements Component<Region> {
 
     private final NoteModel noteModel;
     private final NoteView noteView;

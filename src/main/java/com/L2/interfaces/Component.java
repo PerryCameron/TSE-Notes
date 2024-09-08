@@ -1,9 +1,8 @@
 package com.L2.interfaces;
 
-import javafx.animation.PauseTransition;
-import javafx.util.Duration;
+import javafx.util.Builder;
 
-public interface Component {
+public interface Component<T> extends Builder<T> {
     public void flashBorder();
     public void populateFields();
 }
