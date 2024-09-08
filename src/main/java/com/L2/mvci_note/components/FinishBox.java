@@ -70,7 +70,12 @@ public class FinishBox implements Builder<Region> {
         Button setCompletedButton = ButtonFx.utilityButton( () -> {
             noteView.getAction().accept(NoteMessage.SET_COMPLETE);
         }, "Set Completed", "/images/thumbs-16.png");
-        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, setCompletedButton);
+
+        Button newNoteButton = ButtonFx.utilityButton( () -> {
+            noteView.getAction().accept(NoteMessage.NEW_NOTE);
+        }, "New Note", "/images/new-16.png");
+
+        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, setCompletedButton, newNoteButton);
         return vBox;
     }
 }

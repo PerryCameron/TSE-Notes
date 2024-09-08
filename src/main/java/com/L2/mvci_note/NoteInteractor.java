@@ -322,6 +322,7 @@ public class NoteInteractor {
     }
 
     public void copyCorrectiveAction() {
+        logger.info("Copying corrective action");
         ClipboardUtils.copyHtmlToClipboard(correctiveActionToHTML(), correctiveActionToPlainText());
     }
 
@@ -364,5 +365,11 @@ public class NoteInteractor {
     public void setComplete() {
         logger.info("Note {} has been set to completed", noteModel.getCurrentNote().getId() );
         noteModel.getCurrentNote().setCompleted(true);
+    }
+
+    public void createNewNote() {
+        int noteNumber = noteModel.getCurrentNote().getId() + 1;
+        noteModel.setCurrentNote(new CaseDTO(noteNumber, false));
+        logger.info("Created new note {}", noteNumber);
     }
 }

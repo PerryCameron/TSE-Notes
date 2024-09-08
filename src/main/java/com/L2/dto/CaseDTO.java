@@ -49,6 +49,46 @@ public class CaseDTO implements Serializable {
     private BooleanProperty isEmail = new SimpleBooleanProperty();
     private StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
 
+    public CaseDTO() {
+    }
+
+    public CaseDTO(int id, boolean isEmail) {
+        // Initialize properties with passed values
+        this.id.set(id);
+        this.timestamp.set(LocalDateTime.now());
+        this.workOrder.set("");
+        this.caseNumber.set("");
+        this.serialNumber.set("");
+        this.modelNumber.set("");
+        this.callInPerson.set("");
+        this.callInPhoneNumber.set("");
+        this.callInEmail.set("");
+        this.underWarranty.set(false);
+        this.activeServiceContract.set("");
+        this.serviceLevel.set("");
+        this.schedulingTerms.set("");
+        this.upsStatus.set("");
+        this.loadSupported.set(true);
+        this.issue.set("");
+        this.contactName.set("");
+        this.contactPhoneNumber.set("");
+        this.contactEmail.set("");
+        this.street.set("");
+        this.installedAt.set("");
+        this.city.set("");
+        this.state.set("");
+        this.zip.set("");
+        this.country.set("");
+        this.partOrders.set(FXCollections.observableArrayList(partOrders));
+        this.selectedPartOrder.set(null);
+        this.createdWorkOrder.set("");
+        this.tex.set("");
+        this.partsOrder.set(0);
+        this.entitlement.set("");
+        this.completed.set(false);
+        this.isEmail.set(isEmail);
+        this.additionalCorrectiveActionText.set("");
+    }
 
     public void clearAddress() {
         installedAt.set("");
@@ -66,7 +106,6 @@ public class CaseDTO implements Serializable {
     }
 
     /////////////////////////////////////////////////////////////
-
 
     public boolean isIsEmail() {
         return isEmail.get();

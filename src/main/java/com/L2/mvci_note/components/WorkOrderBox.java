@@ -48,7 +48,7 @@ public class WorkOrderBox implements Builder<Region> {
         Label label = new Label("TEX");
         label.setPadding(new Insets(0,0,0,5));
         TextField tf = TextFieldFx.of(200,  "TEX-");
-        tf.textProperty().set(String.valueOf(noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber()));
+        tf.textProperty().set(String.valueOf(noteModel.getCurrentNote().getTex()));
         vbox.getChildren().addAll(label, tf);
         return vbox;
     }
