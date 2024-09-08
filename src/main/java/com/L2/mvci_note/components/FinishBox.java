@@ -21,6 +21,7 @@ public class FinishBox implements Builder<Region> {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox root;
+    private TextArea textArea;
 
     public FinishBox(NoteView noteView) {
         this.noteView = noteView;
@@ -33,15 +34,18 @@ public class FinishBox implements Builder<Region> {
         root.getStyleClass().add("decorative-hbox");
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
-        Button[] buttons = new Button[] {  };
+        Button clearButton = ButtonFx.utilityButton(() -> {
+            textArea.setText("");
+        },"Clear","/images/clear-16.png");
+        Button[] buttons = new Button[] { clearButton };
         hBox.getChildren().addAll(correctiveText(), buttonBox());
         root.getChildren().addAll(TitleBarFx.of("Final", buttons), hBox);
         return root;
     }
 
     private Node correctiveText() {
-        TextArea textArea = new TextArea();
-        textArea.setPromptText("Extra corrective action text");
+        this.textArea = new TextArea();
+        textArea.setPromptText("Additional corrective action text");
         textArea.setPrefHeight(100);
         HBox.setHgrow(textArea, Priority.ALWAYS);
         return textArea;

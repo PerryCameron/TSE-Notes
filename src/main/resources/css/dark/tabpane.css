@@ -3,7 +3,6 @@
     -fx-pref-width: 150px; /* Set the preferred width for each tab */
 }
 
-
 /* Style for unselected tabs */
 .tab {
     -fx-background-color: #f6f8fa; /* Unselected tab background color */
@@ -25,7 +24,6 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
-
 
 /* Optional: Remove focus border from tabs */
 .tab-pane:focused > .tab-header-area > .tab:selected {
@@ -80,26 +78,26 @@
     -fx-text-fill: red;
 }
 /* styles.css */
-
+.inner-decorative-hbox {
+    -fx-background-color: #efeded;
+    -fx-background-radius: 5;
+}
 
 /* Make the button transparent */
 .invisible-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-padding: 0; /* Remove padding */
+    -fx-padding: 0 4 0 4; /* Remove padding */
 }
-
 
 /* Keep the image fully visible */
 .invisible-button .image-view {
     -fx-opacity: 1;
 }
 
-
 /* On hover, show a selection effect */
 .invisible-button:hover {
     -fx-background-color: rgba(0, 0, 0, 0.1); /* Light transparent background on hover */
-    -fx-border-color: #2980b9; /* Optional: add a border on hover */
     -fx-border-radius: 5; /* Optional: rounded corners on hover */
     -fx-cursor: hand; /* Change cursor to pointer */
 }

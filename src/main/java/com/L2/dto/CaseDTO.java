@@ -45,6 +45,8 @@ public class CaseDTO implements Serializable {
     private StringProperty tex = new SimpleStringProperty();
     private IntegerProperty partsOrder = new SimpleIntegerProperty();
     private StringProperty entitlement = new SimpleStringProperty();
+    private BooleanProperty completed = new SimpleBooleanProperty();
+    private StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
 
 
     public void clearAddress() {
@@ -64,6 +66,30 @@ public class CaseDTO implements Serializable {
 
     /////////////////////////////////////////////////////////////
 
+
+    public boolean isCompleted() {
+        return completed.get();
+    }
+
+    public BooleanProperty completedProperty() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed.set(completed);
+    }
+
+    public String getAdditionalCorrectiveActionText() {
+        return additionalCorrectiveActionText.get();
+    }
+
+    public StringProperty additionalCorrectiveActionTextProperty() {
+        return additionalCorrectiveActionText;
+    }
+
+    public void setAdditionalCorrectiveActionText(String additionalCorrectiveActionText) {
+        this.additionalCorrectiveActionText.set(additionalCorrectiveActionText);
+    }
 
     public String getTex() {
         return tex.get();

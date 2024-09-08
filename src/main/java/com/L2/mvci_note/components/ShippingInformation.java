@@ -28,8 +28,8 @@ public class ShippingInformation implements Builder<Region> {
 
     @Override
     public Region build() {
-        this.root = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
-        HBox hBox =  HBoxFx.of(new Insets(5, 5, 10, 5), 5.0);
+        this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
+        HBox hBox =  HBoxFx.of(new Insets(5, 5, 5, 5), 5.0);
         root.getStyleClass().add("decorative-hbox");
         hBox.getChildren().addAll(contact(), address());
         Button copyButton = ButtonFx.utilityButton( () -> {
@@ -44,7 +44,7 @@ public class ShippingInformation implements Builder<Region> {
 
     private Node contact() {
         VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
-
+        vBox.getStyleClass().add("inner-decorative-hbox");
         TextField tf6 = TextFieldFx.of(250, "Contact Name");
         tf6.textProperty().set(noteModel.getCurrentNote().getContactName());
         ListenerFx.addFocusListener(tf6, "Contact Name", noteModel.getCurrentNote().contactNameProperty(), noteModel.statusLabelProperty());
@@ -83,6 +83,7 @@ public class ShippingInformation implements Builder<Region> {
 
     private Node address() {
         VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
+        vBox.getStyleClass().add("inner-decorative-hbox");
         HBox hBox = new HBox(5);
 
         TextField tf1 = TextFieldFx.of(200, "Related Account / Installed at");
