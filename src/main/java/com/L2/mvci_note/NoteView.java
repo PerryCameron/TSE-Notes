@@ -44,7 +44,16 @@ public class NoteView implements Builder<Region> {
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(setMainVBox());
         setUpStatusBarCommunication();
+        setUpCurrentCaseListener();
         return scrollPane;
+    }
+
+    private void setUpCurrentCaseListener() {
+        noteModel.currentNoteProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                basicInformation.populateFields();
+            }
+        });
     }
 
     // writing to this StringProperty will automatically update the status bar

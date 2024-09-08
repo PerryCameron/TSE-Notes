@@ -64,7 +64,7 @@ public class CaseDTO implements Serializable {
         this.callInPhoneNumber.set("");
         this.callInEmail.set("");
         this.underWarranty.set(false);
-        this.activeServiceContract.set("");
+        this.activeServiceContract.set("None");
         this.serviceLevel.set("");
         this.schedulingTerms.set("");
         this.upsStatus.set("");

@@ -369,6 +369,7 @@ public class NoteInteractor {
 
     public void createNewNote() {
         int noteNumber = noteModel.getCurrentNote().getId() + 1;
+        noteModel.setCurrentEntitlement(noteModel.getEntitlements().getLast());
         noteModel.setCurrentNote(new CaseDTO(noteNumber, false));
         logger.info("Created new note {}", noteNumber);
     }

@@ -25,6 +25,11 @@ public class BasicInformation implements Builder<Region> {
     private final NoteView noteView;
     private VBox root;
     private final TextField[] textFields = new TextField[7];
+    private final ComboBox<EntitlementDTO> servicePlanComboBox = new ComboBox<>();
+    private final ComboBox<String> schedulingTermsComboBox = new ComboBox<>();
+    private final ComboBox<String> serviceLevelComboBox = new ComboBox<>();
+    private final ToggleSwitch toggleSwitch = new ToggleSwitch();
+    private final ComboBox<String> statusComboBox = new ComboBox<>();
 
     public BasicInformation(NoteView noteView) {
         this.noteView = noteView;
@@ -73,15 +78,14 @@ public class BasicInformation implements Builder<Region> {
         VBox vBox = new VBox(4);
         // Define Labels and Controls
         Label label = new Label("Service Plan:");
-        ComboBox<EntitlementDTO> comboBox = new ComboBox<>();
-        comboBox.setPrefWidth(200);
+
+        servicePlanComboBox.setPrefWidth(200);
         // I would like to replace the hard coded entitlements below with the ArrayList  caseModel.getEntitlements() using the field EntitlementDTO::name
-        comboBox.getItems().addAll(noteModel.getEntitlements());
+        servicePlanComboBox.getItems().addAll(noteModel.getEntitlements());
         // Optional: Set a default value if needed
-        if (!comboBox.getItems().isEmpty()) {
-            comboBox.setValue(comboBox.getItems().getFirst());  // Set the first item as selected by default
+        if (!servicePlanComboBox.getItems().isEmpty()) {
+            servicePlanComboBox.setValue(servicePlanComboBox.getItems().getFirst());  // Set the first item as selected by default
         }
-        comboBox.valueProperty().set(noteModel.getCurrentEntitlement());
         // Listener to update activeServiceContract when currentEntitlement changes
         noteModel.currentEntitlementProperty().addListener((obs, oldEntitlement, newEntitlement) -> {
             if (newEntitlement != null) {
@@ -90,36 +94,32 @@ public class BasicInformation implements Builder<Region> {
                 noteModel.getCurrentNote().setActiveServiceContract("");  // Or handle null appropriately
             }
         });
-        comboBox.setOnAction(e -> {
-            noteModel.getCurrentNote().setEntitlement(comboBox.getValue().toString());
-            noteModel.setCurrentEntitlement(comboBox.getValue());
+        servicePlanComboBox.setOnAction(e -> {
+            noteModel.getCurrentNote().setEntitlement(servicePlanComboBox.getValue().toString());
+            noteModel.setCurrentEntitlement(servicePlanComboBox.getValue());
             // no longer setting current entitlement
             System.out.println("Current entitlement set to: " + noteModel.getCurrentEntitlement());
             System.out.println(noteModel.getCurrentNote().getEntitlement());
             noteView.getServicePlanDetails().updateDetails();
         });
-        vBox.getChildren().addAll(label, comboBox);
+        vBox.getChildren().addAll(label, servicePlanComboBox);
         return vBox;
     }
 
     private Node setSchedulingTermsBox() {
         VBox vBox = new VBox(4);
         Label label = new Label("Scheduling terms:");
-        ComboBox<String> comboBox = new ComboBox<>();
-        comboBox.setPrefWidth(200);
-        comboBox.getItems().addAll("5x8", "5x24", "7x24");
+        schedulingTermsComboBox.setPrefWidth(200);
+        schedulingTermsComboBox.getItems().addAll("5x8", "5x24", "7x24");
         // sets initial value
-        comboBox.valueProperty().set(noteModel.getCurrentNote().getSchedulingTerms());
-        vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> noteModel.getCurrentNote().setSchedulingTerms(comboBox.getValue()));
+        vBox.getChildren().addAll(label, schedulingTermsComboBox);
+        schedulingTermsComboBox.setOnAction(e -> noteModel.getCurrentNote().setSchedulingTerms(schedulingTermsComboBox.getValue()));
         return vBox;
     }
 
     private Node loadSupportedBox() {
         Label label = new Label("Load Supported:");
         HBox hBox = new HBox(10);
-        ToggleSwitch toggleSwitch = new ToggleSwitch();
-        toggleSwitch.selectedProperty().set(noteModel.getCurrentNote().isLoadSupported());
         toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> noteModel.getCurrentNote().setLoadSupported(newValue));
         hBox.getChildren().addAll(label, toggleSwitch);
         return hBox;
@@ -128,25 +128,21 @@ public class BasicInformation implements Builder<Region> {
     private Node setStatusBox() {
         VBox vBox = new VBox(4);
         Label label = new Label("Status of the UPS:");
-        ComboBox<String> comboBox = new ComboBox<>();
-        comboBox.setPrefWidth(200);
-        comboBox.getItems().addAll("Online", "Bypass", "Offline");
+        statusComboBox.setPrefWidth(200);
+        statusComboBox.getItems().addAll("Online", "Bypass", "Offline");
         // sets initial value
-        comboBox.valueProperty().set(noteModel.getCurrentNote().getUpsStatus());
-        vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> noteModel.getCurrentNote().setUpsStatus(comboBox.getValue()));
+        vBox.getChildren().addAll(label, statusComboBox);
+        statusComboBox.setOnAction(e -> noteModel.getCurrentNote().setUpsStatus(statusComboBox.getValue()));
         return vBox;
     }
 
     private Node setServiceLevelBox() {
         VBox vBox = new VBox(4);
         Label label = new Label("Service Level:");
-        ComboBox<String> comboBox = new ComboBox<>();
-        comboBox.setPrefWidth(200);
-        comboBox.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
-        comboBox.valueProperty().set(noteModel.getCurrentNote().getServiceLevel());
-        vBox.getChildren().addAll(label, comboBox);
-        comboBox.setOnAction(e -> noteModel.getCurrentNote().setServiceLevel(comboBox.getValue()));
+        serviceLevelComboBox.setPrefWidth(200);
+        serviceLevelComboBox.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
+        vBox.getChildren().addAll(label, serviceLevelComboBox);
+        serviceLevelComboBox.setOnAction(e -> noteModel.getCurrentNote().setServiceLevel(serviceLevelComboBox.getValue()));
         return vBox;
     }
 
@@ -154,36 +150,45 @@ public class BasicInformation implements Builder<Region> {
         VBox vBox = VBoxFx.of(5.5, new Insets(0, 40, 0, 0));
 
         textFields[0] = TextFieldFx.of(200, "Work Order");
-        textFields[0].textProperty().set(noteModel.getCurrentNote().getWorkOrder());
         ListenerFx.addFocusListener(textFields[0], "Work Order", noteModel.getCurrentNote().workOrderProperty(), noteModel.statusLabelProperty());
 
         textFields[1] = TextFieldFx.of(200, "Case");
-        textFields[1].textProperty().set(noteModel.getCurrentNote().getCaseNumber());
         ListenerFx.addFocusListener(textFields[1], "Case", noteModel.getCurrentNote().caseNumberProperty(), noteModel.statusLabelProperty());
 
         textFields[2] = TextFieldFx.of(200, 30, "Model", noteModel.getCurrentNote().modelNumberProperty());
-        textFields[2].textProperty().set(noteModel.getCurrentNote().getModelNumber());
         ListenerFx.addFocusListener(textFields[2], "Model", noteModel.getCurrentNote().modelNumberProperty(), noteModel.statusLabelProperty());
 
         textFields[3] = TextFieldFx.of(200, 30, "Serial", noteModel.getCurrentNote().serialNumberProperty());
-        textFields[3].textProperty().set(noteModel.getCurrentNote().getSerialNumber());
         ListenerFx.addFocusListener(textFields[3], "Serial", noteModel.getCurrentNote().serialNumberProperty(), noteModel.statusLabelProperty());
 
         textFields[4] = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty());
-        textFields[4].textProperty().set(noteModel.getCurrentNote().getCallInPerson());
         ListenerFx.addFocusListener(textFields[4], "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty(), noteModel.statusLabelProperty());
 
         textFields[5]= TextFieldFx.of(200, "Call-in Phone");
-        textFields[5].textProperty().set(noteModel.getCurrentNote().getCallInPhoneNumber());
         ListenerFx.addFocusListener(textFields[5], "Call-in Phone", noteModel.getCurrentNote().callInPhoneNumberProperty(), noteModel.statusLabelProperty());
 
         textFields[6] = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getCurrentNote().callInEmailProperty());
-        textFields[6].textProperty().set(noteModel.getCurrentNote().getCallInEmail());
         ListenerFx.addFocusListener(textFields[6], "Call-in Email", noteModel.getCurrentNote().callInEmailProperty(), noteModel.statusLabelProperty());
         for(TextField textField : textFields) {
             vBox.getChildren().add(textField);
         }
+        populateFields();
         return vBox;
+    }
+
+    public void populateFields() {
+        textFields[0].textProperty().set(noteModel.getCurrentNote().getWorkOrder());
+        textFields[1].textProperty().set(noteModel.getCurrentNote().getCaseNumber());
+        textFields[2].textProperty().set(noteModel.getCurrentNote().getModelNumber());
+        textFields[3].textProperty().set(noteModel.getCurrentNote().getSerialNumber());
+        textFields[4].textProperty().set(noteModel.getCurrentNote().getCallInPerson());
+        textFields[5].textProperty().set(noteModel.getCurrentNote().getCallInPhoneNumber());
+        textFields[6].textProperty().set(noteModel.getCurrentNote().getCallInEmail());
+        servicePlanComboBox.valueProperty().set(noteModel.getCurrentEntitlement());
+        schedulingTermsComboBox.valueProperty().set(noteModel.getCurrentNote().getSchedulingTerms());
+        serviceLevelComboBox.valueProperty().set(noteModel.getCurrentNote().getServiceLevel());
+        statusComboBox.valueProperty().set(noteModel.getCurrentNote().getUpsStatus());
+        toggleSwitch.selectedProperty().set(noteModel.getCurrentNote().isLoadSupported());
     }
 
     public void flashBorder() {
