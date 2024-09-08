@@ -2,6 +2,7 @@ package com.L2.mvci_note.components;
 
 import atlantafx.base.controls.ToggleSwitch;
 import com.L2.dto.EntitlementDTO;
+import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
@@ -19,7 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import javafx.util.Duration;
 
-public class BasicInformation implements Builder<Region> {
+public class BasicInformation implements Builder<Region>, Component {
 
     private final NoteModel noteModel;
     private final NoteView noteView;
@@ -176,6 +177,7 @@ public class BasicInformation implements Builder<Region> {
         return vBox;
     }
 
+    @Override
     public void populateFields() {
         textFields[0].textProperty().set(noteModel.getCurrentNote().getWorkOrder());
         textFields[1].textProperty().set(noteModel.getCurrentNote().getCaseNumber());
@@ -191,6 +193,7 @@ public class BasicInformation implements Builder<Region> {
         toggleSwitch.selectedProperty().set(noteModel.getCurrentNote().isLoadSupported());
     }
 
+    @Override
     public void flashBorder() {
         root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
         PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
