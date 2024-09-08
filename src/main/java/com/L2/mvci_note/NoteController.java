@@ -16,12 +16,16 @@ public class NoteController extends Controller<NoteMessage> {
         this.noteInteractor = new NoteInteractor(noteModel);
         this.noteView = new NoteView(noteModel, this::action);
         action(NoteMessage.LOAD_USER);
+        loadTestData(); // this is for testing
+    }
+
+    private void loadTestData() {
+        noteInteractor.setFakeTestData(); // this is temporary but will be where initial data comes from
     }
 
     @Override
     public Region getView() {
         noteInteractor.loadEntitlements();
-        noteInteractor.setFakeTestData(); // this is temporary but will be where initial data comes from
         noteInteractor.setCurrentEntitlement();
         return noteView.build();
     }

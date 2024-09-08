@@ -1,5 +1,6 @@
 package com.L2.mvci_note.components;
 
+import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.ListenerFx;
@@ -15,13 +16,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.util.Builder;
 import javafx.util.Duration;
 
-public class WorkOrderBox implements Builder<Region> {
+public class WorkOrderBox implements Component<Region> {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox root;
+    TextField texTextField = TextFieldFx.of(200,  "TEX-");
+    TextField relatedCaseTextField = TextFieldFx.of(200,  "Related Case");
+    TextField createdWorkOrderTextField = TextFieldFx.of(200,  "WO-");
+
 
     public WorkOrderBox(NoteView noteView) {
         this.noteView = noteView;
@@ -38,6 +42,7 @@ public class WorkOrderBox implements Builder<Region> {
         root.getChildren().add(followUpWorkOrderTextField());
         root.getChildren().add(relatedCase());
         root.getChildren().add(tex());
+        refreshFields();
         return root;
     }
 
@@ -47,9 +52,7 @@ public class WorkOrderBox implements Builder<Region> {
         vbox.setPadding(new Insets(2, 0, 2, 2));
         Label label = new Label("TEX");
         label.setPadding(new Insets(0,0,0,5));
-        TextField tf = TextFieldFx.of(200,  "TEX-");
-        tf.textProperty().set(String.valueOf(noteModel.getCurrentNote().getTex()));
-        vbox.getChildren().addAll(label, tf);
+        vbox.getChildren().addAll(label, texTextField);
         return vbox;
     }
 
@@ -59,10 +62,8 @@ public class WorkOrderBox implements Builder<Region> {
         vbox.setPadding(new Insets(2, 0, 2, 2));
         Label label = new Label("Related Case");
         label.setPadding(new Insets(0,0,0,5));
-        TextField tf = TextFieldFx.of(200,  "Related Case");
-        tf.textProperty().set(String.valueOf(noteModel.getCurrentNote().getCaseNumber()));
-        tf.setPromptText("Case-");
-        vbox.getChildren().addAll(label, tf);
+        relatedCaseTextField.setPromptText("Case-");
+        vbox.getChildren().addAll(label, relatedCaseTextField);
         return vbox;
     }
 
@@ -72,18 +73,24 @@ public class WorkOrderBox implements Builder<Region> {
         vbox.setPadding(new Insets(2, 0, 5, 5));
         Label label = new Label("Follow Up Work Order");
         label.setPadding(new Insets(0,0,0,5));
-        TextField tf = TextFieldFx.of(200,  "WO-");
-        tf.textProperty().set(noteModel.getCurrentNote().getCreatedWorkOrder());
-        ListenerFx.addFocusListener(tf, "Work Order", noteModel.getCurrentNote().createdWorkOrderProperty(), noteModel.statusLabelProperty());
-        vbox.getChildren().addAll(label, tf);
+        ListenerFx.addFocusListener(createdWorkOrderTextField, "Work Order", noteModel.getCurrentNote().createdWorkOrderProperty(), noteModel.statusLabelProperty());
+        vbox.getChildren().addAll(label, createdWorkOrderTextField);
         return vbox;
     }
 
-    public void flashBorder() {
+    @Override
+    public void flash() {
         root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
         PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
         pause.setOnFinished(event -> root.setStyle("")); // Reset the style
         pause.play();
+    }
+
+    @Override
+    public void refreshFields() {
+        texTextField.textProperty().set(String.valueOf(noteModel.getCurrentNote().getTex()));
+        relatedCaseTextField.textProperty().set(String.valueOf(noteModel.getCurrentNote().getCaseNumber()));
+        createdWorkOrderTextField.textProperty().set(noteModel.getCurrentNote().getCreatedWorkOrder());
     }
 }
 

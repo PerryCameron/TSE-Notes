@@ -27,7 +27,7 @@ public class FakeData {
         c.setCallInPhoneNumber("(817)-389-2359");
         c.setCallInEmail("justin.stain@eatme.com");
         c.setIssue("""
-                The network card is facing significant communication challenges, as it is unable to establish a connection through either TCP/IP or serial interfaces. This issue could be due to a variety of factors. There may be a problem with the card's firmware, leading to a failure in initializing the communication protocols. Alternatively, there could be a hardware fault within the network card itself, such as a damaged port or an internal circuitry issue that is preventing proper signal transmission. It's also possible that the network card's drivers are outdated or corrupted, causing it to malfunction when attempting to communicate with other devices on the network. Environmental factors like electromagnetic interference or physical damage to the card or its connections could also be contributing to this failure. Further investigation is required to pinpoint the exact cause and determine the appropriate course of action to restore communication.
+                The network card is facing significant communication challenges, as it is unable to establish a connection through either TCP/IP or serial interfaces.
                 """);
         c.setContactPhoneNumber("(540)-478-9741");
         c.setContactEmail("gteague@email.com");
@@ -59,6 +59,7 @@ public class FakeData {
         c.getSelectedPartOrder().getParts().add(createFakePart2());
         c.getSelectedPartOrder().getParts().add(createFakePart3());
         c.setLoadSupported(true);
+        c.setAdditionalCorrectiveActionText("This would be some additional text to explain what I did beside the standard items. This is especially useful for looking back at what I still need to do if case is not completed.");
         return c;
     }
 

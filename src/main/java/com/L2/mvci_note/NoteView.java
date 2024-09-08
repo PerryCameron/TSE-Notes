@@ -54,6 +54,7 @@ public class NoteView implements Builder<Region> {
                 basicInformation.refreshFields();
                 dateTimePicker.refreshFields();
                 issueBox.refreshFields();
+                shippingInformation.refreshFields();
             }
         });
     }
@@ -84,11 +85,11 @@ public class NoteView implements Builder<Region> {
                 ((PartOrderBox) partOrder).flashBorder();
             }
         });
-        shippingInformation.flashBorder();
+        shippingInformation.flash();
     }
 
     public void flashGroupB() {
-        workOrderBox.flashBorder();
+        workOrderBox.flash();
         partOrderContainer.getChildren().forEach(partOrder -> {
             if(partOrder instanceof PartOrderBox) {
                 ((PartOrderBox) partOrder).flashBorder();

@@ -43,6 +43,7 @@ public class IssueBox implements Component<Region> {
         copyButton.setTooltip(ToolTipFx.of("Copy Issue"));
         Button[] buttons = new Button[] { clearButton, copyButton };
         root.getChildren().addAll(TitleBarFx.of("Issue", buttons), textAreaIssue);
+        refreshFields();
         return root;
     }
 

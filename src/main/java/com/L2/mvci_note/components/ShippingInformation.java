@@ -1,5 +1,6 @@
 package com.L2.mvci_note.components;
 
+import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
@@ -12,14 +13,16 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.util.Builder;
 import javafx.util.Duration;
 
-public class ShippingInformation implements Builder<Region> {
+public class ShippingInformation implements Component<Region> {
 
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox root;
+    private final TextField[] aTextFields = new TextField[5];
+    private final TextField[] cTextFields = new TextField[3];
+    private final TextArea streetTextArea = TextAreaFx.of(true, 70, 16, 2);
 
     public ShippingInformation(NoteView noteView) {
         this.noteView = noteView;
@@ -29,55 +32,51 @@ public class ShippingInformation implements Builder<Region> {
     @Override
     public Region build() {
         this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
-        HBox hBox =  HBoxFx.of(new Insets(5, 5, 5, 5), 5.0);
+        HBox hBox = HBoxFx.of(new Insets(5, 5, 5, 5), 5.0);
         root.getStyleClass().add("decorative-hbox");
         hBox.getChildren().addAll(contact(), address());
-        Button copyButton = ButtonFx.utilityButton( () -> {
-            flashBorder();
+        Button copyButton = ButtonFx.utilityButton(() -> {
+            flash();
             noteView.getAction().accept(NoteMessage.SHIPPING_INFORMATION);
         }, "Copy", "/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy Shipping Information"));
-        Button[] buttons = new Button[] { copyButton };
+        Button[] buttons = new Button[]{copyButton};
         root.getChildren().addAll(TitleBarFx.of("Shipping Information", buttons), hBox);
+        refreshFields();
         return root;
     }
 
     private Node contact() {
         VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         vBox.getStyleClass().add("inner-decorative-hbox");
-        TextField tf6 = TextFieldFx.of(250, "Contact Name");
-        tf6.textProperty().set(noteModel.getCurrentNote().getContactName());
-        ListenerFx.addFocusListener(tf6, "Contact Name", noteModel.getCurrentNote().contactNameProperty(), noteModel.statusLabelProperty());
+        cTextFields[0] = TextFieldFx.of(250, "Contact Name");
+        ListenerFx.addFocusListener(cTextFields[0], "Contact Name", noteModel.getCurrentNote().contactNameProperty(), noteModel.statusLabelProperty());
 
-        TextField tf7 = TextFieldFx.of(250, "Contact Phone");
-        tf7.textProperty().set(noteModel.getCurrentNote().getContactPhoneNumber());
-        ListenerFx.addFocusListener(tf7, "Contact Phone", noteModel.getCurrentNote().contactPhoneNumberProperty(), noteModel.statusLabelProperty());
+        cTextFields[1] = TextFieldFx.of(250, "Contact Phone");
+        ListenerFx.addFocusListener(cTextFields[1], "Contact Phone", noteModel.getCurrentNote().contactPhoneNumberProperty(), noteModel.statusLabelProperty());
 
-        TextField tf8 = TextFieldFx.of(250, "Contact Email");
-        tf8.textProperty().set(noteModel.getCurrentNote().getContactEmail());
-        ListenerFx.addFocusListener(tf8, "Contact Email", noteModel.getCurrentNote().contactEmailProperty(), noteModel.statusLabelProperty());
+        cTextFields[2] = TextFieldFx.of(250, "Contact Email");
+        ListenerFx.addFocusListener(cTextFields[2], "Contact Email", noteModel.getCurrentNote().contactEmailProperty(), noteModel.statusLabelProperty());
 
         Button clearButton = ButtonFx.utilityButton(() -> {
             noteModel.getCurrentNote().clearContact();
-            tf6.textProperty().set("");
-            tf7.textProperty().set("");
-            tf8.textProperty().set("");
-        },"Clear","/images/clear-16.png");
+            for(TextField textField : cTextFields) textField.setText("");
+        }, "Clear", "/images/clear-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Shipping Contact"));
 
         Button pasteButton = ButtonFx.utilityButton(() -> {
             String[] contactInfo = CopyPastaParser.extractContactInfo();
-                noteModel.getCurrentNote().setContactName(contactInfo[0]);
-                tf6.textProperty().set(contactInfo[0]);
-                noteModel.getCurrentNote().setContactPhoneNumber(contactInfo[1]);
-                tf7.textProperty().set(contactInfo[1]);
-                noteModel.getCurrentNote().setContactEmail(contactInfo[2]);
-                tf8.textProperty().set(contactInfo[2]);
-        },"Paste","/images/paste-16.png");
+            noteModel.getCurrentNote().setContactName(contactInfo[0]);
+            cTextFields[0].textProperty().set(contactInfo[0]);
+            noteModel.getCurrentNote().setContactPhoneNumber(contactInfo[1]);
+            cTextFields[1].textProperty().set(contactInfo[1]);
+            noteModel.getCurrentNote().setContactEmail(contactInfo[2]);
+            cTextFields[2].textProperty().set(contactInfo[2]);
+        }, "Paste", "/images/paste-16.png");
         pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Contact Information"));
 
-        Button[] buttons = new Button[] { clearButton, pasteButton };
-        vBox.getChildren().addAll(TitleBarFx.of("Contact", buttons), tf6, tf7, tf8);
+        Button[] buttons = new Button[]{clearButton, pasteButton};
+        vBox.getChildren().addAll(TitleBarFx.of("Contact", buttons), cTextFields[0], cTextFields[1], cTextFields[2]);
         return vBox;
     }
 
@@ -86,41 +85,33 @@ public class ShippingInformation implements Builder<Region> {
         vBox.getStyleClass().add("inner-decorative-hbox");
         HBox hBox = new HBox(5);
 
-        TextField tf1 = TextFieldFx.of(200, "Related Account / Installed at");
-        tf1.textProperty().set(noteModel.getCurrentNote().getInstalledAt());
-        ListenerFx.addFocusListener(tf1, "Related Account", noteModel.getCurrentNote().installedAtProperty(), noteModel.statusLabelProperty());
+        aTextFields[0] = TextFieldFx.of(200, "Related Account / Installed at");
+        ListenerFx.addFocusListener(aTextFields[0], "Related Account", noteModel.getCurrentNote().installedAtProperty(), noteModel.statusLabelProperty());
 
-        TextArea textArea = TextAreaFx.of(true, 70, 16, 2);
-        textArea.setPrefWidth(400);
-        textArea.setPromptText("Street");
-        textArea.textProperty().set(noteModel.getCurrentNote().getStreet());
-        ListenerFx.addFocusListener(textArea, "Street", noteModel.getCurrentNote().streetProperty(), noteModel.statusLabelProperty());
 
-        TextField tf2 = TextFieldFx.of(250, "City");
-        tf2.textProperty().set(noteModel.getCurrentNote().getCity());
-        ListenerFx.addFocusListener(tf2, "City", noteModel.getCurrentNote().cityProperty(), noteModel.statusLabelProperty());
+        streetTextArea.setPrefWidth(400);
+        streetTextArea.setPromptText("Street");
+        ListenerFx.addFocusListener(streetTextArea, "Street", noteModel.getCurrentNote().streetProperty(), noteModel.statusLabelProperty());
 
-        TextField tf3 = TextFieldFx.of(50, "State/Province");
-        tf3.textProperty().set(noteModel.getCurrentNote().getState());
-        ListenerFx.addFocusListener(tf3, "State/Province", noteModel.getCurrentNote().stateProperty(), noteModel.statusLabelProperty());
+        aTextFields[1] = TextFieldFx.of(250, "City");
+        ListenerFx.addFocusListener(aTextFields[1], "City", noteModel.getCurrentNote().cityProperty(), noteModel.statusLabelProperty());
 
-        TextField tf4 = TextFieldFx.of(100, "zip Code");
-        tf4.textProperty().set(noteModel.getCurrentNote().getZip());
-        ListenerFx.addFocusListener(tf4, "zip Code", noteModel.getCurrentNote().zipProperty(), noteModel.statusLabelProperty());
+        aTextFields[2] = TextFieldFx.of(50, "State/Province");
+        ListenerFx.addFocusListener(aTextFields[2], "State/Province", noteModel.getCurrentNote().stateProperty(), noteModel.statusLabelProperty());
 
-        TextField tf5 = TextFieldFx.of(200, "Country");
-        tf5.textProperty().set(noteModel.getCurrentNote().getCountry());
-        ListenerFx.addFocusListener(tf5, "Country", noteModel.getCurrentNote().countryProperty(), noteModel.statusLabelProperty());
+        aTextFields[3] = TextFieldFx.of(100, "zip Code");
+        ListenerFx.addFocusListener(aTextFields[3], "zip Code", noteModel.getCurrentNote().zipProperty(), noteModel.statusLabelProperty());
 
-        Button clearButton = ButtonFx.utilityButton( () -> {
+        aTextFields[4] = TextFieldFx.of(200, "Country");
+        ListenerFx.addFocusListener(aTextFields[4], "Country", noteModel.getCurrentNote().countryProperty(), noteModel.statusLabelProperty());
+
+        Button clearButton = ButtonFx.utilityButton(() -> {
             noteModel.getCurrentNote().clearAddress();
-            tf1.textProperty().set("");
-            textArea.textProperty().set("");
-            tf2.textProperty().set("");
-            tf3.textProperty().set("");
-            tf4.textProperty().set("");
-            tf5.textProperty().set("");
-        },"Clear","/images/clear-16.png");
+            for (TextField textField : aTextFields)
+                textField.clear();
+            streetTextArea.textProperty().set("");
+
+        }, "Clear", "/images/clear-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Shipping Address"));
 
         Button pasteButton = ButtonFx.utilityButton(() -> {
@@ -131,26 +122,39 @@ public class ShippingInformation implements Builder<Region> {
             noteModel.getCurrentNote().setState(addressInfo[3]);
             noteModel.getCurrentNote().setZip(addressInfo[4]);
             noteModel.getCurrentNote().setCountry(addressInfo[5]);
-            tf1.textProperty().set(addressInfo[0]);
-            textArea.textProperty().set(addressInfo[1]);
-            tf2.textProperty().set(addressInfo[2]);
-            tf3.textProperty().set(addressInfo[3]);
-            tf4.textProperty().set(addressInfo[4]);
-            tf5.textProperty().set(addressInfo[5]);
-        }, "Paste","/images/paste-16.png");
+            aTextFields[0].textProperty().set(addressInfo[0]);
+            streetTextArea.textProperty().set(addressInfo[1]);
+            aTextFields[1].textProperty().set(addressInfo[2]);
+            aTextFields[2].textProperty().set(addressInfo[3]);
+            aTextFields[3].textProperty().set(addressInfo[4]);
+            aTextFields[4].textProperty().set(addressInfo[5]);
+        }, "Paste", "/images/paste-16.png");
         pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Address Information"));
-        Button[] buttons = new Button[] { clearButton, pasteButton };
-
-        hBox.getChildren().addAll(tf2, tf3, tf4);
-        vBox.getChildren().addAll(TitleBarFx.of("Address", buttons), tf1, textArea, hBox, tf5);
+        Button[] buttons = new Button[]{clearButton, pasteButton};
+        hBox.getChildren().addAll(aTextFields[1], aTextFields[2], aTextFields[3]);
+        vBox.getChildren().addAll(TitleBarFx.of("Address", buttons), aTextFields[0], streetTextArea, hBox, aTextFields[4]);
         return vBox;
     }
 
-    public void flashBorder() {
+    @Override
+    public void flash() {
         root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
         PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
         pause.setOnFinished(event -> root.setStyle("")); // Reset the style
         pause.play();
+    }
+
+    @Override
+    public void refreshFields() {
+        cTextFields[0].textProperty().set(noteModel.getCurrentNote().getContactName());
+        cTextFields[1].textProperty().set(noteModel.getCurrentNote().getContactPhoneNumber());
+        cTextFields[2].textProperty().set(noteModel.getCurrentNote().getContactEmail());
+        streetTextArea.textProperty().set(noteModel.getCurrentNote().getStreet());
+        aTextFields[0].textProperty().set(noteModel.getCurrentNote().getInstalledAt());
+        aTextFields[1].textProperty().set(noteModel.getCurrentNote().getCity());
+        aTextFields[2].textProperty().set(noteModel.getCurrentNote().getState());
+        aTextFields[3].textProperty().set(noteModel.getCurrentNote().getZip());
+        aTextFields[4].textProperty().set(noteModel.getCurrentNote().getCountry());
     }
 }
 
