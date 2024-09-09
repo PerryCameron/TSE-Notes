@@ -1,10 +1,8 @@
 package com.L2.dto;
 
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 
 
@@ -14,13 +12,11 @@ import java.io.Serializable;
 public class PartDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-
     private final StringProperty partNumber;
     private final StringProperty partDescription;
     private final StringProperty partQuantity;
     private final StringProperty serialReplaced;
     private final BooleanProperty partEditable;
-
 
     public PartDTO(String partNumber, String partDescription, String partQuantity, String serialReplaced, boolean partEditable) {
         this.partNumber = new SimpleStringProperty(partNumber);

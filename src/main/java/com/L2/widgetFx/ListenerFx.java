@@ -14,7 +14,7 @@ public class ListenerFx {
     private static final Logger logger = LoggerFactory.getLogger(ListenerFx.class);
 
     public static void addFocusListener(TextArea textArea, String controlName, StringProperty currentObject, StringProperty statusLabel) {
-        logger.info("Setting focus listener for issue text area");
+//        logger.info("Setting focus listener for issue text area");
         textArea.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
             if (isNowFocused) {
                 Platform.runLater(() -> {
@@ -45,6 +45,7 @@ public class ListenerFx {
             if (wasFocused) {
                 Platform.runLater(() -> {
                     textField.deselect();
+                    logger.info("Updating {} with the value {}", currentObject, textField.textProperty().get());
                     currentObject.set(textField.textProperty().get());
                     if (resultDTO.isSuccess()) statusLabel.set(controlName + " field successfully saved.");
                     else statusLabel.set(controlName + " field has incorrect value.");

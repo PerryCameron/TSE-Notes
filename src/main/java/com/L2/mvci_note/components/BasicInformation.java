@@ -8,6 +8,7 @@ import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -18,6 +19,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BasicInformation implements Component<Region> {
 
@@ -30,6 +34,7 @@ public class BasicInformation implements Component<Region> {
     private final ComboBox<String> serviceLevelComboBox = new ComboBox<>();
     private final ToggleSwitch toggleSwitch = new ToggleSwitch();
     private final ComboBox<String> statusComboBox = new ComboBox<>();
+    private Map<TextField, ChangeListener<Boolean>> focusListeners = new HashMap<>();
 
     public BasicInformation(NoteView noteView) {
         this.noteView = noteView;
@@ -146,48 +151,49 @@ public class BasicInformation implements Component<Region> {
 
     private Node callInInfo() {
         VBox vBox = VBoxFx.of(5.5, new Insets(0, 40, 0, 0));
-
         textFields[0] = TextFieldFx.of(200, "Work Order");
-        ListenerFx.addFocusListener(textFields[0], "Work Order", noteModel.getCurrentNote().workOrderProperty(), noteModel.statusLabelProperty());
-
         textFields[1] = TextFieldFx.of(200, "Case");
-        ListenerFx.addFocusListener(textFields[1], "Case", noteModel.getCurrentNote().caseNumberProperty(), noteModel.statusLabelProperty());
-
         textFields[2] = TextFieldFx.of(200, 30, "Model", noteModel.getCurrentNote().modelNumberProperty());
-        ListenerFx.addFocusListener(textFields[2], "Model", noteModel.getCurrentNote().modelNumberProperty(), noteModel.statusLabelProperty());
-
         textFields[3] = TextFieldFx.of(200, 30, "Serial", noteModel.getCurrentNote().serialNumberProperty());
-        ListenerFx.addFocusListener(textFields[3], "Serial", noteModel.getCurrentNote().serialNumberProperty(), noteModel.statusLabelProperty());
-
         textFields[4] = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty());
-        ListenerFx.addFocusListener(textFields[4], "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty(), noteModel.statusLabelProperty());
-
         textFields[5]= TextFieldFx.of(200, "Call-in Phone");
-        ListenerFx.addFocusListener(textFields[5], "Call-in Phone", noteModel.getCurrentNote().callInPhoneNumberProperty(), noteModel.statusLabelProperty());
-
         textFields[6] = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getCurrentNote().callInEmailProperty());
-        ListenerFx.addFocusListener(textFields[6], "Call-in Email", noteModel.getCurrentNote().callInEmailProperty(), noteModel.statusLabelProperty());
         for(TextField textField : textFields) {
             vBox.getChildren().add(textField);
         }
-        refreshFields();
+        bindTextFields();
         return vBox;
+    }
+
+    public void bindTextFields() {
+        // Bind each TextField to the corresponding property in the noteModel
+        textFields[0].textProperty().bindBidirectional(noteModel.getCurrentNote().workOrderProperty());
+        textFields[1].textProperty().bindBidirectional(noteModel.getCurrentNote().caseNumberProperty());
+        textFields[2].textProperty().bindBidirectional(noteModel.getCurrentNote().modelNumberProperty());
+        textFields[3].textProperty().bindBidirectional(noteModel.getCurrentNote().serialNumberProperty());
+        textFields[4].textProperty().bindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
+        textFields[5].textProperty().bindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
+        textFields[6].textProperty().bindBidirectional(noteModel.getCurrentNote().callInEmailProperty());
+    }
+
+    public void unbindTextFields() {
+        textFields[0].textProperty().unbindBidirectional(noteModel.getCurrentNote().workOrderProperty());
+        textFields[1].textProperty().unbindBidirectional(noteModel.getCurrentNote().caseNumberProperty());
+        textFields[2].textProperty().unbindBidirectional(noteModel.getCurrentNote().modelNumberProperty());
+        textFields[3].textProperty().unbindBidirectional(noteModel.getCurrentNote().serialNumberProperty());
+        textFields[4].textProperty().unbindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
+        textFields[5].textProperty().unbindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
+        textFields[6].textProperty().unbindBidirectional(noteModel.getCurrentNote().callInEmailProperty());
+    }
+
+    public void refreshBindings() {
+        unbindTextFields();  // Unbind previous bindings
+        bindTextFields();    // Bind the TextFields to the latest properties
     }
 
     @Override
     public void refreshFields() {
-        textFields[0].textProperty().set(noteModel.getCurrentNote().getWorkOrder());
-        textFields[1].textProperty().set(noteModel.getCurrentNote().getCaseNumber());
-        textFields[2].textProperty().set(noteModel.getCurrentNote().getModelNumber());
-        textFields[3].textProperty().set(noteModel.getCurrentNote().getSerialNumber());
-        textFields[4].textProperty().set(noteModel.getCurrentNote().getCallInPerson());
-        textFields[5].textProperty().set(noteModel.getCurrentNote().getCallInPhoneNumber());
-        textFields[6].textProperty().set(noteModel.getCurrentNote().getCallInEmail());
-        servicePlanComboBox.valueProperty().set(noteModel.getCurrentEntitlement());
-        schedulingTermsComboBox.valueProperty().set(noteModel.getCurrentNote().getSchedulingTerms());
-        serviceLevelComboBox.valueProperty().set(noteModel.getCurrentNote().getServiceLevel());
-        statusComboBox.valueProperty().set(noteModel.getCurrentNote().getUpsStatus());
-        toggleSwitch.selectedProperty().set(noteModel.getCurrentNote().isLoadSupported());
+        refreshBindings();
     }
 
     @Override

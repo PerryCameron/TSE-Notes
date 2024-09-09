@@ -279,7 +279,7 @@ public class NoteInteractor {
     }
 
     public void copyCustomerRequest() {
-        logger.error("Copying customer request, flashing Group A (Name/Date, Basic Information, Issue, Part Orders and Shipping Information.");
+        logger.info("Copying customer request, flashing Group A (Name/Date, Basic Information, Issue, Part Orders and Shipping Information.");
         ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), customerRequestToPlainText());
     }
 

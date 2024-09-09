@@ -17,6 +17,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ public class PartOrderBoxList implements Component<Region> {
     private final NoteModel noteModel;
     private final NoteView noteView;
     private VBox root;
+    private TableView<PartDTO> tableView;
     private Map<PartOrderDTO, VBox> partOrderMap = new HashMap<>();
     public PartOrderBoxList(NoteView noteView) {
         this.noteModel = noteView.getNoteModel();
@@ -58,7 +60,15 @@ public class PartOrderBoxList implements Component<Region> {
         vBox.setPadding(new Insets(5, 5, 5, 5));
         vBox.setPrefWidth(300);
         Button addPartButton = ButtonFx.utilityButton( () -> {
-            partOrderDTO.getParts().add(new PartDTO());
+            PartDTO partDTO = new PartDTO();
+            partOrderDTO.getParts().add(partDTO);
+            partOrderDTO.getParts().sort(Comparator.comparing(PartDTO::getPartNumber).reversed());
+
+            tableView.layout();
+            tableView.requestFocus();
+            tableView.getSelectionModel().select(partDTO);
+            tableView.getFocusModel().focus(0);
+            tableView.edit(tableView.getItems().indexOf(partDTO), col1());
         }, "Add Part", "/images/create-16.png");
 
         Button deleteButton = ButtonFx.utilityButton( () -> {
@@ -132,7 +142,7 @@ public class PartOrderBoxList implements Component<Region> {
 
     @SuppressWarnings("unchecked")
     public TableView<PartDTO> buildTable(PartOrderDTO partOrderDTO) {
-        TableView<PartDTO> tableView = TableViewFx.of(PartDTO.class);
+        this.tableView = TableViewFx.of(PartDTO.class);
         tableView.setItems(partOrderDTO.getParts()); // Set the ObservableList here
         tableView.getColumns().addAll(col1(),col2(),col3());
         tableView.setPlaceholder(new Label(""));
