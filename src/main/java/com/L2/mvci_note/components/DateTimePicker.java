@@ -25,21 +25,18 @@ public class DateTimePicker implements Component<Region> {
     private final DatePicker datePicker;
     private final Spinner<Integer> hourSpinner;
     private final Spinner<Integer> minuteSpinner;
-    private VBox root;
+    private final VBox root;
 
 
     public DateTimePicker(NoteView noteView) {
+        this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
         this.datePicker = new DatePicker(LocalDate.now());
         this.hourSpinner = new Spinner<>();
         this.minuteSpinner = new Spinner<>();
         this.noteView = noteView;
     }
 
-    private void updateDateTime() {
-        LocalDate date = datePicker.getValue();
-        LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
-        noteView.getNoteModel().dateTimePropertyProperty().set(LocalDateTime.of(date, time));
-    }
+
 
     public void setDateTime(LocalDateTime dateTime) {
         if (dateTime != null) {
@@ -51,7 +48,6 @@ public class DateTimePicker implements Component<Region> {
 
     @Override
     public Region build() {
-        this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
         root.getStyleClass().add("decorative-hbox");
         Button[] buttons = new Button[] { refreshButton(), copyButton() };
         root.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons) ,dateTimePicker());
@@ -103,6 +99,12 @@ public class DateTimePicker implements Component<Region> {
         return hBox;
     }
 
+    private void updateDateTime() {
+        LocalDate date = datePicker.getValue();
+        LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
+        noteView.getNoteModel().getBoundNote().timestampProperty().set(LocalDateTime.of(date, time));
+    }
+
     @Override
     public void flash() {
         root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
@@ -113,11 +115,11 @@ public class DateTimePicker implements Component<Region> {
 
     @Override
     public void refreshFields() {
-        LocalDateTime localDateTime = noteView.getNoteModel().getCurrentNote().getTimestamp();
+        LocalDateTime localDateTime = noteView.getNoteModel().getBoundNote().getTimestamp();
         datePicker.setValue(localDateTime.toLocalDate());
         hourSpinner.getValueFactory().setValue(localDateTime.getHour());
         minuteSpinner.getValueFactory().setValue(localDateTime.getMinute());
-        setDateTime(noteView.getNoteModel().getDateTimeProperty());
+        setDateTime(noteView.getNoteModel().getBoundNote().getTimestamp());
     }
 }
 

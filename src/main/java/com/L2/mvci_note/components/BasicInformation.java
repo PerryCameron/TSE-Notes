@@ -89,13 +89,13 @@ public class BasicInformation implements Component<Region> {
         // Listener to update activeServiceContract when currentEntitlement changes
         noteModel.currentEntitlementProperty().addListener((obs, oldEntitlement, newEntitlement) -> {
             if (newEntitlement != null) {
-                noteModel.getCurrentNote().setActiveServiceContract(newEntitlement.getName());
+                noteModel.getBoundNote().setActiveServiceContract(newEntitlement.getName());
             } else {
-                noteModel.getCurrentNote().setActiveServiceContract("");  // Or handle null appropriately
+                noteModel.getBoundNote().setActiveServiceContract("");  // Or handle null appropriately
             }
         });
         servicePlanComboBox.setOnAction(e -> {
-            noteModel.getCurrentNote().setEntitlement(servicePlanComboBox.getValue().toString());
+            noteModel.getBoundNote().setEntitlement(servicePlanComboBox.getValue().toString());
             noteModel.setCurrentEntitlement(servicePlanComboBox.getValue());
             noteView.getAction().accept(NoteMessage.LOG_CURRENT_ENTITLEMENT);
             noteView.getServicePlanDetails().updateDetails();
@@ -116,7 +116,6 @@ public class BasicInformation implements Component<Region> {
     private Node loadSupportedBox() {
         Label label = new Label("Load Supported:");
         HBox hBox = new HBox(10);
-//        toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> noteModel.getCurrentNote().setLoadSupported(newValue));
         hBox.getChildren().addAll(label, toggleSwitch);
         return hBox;
     }
@@ -143,11 +142,11 @@ public class BasicInformation implements Component<Region> {
         VBox vBox = VBoxFx.of(5.5, new Insets(0, 40, 0, 0));
         textFields[0] = TextFieldFx.of(200, "Work Order");
         textFields[1] = TextFieldFx.of(200, "Case");
-        textFields[2] = TextFieldFx.of(200, 30, "Model", noteModel.getCurrentNote().modelNumberProperty());
-        textFields[3] = TextFieldFx.of(200, 30, "Serial", noteModel.getCurrentNote().serialNumberProperty());
-        textFields[4] = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getCurrentNote().callInPersonProperty());
+        textFields[2] = TextFieldFx.of(200, 30, "Model", noteModel.getBoundNote().modelNumberProperty());
+        textFields[3] = TextFieldFx.of(200, 30, "Serial", noteModel.getBoundNote().serialNumberProperty());
+        textFields[4] = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getBoundNote().callInPersonProperty());
         textFields[5]= TextFieldFx.of(200, "Call-in Phone");
-        textFields[6] = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getCurrentNote().callInEmailProperty());
+        textFields[6] = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getBoundNote().callInEmailProperty());
         for(TextField textField : textFields) {
             vBox.getChildren().add(textField);
         }
@@ -156,41 +155,41 @@ public class BasicInformation implements Component<Region> {
     }
 
     public void bindTextFields() {
-        textFields[0].textProperty().bindBidirectional(noteModel.getCurrentNote().workOrderProperty());
-        textFields[1].textProperty().bindBidirectional(noteModel.getCurrentNote().caseNumberProperty());
-        textFields[2].textProperty().bindBidirectional(noteModel.getCurrentNote().modelNumberProperty());
-        textFields[3].textProperty().bindBidirectional(noteModel.getCurrentNote().serialNumberProperty());
-        textFields[4].textProperty().bindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
-        textFields[5].textProperty().bindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
-        textFields[6].textProperty().bindBidirectional(noteModel.getCurrentNote().callInEmailProperty());
-        toggleSwitch.selectedProperty().bindBidirectional(noteModel.getCurrentNote().loadSupportedProperty());
-        serviceLevelComboBox.valueProperty().bindBidirectional(noteModel.getCurrentNote().serviceLevelProperty());
-        statusComboBox.valueProperty().bindBidirectional(noteModel.getCurrentNote().upsStatusProperty());
-        schedulingTermsComboBox.valueProperty().bindBidirectional(noteModel.getCurrentNote().schedulingTermsProperty());
+        textFields[0].textProperty().bindBidirectional(noteModel.getBoundNote().workOrderProperty());
+        textFields[1].textProperty().bindBidirectional(noteModel.getBoundNote().caseNumberProperty());
+        textFields[2].textProperty().bindBidirectional(noteModel.getBoundNote().modelNumberProperty());
+        textFields[3].textProperty().bindBidirectional(noteModel.getBoundNote().serialNumberProperty());
+        textFields[4].textProperty().bindBidirectional(noteModel.getBoundNote().callInPhoneNumberProperty());
+        textFields[5].textProperty().bindBidirectional(noteModel.getBoundNote().callInPhoneNumberProperty());
+        textFields[6].textProperty().bindBidirectional(noteModel.getBoundNote().callInEmailProperty());
+        toggleSwitch.selectedProperty().bindBidirectional(noteModel.getBoundNote().loadSupportedProperty());
+        serviceLevelComboBox.valueProperty().bindBidirectional(noteModel.getBoundNote().serviceLevelProperty());
+        statusComboBox.valueProperty().bindBidirectional(noteModel.getBoundNote().upsStatusProperty());
+        schedulingTermsComboBox.valueProperty().bindBidirectional(noteModel.getBoundNote().schedulingTermsProperty());
     }
 
-    public void unbindTextFields() {
-        textFields[0].textProperty().unbindBidirectional(noteModel.getCurrentNote().workOrderProperty());
-        textFields[1].textProperty().unbindBidirectional(noteModel.getCurrentNote().caseNumberProperty());
-        textFields[2].textProperty().unbindBidirectional(noteModel.getCurrentNote().modelNumberProperty());
-        textFields[3].textProperty().unbindBidirectional(noteModel.getCurrentNote().serialNumberProperty());
-        textFields[4].textProperty().unbindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
-        textFields[5].textProperty().unbindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
-        textFields[6].textProperty().unbindBidirectional(noteModel.getCurrentNote().callInEmailProperty());
-        toggleSwitch.selectedProperty().unbindBidirectional(noteModel.getCurrentNote().loadSupportedProperty());
-        serviceLevelComboBox.valueProperty().unbindBidirectional(noteModel.getCurrentNote().serviceLevelProperty());
-        statusComboBox.valueProperty().unbindBidirectional(noteModel.getCurrentNote().upsStatusProperty());
-        schedulingTermsComboBox.valueProperty().unbindBidirectional(noteModel.getCurrentNote().schedulingTermsProperty());
-    }
+//    public void unbindTextFields() {
+//        textFields[0].textProperty().unbindBidirectional(noteModel.getBoundNote().workOrderProperty());
+//        textFields[1].textProperty().unbindBidirectional(noteModel.getBoundNote().caseNumberProperty());
+//        textFields[2].textProperty().unbindBidirectional(noteModel.getBoundNote().modelNumberProperty());
+//        textFields[3].textProperty().unbindBidirectional(noteModel.getBoundNote().serialNumberProperty());
+//        textFields[4].textProperty().unbindBidirectional(noteModel.getBoundNote().callInPhoneNumberProperty());
+//        textFields[5].textProperty().unbindBidirectional(noteModel.getBoundNote().callInPhoneNumberProperty());
+//        textFields[6].textProperty().unbindBidirectional(noteModel.getBoundNote().callInEmailProperty());
+//        toggleSwitch.selectedProperty().unbindBidirectional(noteModel.getBoundNote().loadSupportedProperty());
+//        serviceLevelComboBox.valueProperty().unbindBidirectional(noteModel.getBoundNote().serviceLevelProperty());
+//        statusComboBox.valueProperty().unbindBidirectional(noteModel.getBoundNote().upsStatusProperty());
+//        schedulingTermsComboBox.valueProperty().unbindBidirectional(noteModel.getBoundNote().schedulingTermsProperty());
+//    }
 
-    public void refreshBindings() {
-        unbindTextFields();  // Unbind previous bindings
-        bindTextFields();    // Bind the TextFields to the latest properties
-    }
+//    public void refreshBindings() {
+//        unbindTextFields();  // Unbind previous bindings
+//        bindTextFields();    // Bind the TextFields to the latest properties
+//    }
 
     @Override
     public void refreshFields() {
-        refreshBindings();
+//        refreshBindings();
     }
 
     @Override

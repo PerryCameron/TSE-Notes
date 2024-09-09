@@ -48,7 +48,7 @@ public class NoteView implements Builder<Region> {
     }
 
     private void setUpCurrentCaseListener() {
-        noteModel.currentNoteProperty().addListener((observable, oldValue, newValue) -> {
+        noteModel.boundNoteProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 basicInformation.refreshFields();
                 dateTimePicker.refreshFields();

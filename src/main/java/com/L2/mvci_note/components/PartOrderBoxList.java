@@ -37,7 +37,7 @@ public class PartOrderBoxList implements Component<Region> {
     public Region build() {
         this.root = new VBox(10);
         // for each part order create a VBOX with stuff in it
-        for(PartOrderDTO partOrderDTO: noteModel.getCurrentNote().getPartOrders()) {
+        for(PartOrderDTO partOrderDTO: noteModel.getBoundNote().getPartOrders()) {
             root.getChildren().add(createPartOrderBox(partOrderDTO));
         }
         return root;
@@ -123,12 +123,12 @@ public class PartOrderBoxList implements Component<Region> {
     private Node createButtons(PartOrderDTO partOrderDTO) {
         HBox iconBox = HBoxFx.iconBox();
         Button deleteButton = ButtonFx.utilityButton( () -> {
-            noteModel.getCurrentNote().getPartOrders().remove(partOrderDTO);
+            noteModel.getBoundNote().getPartOrders().remove(partOrderDTO);
                 root.getChildren().remove(partOrderMap.get(partOrderDTO));
         }, "Delete PO", "/images/delete-16.png");
 
         Button copyButton = ButtonFx.utilityButton( () -> {
-            noteModel.getCurrentNote().setSelectedPartOrder(partOrderDTO);
+            noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
             VBox vBox = partOrderMap.get(partOrderDTO);
             vBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
@@ -188,7 +188,7 @@ public class PartOrderBoxList implements Component<Region> {
     @Override
     public void refreshFields() {
         root.getChildren().clear();
-        noteModel.getCurrentNote().getPartOrders().forEach((partOrderDTO) -> {
+        noteModel.getBoundNote().getPartOrders().forEach((partOrderDTO) -> {
             root.getChildren().add(createPartOrderBox(partOrderDTO));
         });
     }

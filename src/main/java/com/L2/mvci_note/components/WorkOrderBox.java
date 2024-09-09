@@ -73,7 +73,7 @@ public class WorkOrderBox implements Component<Region> {
         vbox.setPadding(new Insets(2, 0, 5, 5));
         Label label = new Label("Follow Up Work Order");
         label.setPadding(new Insets(0,0,0,5));
-        ListenerFx.addFocusListener(createdWorkOrderTextField, "Work Order", noteModel.getCurrentNote().createdWorkOrderProperty(), noteModel.statusLabelProperty());
+        ListenerFx.addFocusListener(createdWorkOrderTextField, "Work Order", noteModel.getBoundNote().createdWorkOrderProperty(), noteModel.statusLabelProperty());
         vbox.getChildren().addAll(label, createdWorkOrderTextField);
         return vbox;
     }
@@ -88,9 +88,9 @@ public class WorkOrderBox implements Component<Region> {
 
     @Override
     public void refreshFields() {
-        texTextField.textProperty().set(String.valueOf(noteModel.getCurrentNote().getTex()));
-        relatedCaseTextField.textProperty().set(String.valueOf(noteModel.getCurrentNote().getCaseNumber()));
-        createdWorkOrderTextField.textProperty().set(noteModel.getCurrentNote().getCreatedWorkOrder());
+        texTextField.textProperty().set(String.valueOf(noteModel.getBoundNote().getTex()));
+        relatedCaseTextField.textProperty().set(String.valueOf(noteModel.getBoundNote().getCaseNumber()));
+        createdWorkOrderTextField.textProperty().set(noteModel.getBoundNote().getCreatedWorkOrder());
     }
 }
 

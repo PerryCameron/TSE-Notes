@@ -56,16 +56,16 @@ public class ShippingInformation implements Component<Region> {
         cTextFields[1] = TextFieldFx.of(250, "Contact Phone");
         cTextFields[2] = TextFieldFx.of(250, "Contact Email");
         Button clearButton = ButtonFx.utilityButton(() -> {
-            noteModel.getCurrentNote().clearContact();
+            noteModel.getBoundNote().clearContact();
             for(TextField textField : cTextFields) textField.setText("");
         }, "Clear", "/images/clear-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Shipping Contact"));
 
         Button pasteButton = ButtonFx.utilityButton(() -> {
             String[] contactInfo = CopyPastaParser.extractContactInfo();
-            noteModel.getCurrentNote().setContactName(contactInfo[0]);
-            noteModel.getCurrentNote().setContactPhoneNumber(contactInfo[1]);
-            noteModel.getCurrentNote().setContactEmail(contactInfo[2]);
+            noteModel.getBoundNote().setContactName(contactInfo[0]);
+            noteModel.getBoundNote().setContactPhoneNumber(contactInfo[1]);
+            noteModel.getBoundNote().setContactEmail(contactInfo[2]);
         }, "Paste", "/images/paste-16.png");
         pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Contact Information"));
 
@@ -86,7 +86,7 @@ public class ShippingInformation implements Component<Region> {
         aTextFields[3] = TextFieldFx.of(100, "zip Code");
         aTextFields[4] = TextFieldFx.of(200, "Country");
         Button clearButton = ButtonFx.utilityButton(() -> {
-            noteModel.getCurrentNote().clearAddress();
+            noteModel.getBoundNote().clearAddress();
             for (TextField textField : aTextFields)
                 textField.clear();
             streetTextArea.textProperty().set("");
@@ -130,28 +130,28 @@ public class ShippingInformation implements Component<Region> {
     }
 
     public void unbindTextFields() {
-        aTextFields[0].textProperty().unbindBidirectional(noteModel.getCurrentNote().installedAtProperty());
-        streetTextArea.textProperty().unbindBidirectional(noteModel.getCurrentNote().streetProperty());
-        aTextFields[1].textProperty().unbindBidirectional(noteModel.getCurrentNote().cityProperty());
-        aTextFields[2].textProperty().unbindBidirectional(noteModel.getCurrentNote().stateProperty());
-        aTextFields[3].textProperty().unbindBidirectional(noteModel.getCurrentNote().zipProperty());
-        aTextFields[4].textProperty().unbindBidirectional(noteModel.getCurrentNote().countryProperty());
-        cTextFields[0].textProperty().unbindBidirectional(noteModel.getCurrentNote().contactNameProperty());
-        cTextFields[1].textProperty().unbindBidirectional(noteModel.getCurrentNote().contactPhoneNumberProperty());
-        cTextFields[2].textProperty().unbindBidirectional(noteModel.getCurrentNote().contactEmailProperty());
+        aTextFields[0].textProperty().unbindBidirectional(noteModel.getBoundNote().installedAtProperty());
+        streetTextArea.textProperty().unbindBidirectional(noteModel.getBoundNote().streetProperty());
+        aTextFields[1].textProperty().unbindBidirectional(noteModel.getBoundNote().cityProperty());
+        aTextFields[2].textProperty().unbindBidirectional(noteModel.getBoundNote().stateProperty());
+        aTextFields[3].textProperty().unbindBidirectional(noteModel.getBoundNote().zipProperty());
+        aTextFields[4].textProperty().unbindBidirectional(noteModel.getBoundNote().countryProperty());
+        cTextFields[0].textProperty().unbindBidirectional(noteModel.getBoundNote().contactNameProperty());
+        cTextFields[1].textProperty().unbindBidirectional(noteModel.getBoundNote().contactPhoneNumberProperty());
+        cTextFields[2].textProperty().unbindBidirectional(noteModel.getBoundNote().contactEmailProperty());
     }
 
     public void bindTextFields() {
         // Bind each TextField to the corresponding property in the noteModel
-        aTextFields[0].textProperty().bindBidirectional(noteModel.getCurrentNote().installedAtProperty());
-        streetTextArea.textProperty().bindBidirectional(noteModel.getCurrentNote().streetProperty());
-        aTextFields[1].textProperty().bindBidirectional(noteModel.getCurrentNote().cityProperty());
-        aTextFields[2].textProperty().bindBidirectional(noteModel.getCurrentNote().stateProperty());
-        aTextFields[3].textProperty().bindBidirectional(noteModel.getCurrentNote().zipProperty());
-        aTextFields[4].textProperty().bindBidirectional(noteModel.getCurrentNote().countryProperty());
-        cTextFields[0].textProperty().bindBidirectional(noteModel.getCurrentNote().contactNameProperty());
-        cTextFields[1].textProperty().bindBidirectional(noteModel.getCurrentNote().contactPhoneNumberProperty());
-        cTextFields[2].textProperty().bindBidirectional(noteModel.getCurrentNote().contactEmailProperty());
+        aTextFields[0].textProperty().bindBidirectional(noteModel.getBoundNote().installedAtProperty());
+        streetTextArea.textProperty().bindBidirectional(noteModel.getBoundNote().streetProperty());
+        aTextFields[1].textProperty().bindBidirectional(noteModel.getBoundNote().cityProperty());
+        aTextFields[2].textProperty().bindBidirectional(noteModel.getBoundNote().stateProperty());
+        aTextFields[3].textProperty().bindBidirectional(noteModel.getBoundNote().zipProperty());
+        aTextFields[4].textProperty().bindBidirectional(noteModel.getBoundNote().countryProperty());
+        cTextFields[0].textProperty().bindBidirectional(noteModel.getBoundNote().contactNameProperty());
+        cTextFields[1].textProperty().bindBidirectional(noteModel.getBoundNote().contactPhoneNumberProperty());
+        cTextFields[2].textProperty().bindBidirectional(noteModel.getBoundNote().contactEmailProperty());
     }
 }
 

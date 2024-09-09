@@ -7,6 +7,9 @@ import javafx.collections.ObservableList;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +93,45 @@ public class CaseDTO implements Serializable {
         this.additionalCorrectiveActionText.set("");
     }
 
+    public CaseDTO cloneCase(int id) {
+        CaseDTO clone = new CaseDTO();
+        clone.id.set(id);
+        clone.timestamp.set(LocalDateTime.now());
+        clone.workOrder.set(workOrder.get());
+        clone.caseNumber.set(caseNumber.get());
+        clone.serialNumber.set(serialNumber.get());
+        clone.modelNumber.set(modelNumber.get());
+        clone.callInPerson.set(callInPerson.get());
+        clone.callInPhoneNumber.set(callInPhoneNumber.get());
+        clone.callInEmail.set(callInEmail.get());
+        clone.underWarranty.set(underWarranty.get());
+        clone.activeServiceContract.set(activeServiceContract.get());
+        clone.serviceLevel.set(serviceLevel.get());
+        clone.schedulingTerms.set(schedulingTerms.get());
+        clone.upsStatus.set(upsStatus.get());
+        clone.loadSupported.set(loadSupported.get());
+        clone.issue.set(issue.get());
+        clone.contactName.set(contactName.get());
+        clone.contactPhoneNumber.set(contactPhoneNumber.get());
+        clone.contactEmail.set(contactEmail.get());
+        clone.street.set(street.get());
+        clone.installedAt.set(installedAt.get());
+        clone.city.set(city.get());
+        clone.state.set(state.get());
+        clone.zip.set(zip.get());
+        clone.country.set(country.get());
+        clone.partOrders.set(FXCollections.observableArrayList());
+        clone.selectedPartOrder.set(selectedPartOrder.get());
+        clone.createdWorkOrder.set(createdWorkOrder.get());
+        clone.tex.set(tex.get());
+        clone.partsOrder.set(partsOrder.get());
+        clone.entitlement.set(entitlement.get());
+        clone.completed.set(completed.get());
+        clone.isEmail.set(isEmail.get());
+        clone.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
+        return clone;
+    }
+
     public void clearAddress() {
         installedAt.set("");
         street.set("");
@@ -103,6 +145,20 @@ public class CaseDTO implements Serializable {
         contactName.set("");
         contactPhoneNumber.set("");
         contactEmail.set("");
+    }
+
+    public String formattedDate() {
+        LocalDateTime dateTime = timestampProperty().get();
+        if (dateTime == null) {
+            return "";
+        }
+        // Use a formatter that includes the short time zone name
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy h:mm a z");
+        // Assuming you want to format it with the system's default time zone
+        ZoneId zone = ZoneId.systemDefault();
+        ZonedDateTime zonedDateTime = dateTime.atZone(zone);
+        // Format the date and time with the short time zone name
+        return zonedDateTime.format(formatter);
     }
 
     /////////////////////////////////////////////////////////////

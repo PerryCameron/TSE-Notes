@@ -52,7 +52,7 @@ public class FinishBox implements Component<Region> {
         textArea.setPromptText("Additional corrective action text");
         textArea.setPrefHeight(100);
         textArea.setWrapText(true);
-        ListenerFx.addFocusListener(textArea, "Additional Info", noteModel.getCurrentNote().additionalCorrectiveActionTextProperty(), noteModel.statusLabelProperty());
+        ListenerFx.addFocusListener(textArea, "Additional Info", noteModel.getBoundNote().additionalCorrectiveActionTextProperty(), noteModel.statusLabelProperty());
         HBox.setHgrow(textArea, Priority.ALWAYS);
         return textArea;
     }
@@ -93,6 +93,6 @@ public class FinishBox implements Component<Region> {
 
     @Override
     public void refreshFields() {
-        textArea.setText(noteModel.getCurrentNote().getAdditionalCorrectiveActionText());
+        textArea.setText(noteModel.getBoundNote().getAdditionalCorrectiveActionText());
     }
 }
