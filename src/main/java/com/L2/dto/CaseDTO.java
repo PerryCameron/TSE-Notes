@@ -151,7 +151,6 @@ public class CaseDTO implements Serializable {
     }
 
     public void clear() {
-        // Initialize properties with passed values
         this.id.set(0);
         this.timestamp.set(LocalDateTime.now());
         this.workOrder.set("");
@@ -650,5 +649,47 @@ public class CaseDTO implements Serializable {
         in.defaultReadObject();
         List<PartOrderDTO> savedParts = (List<PartOrderDTO>) in.readObject();
         this.parts = new SimpleListProperty<>(FXCollections.observableArrayList(savedParts));
+    }
+
+    @Override
+    public String toString() {
+        return "CaseDTO{" +
+                "id=" + id +
+                ", timestamp=" + timestamp +
+                ", workOrder=" + workOrder +
+                ", caseNumber=" + caseNumber +
+                ", serialNumber=" + serialNumber +
+                ", modelNumber=" + modelNumber +
+                ", callInPerson=" + callInPerson +
+                ", callInPhoneNumber=" + callInPhoneNumber +
+                ", callInEmail=" + callInEmail +
+                ", underWarranty=" + underWarranty +
+                ", activeServiceContract=" + activeServiceContract +
+                ", serviceLevel=" + serviceLevel +
+                ", schedulingTerms=" + schedulingTerms +
+                ", upsStatus=" + upsStatus +
+                ", loadSupported=" + loadSupported +
+                ", issue=" + issue +
+                ", contactName=" + contactName +
+                ", contactPhoneNumber=" + contactPhoneNumber +
+                ", contactEmail=" + contactEmail +
+                ", street=" + street +
+                ", installedAt=" + installedAt +
+                ", city=" + city +
+                ", state=" + state +
+                ", zip=" + zip +
+                ", country=" + country +
+                ", partOrders=" + partOrders +
+                ", selectedPartOrder=" + selectedPartOrder +
+                ", createdWorkOrder=" + createdWorkOrder +
+                ", tex=" + tex +
+                ", partsOrder=" + partsOrder +
+                ", entitlement=" + entitlement +
+                ", completed=" + completed +
+                ", isEmail=" + isEmail +
+                ", additionalCorrectiveActionText=" + additionalCorrectiveActionText +
+                ", relatedCaseNumber=" + relatedCaseNumber +
+                ", parts=" + parts +
+                '}';
     }
 }

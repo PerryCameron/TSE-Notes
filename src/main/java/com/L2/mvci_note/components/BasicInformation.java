@@ -159,7 +159,7 @@ public class BasicInformation implements Component<Region> {
         textFields[1].textProperty().bindBidirectional(noteModel.getBoundNote().caseNumberProperty());
         textFields[2].textProperty().bindBidirectional(noteModel.getBoundNote().modelNumberProperty());
         textFields[3].textProperty().bindBidirectional(noteModel.getBoundNote().serialNumberProperty());
-        textFields[4].textProperty().bindBidirectional(noteModel.getBoundNote().callInPhoneNumberProperty());
+        textFields[4].textProperty().bindBidirectional(noteModel.getBoundNote().callInPersonProperty());
         textFields[5].textProperty().bindBidirectional(noteModel.getBoundNote().callInPhoneNumberProperty());
         textFields[6].textProperty().bindBidirectional(noteModel.getBoundNote().callInEmailProperty());
         toggleSwitch.selectedProperty().bindBidirectional(noteModel.getBoundNote().loadSupportedProperty());
@@ -168,28 +168,8 @@ public class BasicInformation implements Component<Region> {
         schedulingTermsComboBox.valueProperty().bindBidirectional(noteModel.getBoundNote().schedulingTermsProperty());
     }
 
-//    public void unbindTextFields() {
-//        textFields[0].textProperty().unbindBidirectional(noteModel.getBoundNote().workOrderProperty());
-//        textFields[1].textProperty().unbindBidirectional(noteModel.getBoundNote().caseNumberProperty());
-//        textFields[2].textProperty().unbindBidirectional(noteModel.getBoundNote().modelNumberProperty());
-//        textFields[3].textProperty().unbindBidirectional(noteModel.getBoundNote().serialNumberProperty());
-//        textFields[4].textProperty().unbindBidirectional(noteModel.getBoundNote().callInPhoneNumberProperty());
-//        textFields[5].textProperty().unbindBidirectional(noteModel.getBoundNote().callInPhoneNumberProperty());
-//        textFields[6].textProperty().unbindBidirectional(noteModel.getBoundNote().callInEmailProperty());
-//        toggleSwitch.selectedProperty().unbindBidirectional(noteModel.getBoundNote().loadSupportedProperty());
-//        serviceLevelComboBox.valueProperty().unbindBidirectional(noteModel.getBoundNote().serviceLevelProperty());
-//        statusComboBox.valueProperty().unbindBidirectional(noteModel.getBoundNote().upsStatusProperty());
-//        schedulingTermsComboBox.valueProperty().unbindBidirectional(noteModel.getBoundNote().schedulingTermsProperty());
-//    }
-
-//    public void refreshBindings() {
-//        unbindTextFields();  // Unbind previous bindings
-//        bindTextFields();    // Bind the TextFields to the latest properties
-//    }
-
     @Override
     public void refreshFields() {
-//        refreshBindings();
     }
 
     @Override

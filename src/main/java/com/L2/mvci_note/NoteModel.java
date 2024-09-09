@@ -3,10 +3,7 @@ package com.L2.mvci_note;
 import com.L2.dto.CaseDTO;
 import com.L2.dto.EntitlementDTO;
 import com.L2.dto.UserDTO;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.VBox;
@@ -19,8 +16,20 @@ public class NoteModel {
     private ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
     private StringProperty statusLabel = new SimpleStringProperty();
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
+    private BooleanProperty clearCalled  = new SimpleBooleanProperty(false);
 
 
+    public boolean isClearCalled() {
+        return clearCalled.get();
+    }
+
+    public BooleanProperty clearCalledProperty() {
+        return clearCalled;
+    }
+
+    public void setClearCalled(boolean clearCalled) {
+        this.clearCalled.set(clearCalled);
+    }
 
     public ObservableList<CaseDTO> getNotes() {
         return notes;

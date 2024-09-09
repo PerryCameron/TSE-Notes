@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import static com.L2.static_tools.ApplicationPaths.entitlementsFile;
 import static com.L2.static_tools.ApplicationPaths.settingsDir;
@@ -375,7 +376,11 @@ public class NoteInteractor {
         noteModel.getNotes().add(clonedCase);
         noteModel.getBoundNote().getPartOrders().clear();
         noteModel.getBoundNote().setSelectedPartOrder(null);
+        noteModel.getBoundNote().setTimestamp(LocalDateTime.now());
         noteModel.getBoundNote().clear();
+        noteModel.setClearCalled(true);
+        noteModel.setClearCalled(false);
+        System.out.println(noteModel.getNotes().getLast());
         logger.info("Created new note {}", noteNumber);
         logger.info("There are now {} notes in memory", noteModel.getNotes().size() );
     }
