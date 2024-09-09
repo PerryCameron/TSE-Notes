@@ -22,7 +22,7 @@ public class NoteModel {
     private ObjectProperty<CaseDTO> currentNote = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
-    private ObjectProperty<PartOrderDTO> currentPartOrder = new SimpleObjectProperty<>();
+//    private ObjectProperty<PartOrderDTO> currentPartOrder = new SimpleObjectProperty<>();
     private ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
     private StringProperty statusLabel = new SimpleStringProperty();
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
@@ -67,17 +67,17 @@ public class NoteModel {
         this.dateTimeProperty.set(dateTimeProperty);
     }
 
-    public PartOrderDTO getCurrentPartOrder() {
-        return currentPartOrder.get();
-    }
-
-    public ObjectProperty<PartOrderDTO> currentPartOrderProperty() {
-        return currentPartOrder;
-    }
-
-    public void setCurrentPartOrder(PartOrderDTO currentPartOrder) {
-        this.currentPartOrder.set(currentPartOrder);
-    }
+//    public PartOrderDTO getCurrentPartOrder() {
+//        return currentPartOrder.get();
+//    }
+//
+//    public ObjectProperty<PartOrderDTO> currentPartOrderProperty() {
+//        return currentPartOrder;
+//    }
+//
+//    public void setCurrentPartOrder(PartOrderDTO currentPartOrder) {
+//        this.currentPartOrder.set(currentPartOrder);
+//    }
 
     public UserDTO getUser() {
         return user.get();

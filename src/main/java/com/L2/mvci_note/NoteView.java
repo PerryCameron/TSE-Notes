@@ -1,9 +1,7 @@
 package com.L2.mvci_note;
 
-import com.L2.dto.PartOrderDTO;
 import com.L2.mvci_note.components.*;
 import com.L2.widgetFx.*;
-import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
@@ -23,7 +21,7 @@ public class NoteView implements Builder<Region> {
     private final IssueBox issueBox;
     private final PartOrderHeader partOrderHeader;
     private final FinishBox finishBox;
-    private VBox partOrderContainer;
+    private final PartOrderBoxList partOrderBoxList;
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -35,6 +33,7 @@ public class NoteView implements Builder<Region> {
         this.workOrderBox = new WorkOrderBox(this);
         this.issueBox = new IssueBox(this);
         this.partOrderHeader = new PartOrderHeader(this);
+        this.partOrderBoxList = new PartOrderBoxList(this);
         this.finishBox = new FinishBox(this);
     }
 
@@ -56,6 +55,7 @@ public class NoteView implements Builder<Region> {
                 issueBox.refreshFields();
                 shippingInformation.refreshFields();
                 workOrderBox.refreshFields();
+                partOrderBoxList.refreshFields();
                 finishBox.refreshFields();
             }
         });
@@ -74,7 +74,13 @@ public class NoteView implements Builder<Region> {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
-        vBox.getChildren().addAll(hBox, issueBox.build(), partOrderHeader.build(), partOrders(), rowThreeBox(), finishBox.build());
+        vBox.getChildren().addAll(
+                hBox,
+                issueBox.build(),
+                partOrderHeader.build(),
+                partOrderBoxList.build(),
+                rowThreeBox(),
+                finishBox.build());
         return vBox;
     }
 
@@ -82,37 +88,13 @@ public class NoteView implements Builder<Region> {
         basicInformation.flash();
         dateTimePicker.flash();
         issueBox.flash();
-        partOrderContainer.getChildren().forEach(partOrder -> {
-            if(partOrder instanceof PartOrderBox) {
-                ((PartOrderBox) partOrder).flashBorder();
-            }
-        });
+        partOrderBoxList.flash();
         shippingInformation.flash();
     }
 
     public void flashGroupB() {
         workOrderBox.flash();
-        partOrderContainer.getChildren().forEach(partOrder -> {
-            if(partOrder instanceof PartOrderBox) {
-                ((PartOrderBox) partOrder).flashBorder();
-            }
-        });
-    }
-
-    private Node partOrders() {
-        this.partOrderContainer = new VBox(10);
-        for(PartOrderDTO partOrderDTO: noteModel.getCurrentNote().getPartOrders()) {
-            partOrderContainer.getChildren().add(new PartOrderBox(partOrderDTO, this));
-        }
-        noteModel.getCurrentNote().getPartOrders().addListener((ListChangeListener<PartOrderDTO>) change -> {
-            while (change.next()) {
-                if(change.wasAdded()) {
-                    partOrderContainer.getChildren().add(new PartOrderBox(noteModel.getCurrentNote().getPartOrders().getLast(),this));
-                }
-                action.accept(NoteMessage.REPORT_NUMBER_OF_PART_ORDERS);
-            }
-        });
-        return partOrderContainer;
+        partOrderBoxList.flash();
     }
 
     private Node setBox3Info() {
@@ -139,5 +121,9 @@ public class NoteView implements Builder<Region> {
 
     public Consumer<NoteMessage> getAction() {
         return action;
+    }
+
+    public PartOrderBoxList getPartOrderBoxList() {
+        return partOrderBoxList;
     }
 }

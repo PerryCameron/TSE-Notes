@@ -1,6 +1,7 @@
 package com.L2.mvci_note.components;
 
 import com.L2.dto.PartOrderDTO;
+import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.ButtonFx;
@@ -29,6 +30,9 @@ public class PartOrderHeader implements Builder<Region> {
         root.getStyleClass().add("decorative-header-box");
         Button newButton = ButtonFx.utilityButton( () -> {
             noteModel.getCurrentNote().getPartOrders().add(new PartOrderDTO(""));
+            noteModel.getCurrentNote().setSelectedPartOrder(noteModel.getCurrentNote().getPartOrders().getLast());
+            noteView.getPartOrderBoxList().refreshFields();
+            noteView.getAction().accept(NoteMessage.LOG_ORDER_NUMBER_CHANGE);
         },"New Part Order", "/images/create-16.png");
         newButton.setTooltip(ToolTipFx.of("Create New Part Order"));
         Button[] buttons = new Button[] { newButton };

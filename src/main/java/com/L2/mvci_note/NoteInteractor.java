@@ -71,7 +71,6 @@ public class NoteInteractor {
     }
 
     public String copyAllPartOrdersToPlainText() {
-        System.out.println("copyAllPartOrders() to plain text");
         if(noteModel.getCurrentNote().getPartOrders().size() > 1) {
             StringBuilder builder = new StringBuilder();
             for(PartOrderDTO partOrderDTO : noteModel.getCurrentNote().getPartOrders()) {
@@ -140,7 +139,7 @@ public class NoteInteractor {
     }
 
     public void logPartOrderNumberChange() {
-        logger.info("Part Order Number Changed to: {}", noteModel.getCurrentNote().getSelectedPartOrder().getOrderNumber());
+        logger.info("Part Order Number Changed to: {}", noteModel.getCurrentNote().getSelectedPartOrder());
     }
 
     public void loadUser() {
@@ -375,7 +374,7 @@ public class NoteInteractor {
         noteModel.getNotes().add(new CaseDTO(noteNumber, false));
         noteModel.setCurrentNote(noteModel.getNotes().getLast());
         noteModel.getCurrentNote().getPartOrders().clear();
-        noteModel.setCurrentPartOrder(null);
+        noteModel.getCurrentNote().setSelectedPartOrder(null);
         logger.info("Created new note {}", noteNumber);
         logger.info("There are now {} notes in memory", noteModel.getNotes().size() );
     }
