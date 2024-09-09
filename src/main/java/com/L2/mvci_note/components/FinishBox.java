@@ -1,5 +1,6 @@
 package com.L2.mvci_note.components;
 
+import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
@@ -7,6 +8,7 @@ import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.ListenerFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.VBoxFx;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -15,9 +17,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.util.Builder;
+import javafx.util.Duration;
 
-public class FinishBox implements Builder<Region> {
+public class FinishBox implements Component<Region> {
 
     private final NoteView noteView;
     private final NoteModel noteModel;
@@ -41,6 +43,7 @@ public class FinishBox implements Builder<Region> {
         Button[] buttons = new Button[] { clearButton };
         hBox.getChildren().addAll(correctiveText(), buttonBox());
         root.getChildren().addAll(TitleBarFx.of("Final", buttons), hBox);
+        refreshFields();
         return root;
     }
 
@@ -48,6 +51,7 @@ public class FinishBox implements Builder<Region> {
         this.textArea = new TextArea();
         textArea.setPromptText("Additional corrective action text");
         textArea.setPrefHeight(100);
+        textArea.setWrapText(true);
         ListenerFx.addFocusListener(textArea, "Additional Info", noteModel.getCurrentNote().additionalCorrectiveActionTextProperty(), noteModel.statusLabelProperty());
         HBox.setHgrow(textArea, Priority.ALWAYS);
         return textArea;
@@ -77,5 +81,18 @@ public class FinishBox implements Builder<Region> {
 
         vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, setCompletedButton, newNoteButton);
         return vBox;
+    }
+
+    @Override
+    public void flash() {
+        root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        pause.setOnFinished(event -> root.setStyle("")); // Reset the style
+        pause.play();
+    }
+
+    @Override
+    public void refreshFields() {
+        textArea.setText(noteModel.getCurrentNote().getAdditionalCorrectiveActionText());
     }
 }

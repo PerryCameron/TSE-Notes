@@ -46,6 +46,7 @@ public class NoteController extends Controller<NoteMessage> {
             case COPY_CORRECTIVE_ACTION -> noteInteractor.copyCorrectiveAction();
             case SET_COMPLETE -> noteInteractor.setComplete();
             case NEW_NOTE -> noteInteractor.createNewNote();
+            case LOG_CURRENT_ENTITLEMENT -> noteInteractor.logCurrentEntitlement();
         };
     }
 

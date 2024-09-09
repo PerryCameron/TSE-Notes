@@ -97,9 +97,7 @@ public class BasicInformation implements Component<Region> {
         servicePlanComboBox.setOnAction(e -> {
             noteModel.getCurrentNote().setEntitlement(servicePlanComboBox.getValue().toString());
             noteModel.setCurrentEntitlement(servicePlanComboBox.getValue());
-            // no longer setting current entitlement
-            System.out.println("Current entitlement set to: " + noteModel.getCurrentEntitlement());
-            System.out.println(noteModel.getCurrentNote().getEntitlement());
+            noteView.getAction().accept(NoteMessage.LOG_CURRENT_ENTITLEMENT);
             noteView.getServicePlanDetails().updateDetails();
         });
         vBox.getChildren().addAll(label, servicePlanComboBox);

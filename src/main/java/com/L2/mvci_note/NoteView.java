@@ -55,6 +55,8 @@ public class NoteView implements Builder<Region> {
                 dateTimePicker.refreshFields();
                 issueBox.refreshFields();
                 shippingInformation.refreshFields();
+                workOrderBox.refreshFields();
+                finishBox.refreshFields();
             }
         });
     }

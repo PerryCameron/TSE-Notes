@@ -20,13 +20,16 @@ public class ShippingInformation implements Component<Region> {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox root;
-    private final TextField[] aTextFields = new TextField[5];
-    private final TextField[] cTextFields = new TextField[3];
-    private final TextArea streetTextArea = TextAreaFx.of(true, 70, 16, 2);
+    private final TextField[] aTextFields;
+    private final TextField[] cTextFields;
+    private final TextArea streetTextArea;
 
     public ShippingInformation(NoteView noteView) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
+        this.aTextFields = new TextField[5];
+        this.cTextFields = new TextField[3];
+        this.streetTextArea = TextAreaFx.of(true, 70, 16, 2);
     }
 
     @Override

@@ -280,6 +280,7 @@ public class NoteInteractor {
     }
 
     public void copyCustomerRequest() {
+        logger.error("Copying customer request, flashing Group A (Name/Date, Basic Information, Issue, Part Orders and Shipping Information.");
         ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), customerRequestToPlainText());
     }
 
@@ -323,7 +324,7 @@ public class NoteInteractor {
     }
 
     public void copyCorrectiveAction() {
-        logger.info("Copying corrective action");
+        logger.info("Copying corrective action, flashing group B (FinalBox, Related, Part Orders, Name/Date");
         ClipboardUtils.copyHtmlToClipboard(correctiveActionToHTML(), correctiveActionToPlainText());
     }
 
@@ -373,7 +374,13 @@ public class NoteInteractor {
         noteModel.setCurrentEntitlement(noteModel.getEntitlements().getLast());
         noteModel.getNotes().add(new CaseDTO(noteNumber, false));
         noteModel.setCurrentNote(noteModel.getNotes().getLast());
+        noteModel.getCurrentNote().getPartOrders().clear();
+        noteModel.setCurrentPartOrder(null);
         logger.info("Created new note {}", noteNumber);
         logger.info("There are now {} notes in memory", noteModel.getNotes().size() );
+    }
+
+    public void logCurrentEntitlement() {
+        logger.info("Current entitlement set to: {}", noteModel.getCurrentEntitlement());
     }
 }
