@@ -8,7 +8,6 @@ import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -20,30 +19,26 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class BasicInformation implements Component<Region> {
 
     private final NoteModel noteModel;
     private final NoteView noteView;
-    private VBox root;
+    private final VBox root;
     private final TextField[] textFields = new TextField[7];
     private final ComboBox<EntitlementDTO> servicePlanComboBox = new ComboBox<>();
     private final ComboBox<String> schedulingTermsComboBox = new ComboBox<>();
     private final ComboBox<String> serviceLevelComboBox = new ComboBox<>();
     private final ToggleSwitch toggleSwitch = new ToggleSwitch();
     private final ComboBox<String> statusComboBox = new ComboBox<>();
-    private Map<TextField, ChangeListener<Boolean>> focusListeners = new HashMap<>();
 
     public BasicInformation(NoteView noteView) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
+        this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
     }
 
     @Override
     public Region build() {
-        root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
         root.getStyleClass().add("decorative-hbox");
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
@@ -114,16 +109,14 @@ public class BasicInformation implements Component<Region> {
         Label label = new Label("Scheduling terms:");
         schedulingTermsComboBox.setPrefWidth(200);
         schedulingTermsComboBox.getItems().addAll("5x8", "5x24", "7x24");
-        // sets initial value
         vBox.getChildren().addAll(label, schedulingTermsComboBox);
-        schedulingTermsComboBox.setOnAction(e -> noteModel.getCurrentNote().setSchedulingTerms(schedulingTermsComboBox.getValue()));
         return vBox;
     }
 
     private Node loadSupportedBox() {
         Label label = new Label("Load Supported:");
         HBox hBox = new HBox(10);
-        toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> noteModel.getCurrentNote().setLoadSupported(newValue));
+//        toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> noteModel.getCurrentNote().setLoadSupported(newValue));
         hBox.getChildren().addAll(label, toggleSwitch);
         return hBox;
     }
@@ -133,9 +126,7 @@ public class BasicInformation implements Component<Region> {
         Label label = new Label("Status of the UPS:");
         statusComboBox.setPrefWidth(200);
         statusComboBox.getItems().addAll("Online", "Bypass", "Offline");
-        // sets initial value
         vBox.getChildren().addAll(label, statusComboBox);
-        statusComboBox.setOnAction(e -> noteModel.getCurrentNote().setUpsStatus(statusComboBox.getValue()));
         return vBox;
     }
 
@@ -145,7 +136,6 @@ public class BasicInformation implements Component<Region> {
         serviceLevelComboBox.setPrefWidth(200);
         serviceLevelComboBox.getItems().addAll("4-Hour", "8-Hour", "Next Business Day");
         vBox.getChildren().addAll(label, serviceLevelComboBox);
-        serviceLevelComboBox.setOnAction(e -> noteModel.getCurrentNote().setServiceLevel(serviceLevelComboBox.getValue()));
         return vBox;
     }
 
@@ -166,7 +156,6 @@ public class BasicInformation implements Component<Region> {
     }
 
     public void bindTextFields() {
-        // Bind each TextField to the corresponding property in the noteModel
         textFields[0].textProperty().bindBidirectional(noteModel.getCurrentNote().workOrderProperty());
         textFields[1].textProperty().bindBidirectional(noteModel.getCurrentNote().caseNumberProperty());
         textFields[2].textProperty().bindBidirectional(noteModel.getCurrentNote().modelNumberProperty());
@@ -174,6 +163,10 @@ public class BasicInformation implements Component<Region> {
         textFields[4].textProperty().bindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
         textFields[5].textProperty().bindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
         textFields[6].textProperty().bindBidirectional(noteModel.getCurrentNote().callInEmailProperty());
+        toggleSwitch.selectedProperty().bindBidirectional(noteModel.getCurrentNote().loadSupportedProperty());
+        serviceLevelComboBox.valueProperty().bindBidirectional(noteModel.getCurrentNote().serviceLevelProperty());
+        statusComboBox.valueProperty().bindBidirectional(noteModel.getCurrentNote().upsStatusProperty());
+        schedulingTermsComboBox.valueProperty().bindBidirectional(noteModel.getCurrentNote().schedulingTermsProperty());
     }
 
     public void unbindTextFields() {
@@ -184,6 +177,10 @@ public class BasicInformation implements Component<Region> {
         textFields[4].textProperty().unbindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
         textFields[5].textProperty().unbindBidirectional(noteModel.getCurrentNote().callInPhoneNumberProperty());
         textFields[6].textProperty().unbindBidirectional(noteModel.getCurrentNote().callInEmailProperty());
+        toggleSwitch.selectedProperty().unbindBidirectional(noteModel.getCurrentNote().loadSupportedProperty());
+        serviceLevelComboBox.valueProperty().unbindBidirectional(noteModel.getCurrentNote().serviceLevelProperty());
+        statusComboBox.valueProperty().unbindBidirectional(noteModel.getCurrentNote().upsStatusProperty());
+        schedulingTermsComboBox.valueProperty().unbindBidirectional(noteModel.getCurrentNote().schedulingTermsProperty());
     }
 
     public void refreshBindings() {
