@@ -51,6 +51,7 @@ public class CaseDTO implements Serializable {
     private BooleanProperty completed = new SimpleBooleanProperty();
     private BooleanProperty isEmail = new SimpleBooleanProperty();
     private StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
+    private StringProperty relatedCaseNumber = new SimpleStringProperty();
 
     public CaseDTO() {
     }
@@ -91,6 +92,7 @@ public class CaseDTO implements Serializable {
         this.completed.set(false);
         this.isEmail.set(isEmail);
         this.additionalCorrectiveActionText.set("");
+        this.relatedCaseNumber.set("");
     }
 
     public CaseDTO cloneCase(int id) {
@@ -129,6 +131,7 @@ public class CaseDTO implements Serializable {
         clone.completed.set(completed.get());
         clone.isEmail.set(isEmail.get());
         clone.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
+        clone.relatedCaseNumber.set(relatedCaseNumber.get());
         return clone;
     }
 
@@ -147,6 +150,45 @@ public class CaseDTO implements Serializable {
         contactEmail.set("");
     }
 
+    public void clear() {
+        // Initialize properties with passed values
+        this.id.set(0);
+        this.timestamp.set(LocalDateTime.now());
+        this.workOrder.set("");
+        this.caseNumber.set("");
+        this.serialNumber.set("");
+        this.modelNumber.set("");
+        this.callInPerson.set("");
+        this.callInPhoneNumber.set("");
+        this.callInEmail.set("");
+        this.underWarranty.set(false);
+        this.activeServiceContract.set("None");
+        this.serviceLevel.set("");
+        this.schedulingTerms.set("");
+        this.upsStatus.set("");
+        this.loadSupported.set(true);
+        this.issue.set("");
+        this.contactName.set("");
+        this.contactPhoneNumber.set("");
+        this.contactEmail.set("");
+        this.street.set("");
+        this.installedAt.set("");
+        this.city.set("");
+        this.state.set("");
+        this.zip.set("");
+        this.country.set("");
+        this.partOrders.set(FXCollections.observableArrayList());
+        this.selectedPartOrder.set(null);
+        this.createdWorkOrder.set("");
+        this.tex.set("");
+        this.partsOrder.set(0);
+        this.entitlement.set("");
+        this.completed.set(false);
+        this.isEmail.set(false);
+        this.additionalCorrectiveActionText.set("");
+        this.relatedCaseNumber.set("");
+    }
+
     public String formattedDate() {
         LocalDateTime dateTime = timestampProperty().get();
         if (dateTime == null) {
@@ -162,6 +204,19 @@ public class CaseDTO implements Serializable {
     }
 
     /////////////////////////////////////////////////////////////
+
+
+    public String getRelatedCaseNumber() {
+        return relatedCaseNumber.get();
+    }
+
+    public StringProperty relatedCaseNumberProperty() {
+        return relatedCaseNumber;
+    }
+
+    public void setRelatedCaseNumber(String relatedCaseNumber) {
+        this.relatedCaseNumber.set(relatedCaseNumber);
+    }
 
     public boolean isIsEmail() {
         return isEmail.get();

@@ -5,7 +5,6 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.ButtonFx;
-import com.L2.widgetFx.ListenerFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.animation.PauseTransition;
@@ -52,7 +51,7 @@ public class FinishBox implements Component<Region> {
         textArea.setPromptText("Additional corrective action text");
         textArea.setPrefHeight(100);
         textArea.setWrapText(true);
-        ListenerFx.addFocusListener(textArea, "Additional Info", noteModel.getBoundNote().additionalCorrectiveActionTextProperty(), noteModel.statusLabelProperty());
+        textArea.textProperty().bindBidirectional(noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
         HBox.setHgrow(textArea, Priority.ALWAYS);
         return textArea;
     }
@@ -93,6 +92,6 @@ public class FinishBox implements Component<Region> {
 
     @Override
     public void refreshFields() {
-        textArea.setText(noteModel.getBoundNote().getAdditionalCorrectiveActionText());
+
     }
 }

@@ -3,7 +3,6 @@ package com.L2.mvci_note.components;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
-import com.L2.widgetFx.ListenerFx;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.VBoxFx;
@@ -52,6 +51,7 @@ public class WorkOrderBox implements Component<Region> {
         vbox.setPadding(new Insets(2, 0, 2, 2));
         Label label = new Label("TEX");
         label.setPadding(new Insets(0,0,0,5));
+        texTextField.textProperty().bindBidirectional(noteModel.getBoundNote().texProperty());
         vbox.getChildren().addAll(label, texTextField);
         return vbox;
     }
@@ -62,7 +62,7 @@ public class WorkOrderBox implements Component<Region> {
         vbox.setPadding(new Insets(2, 0, 2, 2));
         Label label = new Label("Related Case");
         label.setPadding(new Insets(0,0,0,5));
-        relatedCaseTextField.setPromptText("Case-");
+        relatedCaseTextField.textProperty().bindBidirectional(noteModel.getBoundNote().relatedCaseNumberProperty());
         vbox.getChildren().addAll(label, relatedCaseTextField);
         return vbox;
     }
@@ -73,7 +73,7 @@ public class WorkOrderBox implements Component<Region> {
         vbox.setPadding(new Insets(2, 0, 5, 5));
         Label label = new Label("Follow Up Work Order");
         label.setPadding(new Insets(0,0,0,5));
-        ListenerFx.addFocusListener(createdWorkOrderTextField, "Work Order", noteModel.getBoundNote().createdWorkOrderProperty(), noteModel.statusLabelProperty());
+        createdWorkOrderTextField.textProperty().bindBidirectional(noteModel.getBoundNote().createdWorkOrderProperty());
         vbox.getChildren().addAll(label, createdWorkOrderTextField);
         return vbox;
     }
@@ -88,9 +88,7 @@ public class WorkOrderBox implements Component<Region> {
 
     @Override
     public void refreshFields() {
-        texTextField.textProperty().set(String.valueOf(noteModel.getBoundNote().getTex()));
-        relatedCaseTextField.textProperty().set(String.valueOf(noteModel.getBoundNote().getCaseNumber()));
-        createdWorkOrderTextField.textProperty().set(noteModel.getBoundNote().getCreatedWorkOrder());
+
     }
 }
 

@@ -31,7 +31,7 @@ public class IssueBox implements Component<Region> {
         this.root = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         root.getStyleClass().add("decorative-hbox");
         textAreaIssue.setPrefWidth(900);
-        ListenerFx.addFocusListener(textAreaIssue, "Issue field", noteModel.getBoundNote().issueProperty(), noteModel.statusLabelProperty());
+        textAreaIssue.textProperty().bindBidirectional(noteModel.getBoundNote().issueProperty());
         Button clearButton = ButtonFx.utilityButton( () -> {
         textAreaIssue.setText("");
         }, "Clear", "/images/clear-16.png");

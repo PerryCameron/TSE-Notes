@@ -370,14 +370,12 @@ public class NoteInteractor {
 
     public void createNewNote() {
         int noteNumber = noteModel.getNotes().size() + 1;  // temp way to make an ID
-        CaseDTO caseDTO = new CaseDTO(noteNumber, false);
-        // copy current note values to this
-
+        CaseDTO clonedCase = noteModel.getBoundNote().cloneCase(noteNumber);
         noteModel.setCurrentEntitlement(noteModel.getEntitlements().getLast());
-        noteModel.getNotes().add(new CaseDTO(noteNumber, false));
-        noteModel.setBoundNote(noteModel.getNotes().getLast());
+        noteModel.getNotes().add(clonedCase);
         noteModel.getBoundNote().getPartOrders().clear();
         noteModel.getBoundNote().setSelectedPartOrder(null);
+        noteModel.getBoundNote().clear();
         logger.info("Created new note {}", noteNumber);
         logger.info("There are now {} notes in memory", noteModel.getNotes().size() );
     }

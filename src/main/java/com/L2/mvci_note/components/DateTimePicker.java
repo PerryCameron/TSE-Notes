@@ -36,8 +36,6 @@ public class DateTimePicker implements Component<Region> {
         this.noteView = noteView;
     }
 
-
-
     public void setDateTime(LocalDateTime dateTime) {
         if (dateTime != null) {
             datePicker.setValue(dateTime.toLocalDate());
