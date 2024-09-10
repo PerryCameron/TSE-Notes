@@ -101,3 +101,8 @@
     -fx-border-radius: 5; /* Optional: rounded corners on hover */
     -fx-cursor: hand; /* Change cursor to pointer */
 }
+
+.text-field-error {
+    -fx-border-color: red;
+    -fx-border-radius: 5px;
+}

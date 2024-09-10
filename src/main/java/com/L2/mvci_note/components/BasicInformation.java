@@ -6,6 +6,7 @@ import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
+import com.L2.static_tools.StringChecker;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
@@ -47,11 +48,11 @@ public class BasicInformation implements Component<Region> {
         Button copyButton = ButtonFx.utilityButton(() -> {
             flash();
             noteView.getAction().accept(NoteMessage.COPY_BASIC_INFORMATION);
-        }, "Copy","/images/copy-16.png");
+        }, "Copy", "/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
 
         Button clearButton = ButtonFx.utilityButton(() -> {
-            for(TextField textField : textFields) {
+            for (TextField textField : textFields) {
                 textField.setText("");
             }
         }, "Clear", "/images/clear-16.png");
@@ -61,7 +62,7 @@ public class BasicInformation implements Component<Region> {
         }, "Pasta", "/images/paste-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
 
-        Button[] buttons = new Button[] { clearButton, pasteButton, copyButton };
+        Button[] buttons = new Button[]{clearButton, pasteButton, copyButton};
         root.getChildren().addAll(TitleBarFx.of("Basic Information", buttons), hBox);
         return root;
     }
@@ -140,14 +141,14 @@ public class BasicInformation implements Component<Region> {
 
     private Node callInInfo() {
         VBox vBox = VBoxFx.of(5.5, new Insets(0, 40, 0, 0));
-        textFields[0] = TextFieldFx.of(200, "Work Order");
-        textFields[1] = TextFieldFx.of(200, "Case");
-        textFields[2] = TextFieldFx.of(200, 30, "Model", noteModel.getBoundNote().modelNumberProperty());
-        textFields[3] = TextFieldFx.of(200, 30, "Serial", noteModel.getBoundNote().serialNumberProperty());
-        textFields[4] = TextFieldFx.of(200, 30, "Call-in Contact", noteModel.getBoundNote().callInPersonProperty());
-        textFields[5]= TextFieldFx.of(200, "Call-in Phone");
-        textFields[6] = TextFieldFx.of(200, 30, "Call-in Email", noteModel.getBoundNote().callInEmailProperty());
-        for(TextField textField : textFields) {
+        textFields[0] = TextFieldFx.createValidatedTextField(200,"WO-", StringChecker::formatWorkOrder);
+        textFields[1] = TextFieldFx.createValidatedTextField(200,"Case-", StringChecker::formatCaseNumber);
+        textFields[2] = TextFieldFx.standardTextField(200, "Model");
+        textFields[3] = TextFieldFx.standardTextField(200, "Serial");
+        textFields[4] = TextFieldFx.standardTextField(200, "Call-in Contact");
+        textFields[5] = TextFieldFx.createValidatedTextField(200,"Call-in Phone", StringChecker::formatPhoneNumber);
+        textFields[6] = TextFieldFx.createValidatedTextField(200,"Call-in Email", StringChecker::formatEmail);
+        for (TextField textField : textFields) {
             vBox.getChildren().add(textField);
         }
         bindTextFields();

@@ -43,7 +43,7 @@ public class StringChecker {
         }
         // Remove all non-digit characters
         String digits = input.replaceAll("\\D", "");
-        // Check if the string has exactly 8 digits
+        // Check if the string has exactly 9 digits
         if (digits.length() == 9) {
             resultDTO.setSuccess(Boolean.TRUE);
         } else {

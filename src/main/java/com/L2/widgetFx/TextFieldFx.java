@@ -1,11 +1,14 @@
 package com.L2.widgetFx;
 
+import com.L2.dto.ResultDTO;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.util.converter.NumberStringConverter;
+import java.util.function.Function;
 
 public class TextFieldFx {
     public static TextField of(double width, String prompt) {
@@ -16,13 +19,13 @@ public class TextFieldFx {
     }
 
 
-        public static TextField of(double width, double height, String prompt, StringProperty binder) {
-            TextField textField = new TextField();
-            textField.setPromptText(prompt);
-            textField.setPrefSize(width, height);
-            textField.textProperty().bindBidirectional(binder);
-            return textField;
-        }
+    public static TextField of(double width, double height, String prompt, StringProperty binder) {
+        TextField textField = new TextField();
+        textField.setPromptText(prompt);
+        textField.setPrefSize(width, height);
+        textField.textProperty().bindBidirectional(binder);
+        return textField;
+    }
 
     public static TextField of(double width, Property<?> property) {
         TextField textField = new TextField();
@@ -42,5 +45,35 @@ public class TextFieldFx {
         passwordField.setPromptText(prompt);
         passwordField.setPrefWidth(width);
         return passwordField;
+    }
+
+    public static TextField standardTextField(double width, String prompt) {
+        TextField textField = TextFieldFx.of(width, prompt);
+        textField.focusedProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue)
+                Platform.runLater(textField::selectAll);
+        });
+        return textField;
+    }
+
+    public static TextField createValidatedTextField(double width, String promptText, Function<String, ResultDTO> validationFunction) {
+        TextField textField = TextFieldFx.of(width, promptText);
+
+        textField.focusedProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue) {
+                Platform.runLater(textField::selectAll);
+            } else {  // On focus lost
+                ResultDTO resultDTO = validationFunction.apply(textField.getText());
+                if (resultDTO.isSuccess()) {
+                    textField.setText(resultDTO.getFieldName());
+                    textField.getStyleClass().remove("text-field-error");  // Remove error class
+                } else {
+                    if (!textField.getStyleClass().contains("text-field-error")) {
+                        textField.getStyleClass().add("text-field-error");  // Add error class
+                    }
+                }
+            }
+        });
+        return textField;
     }
 }
