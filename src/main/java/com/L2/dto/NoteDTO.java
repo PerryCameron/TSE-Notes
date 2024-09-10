@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CaseDTO implements Serializable {
+public class NoteDTO implements Serializable {
     private static final long serialVersionUID = 13897650298347L;
 
     private IntegerProperty id = new SimpleIntegerProperty();
@@ -53,10 +53,10 @@ public class CaseDTO implements Serializable {
 
     private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
     private ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
-    public CaseDTO() {
+    public NoteDTO() {
     }
 
-    public CaseDTO(int id, boolean isEmail) {
+    public NoteDTO(int id, boolean isEmail) {
         // Initialize properties with passed values
         this.id.set(id);
         this.timestamp.set(LocalDateTime.now());
@@ -95,7 +95,7 @@ public class CaseDTO implements Serializable {
         this.relatedCaseNumber.set("");
     }
 
-    public CaseDTO(Integer id, LocalDateTime timestamp, String workOrder, String caseNumber, String serialNumber,
+    public NoteDTO(Integer id, LocalDateTime timestamp, String workOrder, String caseNumber, String serialNumber,
                    String modelNumber, String callInPerson, String callInPhoneNumber, String callInEmail,
                    Boolean underWarranty, String activeServiceContract, String serviceLevel, String schedulingTerms,
                    String upsStatus, Boolean loadSupported, String issue, String contactName,
@@ -140,46 +140,46 @@ public class CaseDTO implements Serializable {
         this.relatedCaseNumber = new SimpleStringProperty(relatedCaseNumber);
     }
 
-    public void updateCase(CaseDTO caseDTO) {
-        caseDTO.timestamp.set(timestamp.get());
-        caseDTO.workOrder.set(workOrder.get());
-        caseDTO.caseNumber.set(caseNumber.get());
-        caseDTO.serialNumber.set(serialNumber.get());
-        caseDTO.modelNumber.set(modelNumber.get());
-        caseDTO.callInPerson.set(callInPerson.get());
-        caseDTO.callInPhoneNumber.set(callInPhoneNumber.get());
-        caseDTO.callInEmail.set(callInEmail.get());
-        caseDTO.underWarranty.set(isUnderWarranty());
-        caseDTO.activeServiceContract.set(activeServiceContract.get());
-        caseDTO.serviceLevel.set(serviceLevel.get());
-        caseDTO.schedulingTerms.set(schedulingTerms.get());
-        caseDTO.upsStatus.set(upsStatus.get());
-        caseDTO.loadSupported.set(isLoadSupported());
-        caseDTO.issue.set(issue.get());
-        caseDTO.contactName.set(contactName.get());
-        caseDTO.contactPhoneNumber.set(contactPhoneNumber.get());
-        caseDTO.contactEmail.set(contactEmail.get());
-        caseDTO.street.set(street.get());
-        caseDTO.installedAt.set(installedAt.get());
-        caseDTO.city.set(city.get());
-        caseDTO.state.set(state.get());
-        caseDTO.zip.set(zip.get());
-        caseDTO.country.set(country.get());
-        caseDTO.partOrders.clear();
-        caseDTO.partOrders.set(partOrders.get());
-        caseDTO.selectedPartOrder.set(selectedPartOrder.get());
-        caseDTO.createdWorkOrder.set(createdWorkOrder.get());
-        caseDTO.tex.set(tex.get());
-        caseDTO.partsOrder.set(partsOrder.get());
-        caseDTO.entitlement.set(entitlement.get());
-        caseDTO.completed.set(isCompleted() );
-        caseDTO.isEmail.set(isIsEmail());
-        caseDTO.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
-        caseDTO.relatedCaseNumber.set(relatedCaseNumber.get());
+    public void updateCase(NoteDTO noteDTO) {
+        noteDTO.timestamp.set(timestamp.get());
+        noteDTO.workOrder.set(workOrder.get());
+        noteDTO.caseNumber.set(caseNumber.get());
+        noteDTO.serialNumber.set(serialNumber.get());
+        noteDTO.modelNumber.set(modelNumber.get());
+        noteDTO.callInPerson.set(callInPerson.get());
+        noteDTO.callInPhoneNumber.set(callInPhoneNumber.get());
+        noteDTO.callInEmail.set(callInEmail.get());
+        noteDTO.underWarranty.set(isUnderWarranty());
+        noteDTO.activeServiceContract.set(activeServiceContract.get());
+        noteDTO.serviceLevel.set(serviceLevel.get());
+        noteDTO.schedulingTerms.set(schedulingTerms.get());
+        noteDTO.upsStatus.set(upsStatus.get());
+        noteDTO.loadSupported.set(isLoadSupported());
+        noteDTO.issue.set(issue.get());
+        noteDTO.contactName.set(contactName.get());
+        noteDTO.contactPhoneNumber.set(contactPhoneNumber.get());
+        noteDTO.contactEmail.set(contactEmail.get());
+        noteDTO.street.set(street.get());
+        noteDTO.installedAt.set(installedAt.get());
+        noteDTO.city.set(city.get());
+        noteDTO.state.set(state.get());
+        noteDTO.zip.set(zip.get());
+        noteDTO.country.set(country.get());
+        noteDTO.partOrders.clear();
+        noteDTO.partOrders.set(partOrders.get());
+        noteDTO.selectedPartOrder.set(selectedPartOrder.get());
+        noteDTO.createdWorkOrder.set(createdWorkOrder.get());
+        noteDTO.tex.set(tex.get());
+        noteDTO.partsOrder.set(partsOrder.get());
+        noteDTO.entitlement.set(entitlement.get());
+        noteDTO.completed.set(isCompleted() );
+        noteDTO.isEmail.set(isIsEmail());
+        noteDTO.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
+        noteDTO.relatedCaseNumber.set(relatedCaseNumber.get());
     }
 
-    public CaseDTO cloneCase(int id) {
-        CaseDTO clone = new CaseDTO();
+    public NoteDTO cloneCase(int id) {
+        NoteDTO clone = new NoteDTO();
         clone.id.set(id);
         clone.timestamp.set(LocalDateTime.now());
         clone.workOrder.set(workOrder.get());

@@ -1,6 +1,6 @@
 package com.L2.static_tools;
 
-import com.L2.dto.CaseDTO;
+import com.L2.dto.NoteDTO;
 import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
 import com.L2.dto.UserDTO;
@@ -15,8 +15,8 @@ public class FakeData {
         return userDTO;
     }
 
-    public static CaseDTO createFakeCase() {
-        CaseDTO c = new CaseDTO();
+    public static NoteDTO createFakeCase() {
+        NoteDTO c = new NoteDTO();
         c.setId(1);
         c.setTimestamp(LocalDateTime.now());
         c.setWorkOrder("WO-10196741");

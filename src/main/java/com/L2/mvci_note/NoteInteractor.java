@@ -1,6 +1,6 @@
 package com.L2.mvci_note;
 
-import com.L2.dto.CaseDTO;
+import com.L2.dto.NoteDTO;
 import com.L2.dto.EntitlementDTO;
 import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
@@ -47,9 +47,9 @@ public class NoteInteractor {
     }
 
     public void setFakeTestData() {
-        CaseDTO caseDTO = FakeData.createFakeCase();
-        noteModel.getNotes().add(caseDTO);
-        noteModel.setBoundNote(caseDTO);
+        NoteDTO noteDTO = FakeData.createFakeCase();
+        noteModel.getNotes().add(noteDTO);
+        noteModel.setBoundNote(noteDTO);
     }
 
     public EntitlementDTO setCurrentEntitlement() {
@@ -387,19 +387,19 @@ public class NoteInteractor {
     private void saveBoundNote() {
         int noteNumber = noteModel.getNotes().size() + 1;  // temp way to make an ID
         // get note if it exists
-        CaseDTO caseDTO = noteModel.getNotes()
+        NoteDTO noteDTO = noteModel.getNotes()
                 .stream()
                 .filter(note -> note.getId() == noteModel.getBoundNote().getId())  // Filter notes
                 .findFirst()
                 .orElse(null);  // Return null if no matching element is found
         // if it does exist update it
-        if(caseDTO != null) {
-            noteModel.getBoundNote().updateCase(caseDTO);
+        if(noteDTO != null) {
+            noteModel.getBoundNote().updateCase(noteDTO);
             logger.info("Updated a note currently in memory");
         // if it doesn't exist create it
         } else {
             logger.info("Note in memory does not exist creating a new one");
-            CaseDTO clonedCase = noteModel.getBoundNote().cloneCase(noteNumber);
+            NoteDTO clonedCase = noteModel.getBoundNote().cloneCase(noteNumber);
             noteModel.setCurrentEntitlement(noteModel.getEntitlements().getLast());
             noteModel.getNotes().add(clonedCase);
             logger.info("Created new note {}", noteNumber);

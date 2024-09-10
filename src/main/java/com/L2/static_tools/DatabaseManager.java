@@ -9,7 +9,6 @@ public class DatabaseManager {
     // Method to create the database and schema
     public static void createSchema() {
         String url = "jdbc:sqlite:" + ApplicationPaths.settingsDir.resolve("notes.db");  // Path to the SQLite database file
-        System.out.println(url);
         // SQL commands to create the tables
         String createNotesTable = "CREATE TABLE IF NOT EXISTS Notes (\n"
                 + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"

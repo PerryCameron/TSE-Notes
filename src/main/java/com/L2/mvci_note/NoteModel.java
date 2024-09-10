@@ -1,6 +1,6 @@
 package com.L2.mvci_note;
 
-import com.L2.dto.CaseDTO;
+import com.L2.dto.NoteDTO;
 import com.L2.dto.EntitlementDTO;
 import com.L2.dto.UserDTO;
 import javafx.beans.property.*;
@@ -9,8 +9,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.layout.VBox;
 
 public class NoteModel {
-    private ObservableList<CaseDTO> notes = FXCollections.observableArrayList();
-    private ObjectProperty<CaseDTO> boundNote = new SimpleObjectProperty<>();
+    private ObservableList<NoteDTO> notes = FXCollections.observableArrayList();
+    private ObjectProperty<NoteDTO> boundNote = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
     private ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
@@ -31,11 +31,11 @@ public class NoteModel {
         this.clearCalled.set(clearCalled);
     }
 
-    public ObservableList<CaseDTO> getNotes() {
+    public ObservableList<NoteDTO> getNotes() {
         return notes;
     }
 
-    public void setNotes(ObservableList<CaseDTO> notes) {
+    public void setNotes(ObservableList<NoteDTO> notes) {
         this.notes = notes;
     }
 
@@ -83,15 +83,15 @@ public class NoteModel {
         this.entitlements = entitlements;
     }
 
-    public CaseDTO getBoundNote() {
+    public NoteDTO getBoundNote() {
         return boundNote.get();
     }
 
-    public ObjectProperty<CaseDTO> boundNoteProperty() {
+    public ObjectProperty<NoteDTO> boundNoteProperty() {
         return boundNote;
     }
 
-    public void setBoundNote(CaseDTO boundNote) {
+    public void setBoundNote(NoteDTO boundNote) {
         this.boundNote.set(boundNote);
     }
 
