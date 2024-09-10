@@ -45,7 +45,7 @@ public class ShippingInformation implements Component<Region> {
         copyButton.setTooltip(ToolTipFx.of("Copy Shipping Information"));
         Button[] buttons = new Button[]{copyButton};
         root.getChildren().addAll(TitleBarFx.of("Shipping Information", buttons), hBox);
-        refreshFields();
+        bindTextFields();
         return root;
     }
 
@@ -118,31 +118,11 @@ public class ShippingInformation implements Component<Region> {
         pause.play();
     }
 
-    // resets all the text fields
     @Override
     public void refreshFields() {
-        refreshBindings();
-    }
-
-    public void refreshBindings() {
-        unbindTextFields();  // Unbind previous bindings
-        bindTextFields();    // Bind the TextFields to the latest properties
-    }
-
-    public void unbindTextFields() {
-        aTextFields[0].textProperty().unbindBidirectional(noteModel.getBoundNote().installedAtProperty());
-        streetTextArea.textProperty().unbindBidirectional(noteModel.getBoundNote().streetProperty());
-        aTextFields[1].textProperty().unbindBidirectional(noteModel.getBoundNote().cityProperty());
-        aTextFields[2].textProperty().unbindBidirectional(noteModel.getBoundNote().stateProperty());
-        aTextFields[3].textProperty().unbindBidirectional(noteModel.getBoundNote().zipProperty());
-        aTextFields[4].textProperty().unbindBidirectional(noteModel.getBoundNote().countryProperty());
-        cTextFields[0].textProperty().unbindBidirectional(noteModel.getBoundNote().contactNameProperty());
-        cTextFields[1].textProperty().unbindBidirectional(noteModel.getBoundNote().contactPhoneNumberProperty());
-        cTextFields[2].textProperty().unbindBidirectional(noteModel.getBoundNote().contactEmailProperty());
     }
 
     public void bindTextFields() {
-        // Bind each TextField to the corresponding property in the noteModel
         aTextFields[0].textProperty().bindBidirectional(noteModel.getBoundNote().installedAtProperty());
         streetTextArea.textProperty().bindBidirectional(noteModel.getBoundNote().streetProperty());
         aTextFields[1].textProperty().bindBidirectional(noteModel.getBoundNote().cityProperty());

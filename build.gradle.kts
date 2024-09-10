@@ -1,7 +1,8 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id("java")
+    application
+    java
 }
 
 group = "com.schneider"
@@ -12,6 +13,8 @@ repositories {
 }
 
 val appVersion: String by project
+
+
 
 // Process and copy app.properties with version replacement
 tasks.register<Copy>("processAppProperties") {
@@ -30,6 +33,9 @@ tasks.register<Copy>("processAppProperties") {
 dependencies {
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     implementation("org.xerial:sqlite-jdbc:3.46.1.0")
+    // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
+    implementation("org.springframework:spring-jdbc:6.1.12")
+
     // Allows use of clipboard API
     implementation("net.java.dev.jna:jna:5.14.0")
     // https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform
@@ -57,6 +63,14 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
+//application {
+//    // Define the main class for the application
+//    mainClass.set("com.example.MainApp")  // Replace with your actual main class
+//}
+
+
 tasks.test {
     useJUnitPlatform()
 }
+
+

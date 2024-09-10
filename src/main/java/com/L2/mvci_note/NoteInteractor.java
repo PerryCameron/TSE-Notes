@@ -370,19 +370,40 @@ public class NoteInteractor {
     }
 
     public void createNewNote() {
-        int noteNumber = noteModel.getNotes().size() + 1;  // temp way to make an ID
-        CaseDTO clonedCase = noteModel.getBoundNote().cloneCase(noteNumber);
-        noteModel.setCurrentEntitlement(noteModel.getEntitlements().getLast());
-        noteModel.getNotes().add(clonedCase);
+        saveBoundNote();
         noteModel.getBoundNote().getPartOrders().clear();
         noteModel.getBoundNote().setSelectedPartOrder(null);
         noteModel.getBoundNote().setTimestamp(LocalDateTime.now());
         noteModel.getBoundNote().clear();
         noteModel.setClearCalled(true);
         noteModel.setClearCalled(false);
-        System.out.println(noteModel.getNotes().getLast());
-        logger.info("Created new note {}", noteNumber);
+        int noteNumber = noteModel.getNotes().size() + 1;  // temp way to make an ID
+        noteModel.getBoundNote().setId(noteNumber);
+        noteModel.getNotes().add(noteModel.getBoundNote().cloneCase(noteNumber));
+        logger.info("Created a new note with id: {}", noteModel.getBoundNote().getId());
         logger.info("There are now {} notes in memory", noteModel.getNotes().size() );
+    }
+
+    private void saveBoundNote() {
+        int noteNumber = noteModel.getNotes().size() + 1;  // temp way to make an ID
+        // get note if it exists
+        CaseDTO caseDTO = noteModel.getNotes()
+                .stream()
+                .filter(note -> note.getId() == noteModel.getBoundNote().getId())  // Filter notes
+                .findFirst()
+                .orElse(null);  // Return null if no matching element is found
+        // if it does exist update it
+        if(caseDTO != null) {
+            noteModel.getBoundNote().updateCase(caseDTO);
+            logger.info("Updated a note currently in memory");
+        // if it doesn't exist create it
+        } else {
+            logger.info("Note in memory does not exist creating a new one");
+            CaseDTO clonedCase = noteModel.getBoundNote().cloneCase(noteNumber);
+            noteModel.setCurrentEntitlement(noteModel.getEntitlements().getLast());
+            noteModel.getNotes().add(clonedCase);
+            logger.info("Created new note {}", noteNumber);
+        }
     }
 
     public void logCurrentEntitlement() {
