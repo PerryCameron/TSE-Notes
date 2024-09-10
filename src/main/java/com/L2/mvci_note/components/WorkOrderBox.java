@@ -21,9 +21,9 @@ public class WorkOrderBox implements Component<Region> {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox root;
-    TextField texTextField = TextFieldFx.of(200,  "TEX-");
-    TextField relatedCaseTextField = TextFieldFx.of(200,  "Related Case");
-    TextField createdWorkOrderTextField = TextFieldFx.of(200,  "WO-");
+    TextField texTextField = TextFieldFx.standardTextField(200,  "TEX-");
+    TextField relatedCaseTextField = TextFieldFx.standardTextField(200,  "Related Case");
+    TextField createdWorkOrderTextField = TextFieldFx.standardTextField(200,  "WO-");
 
 
     public WorkOrderBox(NoteView noteView) {
