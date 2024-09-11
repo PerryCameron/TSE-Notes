@@ -374,6 +374,7 @@ public class NoteInteractor {
         noteModel.getBoundNote().getPartOrders().clear();
         noteModel.getBoundNote().setSelectedPartOrder(null);
         noteModel.getBoundNote().setTimestamp(LocalDateTime.now());
+
         noteModel.getBoundNote().clear();
         noteModel.setClearCalled(true);
         noteModel.setClearCalled(false);

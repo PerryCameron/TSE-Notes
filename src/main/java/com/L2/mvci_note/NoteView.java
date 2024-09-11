@@ -8,6 +8,7 @@ import javafx.scene.layout.*;
 import javafx.util.Builder;
 import javafx.scene.control.*;
 
+import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
 public class NoteView implements Builder<Region> {
@@ -51,6 +52,7 @@ public class NoteView implements Builder<Region> {
         noteModel.clearCalledProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != true) {
                 partOrderBoxList.refreshFields();
+                dateTimePicker.refreshFields();
             }
         });
     }
