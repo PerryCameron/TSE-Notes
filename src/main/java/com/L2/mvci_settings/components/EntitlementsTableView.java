@@ -1,7 +1,6 @@
 package com.L2.mvci_settings.components;
 
 import com.L2.dto.EntitlementDTO;
-import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import com.L2.widgetFx.TableColumnFx;
@@ -9,22 +8,19 @@ import com.L2.widgetFx.TableViewFx;
 import javafx.scene.control.*;
 import javafx.util.Builder;
 
-import java.util.function.Consumer;
-
 
 public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>> {
 
     private final SettingsModel settingsModel;
-    private final Consumer<SettingsMessage> action;
+//    private final Consumer<SettingsMessage> action;
 
     public EntitlementsTableView(SettingsView view) {
         this.settingsModel = view.getSettingsModel();
-        this.action = view.getAction();
+//        this.action = view.getAction();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public TableView build() {
+    public TableView<EntitlementDTO> build() {
         TableView<EntitlementDTO> tableView = TableViewFx.of(EntitlementDTO.class);
         settingsModel.setEntitlementsTableView(tableView);
         tableView.setItems(settingsModel.getEntitlements()); // Set the ObservableList here

@@ -5,6 +5,7 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.ButtonFx;
+import com.L2.widgetFx.TextAreaFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.animation.PauseTransition;
@@ -47,10 +48,8 @@ public class FinishBox implements Component<Region> {
     }
 
     private Node correctiveText() {
-        this.textArea = new TextArea();
+        this.textArea = TextAreaFx.standardTextArea(true, 100, 16, 4);
         textArea.setPromptText("Additional corrective action text");
-        textArea.setPrefHeight(100);
-        textArea.setWrapText(true);
         textArea.textProperty().bindBidirectional(noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
         HBox.setHgrow(textArea, Priority.ALWAYS);
         return textArea;

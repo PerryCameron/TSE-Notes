@@ -65,6 +65,7 @@ public class FakeData {
 
     public static PartDTO createFakePart1() {
         PartDTO partDTO = new PartDTO();
+        partDTO.setId(1);
         partDTO.setPartNumber("0J-0P8153");
         partDTO.setPartDescription("ASSY PCB PDU HMI-NMC INTERFACE BOARD");
         partDTO.setPartQuantity("1");
@@ -74,6 +75,7 @@ public class FakeData {
 
     public static PartDTO createFakePart2() {
         PartDTO partDTO = new PartDTO();
+        partDTO.setId(2);
         partDTO.setPartNumber("0G-SBS50KD");
         partDTO.setPartDescription("SBS50KW MODULE");
         partDTO.setPartQuantity("2");
@@ -83,6 +85,7 @@ public class FakeData {
 
     public static PartDTO createFakePart3() {
         PartDTO partDTO = new PartDTO();
+        partDTO.setId(3);
         partDTO.setPartNumber("LIBSMG95MODA");
         partDTO.setPartDescription("Battery Module Type A");
         partDTO.setPartQuantity("8");

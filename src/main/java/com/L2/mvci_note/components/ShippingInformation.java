@@ -30,7 +30,7 @@ public class ShippingInformation implements Component<Region> {
         this.noteModel = noteView.getNoteModel();
         this.aTextFields = new TextField[5];
         this.cTextFields = new TextField[3];
-        this.streetTextArea = TextAreaFx.of(true, 70, 16, 2);
+        this.streetTextArea = TextAreaFx.standardTextArea(true, 70, 16, 2);
         this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
     }
 

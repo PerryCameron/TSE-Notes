@@ -106,3 +106,20 @@
     -fx-border-color: red;
     -fx-border-radius: 5px;
 }
+
+/*.table-cell:focused, .table-cell:selected {*/
+/*    -fx-background-color: lightblue; !* Or any color you prefer *!*/
+/*    -fx-text-fill: black; !* Adjust the text color if necessary *!*/
+/*}*/
+
+
+/*.table-row-cell:selected {*/
+/*    -fx-background-color: lightblue; !* Background color of selected row *!*/
+/*}*/
+
+.table-cell:selected {
+    -fx-background-color: #d2efea; /* Background color of selected cell */
+    -fx-text-fill: black; /* Text color in the selected cell */
+}
+
+

@@ -12,11 +12,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +30,7 @@ public class PartOrderBoxList implements Component<Region> {
     private final NoteView noteView;
     private VBox root;
     private TableView<PartDTO> tableView;
-    private Map<PartOrderDTO, VBox> partOrderMap = new HashMap<>();
+    private final Map<PartOrderDTO, VBox> partOrderMap = new HashMap<>();
     public PartOrderBoxList(NoteView noteView) {
         this.noteModel = noteView.getNoteModel();
         this.noteView = noteView;
@@ -59,21 +62,28 @@ public class PartOrderBoxList implements Component<Region> {
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(5, 5, 5, 5));
         vBox.setPrefWidth(300);
-        Button addPartButton = ButtonFx.utilityButton( () -> {
+        Button addPartButton = ButtonFx.utilityButton(() -> {
             PartDTO partDTO = new PartDTO();
+            partDTO.setId(partOrderDTO.getParts().size() + 1); // TODO changes this when hooked to database
             partOrderDTO.getParts().add(partDTO);
-            partOrderDTO.getParts().sort(Comparator.comparing(PartDTO::getPartNumber).reversed());
 
+            // Sort parts in reverse order
+            partOrderDTO.getParts().sort(Comparator.comparing(PartDTO::getId).reversed());
+
+            // Refresh the table view layout and focus
             tableView.layout();
             tableView.requestFocus();
-            tableView.getSelectionModel().select(partDTO);
-            tableView.getFocusModel().focus(0);
-            tableView.edit(tableView.getItems().indexOf(partDTO), col1());
+
+            // Select row 0 and focus the first column
+            tableView.getSelectionModel().select(0);
+            tableView.getFocusModel().focus(0, tableView.getColumns().get(0));  // Focus the first column (index 0)
+
+            // Edit the first cell in the first row
+            tableView.edit(0, tableView.getColumns().get(0));  // Edit row 0, first column
         }, "Add Part", "/images/create-16.png");
 
-        Button deleteButton = ButtonFx.utilityButton( () -> {
-            partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart());
-        }, "Delete", "/images/delete-16.png");
+
+        Button deleteButton = ButtonFx.utilityButton( () -> partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart()), "Delete", "/images/delete-16.png");
         TextField textField = TextFieldFx.of(250, "Search");
         vBox.getChildren().addAll(textField, addPartButton, deleteButton);
         return vBox;
@@ -140,15 +150,70 @@ public class PartOrderBoxList implements Component<Region> {
         return iconBox;
     }
 
-    @SuppressWarnings("unchecked")
+
     public TableView<PartDTO> buildTable(PartOrderDTO partOrderDTO) {
         this.tableView = TableViewFx.of(PartDTO.class);
         tableView.setItems(partOrderDTO.getParts()); // Set the ObservableList here
-        tableView.getColumns().addAll(col1(),col2(),col3());
+//        tableView.getSelectionModel().setCellSelectionEnabled(true);
+        tableView.setEditable(true);
+        tableView.getColumns().addAll(Arrays.asList(col1(),col2(),col3()));
         tableView.setPlaceholder(new Label(""));
         tableView.setPrefHeight(160);
+        // Key event for Tab navigation
+        // Handle key events for the TableView, only when focused
+        tableView.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            System.out.print("Key pressed: ");
+            if (event.getCode() == KeyCode.TAB) {
+                System.out.print("Tab key, Focused Row: ");
+                // Consume the event to stop focus from moving out of the table
+                event.consume();
+
+                // Get the currently focused cell
+                TablePosition<PartDTO, String> focusedCell = tableView.getFocusModel().getFocusedCell();
+                int row = focusedCell.getRow();
+                int column = focusedCell.getColumn();
+                // Determine the next cell position
+                if (!event.isShiftDown()) {
+                    // Forward tabbing
+                    if (column < tableView.getColumns().size() - 1) {
+                        column++;
+                    } else {
+                        column = 0;
+                        row++;
+                    }
+                } else {
+                    // Reverse tabbing (Shift + Tab)
+                    if (column > 0) {
+                        column--;
+                    } else {
+                        column = tableView.getColumns().size() - 1;
+                        row--;
+                    }
+                }
+                // Prevent navigating out of bounds
+                if (row >= 0 && row < tableView.getItems().size()) {
+                    // Select the next cell
+                    tableView.layout();
+                    tableView.requestFocus();
+                    //        // Select row 0 and focus the first column
+                    tableView.getSelectionModel().select(row);
+                    tableView.getFocusModel().focus(row, tableView.getColumns().get(column));  // Focus the first column (index 0)
+                    tableView.edit(row, tableView.getColumns().get(column));  // Edit row 0, first column
+
+//                    tableView.getSelectionModel().clearAndSelect(row, tableView.getColumns().get(column));
+//                    tableView.getFocusModel().focus(row, tableView.getColumns().get(column));
+//                    tableView.edit(row, tableView.getColumns().get(column)); // selects correctly but does not open to edit
+                }
+                System.out.println(row + " Column: " + column);
+
+                // Ensure the table retains focus
+                tableView.requestFocus();
+            }
+        });
+
         // auto selector
         TableView.TableViewSelectionModel<PartDTO> selectionModel = tableView.getSelectionModel();
+
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) partOrderDTO.setSelectedPart(newSelection);
         });
@@ -160,6 +225,7 @@ public class PartOrderBoxList implements Component<Region> {
         col.setStyle("-fx-alignment: center-left");
         return col;
     }
+
 
     private TableColumn<PartDTO, String> col2() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partDescriptionProperty,"Part Description");
@@ -188,8 +254,6 @@ public class PartOrderBoxList implements Component<Region> {
     @Override
     public void refreshFields() {
         root.getChildren().clear();
-        noteModel.getBoundNote().getPartOrders().forEach((partOrderDTO) -> {
-            root.getChildren().add(createPartOrderBox(partOrderDTO));
-        });
+        noteModel.getBoundNote().getPartOrders().forEach((partOrderDTO) -> root.getChildren().add(createPartOrderBox(partOrderDTO)));
     }
 }
