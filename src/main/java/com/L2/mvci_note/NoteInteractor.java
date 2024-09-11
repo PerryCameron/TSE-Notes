@@ -410,4 +410,10 @@ public class NoteInteractor {
     public void logCurrentEntitlement() {
         logger.info("Current entitlement set to: {}", noteModel.getCurrentEntitlement());
     }
+
+    public void displayNextNote() {
+    }
+
+    public void displayPreviousNote() {
+    }
 }
