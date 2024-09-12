@@ -85,7 +85,12 @@ public class FinishBox implements Component<Region> {
             noteView.getAction().accept(NoteMessage.NEXT_NOTE);
         }, "Next", "/images/forward-16.png");
 
-        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, setCompletedButton, newNoteButton, prevNoteButton, nextNoteButton);
+        Button saveNoteButton = ButtonFx.utilityButton( () -> {
+            noteView.getAction().accept(NoteMessage.SAVE_NOTE);
+        }, "Save", "/images/Save-16.png");
+
+        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, setCompletedButton,
+                newNoteButton, prevNoteButton, nextNoteButton, saveNoteButton);
         return vBox;
     }
 

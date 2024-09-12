@@ -17,10 +17,27 @@ public class NoteModel {
     private StringProperty statusLabel = new SimpleStringProperty();
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
     private BooleanProperty clearCalled  = new SimpleBooleanProperty(false);
+    private BooleanProperty refreshBoundNote = new SimpleBooleanProperty(false);
 
 
-    public boolean isClearCalled() {
-        return clearCalled.get();
+    public void clearBoundNoteFields() {
+        boundNote.get().getPartOrders().clear();
+        boundNote.get().setSelectedPartOrder(null);
+        boundNote.get().clear();
+        setClearCalled(true);
+        setClearCalled(false);
+    }
+
+    public boolean isRefreshBoundNote() {
+        return refreshBoundNote.get();
+    }
+
+    public BooleanProperty refreshBoundNoteProperty() {
+        return refreshBoundNote;
+    }
+
+    public void setRefreshBoundNote(boolean refreshBoundNote) {
+        this.refreshBoundNote.set(refreshBoundNote);
     }
 
     public BooleanProperty clearCalledProperty() {

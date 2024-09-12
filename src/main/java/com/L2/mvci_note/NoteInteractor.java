@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 import static com.L2.static_tools.ApplicationPaths.entitlementsFile;
 import static com.L2.static_tools.ApplicationPaths.settingsDir;
@@ -49,7 +48,9 @@ public class NoteInteractor {
     public void setFakeTestData() {
         NoteDTO noteDTO = FakeData.createFakeCase();
         noteModel.getNotes().add(noteDTO);
-        noteModel.setBoundNote(noteDTO);
+        NoteDTO boundNote = new NoteDTO();
+        boundNote.copyFrom(noteDTO);
+        noteModel.setBoundNote(boundNote);
     }
 
     public EntitlementDTO setCurrentEntitlement() {
@@ -365,46 +366,19 @@ public class NoteInteractor {
     }
 
     public void setComplete() {
-        logger.info("Note {} has been set to completed", noteModel.getBoundNote().getId() );
-        noteModel.getBoundNote().setCompleted(true);
+//        logger.info("Note {} has been set to completed", noteModel.getBoundNote().getId() );
+//        noteModel.getBoundNote().setCompleted(true);
+        printAllNotes();
     }
 
     public void createNewNote() {
-        saveBoundNote();
-        noteModel.getBoundNote().getPartOrders().clear();
-        noteModel.getBoundNote().setSelectedPartOrder(null);
-        noteModel.getBoundNote().setTimestamp(LocalDateTime.now());
-
-        noteModel.getBoundNote().clear();
-        noteModel.setClearCalled(true);
-        noteModel.setClearCalled(false);
-        int noteNumber = noteModel.getNotes().size() + 1;  // temp way to make an ID
-        noteModel.getBoundNote().setId(noteNumber);
-        noteModel.getNotes().add(noteModel.getBoundNote().cloneCase(noteNumber));
-        logger.info("Created a new note with id: {}", noteModel.getBoundNote().getId());
-        logger.info("There are now {} notes in memory", noteModel.getNotes().size() );
-    }
-
-    private void saveBoundNote() {
-        int noteNumber = noteModel.getNotes().size() + 1;  // temp way to make an ID
-        // get note if it exists
-        NoteDTO noteDTO = noteModel.getNotes()
-                .stream()
-                .filter(note -> note.getId() == noteModel.getBoundNote().getId())  // Filter notes
-                .findFirst()
-                .orElse(null);  // Return null if no matching element is found
-        // if it does exist update it
-        if(noteDTO != null) {
-            noteModel.getBoundNote().updateCase(noteDTO);
-            logger.info("Updated a note currently in memory");
-        // if it doesn't exist create it
-        } else {
-            logger.info("Note in memory does not exist creating a new one");
-            NoteDTO clonedCase = noteModel.getBoundNote().cloneCase(noteNumber);
-            noteModel.setCurrentEntitlement(noteModel.getEntitlements().getLast());
-            noteModel.getNotes().add(clonedCase);
-            logger.info("Created new note {}", noteNumber);
-        }
+        // let's update the list note before moving on
+        saveNote();
+        int noteNumber = noteModel.getNotes().size() + 1;  // TODO we will save to database here and get id from autogenerate
+        NoteDTO noteDTO = new NoteDTO(noteNumber, false);
+        noteModel.getNotes().add(noteDTO);
+        noteModel.getBoundNote().setId(noteDTO.getId());
+        noteModel.clearBoundNoteFields();
     }
 
     public void logCurrentEntitlement() {
@@ -412,8 +386,34 @@ public class NoteInteractor {
     }
 
     public void displayNextNote() {
+        System.out.println("display next note");
     }
 
     public void displayPreviousNote() {
+        System.out.println("display previous note");
+        int element = noteModel.getNotes().indexOf(noteModel.getBoundNote());
+        if(element > 0) {
+            saveNote();
+            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(element -1));
+        }
+    }
+
+    public void printAllNotes() {
+        for(NoteDTO note : noteModel.getNotes()) {
+            System.out.println("note: " + note.getId() + " WO: " + note.getWorkOrder());
+        }
+    }
+
+    // this synchronizes the bound object to the correct object in the list
+    public void saveNote() {
+//        System.out.println("Bound Note: " + noteModel.getBoundNote() + " WO: " + noteModel.getBoundNote().getWorkOrder());
+        for(NoteDTO noteDTO: noteModel.getNotes()) {
+            if(noteDTO.getId() == noteModel.getBoundNote().getId()) {
+                // copies bound note to the note in the list with matching id
+                noteDTO.copyFrom(noteModel.getBoundNote());
+                // TODO save to database here
+            }
+        }
+
     }
 }

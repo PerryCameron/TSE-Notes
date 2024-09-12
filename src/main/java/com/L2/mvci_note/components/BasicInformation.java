@@ -52,9 +52,7 @@ public class BasicInformation implements Component<Region> {
         copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
 
         Button clearButton = ButtonFx.utilityButton(() -> {
-            for (TextField textField : textFields) {
-                textField.setText("");
-            }
+            clear();
         }, "Clear", "/images/clear-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
 
@@ -167,6 +165,12 @@ public class BasicInformation implements Component<Region> {
         serviceLevelComboBox.valueProperty().bindBidirectional(noteModel.getBoundNote().serviceLevelProperty());
         statusComboBox.valueProperty().bindBidirectional(noteModel.getBoundNote().upsStatusProperty());
         schedulingTermsComboBox.valueProperty().bindBidirectional(noteModel.getBoundNote().schedulingTermsProperty());
+    }
+
+    public void clear() {
+        for (TextField textField : textFields) {
+            textField.setText("");
+        }
     }
 
     @Override

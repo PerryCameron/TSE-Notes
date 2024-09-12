@@ -57,6 +57,14 @@ public class NoteView implements Builder<Region> {
         });
     }
 
+    private void refreshBoundNoteListener() {
+        noteModel.refreshBoundNoteProperty().addListener((observable, oldValue, newValue) -> {
+           if (newValue != true) {
+               partOrderBoxList.refreshFields();
+           }
+        });
+    }
+
     // writing to this StringProperty will automatically update the status bar
     private void setUpStatusBarCommunication() {
         noteModel.statusLabelProperty().addListener((observable, oldValue, newValue) -> {

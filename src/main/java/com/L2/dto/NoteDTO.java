@@ -218,6 +218,45 @@ public class NoteDTO implements Serializable {
         return clone;
     }
 
+    public void copyFrom(NoteDTO noteDTO) {
+        System.out.println("copied: " + noteDTO + " id: " + noteDTO.id.get());
+        id.set(noteDTO.getId());
+        timestamp.set(noteDTO.getTimestamp());
+        workOrder.set(noteDTO.getWorkOrder());
+        caseNumber.set(noteDTO.getCaseNumber());
+        serialNumber.set(noteDTO.getSerialNumber());
+        modelNumber.set(noteDTO.getModelNumber());
+        callInPerson.set(noteDTO.getCallInPerson());
+        callInPhoneNumber.set(noteDTO.getCallInPhoneNumber());
+        callInEmail.set(noteDTO.getCallInEmail());
+        underWarranty.set(noteDTO.isUnderWarranty());
+        activeServiceContract.set(noteDTO.getActiveServiceContract());
+        serviceLevel.set(noteDTO.getServiceLevel());
+        schedulingTerms.set(noteDTO.getSchedulingTerms());
+        upsStatus.set(noteDTO.getUpsStatus());
+        loadSupported.set(noteDTO.isLoadSupported());
+        issue.set(noteDTO.getIssue());
+        contactName.set(noteDTO.getContactName());
+        contactPhoneNumber.set(noteDTO.getContactPhoneNumber());
+        contactEmail.set(noteDTO.getContactEmail());
+        street.set(noteDTO.getStreet());
+        installedAt.set(noteDTO.getInstalledAt());
+        city.set(noteDTO.getCity());
+        state.set(noteDTO.getState());
+        zip.set(noteDTO.getZip());
+        country.set(noteDTO.getCountry());
+        partOrders.set(noteDTO.getPartOrders());
+        selectedPartOrder.set(noteDTO.getSelectedPartOrder());
+        createdWorkOrder.set(noteDTO.getCreatedWorkOrder());
+        tex.set(noteDTO.getTex());
+        partsOrder.set(noteDTO.getPartsOrder());
+        entitlement.set(noteDTO.getEntitlement());
+        completed.set(noteDTO.isCompleted());
+        isEmail.set(noteDTO.isIsEmail());
+        additionalCorrectiveActionText.set(noteDTO.getAdditionalCorrectiveActionText());
+        relatedCaseNumber.set(noteDTO.getRelatedCaseNumber());
+    }
+
     public void clearAddress() {
         installedAt.set("");
         street.set("");
@@ -234,7 +273,6 @@ public class NoteDTO implements Serializable {
     }
 
     public void clear() {
-        this.id.set(0);
         this.timestamp.set(LocalDateTime.now());
         this.workOrder.set("");
         this.caseNumber.set("");
@@ -734,45 +772,45 @@ public class NoteDTO implements Serializable {
         this.parts = new SimpleListProperty<>(FXCollections.observableArrayList(savedParts));
     }
 
-    @Override
-    public String toString() {
-        return "CaseDTO{" +
-                "id=" + id +
-                ", timestamp=" + timestamp +
-                ", workOrder=" + workOrder +
-                ", caseNumber=" + caseNumber +
-                ", serialNumber=" + serialNumber +
-                ", modelNumber=" + modelNumber +
-                ", callInPerson=" + callInPerson +
-                ", callInPhoneNumber=" + callInPhoneNumber +
-                ", callInEmail=" + callInEmail +
-                ", underWarranty=" + underWarranty +
-                ", activeServiceContract=" + activeServiceContract +
-                ", serviceLevel=" + serviceLevel +
-                ", schedulingTerms=" + schedulingTerms +
-                ", upsStatus=" + upsStatus +
-                ", loadSupported=" + loadSupported +
-                ", issue=" + issue +
-                ", contactName=" + contactName +
-                ", contactPhoneNumber=" + contactPhoneNumber +
-                ", contactEmail=" + contactEmail +
-                ", street=" + street +
-                ", installedAt=" + installedAt +
-                ", city=" + city +
-                ", state=" + state +
-                ", zip=" + zip +
-                ", country=" + country +
-                ", partOrders=" + partOrders +
-                ", selectedPartOrder=" + selectedPartOrder +
-                ", createdWorkOrder=" + createdWorkOrder +
-                ", tex=" + tex +
-                ", partsOrder=" + partsOrder +
-                ", entitlement=" + entitlement +
-                ", completed=" + completed +
-                ", isEmail=" + isEmail +
-                ", additionalCorrectiveActionText=" + additionalCorrectiveActionText +
-                ", relatedCaseNumber=" + relatedCaseNumber +
-                ", parts=" + parts +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "CaseDTO{" +
+//                "id=" + id +
+//                ", timestamp=" + timestamp +
+//                ", workOrder=" + workOrder +
+//                ", caseNumber=" + caseNumber +
+//                ", serialNumber=" + serialNumber +
+//                ", modelNumber=" + modelNumber +
+//                ", callInPerson=" + callInPerson +
+//                ", callInPhoneNumber=" + callInPhoneNumber +
+//                ", callInEmail=" + callInEmail +
+//                ", underWarranty=" + underWarranty +
+//                ", activeServiceContract=" + activeServiceContract +
+//                ", serviceLevel=" + serviceLevel +
+//                ", schedulingTerms=" + schedulingTerms +
+//                ", upsStatus=" + upsStatus +
+//                ", loadSupported=" + loadSupported +
+//                ", issue=" + issue +
+//                ", contactName=" + contactName +
+//                ", contactPhoneNumber=" + contactPhoneNumber +
+//                ", contactEmail=" + contactEmail +
+//                ", street=" + street +
+//                ", installedAt=" + installedAt +
+//                ", city=" + city +
+//                ", state=" + state +
+//                ", zip=" + zip +
+//                ", country=" + country +
+//                ", partOrders=" + partOrders +
+//                ", selectedPartOrder=" + selectedPartOrder +
+//                ", createdWorkOrder=" + createdWorkOrder +
+//                ", tex=" + tex +
+//                ", partsOrder=" + partsOrder +
+//                ", entitlement=" + entitlement +
+//                ", completed=" + completed +
+//                ", isEmail=" + isEmail +
+//                ", additionalCorrectiveActionText=" + additionalCorrectiveActionText +
+//                ", relatedCaseNumber=" + relatedCaseNumber +
+//                ", parts=" + parts +
+//                '}';
+//    }
 }

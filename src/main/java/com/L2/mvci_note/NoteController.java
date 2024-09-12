@@ -17,6 +17,7 @@ public class NoteController extends Controller<NoteMessage> {
         this.noteView = new NoteView(noteModel, this::action);
         action(NoteMessage.LOAD_USER);
         loadTestData(); // this is for testing
+        noteInteractor.printAllNotes(); // this is for testing
     }
 
     private void loadTestData() {
@@ -49,6 +50,7 @@ public class NoteController extends Controller<NoteMessage> {
             case LOG_CURRENT_ENTITLEMENT -> noteInteractor.logCurrentEntitlement();
             case NEXT_NOTE -> noteInteractor.displayNextNote();
             case PREVIOUS_NOTE -> noteInteractor.displayPreviousNote();
+            case SAVE_NOTE -> noteInteractor.saveNote();
         };
     }
 
