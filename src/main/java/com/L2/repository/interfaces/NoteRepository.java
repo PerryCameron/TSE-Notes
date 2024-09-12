@@ -6,4 +6,10 @@ import java.util.List;
 
 public interface NoteRepository {
     List<NoteDTO> getAllNotes();
+
+    boolean noteExists(NoteDTO note);
+
+    int insertNote(NoteDTO note);
+
+    void updateNote(NoteDTO note);
 }

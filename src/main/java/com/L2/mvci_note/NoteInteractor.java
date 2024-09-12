@@ -429,6 +429,12 @@ public class NoteInteractor {
                 // copies bound note to the note in the list with matching id
                 noteDTO.copyFrom(noteModel.getBoundNote());
                 // TODO save to database here
+                if(noteRepo.noteExists(noteDTO)) {
+                    System.out.println("The Note exists, we need to update");
+                } else {
+                    System.out.println("The Note does not exist, we need to insert it");
+                    noteDTO.setId(noteRepo.insertNote(noteDTO));
+                }
             }
         }
     }
