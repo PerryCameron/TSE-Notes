@@ -1,22 +1,32 @@
 package com.L2.static_tools;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.sqlite.SQLiteDataSource;
+
 import java.sql.SQLException;
 
 public class DatabaseConnector {
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseConnector.class);
 
-    private static final String DATABASE_URL = "jdbc:sqlite:notes.db";
+    // Assuming ApplicationPaths.settingsDir resolves to the desired path for the database
+    private static final String DATABASE_URL = "jdbc:sqlite:" + ApplicationPaths.settingsDir.resolve("notes.db");
 
-    public static Connection connect() {
-        Connection conn = null;
+    // Method to return a DataSource for use with JdbcTemplate
+    public static SQLiteDataSource getDataSource() {
+        SQLiteDataSource dataSource = new SQLiteDataSource();
+        dataSource.setUrl(DATABASE_URL);
+
         try {
-            conn = DriverManager.getConnection(DATABASE_URL);
-            System.out.println("Connection to SQLite has been established.");
+            // Test the connection
+            dataSource.getConnection().close();
+            logger.info("Connection to SQLite has been established.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Failed to establish SQLite connection.", e);
         }
-        return conn;
+
+        return dataSource;
     }
 }
 

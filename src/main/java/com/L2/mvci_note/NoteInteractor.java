@@ -4,6 +4,8 @@ import com.L2.dto.NoteDTO;
 import com.L2.dto.EntitlementDTO;
 import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
+import com.L2.repository.implementations.NoteRepositoryImpl;
+import com.L2.repository.interfaces.NoteRepository;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ClipboardUtils;
 import com.L2.static_tools.FakeData;
@@ -21,9 +23,12 @@ public class NoteInteractor {
 
     private final NoteModel noteModel;
     private static final Logger logger = LoggerFactory.getLogger(NoteInteractor.class);
+    private final NoteRepositoryImpl noteRepo;
 
     public NoteInteractor(NoteModel noteModel) {
+
         this.noteModel = noteModel;
+        this.noteRepo = new NoteRepositoryImpl();
     }
 
     public void loadEntitlements() {

@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -172,7 +171,7 @@ public class NoteDTO {
         noteDTO.partsOrder.set(partsOrder.get());
         noteDTO.entitlement.set(entitlement.get());
         noteDTO.completed.set(isCompleted() );
-        noteDTO.isEmail.set(isIsEmail());
+        noteDTO.isEmail.set(isEmail());
         noteDTO.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
         noteDTO.relatedCaseNumber.set(relatedCaseNumber.get());
     }
@@ -251,7 +250,7 @@ public class NoteDTO {
         partsOrder.set(noteDTO.getPartsOrder());
         entitlement.set(noteDTO.getEntitlement());
         completed.set(noteDTO.isCompleted());
-        isEmail.set(noteDTO.isIsEmail());
+        isEmail.set(noteDTO.isEmail());
         additionalCorrectiveActionText.set(noteDTO.getAdditionalCorrectiveActionText());
         relatedCaseNumber.set(noteDTO.getRelatedCaseNumber());
     }
@@ -337,7 +336,7 @@ public class NoteDTO {
         this.relatedCaseNumber.set(relatedCaseNumber);
     }
 
-    public boolean isIsEmail() {
+    public boolean isEmail() {
         return isEmail.get();
     }
 
@@ -770,46 +769,4 @@ public class NoteDTO {
         List<PartOrderDTO> savedParts = (List<PartOrderDTO>) in.readObject();
         this.parts = new SimpleListProperty<>(FXCollections.observableArrayList(savedParts));
     }
-
-//    @Override
-//    public String toString() {
-//        return "CaseDTO{" +
-//                "id=" + id +
-//                ", timestamp=" + timestamp +
-//                ", workOrder=" + workOrder +
-//                ", caseNumber=" + caseNumber +
-//                ", serialNumber=" + serialNumber +
-//                ", modelNumber=" + modelNumber +
-//                ", callInPerson=" + callInPerson +
-//                ", callInPhoneNumber=" + callInPhoneNumber +
-//                ", callInEmail=" + callInEmail +
-//                ", underWarranty=" + underWarranty +
-//                ", activeServiceContract=" + activeServiceContract +
-//                ", serviceLevel=" + serviceLevel +
-//                ", schedulingTerms=" + schedulingTerms +
-//                ", upsStatus=" + upsStatus +
-//                ", loadSupported=" + loadSupported +
-//                ", issue=" + issue +
-//                ", contactName=" + contactName +
-//                ", contactPhoneNumber=" + contactPhoneNumber +
-//                ", contactEmail=" + contactEmail +
-//                ", street=" + street +
-//                ", installedAt=" + installedAt +
-//                ", city=" + city +
-//                ", state=" + state +
-//                ", zip=" + zip +
-//                ", country=" + country +
-//                ", partOrders=" + partOrders +
-//                ", selectedPartOrder=" + selectedPartOrder +
-//                ", createdWorkOrder=" + createdWorkOrder +
-//                ", tex=" + tex +
-//                ", partsOrder=" + partsOrder +
-//                ", entitlement=" + entitlement +
-//                ", completed=" + completed +
-//                ", isEmail=" + isEmail +
-//                ", additionalCorrectiveActionText=" + additionalCorrectiveActionText +
-//                ", relatedCaseNumber=" + relatedCaseNumber +
-//                ", parts=" + parts +
-//                '}';
-//    }
 }
