@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NoteDTO implements Serializable {
-    private static final long serialVersionUID = 13897650298347L;
+public class NoteDTO {
 
     private IntegerProperty id = new SimpleIntegerProperty();
     private ObjectProperty<LocalDateTime> timestamp = new SimpleObjectProperty<>();
@@ -219,7 +218,7 @@ public class NoteDTO implements Serializable {
     }
 
     public void copyFrom(NoteDTO noteDTO) {
-        System.out.println("copied: " + noteDTO + " id: " + noteDTO.id.get());
+        System.out.println("copied fields from " + noteDTO + "(id " + noteDTO.id.get() + ") to: " + this);
         id.set(noteDTO.getId());
         timestamp.set(noteDTO.getTimestamp());
         workOrder.set(noteDTO.getWorkOrder());

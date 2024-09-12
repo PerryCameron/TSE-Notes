@@ -273,7 +273,7 @@ public class NoteInteractor {
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getCallInEmail()).append("<br>");
         stringBuilder.append("<br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Entitlement: </span>").append(noteModel.getBoundNote().getEntitlement()).append("<br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(noteModel.getBoundNote().getSchedulingTerms()).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Scheduling Terms: </span>").append(noteModel.getBoundNote().getSchedulingTerms()).append("<br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(noteModel.getBoundNote().getServiceLevel()).append("<br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Status of the UPS: </span>").append(noteModel.getBoundNote().getUpsStatus()).append("<br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Load Supported: </span>").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("<br>");
@@ -386,16 +386,28 @@ public class NoteInteractor {
     }
 
     public void displayNextNote() {
-        System.out.println("display next note");
+        int index = getIndexById(noteModel.getBoundNote().getId());
+        if(index < noteModel.getNotes().size() - 1) {
+            saveNote();
+            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index +1));
+        } else System.out.println("This is the last element in the list so we can go no further");
     }
 
     public void displayPreviousNote() {
-        System.out.println("display previous note");
-        int element = noteModel.getNotes().indexOf(noteModel.getBoundNote());
-        if(element > 0) {
+        int index = getIndexById(noteModel.getBoundNote().getId());
+        if(index > 0) {
             saveNote();
-            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(element -1));
+            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index -1));
+        } else System.out.println("This is the first element in the list so we can go no further");
+    }
+
+    public int getIndexById(int id) {
+        for(NoteDTO note : noteModel.getNotes()) {
+            if(note.getId() == id) {
+                return noteModel.getNotes().indexOf(note);
+            }
         }
+        return -1;
     }
 
     public void printAllNotes() {
@@ -414,6 +426,5 @@ public class NoteInteractor {
                 // TODO save to database here
             }
         }
-
     }
 }
