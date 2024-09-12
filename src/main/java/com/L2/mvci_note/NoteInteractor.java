@@ -50,12 +50,19 @@ public class NoteInteractor {
         }
     }
 
-    public void setFakeTestData() {
-        NoteDTO noteDTO = FakeData.createFakeCase();
-        noteModel.getNotes().add(noteDTO);
+//    public void setFakeTestData() {
+//        NoteDTO noteDTO = FakeData.createFakeCase();
+//        noteModel.getNotes().add(noteDTO);
+//
+//        boundNote.copyFrom(noteDTO);
+//        noteModel.setBoundNote(boundNote);
+//    }
+
+    public void loadNotes() {
         NoteDTO boundNote = new NoteDTO();
-        boundNote.copyFrom(noteDTO);
         noteModel.setBoundNote(boundNote);
+        noteModel.getNotes().addAll(noteRepo.getAllNotes());
+        boundNote.copyFrom(noteModel.getNotes().get(0));
     }
 
     public EntitlementDTO setCurrentEntitlement() {
@@ -379,8 +386,8 @@ public class NoteInteractor {
     public void createNewNote() {
         // let's update the list note before moving on
         saveNote();
-        int noteNumber = noteModel.getNotes().size() + 1;  // TODO we will save to database here and get id from autogenerate
-        NoteDTO noteDTO = new NoteDTO(noteNumber, false);
+        NoteDTO noteDTO = new NoteDTO(0, false);
+        noteDTO.setId(noteRepo.insertNote(noteDTO));
         noteModel.getNotes().add(noteDTO);
         noteModel.getBoundNote().setId(noteDTO.getId());
         noteModel.clearBoundNoteFields();
@@ -437,5 +444,9 @@ public class NoteInteractor {
                 }
             }
         }
+    }
+
+    public void printBoundNote() {
+        System.out.println(noteModel.getBoundNote());
     }
 }

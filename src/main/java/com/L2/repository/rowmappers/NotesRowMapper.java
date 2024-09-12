@@ -12,13 +12,12 @@ import java.time.format.DateTimeFormatter;
 public class NotesRowMapper implements RowMapper<NoteDTO> {
 
     // Formatter to parse the timestamp from the ResultSet (if stored as TEXT)
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     @Override
     public NoteDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new NoteDTO(
                 rs.getInt("id"),
-                LocalDateTime.parse(rs.getString("timestamp"), formatter), // Parse timestamp
+                LocalDateTime.parse(rs.getString("timestamp"), formatter), // this is row 21
                 rs.getString("workOrder"),
                 rs.getString("caseNumber"),
                 rs.getString("serialNumber"),

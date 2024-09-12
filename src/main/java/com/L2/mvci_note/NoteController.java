@@ -16,17 +16,17 @@ public class NoteController extends Controller<NoteMessage> {
         this.noteInteractor = new NoteInteractor(noteModel);
         this.noteView = new NoteView(noteModel, this::action);
         action(NoteMessage.LOAD_USER);
-        loadTestData(); // this is for testing
-        noteInteractor.printAllNotes(); // this is for testing
     }
 
-    private void loadTestData() {
-        noteInteractor.setFakeTestData(); // this is temporary but will be where initial data comes from
-    }
+//    private void loadTestData() {
+//        noteInteractor.setFakeTestData(); // this is temporary but will be where initial data comes from
+//    }
 
     @Override
     public Region getView() {
         noteInteractor.loadEntitlements();
+        noteInteractor.loadNotes();
+        noteInteractor.printBoundNote();
         noteInteractor.setCurrentEntitlement();
         return noteView.build();
     }
@@ -51,6 +51,7 @@ public class NoteController extends Controller<NoteMessage> {
             case NEXT_NOTE -> noteInteractor.displayNextNote();
             case PREVIOUS_NOTE -> noteInteractor.displayPreviousNote();
             case SAVE_NOTE -> noteInteractor.saveNote();
+            case LOAD_NOTES -> noteInteractor.loadNotes();
         };
     }
 
