@@ -12,12 +12,24 @@ public class TextAreaFx {
         textArea.setWrapText(true);
         textArea.setFont(Font.font(fontSize));
         textArea.setPrefHeight(height);
+        if (hGrow)
         HBox.setHgrow(textArea, Priority.ALWAYS);
         textArea.setPrefRowCount(prefRows); // Optional: Set a preferred number of rows
         textArea.focusedProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue)
                 Platform.runLater(textArea::selectAll);
         });
+        return textArea;
+    }
+
+    public static TextArea of(boolean hGrow, double height, double fontSize, int prefRows) {
+        TextArea textArea = new TextArea();
+        textArea.setWrapText(true);
+        textArea.setFont(Font.font(fontSize));
+        textArea.setPrefHeight(height);
+        if (hGrow)
+            HBox.setHgrow(textArea, Priority.ALWAYS);
+        textArea.setPrefRowCount(prefRows); // Optional: Set a preferred number of rows
         return textArea;
     }
 }

@@ -48,7 +48,7 @@ public class FinishBox implements Component<Region> {
     }
 
     private Node correctiveText() {
-        this.textArea = TextAreaFx.standardTextArea(true, 100, 16, 4);
+        this.textArea = TextAreaFx.of(true, 100, 16, 4);
         textArea.setPromptText("Additional corrective action text");
         textArea.textProperty().bindBidirectional(noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
         HBox.setHgrow(textArea, Priority.ALWAYS);
