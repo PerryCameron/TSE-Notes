@@ -5,10 +5,12 @@ import com.L2.dto.EntitlementDTO;
 import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
 import com.L2.repository.implementations.NoteRepositoryImpl;
+import com.L2.repository.implementations.PartOrderRepositoryImpl;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ClipboardUtils;
 import com.L2.static_tools.FakeData;
 import com.L2.static_tools.TableFormatter;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +25,13 @@ public class NoteInteractor {
     private final NoteModel noteModel;
     private static final Logger logger = LoggerFactory.getLogger(NoteInteractor.class);
     private final NoteRepositoryImpl noteRepo;
+    private final PartOrderRepositoryImpl partOrderRepo;
 
     public NoteInteractor(NoteModel noteModel) {
 
         this.noteModel = noteModel;
         this.noteRepo = new NoteRepositoryImpl();
+        this.partOrderRepo = new PartOrderRepositoryImpl();
     }
 
     public void loadEntitlements() {
@@ -49,7 +53,14 @@ public class NoteInteractor {
         noteModel.setBoundNote(boundNote);
         noteModel.getNotes().addAll(noteRepo.getAllNotes());
         boundNote.copyFrom(noteModel.getNotes().getFirst());
-        System.out.println("Original Timestamp for Bound Note: " + noteModel.getBoundNote().getTimestamp());  // TimeStamp is good to this point
+        loadPartOrders();
+    }
+
+    private void loadPartOrders() {
+        if(noteModel.getBoundNote().getPartOrders().isEmpty()) {
+         noteModel.getBoundNote()
+                 .setPartOrders(FXCollections.observableArrayList(partOrderRepo.findAllPartOrdersByNoteId(noteModel.getBoundNote().getId())));
+        }
     }
 
     public void setCurrentEntitlement() {
@@ -420,7 +431,10 @@ public class NoteInteractor {
     }
 
     public void insertPartOrder() {
-        noteModel.getBoundNote().getPartOrders().add(new PartOrderDTO(""));
+        int noteId = noteModel.getBoundNote().getId();
+        PartOrderDTO partOrderDTO = new PartOrderDTO(0, noteId,"");
+        partOrderDTO.setId(partOrderRepo.insertPartOrder(partOrderDTO));
+        noteModel.getBoundNote().getPartOrders().add(partOrderDTO);
         noteModel.getBoundNote().setSelectedPartOrder(noteModel.getBoundNote().getPartOrders().getLast());
     }
 }
