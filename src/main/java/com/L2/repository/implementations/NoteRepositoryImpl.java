@@ -46,8 +46,8 @@ public class NoteRepositoryImpl implements NoteRepository {
         String sql = "INSERT INTO Notes (timestamp, workOrder, caseNumber, serialNumber, modelNumber, callInPerson, " +
                 "callInPhoneNumber, callInEmail, underWarranty, activeServiceContract, serviceLevel, schedulingTerms, upsStatus, " +
                 "loadSupported, issue, contactName, contactPhoneNumber, contactEmail, street, installedAt, city, state, zip, country, " +
-                "createdWorkOrder, tex, partsOrder, entitlement, completed, isEmail, additionalCorrectiveActionText, relatedCaseNumber) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "createdWorkOrder, tex, partsOrder, completed, isEmail, additionalCorrectiveActionText, relatedCaseNumber) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -80,11 +80,10 @@ public class NoteRepositoryImpl implements NoteRepository {
             ps.setString(25, note.getCreatedWorkOrder());
             ps.setString(26, note.getTex());
             ps.setInt(27, note.getPartsOrder());
-            ps.setString(28, note.getEntitlement());
-            ps.setInt(29, note.isCompleted() ? 1 : 0);
-            ps.setInt(30, note.isEmail() ? 1 : 0);
-            ps.setString(31, note.getAdditionalCorrectiveActionText());
-            ps.setString(32, note.getRelatedCaseNumber());
+            ps.setInt(28, note.isCompleted() ? 1 : 0);
+            ps.setInt(29, note.isEmail() ? 1 : 0);
+            ps.setString(30, note.getAdditionalCorrectiveActionText());
+            ps.setString(31, note.getRelatedCaseNumber());
             return ps;
         }, keyHolder);
 
@@ -100,7 +99,7 @@ public class NoteRepositoryImpl implements NoteRepository {
                 "activeServiceContract = ?, serviceLevel = ?, schedulingTerms = ?, upsStatus = ?, " +
                 "loadSupported = ?, issue = ?, contactName = ?, contactPhoneNumber = ?, " +
                 "contactEmail = ?, street = ?, installedAt = ?, city = ?, state = ?, zip = ?, " +
-                "country = ?, createdWorkOrder = ?, tex = ?, partsOrder = ?, entitlement = ?, " +
+                "country = ?, createdWorkOrder = ?, tex = ?, partsOrder = ?, " +
                 "completed = ?, isEmail = ?, additionalCorrectiveActionText = ?, relatedCaseNumber = ? " +
                 "WHERE id = ?";
 
@@ -132,7 +131,6 @@ public class NoteRepositoryImpl implements NoteRepository {
                 note.getCreatedWorkOrder(),
                 note.getTex(),
                 note.getPartsOrder(),
-                note.getEntitlement(),
                 note.isCompleted() ? 1 : 0,
                 note.isEmail() ? 1 : 0,
                 note.getAdditionalCorrectiveActionText(),

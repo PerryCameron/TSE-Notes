@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Comparator;
 
 import static com.L2.static_tools.ApplicationPaths.entitlementsFile;
 import static com.L2.static_tools.ApplicationPaths.settingsDir;
@@ -52,7 +53,8 @@ public class NoteInteractor {
         NoteDTO boundNote = new NoteDTO();
         noteModel.setBoundNote(boundNote);
         noteModel.getNotes().addAll(noteRepo.getAllNotes());
-        boundNote.copyFrom(noteModel.getNotes().getFirst());
+        noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp));
+        boundNote.copyFrom(noteModel.getNotes().getLast());
         loadPartOrders();
     }
 
@@ -66,9 +68,9 @@ public class NoteInteractor {
         }
     }
 
-    public void setCurrentEntitlement() {
+    public void setActiveServieContract() {
         EntitlementDTO entitlementDTO = noteModel.getEntitlements().stream().filter(DTO -> DTO.getName()
-                .equals(noteModel.getBoundNote().getEntitlement())).findFirst().orElse(null);
+                .equals(noteModel.getBoundNote().getActiveServiceContract())).findFirst().orElse(null);
         noteModel.setCurrentEntitlement(entitlementDTO);
     }
 
@@ -243,7 +245,7 @@ public class NoteInteractor {
         .append("Name: ").append(noteModel.getBoundNote().getCallInPerson()).append("\r\n")
         .append("Phone: ").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("\r\n")
         .append("Email: ").append(noteModel.getBoundNote().getCallInEmail()).append("\r\n").append("\r\n")
-        .append("Entitlement: ").append(noteModel.getBoundNote().getEntitlement()).append("\r\n")
+        .append("Entitlement: ").append(noteModel.getBoundNote().getActiveServiceContract()).append("\r\n")
         .append("Scheduling Terms: ").append(noteModel.getBoundNote().getSchedulingTerms()).append("\r\n")
         .append("Service Level: ").append(noteModel.getBoundNote().getServiceLevel()).append("\r\n")
         .append("Status of the UPS: ").append(noteModel.getBoundNote().getUpsStatus()).append("\r\n")
@@ -273,7 +275,7 @@ public class NoteInteractor {
                 .append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("<br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getCallInEmail()).append("<br>")
                 .append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Entitlement: </span>").append(noteModel.getBoundNote().getEntitlement()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Entitlement: </span>").append(noteModel.getBoundNote().getActiveServiceContract()).append("<br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">Scheduling Terms: </span>").append(noteModel.getBoundNote().getSchedulingTerms()).append("<br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(noteModel.getBoundNote().getServiceLevel()).append("<br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">Status of the UPS: </span>").append(noteModel.getBoundNote().getUpsStatus()).append("<br>")

@@ -22,7 +22,7 @@ public class NoteController extends Controller<NoteMessage> {
     public Region getView() {
         noteInteractor.loadEntitlements();
         noteInteractor.loadNotes();  // good past this point, correct Timestamp is in bound note
-        noteInteractor.setCurrentEntitlement();
+        noteInteractor.setActiveServieContract();
         return noteView.build();
     }
 

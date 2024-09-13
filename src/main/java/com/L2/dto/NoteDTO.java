@@ -43,7 +43,7 @@ public class NoteDTO {
     private StringProperty createdWorkOrder = new SimpleStringProperty();
     private StringProperty tex = new SimpleStringProperty();
     private IntegerProperty partsOrder = new SimpleIntegerProperty();
-    private StringProperty entitlement = new SimpleStringProperty();
+//    private StringProperty entitlement = new SimpleStringProperty();
     private BooleanProperty completed = new SimpleBooleanProperty();
     private BooleanProperty isEmail = new SimpleBooleanProperty();
     private StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
@@ -86,7 +86,7 @@ public class NoteDTO {
         this.createdWorkOrder.set("");
         this.tex.set("");
         this.partsOrder.set(0);
-        this.entitlement.set("");
+//        this.entitlement.set("");
         this.completed.set(false);
         this.isEmail.set(isEmail);
         this.additionalCorrectiveActionText.set("");
@@ -99,7 +99,7 @@ public class NoteDTO {
                    String upsStatus, Boolean loadSupported, String issue, String contactName,
                    String contactPhoneNumber, String contactEmail, String street, String installedAt,
                    String city, String state, String zip, String country,
-                   String createdWorkOrder, String tex, Integer partsOrder, String entitlement,
+                   String createdWorkOrder, String tex, Integer partsOrder,
                    Boolean completed, Boolean isEmail, String additionalCorrectiveActionText,
                    String relatedCaseNumber) {
         this.id = new SimpleIntegerProperty(id);
@@ -131,7 +131,7 @@ public class NoteDTO {
         this.createdWorkOrder = new SimpleStringProperty(createdWorkOrder);
         this.tex = new SimpleStringProperty(tex);
         this.partsOrder = new SimpleIntegerProperty(partsOrder);
-        this.entitlement = new SimpleStringProperty(entitlement);
+//        this.entitlement = new SimpleStringProperty(entitlement);
         this.completed = new SimpleBooleanProperty(completed);
         this.isEmail = new SimpleBooleanProperty(isEmail);
         this.additionalCorrectiveActionText = new SimpleStringProperty(additionalCorrectiveActionText);
@@ -169,7 +169,7 @@ public class NoteDTO {
         noteDTO.createdWorkOrder.set(createdWorkOrder.get());
         noteDTO.tex.set(tex.get());
         noteDTO.partsOrder.set(partsOrder.get());
-        noteDTO.entitlement.set(entitlement.get());
+//        noteDTO.entitlement.set(entitlement.get());
         noteDTO.completed.set(isCompleted() );
         noteDTO.isEmail.set(isEmail());
         noteDTO.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
@@ -208,7 +208,7 @@ public class NoteDTO {
         clone.createdWorkOrder.set(createdWorkOrder.get());
         clone.tex.set(tex.get());
         clone.partsOrder.set(partsOrder.get());
-        clone.entitlement.set(entitlement.get());
+//        clone.entitlement.set(entitlement.get());
         clone.completed.set(completed.get());
         clone.isEmail.set(isEmail.get());
         clone.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
@@ -248,7 +248,7 @@ public class NoteDTO {
         createdWorkOrder.set(noteDTO.getCreatedWorkOrder());
         tex.set(noteDTO.getTex());
         partsOrder.set(noteDTO.getPartsOrder());
-        entitlement.set(noteDTO.getEntitlement());
+//        entitlement.set(noteDTO.getEntitlement());
         completed.set(noteDTO.isCompleted());
         isEmail.set(noteDTO.isEmail());
         additionalCorrectiveActionText.set(noteDTO.getAdditionalCorrectiveActionText());
@@ -300,7 +300,7 @@ public class NoteDTO {
         this.createdWorkOrder.set("");
         this.tex.set("");
         this.partsOrder.set(0);
-        this.entitlement.set("");
+//        this.entitlement.set("");
         this.completed.set(false);
         this.isEmail.set(false);
         this.additionalCorrectiveActionText.set("");
@@ -396,17 +396,17 @@ public class NoteDTO {
         this.schedulingTerms.set(schedulingTerms);
     }
 
-    public String getEntitlement() {
-        return entitlement.get();
-    }
-
-    public StringProperty entitlementProperty() {
-        return entitlement;
-    }
-
-    public void setEntitlement(String entitlement) {
-        this.entitlement.set(entitlement);
-    }
+//    public String getEntitlement() {
+//        return entitlement.get();
+//    }
+//
+//    public StringProperty entitlementProperty() {
+//        return entitlement;
+//    }
+//
+//    public void setEntitlement(String entitlement) {
+//        this.entitlement.set(entitlement);
+//    }
 
     public int getId() {
         return id.get();

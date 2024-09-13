@@ -79,10 +79,16 @@ public class FinishBox implements Component<Region> {
 
         Button prevNoteButton = ButtonFx.utilityButton( () -> {
             noteView.getAction().accept(NoteMessage.PREVIOUS_NOTE);
+            noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId());
+            System.out.println("ID: " + noteModel.getBoundNote().getId());
+            System.out.println("Active Service Contract: " + noteModel.getBoundNote().getActiveServiceContract());
         }, "Previous", "/images/back-16.png");
 
         Button nextNoteButton = ButtonFx.utilityButton( () -> {
             noteView.getAction().accept(NoteMessage.NEXT_NOTE);
+            noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId());
+            System.out.println("ID: " + noteModel.getBoundNote().getId());
+            System.out.println("Active Service Contract: " + noteModel.getBoundNote().getActiveServiceContract());
         }, "Next", "/images/forward-16.png");
 
         Button saveNoteButton = ButtonFx.utilityButton( () -> {

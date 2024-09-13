@@ -88,13 +88,16 @@ public class BasicInformation implements Component<Region> {
         // Listener to update activeServiceContract when currentEntitlement changes
         noteModel.currentEntitlementProperty().addListener((obs, oldEntitlement, newEntitlement) -> {
             if (newEntitlement != null) {
+                System.out.println("noteModel.getBoundNote().setActiveServiceContract(" + newEntitlement.getId() + ")");
                 noteModel.getBoundNote().setActiveServiceContract(newEntitlement.getName());
             } else {
+                System.out.println("noteModel.getBoundNote().setActiveServiceContract(\"\");");
                 noteModel.getBoundNote().setActiveServiceContract("");  // Or handle null appropriately
             }
         });
         servicePlanComboBox.setOnAction(e -> {
-            noteModel.getBoundNote().setEntitlement(servicePlanComboBox.getValue().toString());
+            System.out.println("setting bound not entitlement to " + servicePlanComboBox.getValue());
+            noteModel.getBoundNote().setActiveServiceContract(servicePlanComboBox.getValue().toString());
             noteModel.setCurrentEntitlement(servicePlanComboBox.getValue());
             noteView.getAction().accept(NoteMessage.LOG_CURRENT_ENTITLEMENT);
             noteView.getServicePlanDetails().updateDetails();

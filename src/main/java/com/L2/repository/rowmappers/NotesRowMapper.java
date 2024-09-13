@@ -44,7 +44,6 @@ public class NotesRowMapper implements RowMapper<NoteDTO> {
                 rs.getString("createdWorkOrder"),
                 rs.getString("tex"),
                 rs.getInt("partsOrder"),
-                rs.getString("entitlement"),
                 rs.getInt("completed") == 1,      // Convert INTEGER to Boolean
                 rs.getInt("isEmail") == 1,        // Convert INTEGER to Boolean
                 rs.getString("additionalCorrectiveActionText"),
