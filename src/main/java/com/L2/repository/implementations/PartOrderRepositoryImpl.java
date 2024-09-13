@@ -64,6 +64,7 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
         return jdbcTemplate.update(sql, partOrderDTO.getId());
     }
 
+    @Override
     public int insertPart(PartDTO partDTO) {
         String sql = "INSERT INTO Parts (partOrderId, partNumber, partDescription, partQuantity, serialReplaced, partEditable) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
@@ -85,6 +86,25 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
         return keyHolder.getKey().intValue();
     }
 
+    @Override
+    public int updatePart(PartDTO partDTO) {
+        String sql = "UPDATE Parts SET partOrderId = ?, partNumber = ?, partDescription = ?, partQuantity = ?, serialReplaced = ?, partEditable = ? WHERE id = ?";
+
+        return jdbcTemplate.update(sql,
+                partDTO.getPartOrderId(),
+                partDTO.getPartNumber(),
+                partDTO.getPartDescription(),
+                partDTO.getPartQuantity(),
+                partDTO.getSerialReplaced(),
+                partDTO.isPartEditable() ? 1 : 0,
+                partDTO.getId());
+    }
+
+    @Override
+    public int deletePart(PartDTO partDTO) {
+        String sql = "DELETE FROM Parts WHERE id = ?";
+        return jdbcTemplate.update(sql, partDTO.getId());
+    }
 
 
 }

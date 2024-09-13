@@ -18,21 +18,28 @@ public class StringChecker {
     }
 
     public static ResultDTO formatEmail(String email) {
-        String EMAIL_REGEX = "^[\\w-.]+@[\\w-]+\\.[a-zA-Z]{2,}$";
+        // Updated EMAIL_REGEX to handle multiple '.' in the domain part
+        String EMAIL_REGEX = "^[\\w-.]+@[\\w-]+(\\.[\\w-]+)+$";
         Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
         ResultDTO resultDTO = new ResultDTO();
+
         if (email == null) {
             resultDTO.setFieldName("Null email");
             resultDTO.setSuccess(Boolean.FALSE);
             return resultDTO;
         }
+
         Matcher matcher = EMAIL_PATTERN.matcher(email);
         if (!matcher.matches()) {
             resultDTO.setSuccess(Boolean.FALSE);
-        } else resultDTO.setSuccess(Boolean.TRUE);
+        } else {
+            resultDTO.setSuccess(Boolean.TRUE);
+        }
+
         resultDTO.setFieldName(email.toLowerCase());
         return resultDTO;
     }
+
 
     public static ResultDTO formatCaseNumber(String input) {
         ResultDTO resultDTO = new ResultDTO();
