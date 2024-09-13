@@ -448,4 +448,13 @@ public class NoteInteractor {
     public void deletePartOrder() {
         partOrderRepo.deletePartOrder(noteModel.getBoundNote().getSelectedPartOrder());
     }
+
+    public void deletePart() {
+    }
+
+    public void insertPart() {
+        PartDTO partDTO = new PartDTO(noteModel.getBoundNote().getSelectedPartOrder().getId());
+        partDTO.setId(partOrderRepo.insertPart(partDTO)); // TODO changes this when hooked to database
+        noteModel.getBoundNote().getSelectedPartOrder().getParts().add(partDTO);
+    }
 }

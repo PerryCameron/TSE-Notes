@@ -1,5 +1,6 @@
 package com.L2.repository.implementations;
 
+import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
 import com.L2.repository.interfaces.PartOrderRepository;
 import com.L2.repository.rowmappers.PartOrderRowMapper;
@@ -63,6 +64,26 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
         return jdbcTemplate.update(sql, partOrderDTO.getId());
     }
 
+    public int insertPart(PartDTO partDTO) {
+        String sql = "INSERT INTO Parts (partOrderId, partNumber, partDescription, partQuantity, serialReplaced, partEditable) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, partDTO.getPartOrderId());
+            ps.setString(2, partDTO.getPartNumber());
+            ps.setString(3, partDTO.getPartDescription());
+            ps.setString(4, partDTO.getPartQuantity());
+            ps.setString(5, partDTO.getSerialReplaced());
+            ps.setInt(6, partDTO.isPartEditable() ? 1 : 0);
+            return ps;
+        }, keyHolder);
+
+        // Return the generated key (ID)
+        return keyHolder.getKey().intValue();
+    }
 
 
 

@@ -48,6 +48,8 @@ public class NoteController extends Controller<NoteMessage> {
             case INSERT_PART_ORDER -> noteInteractor.insertPartOrder();
             case UPDATE_PART_ORDER -> noteInteractor.updatePartOrder();
             case DELETE_PART_ORDER -> noteInteractor.deletePartOrder();
+            case DELETE_PART -> noteInteractor.deletePart();
+            case INSERT_PART -> noteInteractor.insertPart();
         };
     }
 

@@ -3,37 +3,34 @@ package com.L2.dto;
 import javafx.beans.property.*;
 
 
-import java.io.Serializable;
+public class PartDTO {
 
-
-public class PartDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private IntegerProperty id;
-    private IntegerProperty partOrderId;
-    private StringProperty partNumber;
-    private StringProperty partDescription;
-    private StringProperty partQuantity;
-    private StringProperty serialReplaced;
-    private BooleanProperty partEditable;
+    private final IntegerProperty id =  new SimpleIntegerProperty();
+    private final IntegerProperty partOrderId =  new SimpleIntegerProperty();
+    private final StringProperty partNumber =  new SimpleStringProperty();
+    private final StringProperty partDescription =  new SimpleStringProperty();
+    private final StringProperty partQuantity =  new SimpleStringProperty();
+    private final StringProperty serialReplaced =  new SimpleStringProperty();
+    private final BooleanProperty partEditable =  new SimpleBooleanProperty();
 
     public PartDTO(Integer id, Integer partOrderId, String partNumber, String partDescription, String partQuantity, String serialReplaced, boolean partEditable) {
-        this.id = new SimpleIntegerProperty(id);
-        this.partOrderId = new SimpleIntegerProperty(partOrderId);
-        this.partNumber = new SimpleStringProperty(partNumber);
-        this.partDescription = new SimpleStringProperty(partDescription);
-        this.partQuantity = new SimpleStringProperty(partQuantity);
-        this.serialReplaced = new SimpleStringProperty(serialReplaced);
-        this.partEditable = new SimpleBooleanProperty(partEditable);
+        this.id.set(id);
+        this.partOrderId.set(partOrderId);
+        this.partNumber.set(partNumber);
+        this.partDescription.set(partDescription);
+        this.partQuantity.set(partQuantity);
+        this.serialReplaced.set(serialReplaced);
+        this.partEditable.set(partEditable);
     }
 
-    public PartDTO() {
-        this.id = new SimpleIntegerProperty(0);
-        this.partOrderId = new SimpleIntegerProperty(0);
-        this.partNumber = new SimpleStringProperty("");
-        this.partDescription = new SimpleStringProperty("");
-        this.partQuantity = new SimpleStringProperty("");
-        this.serialReplaced = new SimpleStringProperty("");
-        this.partEditable = new SimpleBooleanProperty(false);
+    public PartDTO(int partOrderId) {
+        this.id.set(0);
+        this.partOrderId.set(partOrderId);
+        this.partNumber.set("");
+        this.partDescription.set("");
+        this.partQuantity.set("");
+        this.serialReplaced.set("");
+        this.partEditable.set(false);
     }
 
     public int getPartOrderId() {

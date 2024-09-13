@@ -63,9 +63,8 @@ public class PartOrderBoxList implements Component<Region> {
         vBox.setPadding(new Insets(5, 5, 5, 5));
         vBox.setPrefWidth(300);
         Button addPartButton = ButtonFx.utilityButton(() -> {
-            PartDTO partDTO = new PartDTO();
-            partDTO.setId(partOrderDTO.getParts().size() + 1); // TODO changes this when hooked to database
-            partOrderDTO.getParts().add(partDTO);
+            noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+            noteView.getAction().accept(NoteMessage.INSERT_PART);
 
             // Sort parts in reverse order
             partOrderDTO.getParts().sort(Comparator.comparing(PartDTO::getId).reversed());
@@ -83,7 +82,11 @@ public class PartOrderBoxList implements Component<Region> {
         }, "Add Part", "/images/create-16.png");
 
 
-        Button deleteButton = ButtonFx.utilityButton( () -> partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart()), "Delete", "/images/delete-16.png");
+        Button deleteButton = ButtonFx.utilityButton( () -> {
+            noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+            partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart());
+            noteView.getAction().accept(NoteMessage.DELETE_PART);
+        }, "Delete", "/images/delete-16.png");
         TextField textField = TextFieldFx.of(250, "Search");
         vBox.getChildren().addAll(textField, addPartButton, deleteButton);
         return vBox;
@@ -221,6 +224,8 @@ public class PartOrderBoxList implements Component<Region> {
 
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) partOrderDTO.setSelectedPart(newSelection);
+            noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+            noteModel.getBoundNote().getSelectedPartOrder().setSelectedPart(newSelection);
         });
         return tableView;
     }
