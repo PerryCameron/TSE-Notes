@@ -52,6 +52,7 @@ public class NoteView implements Builder<Region> {
            if (newValue != true) {
                partOrderBoxList.refreshFields();
                dateTimePicker.refreshFields();
+               basicInformation.refreshFields();
            }
         });
     }

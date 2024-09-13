@@ -83,7 +83,11 @@ public class BasicInformation implements Component<Region> {
         servicePlanComboBox.getItems().addAll(noteModel.getEntitlements());
         // Optional: Set a default value if needed
         if (!servicePlanComboBox.getItems().isEmpty()) {
-            servicePlanComboBox.setValue(servicePlanComboBox.getItems().getFirst());  // Set the first item as selected by default
+            for(EntitlementDTO entitlementDTO: servicePlanComboBox.getItems()) {
+                if(entitlementDTO.getName().equals(noteModel.getBoundNote().getActiveServiceContract())) {
+                    servicePlanComboBox.getSelectionModel().select(entitlementDTO);
+                }
+            }
         }
         // Listener to update activeServiceContract when currentEntitlement changes
         noteModel.currentEntitlementProperty().addListener((obs, oldEntitlement, newEntitlement) -> {
@@ -178,6 +182,11 @@ public class BasicInformation implements Component<Region> {
 
     @Override
     public void refreshFields() {
+        for(EntitlementDTO entitlementDTO: servicePlanComboBox.getItems()) {
+            if(entitlementDTO.getName().equals(noteModel.getBoundNote().getActiveServiceContract())) {
+                servicePlanComboBox.getSelectionModel().select(entitlementDTO);
+            }
+        }
     }
 
     @Override
