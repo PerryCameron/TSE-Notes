@@ -9,14 +9,16 @@ import java.io.Serializable;
 public class PartDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     private IntegerProperty id;
+    private IntegerProperty partOrderId;
     private StringProperty partNumber;
     private StringProperty partDescription;
     private StringProperty partQuantity;
     private StringProperty serialReplaced;
     private BooleanProperty partEditable;
 
-    public PartDTO(Integer id, String partNumber, String partDescription, String partQuantity, String serialReplaced, boolean partEditable) {
+    public PartDTO(Integer id, Integer partOrderId, String partNumber, String partDescription, String partQuantity, String serialReplaced, boolean partEditable) {
         this.id = new SimpleIntegerProperty(id);
+        this.partOrderId = new SimpleIntegerProperty(partOrderId);
         this.partNumber = new SimpleStringProperty(partNumber);
         this.partDescription = new SimpleStringProperty(partDescription);
         this.partQuantity = new SimpleStringProperty(partQuantity);
@@ -24,22 +26,26 @@ public class PartDTO implements Serializable {
         this.partEditable = new SimpleBooleanProperty(partEditable);
     }
 
-    public PartDTO(IntegerProperty id, String partNumber, String partDescription, String partQuantity) {
-        this.id = new SimpleIntegerProperty(0);
-        this.partNumber = new SimpleStringProperty(partNumber);
-        this.partDescription = new SimpleStringProperty(partDescription);
-        this.partQuantity = new SimpleStringProperty(partQuantity);
-        this.serialReplaced = new SimpleStringProperty("");
-        this.partEditable = new SimpleBooleanProperty(false);
-    }
-
     public PartDTO() {
         this.id = new SimpleIntegerProperty(0);
+        this.partOrderId = new SimpleIntegerProperty(0);
         this.partNumber = new SimpleStringProperty("");
         this.partDescription = new SimpleStringProperty("");
         this.partQuantity = new SimpleStringProperty("");
         this.serialReplaced = new SimpleStringProperty("");
         this.partEditable = new SimpleBooleanProperty(false);
+    }
+
+    public int getPartOrderId() {
+        return partOrderId.get();
+    }
+
+    public IntegerProperty partOrderIdProperty() {
+        return partOrderId;
+    }
+
+    public void setPartOrderId(int partOrderId) {
+        this.partOrderId.set(partOrderId);
     }
 
     public int getId() {

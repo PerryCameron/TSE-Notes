@@ -29,10 +29,10 @@ public class PartOrderHeader implements Builder<Region> {
         VBox root = VBoxFx.of(true,5.0, new Insets(3, 5, 3, 5));
         root.getStyleClass().add("decorative-header-box");
         Button newButton = ButtonFx.utilityButton( () -> {
-            noteModel.getBoundNote().getPartOrders().add(new PartOrderDTO(""));
-            noteModel.getBoundNote().setSelectedPartOrder(noteModel.getBoundNote().getPartOrders().getLast());
+
+            noteView.getAction().accept(NoteMessage.INSERT_PART_ORDER);
             noteView.getPartOrderBoxList().refreshFields();
-            noteView.getAction().accept(NoteMessage.LOG_ORDER_NUMBER_CHANGE);
+
         },"New Part Order", "/images/create-16.png");
         newButton.setTooltip(ToolTipFx.of("Create New Part Order"));
         Button[] buttons = new Button[] { newButton };

@@ -18,17 +18,11 @@ public class NoteController extends Controller<NoteMessage> {
         action(NoteMessage.LOAD_USER);
     }
 
-//    private void loadTestData() {
-//        noteInteractor.setFakeTestData(); // this is temporary but will be where initial data comes from
-//    }
-
     @Override
     public Region getView() {
         noteInteractor.loadEntitlements();
         noteInteractor.loadNotes();  // good past this point, correct Timestamp is in bound note
-        noteInteractor.printBoundNote();
         noteInteractor.setCurrentEntitlement();
-        System.out.println("In NoteController.getView()" + noteView.getNoteModel().getBoundNote().getTimestamp());
         return noteView.build();
     }
 
@@ -39,7 +33,6 @@ public class NoteController extends Controller<NoteMessage> {
             case STATUS_BAR_CHANGE -> changeStatusBar();
             case REPORT_NUMBER_OF_PART_ORDERS -> noteInteractor.reportNumberOfPartOrders();
             case COPY_PART_ORDER -> noteInteractor.copyPartOrder();
-            case LOG_ORDER_NUMBER_CHANGE -> noteInteractor.logPartOrderNumberChange();
             case COPY_NAME_DATE -> noteInteractor.copyNameDate();
             case SHIPPING_INFORMATION -> noteInteractor.copyShippingInformation();
             case COPY_BASIC_INFORMATION -> noteInteractor.copyBasicInformation();
@@ -52,6 +45,7 @@ public class NoteController extends Controller<NoteMessage> {
             case NEXT_NOTE -> noteInteractor.displayNextNote();
             case PREVIOUS_NOTE -> noteInteractor.displayPreviousNote();
             case SAVE_NOTE -> noteInteractor.saveNote();
+            case INSERT_PART_ORDER -> noteInteractor.insertPartOrder();
 //            case LOAD_NOTES -> noteInteractor.loadNotes();
         };
     }

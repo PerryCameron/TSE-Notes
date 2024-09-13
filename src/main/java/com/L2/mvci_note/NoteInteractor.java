@@ -67,13 +67,13 @@ public class NoteInteractor {
     }
 
     public void copyPartOrder() {
-            ClipboardUtils.copyHtmlToClipboard(buildPartOrderToHTML(), buildPartOrderToPlainText());
+        ClipboardUtils.copyHtmlToClipboard(buildPartOrderToHTML(), buildPartOrderToPlainText());
     }
 
     public String copyAllPartOrdersToPlainText() {
-        if(noteModel.getBoundNote().getPartOrders().size() > 1) {
+        if (noteModel.getBoundNote().getPartOrders().size() > 1) {
             StringBuilder builder = new StringBuilder();
-            for(PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
+            for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
                 noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
                 builder.append(buildPartOrderToPlainText());
             }
@@ -85,9 +85,9 @@ public class NoteInteractor {
     }
 
     public String copyAllPartOrdersToHTML() {
-        if(noteModel.getBoundNote().getPartOrders().size() > 1) {
+        if (noteModel.getBoundNote().getPartOrders().size() > 1) {
             StringBuilder builder = new StringBuilder();
-            for(PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
+            for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
                 noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
                 builder.append(buildPartOrderToHTML()).append("<br>");
             }
@@ -103,14 +103,14 @@ public class NoteInteractor {
         // Start the table and add headers
         logger.info("Copying Part Order");
         if (!noteModel.getBoundNote().getSelectedPartOrder().getParts().isEmpty()) {
-            stringBuilder.append("<b>Parts Needed</b><br>");
-            stringBuilder.append("<table border=\"1\">");
+            stringBuilder.append("<b>Parts Needed</b><br>")
+            .append("<table border=\"1\">");
             logger.info("Adding order: {}", noteModel.getBoundNote().getSelectedPartOrder().getOrderNumber());
-            if(!noteModel.getBoundNote().getSelectedPartOrder().getOrderNumber().isEmpty()) {
-            stringBuilder.append("<tr><th colspan=\"3\" style=\"background-color: lightgrey;\">")
-                    .append("Part Order: ")
-                    .append(noteModel.getBoundNote().getSelectedPartOrder().getOrderNumber())
-                    .append("</th></tr>");
+            if (!noteModel.getBoundNote().getSelectedPartOrder().getOrderNumber().isEmpty()) {
+                stringBuilder.append("<tr><th colspan=\"3\" style=\"background-color: lightgrey;\">")
+                        .append("Part Order: ")
+                        .append(noteModel.getBoundNote().getSelectedPartOrder().getOrderNumber())
+                        .append("</th></tr>");
             }
             stringBuilder.append("<tr>")
                     .append("<th>Part Number</th>")
@@ -136,10 +136,6 @@ public class NoteInteractor {
         return TableFormatter.buildPartsTableString(parts, orderNumber);
     }
 
-    public void logPartOrderNumberChange() {
-        logger.info("Part Order Number Changed to: {}", noteModel.getBoundNote().getSelectedPartOrder());
-    }
-
     public void loadUser() {
         // will eventually pull user off of hard disk
         noteModel.setUser(FakeData.createPerson());
@@ -155,7 +151,7 @@ public class NoteInteractor {
     }
 
     private String buildNameDateToHTML() {
-        String nameDateBlock = "<table style=\"width: 100%; font-size: 13px; background-color: #F5F5F5;\" class=\"ql-table-blob\">" +
+        return "<table style=\"width: 100%; font-size: 13px; background-color: #F5F5F5;\" class=\"ql-table-blob\">" +
                 "<tbody><tr><td class=\"slds-cell-edit cellContainer\">" +
                 "<span class=\"slds-grid slds-grid--align-spread\">" +
                 "<a href=\"" +
@@ -170,7 +166,6 @@ public class NoteInteractor {
                 noteModel.getBoundNote().formattedDate() +
                 "</span>" +
                 "</span></td></tr></tbody></table>";
-        return nameDateBlock;
     }
 
     public void copyShippingInformation() {
@@ -202,16 +197,15 @@ public class NoteInteractor {
                 .append("<b>Shipping Contact</b><br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(noteModel.getBoundNote().getContactName()).append("<br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getContactEmail()).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getContactPhoneNumber()).append("<br><br>");
-        stringBuilder.append("<b>Shipping Address</b>").append("<br>");
+                .append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getContactPhoneNumber()).append("<br><br>")
+                .append("<b>Shipping Address</b>").append("<br>");
         if (!noteModel.getBoundNote().getInstalledAt().isEmpty())
-            stringBuilder.append(noteModel.getBoundNote().getInstalledAt()).append("<br>");
-        stringBuilder
-                .append(noteModel.getBoundNote().getStreet()).append("<br>")
-                .append(noteModel.getBoundNote().getCity()).append(" ")
-                .append(noteModel.getBoundNote().getState()).append(" ")
-                .append(noteModel.getBoundNote().getZip()).append("<br>")
-                .append(noteModel.getBoundNote().getCountry());
+            stringBuilder.append(noteModel.getBoundNote().getInstalledAt()).append("<br>")
+                    .append(noteModel.getBoundNote().getStreet()).append("<br>")
+                    .append(noteModel.getBoundNote().getCity()).append(" ")
+                    .append(noteModel.getBoundNote().getState()).append(" ")
+                    .append(noteModel.getBoundNote().getZip()).append("<br>")
+                    .append(noteModel.getBoundNote().getCountry());
         return stringBuilder.toString();
     }
 
@@ -222,55 +216,54 @@ public class NoteInteractor {
     private String basicInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Case/WO # ");
-        if(!noteModel.getBoundNote().getCaseNumber().isEmpty()) {
+        if (!noteModel.getBoundNote().getCaseNumber().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getCaseNumber());
-            if(!noteModel.getBoundNote().getWorkOrder().isEmpty()) {
+            if (!noteModel.getBoundNote().getWorkOrder().isEmpty()) {
                 stringBuilder.append(" / ");
             }
         }
-        stringBuilder.append(noteModel.getBoundNote().getWorkOrder()).append("\r\n");
-        stringBuilder.append("Model: ").append(noteModel.getBoundNote().getModelNumber()).append("\r\n");
-        stringBuilder.append("S/N: ").append(noteModel.getBoundNote().getSerialNumber()).append("\r\n").append("\r\n");
-        stringBuilder.append("--- Call-in person ---").append("\r\n");
-        stringBuilder.append("Name: ").append(noteModel.getBoundNote().getCallInPerson()).append("\r\n");
-        stringBuilder.append("Phone: ").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("\r\n");
-        stringBuilder.append("Email: ").append(noteModel.getBoundNote().getCallInEmail()).append("\r\n");
-        stringBuilder.append("\r\n");
-        stringBuilder.append("Entitlement: ").append(noteModel.getBoundNote().getEntitlement()).append("\r\n");
-        stringBuilder.append("Scheduling Terms: ").append(noteModel.getBoundNote().getSchedulingTerms()).append("\r\n");
-        stringBuilder.append("Service Level: ").append(noteModel.getBoundNote().getServiceLevel()).append("\r\n");
-        stringBuilder.append("Status of the UPS: ").append(noteModel.getBoundNote().getUpsStatus()).append("\r\n");
-        stringBuilder.append("Load Supported: ").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("\r\n");
+        stringBuilder.append(noteModel.getBoundNote().getWorkOrder()).append("\r\n")
+        .append("Model: ").append(noteModel.getBoundNote().getModelNumber()).append("\r\n")
+        .append("S/N: ").append(noteModel.getBoundNote().getSerialNumber()).append("\r\n").append("\r\n")
+        .append("--- Call-in person ---").append("\r\n")
+        .append("Name: ").append(noteModel.getBoundNote().getCallInPerson()).append("\r\n")
+        .append("Phone: ").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("\r\n")
+        .append("Email: ").append(noteModel.getBoundNote().getCallInEmail()).append("\r\n").append("\r\n")
+        .append("Entitlement: ").append(noteModel.getBoundNote().getEntitlement()).append("\r\n")
+        .append("Scheduling Terms: ").append(noteModel.getBoundNote().getSchedulingTerms()).append("\r\n")
+        .append("Service Level: ").append(noteModel.getBoundNote().getServiceLevel()).append("\r\n")
+        .append("Status of the UPS: ").append(noteModel.getBoundNote().getUpsStatus()).append("\r\n")
+        .append("Load Supported: ").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("\r\n");
         return stringBuilder.toString();
     }
 
     private String convertBool(boolean convert) {
-        if(convert) return "Yes";
+        if (convert) return "Yes";
         else return "No";
     }
 
     private String basicInformationToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Case/WO # </span>");
-        if(!noteModel.getBoundNote().getCaseNumber().isEmpty()) {
+        if (!noteModel.getBoundNote().getCaseNumber().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getCaseNumber());
-            if(!noteModel.getBoundNote().getWorkOrder().isEmpty()) {
+            if (!noteModel.getBoundNote().getWorkOrder().isEmpty()) {
                 stringBuilder.append(" / ");
             }
         }
-        stringBuilder.append(noteModel.getBoundNote().getWorkOrder()).append("<br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Model: </span>").append(noteModel.getBoundNote().getModelNumber()).append("<br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">S/N: </span>").append(noteModel.getBoundNote().getSerialNumber()).append("<br><br>");
-        stringBuilder.append("<b>Call-in person</b><br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(noteModel.getBoundNote().getCallInPerson()).append("<br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("<br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getCallInEmail()).append("<br>");
-        stringBuilder.append("<br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Entitlement: </span>").append(noteModel.getBoundNote().getEntitlement()).append("<br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Scheduling Terms: </span>").append(noteModel.getBoundNote().getSchedulingTerms()).append("<br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(noteModel.getBoundNote().getServiceLevel()).append("<br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Status of the UPS: </span>").append(noteModel.getBoundNote().getUpsStatus()).append("<br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Load Supported: </span>").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("<br>");
+        stringBuilder.append(noteModel.getBoundNote().getWorkOrder()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Model: </span>").append(noteModel.getBoundNote().getModelNumber()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">S/N: </span>").append(noteModel.getBoundNote().getSerialNumber()).append("<br><br>")
+                .append("<b>Call-in person</b><br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(noteModel.getBoundNote().getCallInPerson()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getCallInEmail()).append("<br>")
+                .append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Entitlement: </span>").append(noteModel.getBoundNote().getEntitlement()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Scheduling Terms: </span>").append(noteModel.getBoundNote().getSchedulingTerms()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(noteModel.getBoundNote().getServiceLevel()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Status of the UPS: </span>").append(noteModel.getBoundNote().getUpsStatus()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Load Supported: </span>").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("<br>");
         return stringBuilder.toString();
     }
 
@@ -280,24 +273,20 @@ public class NoteInteractor {
     }
 
     private String customerRequestToPlainText() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
-        stringBuilder.append(basicInformationToPlainText()).append("\r\n");
-        stringBuilder.append(issueToPlainText()).append("\r\n");
-        stringBuilder.append("--- Parts Needed ---").append("\r\n");
-        stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
-        stringBuilder.append(shippingInformationToPlainText()).append("\r\n");
-        return stringBuilder.toString();
+        return buildNameDateToPlainText() + "\r\n" + "\r\n" +
+                basicInformationToPlainText() + "\r\n" +
+                issueToPlainText() + "\r\n" +
+                "--- Parts Needed ---" + "\r\n" +
+                copyAllPartOrdersToPlainText() + "\r\n" +
+                shippingInformationToPlainText() + "\r\n";
     }
 
     private String customerRequestToHTML() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(buildNameDateToHTML()).append("<br>").append("\r\n");
-        stringBuilder.append(basicInformationToHTML()).append("<br>").append("\r\n");
-        stringBuilder.append(issueToHTML()).append("<br>").append("\r\n");
-        stringBuilder.append(copyAllPartOrdersToHTML()).append("<br>");
-        stringBuilder.append(shippingInformationToHTML()).append("<br>").append("\r\n");
-        return stringBuilder.toString();
+        return buildNameDateToHTML() + "<br>" + "\r\n" +
+                basicInformationToHTML() + "<br>" + "\r\n" +
+                issueToHTML() + "<br>" + "\r\n" +
+                copyAllPartOrdersToHTML() + "<br>" +
+                shippingInformationToHTML() + "<br>" + "\r\n";
     }
 
     public void copyIssue() {
@@ -305,17 +294,13 @@ public class NoteInteractor {
     }
 
     private String issueToPlainText() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("--- Issue ---").append("\r\n");
-        stringBuilder.append(noteModel.getBoundNote().getIssue());
-        return stringBuilder.toString();
+        return "--- Issue ---" + "\r\n" +
+                noteModel.getBoundNote().getIssue();
     }
 
     private String issueToHTML() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<strong>Issue</strong>").append("<br>");
-        stringBuilder.append(noteModel.getBoundNote().getIssue()).append("<br>");
-        return stringBuilder.toString();
+        return "<strong>Issue</strong>" + "<br>" +
+                noteModel.getBoundNote().getIssue() + "<br>";
     }
 
     public void copyCorrectiveAction() {
@@ -326,17 +311,17 @@ public class NoteInteractor {
     private String correctiveActionToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
-        if(!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
-            stringBuilder.append("Created ");
-            stringBuilder.append(noteModel.getBoundNote().getCreatedWorkOrder()).append("\r\n").append("\r\n");
+        if (!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
+            stringBuilder.append("Created ")
+            .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("\r\n").append("\r\n");
         }
-        if(!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
+        if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("\r\n").append("\r\n");
         }
         stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
-        if(!noteModel.getBoundNote().getTex().isEmpty()) {
-            stringBuilder.append("Created ");
-            stringBuilder.append(noteModel.getBoundNote().getTex()).append("\r\n");
+        if (!noteModel.getBoundNote().getTex().isEmpty()) {
+            stringBuilder.append("Created ")
+            .append(noteModel.getBoundNote().getTex()).append("\r\n");
         }
         return stringBuilder.toString();
     }
@@ -344,17 +329,17 @@ public class NoteInteractor {
     private String correctiveActionToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToHTML()).append("<br>");
-        if(!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
-            stringBuilder.append("Created ");
-            stringBuilder.append(noteModel.getBoundNote().getCreatedWorkOrder()).append("<br><br>");
+        if (!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
+            stringBuilder.append("Created ")
+            .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("<br><br>");
         }
-        if(!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
+        if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("<br>").append("<br>");
         }
         stringBuilder.append(copyAllPartOrdersToHTML()).append("<br>");
-        if(!noteModel.getBoundNote().getTex().isEmpty()) {
-            stringBuilder.append("Created ");
-            stringBuilder.append(noteModel.getBoundNote().getTex()).append("<br>");
+        if (!noteModel.getBoundNote().getTex().isEmpty()) {
+            stringBuilder.append("Created ")
+            .append(noteModel.getBoundNote().getTex()).append("<br>");
         }
         return stringBuilder.toString();
     }
@@ -381,25 +366,25 @@ public class NoteInteractor {
 
     public void displayNextNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
-        if(index < noteModel.getNotes().size() - 1) {
+        if (index < noteModel.getNotes().size() - 1) {
             saveNote();
-            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index +1));
+            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
             noteModel.refreshBoundNote();
         } else System.out.println("This is the last element in the list so we can go no further");
     }
 
     public void displayPreviousNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
-        if(index > 0) {
+        if (index > 0) {
             saveNote();
-            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index -1));
+            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
             noteModel.refreshBoundNote();
         } else System.out.println("This is the first element in the list so we can go no further");
     }
 
     public int getIndexById(int id) {
-        for(NoteDTO note : noteModel.getNotes()) {
-            if(note.getId() == id) {
+        for (NoteDTO note : noteModel.getNotes()) {
+            if (note.getId() == id) {
                 return noteModel.getNotes().indexOf(note);
             }
         }
@@ -408,19 +393,18 @@ public class NoteInteractor {
 
     public void printAllNotes() {
         System.out.println("Bound Note: " + noteModel.getBoundNote().getId() + " date: " + noteModel.getBoundNote().getTimestamp());
-        for(NoteDTO note : noteModel.getNotes()) {
+        for (NoteDTO note : noteModel.getNotes()) {
             System.out.println("note: " + note.getId() + " date: " + note.formattedDate());
         }
     }
 
     // this synchronizes the bound object to the correct object in the list
     public void saveNote() {
-//        System.out.println("Bound Note: " + noteModel.getBoundNote() + " WO: " + noteModel.getBoundNote().getWorkOrder());
-        for(NoteDTO noteDTO: noteModel.getNotes()) {
-            if(noteDTO.getId() == noteModel.getBoundNote().getId()) {
+        for (NoteDTO noteDTO : noteModel.getNotes()) {
+            if (noteDTO.getId() == noteModel.getBoundNote().getId()) {
                 // copies bound note to the note in the list with matching id
                 noteDTO.copyFrom(noteModel.getBoundNote());
-                if(noteRepo.noteExists(noteDTO)) {
+                if (noteRepo.noteExists(noteDTO)) {
                     logger.info("Updated note: {}", noteDTO.getId());
                     noteRepo.updateNote(noteDTO);
                 } else {
@@ -433,5 +417,10 @@ public class NoteInteractor {
 
     public void printBoundNote() {
         System.out.println(noteModel.getBoundNote());
+    }
+
+    public void insertPartOrder() {
+        noteModel.getBoundNote().getPartOrders().add(new PartOrderDTO(""));
+        noteModel.getBoundNote().setSelectedPartOrder(noteModel.getBoundNote().getPartOrders().getLast());
     }
 }
