@@ -22,4 +22,6 @@ public interface PartOrderRepository {
     int updatePart(PartDTO partDTO);
 
     int deletePart(PartDTO partDTO);
+
+    List<PartDTO> getPartsByPartOrder(PartOrderDTO partOrderDTO);
 }

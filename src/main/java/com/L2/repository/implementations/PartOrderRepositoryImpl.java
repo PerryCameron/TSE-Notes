@@ -4,6 +4,7 @@ import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
 import com.L2.repository.interfaces.PartOrderRepository;
 import com.L2.repository.rowmappers.PartOrderRowMapper;
+import com.L2.repository.rowmappers.PartRowMapper;
 import com.L2.static_tools.DatabaseConnector;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -106,5 +107,11 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
         return jdbcTemplate.update(sql, partDTO.getId());
     }
 
+    @Override
+    public List<PartDTO> getPartsByPartOrder(PartOrderDTO partOrderDTO) {
+        String sql = "SELECT * FROM Parts WHERE partOrderId = ?";
+        // Use partOrderDTO to get the partOrderId and pass it to the query
+        return jdbcTemplate.query(sql, new PartRowMapper(), partOrderDTO.getId());
+    }
 
 }

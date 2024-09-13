@@ -50,6 +50,7 @@ public class NoteView implements Builder<Region> {
     private void refreshBoundNoteListener() {
         noteModel.refreshBoundNoteProperty().addListener((observable, oldValue, newValue) -> {
            if (newValue != true) {
+               System.out.println("Bounded Note Refresh Called");
                partOrderBoxList.refreshFields();
                dateTimePicker.refreshFields();
                basicInformation.refreshFields();
