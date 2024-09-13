@@ -13,4 +13,6 @@ public interface PartOrderRepository {
     List<PartOrderDTO> findAllPartOrders();
 
     int updatePartOrder(PartOrderDTO partOrder);
+
+    int deletePartOrder(PartOrderDTO partOrderDTO);
 }

@@ -46,7 +46,8 @@ public class NoteController extends Controller<NoteMessage> {
             case PREVIOUS_NOTE -> noteInteractor.displayPreviousNote();
             case SAVE_NOTE -> noteInteractor.saveNote();
             case INSERT_PART_ORDER -> noteInteractor.insertPartOrder();
-//            case LOAD_NOTES -> noteInteractor.loadNotes();
+            case UPDATE_PART_ORDER -> noteInteractor.updatePartOrder();
+            case DELETE_PART_ORDER -> noteInteractor.deletePartOrder();
         };
     }
 

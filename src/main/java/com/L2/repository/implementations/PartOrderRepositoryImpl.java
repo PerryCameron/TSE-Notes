@@ -56,6 +56,14 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
         return jdbcTemplate.update(sql, partOrder.getNoteId(), partOrder.getOrderNumber(), partOrder.getId());
     }
 
+    @Override
+    public int deletePartOrder(PartOrderDTO partOrderDTO) {
+        String sql = "DELETE FROM PartOrders WHERE id = ?";
+        // Execute the update query to delete the PartOrder by its id
+        return jdbcTemplate.update(sql, partOrderDTO.getId());
+    }
+
+
 
 
 }

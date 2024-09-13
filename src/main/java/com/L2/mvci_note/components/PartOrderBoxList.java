@@ -94,7 +94,9 @@ public class PartOrderBoxList implements Component<Region> {
         textField.textProperty().set(partOrderDTO.getOrderNumber());
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
+                noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
                 partOrderDTO.setOrderNumber(textField.getText());
+                noteView.getAction().accept(NoteMessage.UPDATE_PART_ORDER);
             }
         });
         return textField;
@@ -123,6 +125,7 @@ public class PartOrderBoxList implements Component<Region> {
         partOrderDTO.orderNumberProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.isEmpty()) {
                 label.setText("Part Order: " + newValue);
+                noteView.getAction().accept(NoteMessage.UPDATE_PART_ORDER);
                 hBox.getChildren().remove(partNameTextField);
                 hBox.getChildren().add(label);
             }
@@ -133,6 +136,8 @@ public class PartOrderBoxList implements Component<Region> {
     private Node createButtons(PartOrderDTO partOrderDTO) {
         HBox iconBox = HBoxFx.iconBox();
         Button deleteButton = ButtonFx.utilityButton( () -> {
+            noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+            noteView.getAction().accept(NoteMessage.DELETE_PART_ORDER);
             noteModel.getBoundNote().getPartOrders().remove(partOrderDTO);
                 root.getChildren().remove(partOrderMap.get(partOrderDTO));
         }, "Delete PO", "/images/delete-16.png");

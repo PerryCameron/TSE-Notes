@@ -61,6 +61,9 @@ public class NoteInteractor {
          noteModel.getBoundNote()
                  .setPartOrders(FXCollections.observableArrayList(partOrderRepo.findAllPartOrdersByNoteId(noteModel.getBoundNote().getId())));
         }
+        if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
+            noteModel.getBoundNote().setSelectedPartOrder(noteModel.getBoundNote().getPartOrders().getFirst());
+        }
     }
 
     public void setCurrentEntitlement() {
@@ -436,5 +439,13 @@ public class NoteInteractor {
         partOrderDTO.setId(partOrderRepo.insertPartOrder(partOrderDTO));
         noteModel.getBoundNote().getPartOrders().add(partOrderDTO);
         noteModel.getBoundNote().setSelectedPartOrder(noteModel.getBoundNote().getPartOrders().getLast());
+    }
+
+    public void updatePartOrder() {
+        partOrderRepo.updatePartOrder(noteModel.getBoundNote().getSelectedPartOrder());
+    }
+
+    public void deletePartOrder() {
+        partOrderRepo.deletePartOrder(noteModel.getBoundNote().getSelectedPartOrder());
     }
 }
