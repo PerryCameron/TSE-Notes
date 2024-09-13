@@ -44,23 +44,15 @@ public class NoteView implements Builder<Region> {
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(setMainVBox());
         setUpStatusBarCommunication();
-        objectClearedListener();
+        refreshBoundNoteListener();
         return scrollPane;
-    }
-
-    private void objectClearedListener() {
-        noteModel.clearCalledProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != true) {
-                partOrderBoxList.refreshFields();
-                dateTimePicker.refreshFields();
-            }
-        });
     }
 
     private void refreshBoundNoteListener() {
         noteModel.refreshBoundNoteProperty().addListener((observable, oldValue, newValue) -> {
            if (newValue != true) {
                partOrderBoxList.refreshFields();
+               dateTimePicker.refreshFields();
            }
         });
     }

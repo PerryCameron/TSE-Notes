@@ -34,7 +34,9 @@ public class DateTimePicker implements Component<Region> {
         this.hourSpinner = new Spinner<>();
         this.minuteSpinner = new Spinner<>();
         this.noteView = noteView;
+        // Bind the datePicker, hourSpinner, and minuteSpinner to the timestamp in NoteDTO
     }
+
 
     public void setDateTime(LocalDateTime dateTime) {
         if (dateTime != null) {
@@ -49,6 +51,7 @@ public class DateTimePicker implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         Button[] buttons = new Button[] { refreshButton(), copyButton() };
         root.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons) ,dateTimePicker());
+        refreshFields();
         return root;
     }
 
@@ -93,7 +96,6 @@ public class DateTimePicker implements Component<Region> {
         hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
         minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
         // Initialize with the current date and time
-        updateDateTime();
         return hBox;
     }
 

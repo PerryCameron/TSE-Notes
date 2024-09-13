@@ -5,7 +5,6 @@ import com.L2.dto.EntitlementDTO;
 import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
 import com.L2.repository.implementations.NoteRepositoryImpl;
-import com.L2.repository.interfaces.NoteRepository;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ClipboardUtils;
 import com.L2.static_tools.FakeData;
@@ -37,39 +36,26 @@ public class NoteInteractor {
             AppFileTools.createFileIfNotExists(settingsDir);
             // Load the entitlements
             ObservableList<EntitlementDTO> entitlements = AppFileTools.getEntitlements(entitlementsFile);
-            if (entitlements != null) {
-                noteModel.setEntitlements(entitlements);
-                logger.info("Loaded entitlements: " + entitlements.size());
-            } else {
-                // arrayList is already initialized so really we do nothing but warn
-                logger.warn("Entitlements file is empty or could not be read. Initializing with an empty list.");
-            }
+            noteModel.setEntitlements(entitlements);
+            logger.info("Loaded entitlements: {}", entitlements.size());
         } catch (IOException e) {
-            logger.error("Failed to load entitlements: " + e.getMessage());
+            logger.error("Failed to load entitlements: {}", e.getMessage());
             e.printStackTrace();
         }
     }
-
-//    public void setFakeTestData() {
-//        NoteDTO noteDTO = FakeData.createFakeCase();
-//        noteModel.getNotes().add(noteDTO);
-//
-//        boundNote.copyFrom(noteDTO);
-//        noteModel.setBoundNote(boundNote);
-//    }
 
     public void loadNotes() {
         NoteDTO boundNote = new NoteDTO();
         noteModel.setBoundNote(boundNote);
         noteModel.getNotes().addAll(noteRepo.getAllNotes());
-        boundNote.copyFrom(noteModel.getNotes().get(0));
+        boundNote.copyFrom(noteModel.getNotes().getFirst());
+        System.out.println("Original Timestamp for Bound Note: " + noteModel.getBoundNote().getTimestamp());  // TimeStamp is good to this point
     }
 
-    public EntitlementDTO setCurrentEntitlement() {
+    public void setCurrentEntitlement() {
         EntitlementDTO entitlementDTO = noteModel.getEntitlements().stream().filter(DTO -> DTO.getName()
                 .equals(noteModel.getBoundNote().getEntitlement())).findFirst().orElse(null);
         noteModel.setCurrentEntitlement(entitlementDTO);
-        return entitlementDTO;
     }
 
     public String getStatus() {
@@ -132,13 +118,11 @@ public class NoteInteractor {
                     .append("<th>Qty</th>")
                     .append("</tr>");
             // Loop through each PartDTO to add table rows
-            noteModel.getBoundNote().getSelectedPartOrder().getParts().forEach(partDTO -> {
-                stringBuilder.append("<tr>")
-                        .append("<td>").append(partDTO.getPartNumber()).append("</td>")
-                        .append("<td>").append(partDTO.getPartDescription()).append("</td>")
-                        .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
-                        .append("</tr>");
-            });
+            noteModel.getBoundNote().getSelectedPartOrder().getParts().forEach(partDTO -> stringBuilder.append("<tr>")
+                    .append("<td>").append(partDTO.getPartNumber()).append("</td>")
+                    .append("<td>").append(partDTO.getPartDescription()).append("</td>")
+                    .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
+                    .append("</tr>"));
             // Close the table
             stringBuilder.append("</table>");
         }
@@ -171,24 +155,22 @@ public class NoteInteractor {
     }
 
     private String buildNameDateToHTML() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append("<table style=\"width: 100%; font-size: 13px; background-color: #F5F5F5;\" class=\"ql-table-blob\">")
-                .append("<tbody><tr><td class=\"slds-cell-edit cellContainer\">")
-                .append("<span class=\"slds-grid slds-grid--align-spread\">")
-                .append("<a href=\"")
-                .append(noteModel.getUser().getProfileLink())
-                .append("\" target=\"_blank\" title=\"FirstName LastName\" class=\"slds-truncate outputLookupLink\">")
-                .append(noteModel.getUser().getFullName())
-                .append("</a>")
-                .append("</span></td>")
-                .append("<td class=\"slds-cell-edit cellContainer\">")
-                .append("<span class=\"slds-grid slds-grid--align-spread\">")
-                .append("<span class=\"slds-truncate uiOutputDateTime\">")
-                .append(noteModel.getBoundNote().formattedDate())
-                .append("</span>")
-                .append("</span></td></tr></tbody></table>");
-        return stringBuilder.toString();
+        String nameDateBlock = "<table style=\"width: 100%; font-size: 13px; background-color: #F5F5F5;\" class=\"ql-table-blob\">" +
+                "<tbody><tr><td class=\"slds-cell-edit cellContainer\">" +
+                "<span class=\"slds-grid slds-grid--align-spread\">" +
+                "<a href=\"" +
+                noteModel.getUser().getProfileLink() +
+                "\" target=\"_blank\" title=\"FirstName LastName\" class=\"slds-truncate outputLookupLink\">" +
+                noteModel.getUser().getFullName() +
+                "</a>" +
+                "</span></td>" +
+                "<td class=\"slds-cell-edit cellContainer\">" +
+                "<span class=\"slds-grid slds-grid--align-spread\">" +
+                "<span class=\"slds-truncate uiOutputDateTime\">" +
+                noteModel.getBoundNote().formattedDate() +
+                "</span>" +
+                "</span></td></tr></tbody></table>";
+        return nameDateBlock;
     }
 
     public void copyShippingInformation() {
@@ -402,6 +384,7 @@ public class NoteInteractor {
         if(index < noteModel.getNotes().size() - 1) {
             saveNote();
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index +1));
+            noteModel.refreshBoundNote();
         } else System.out.println("This is the last element in the list so we can go no further");
     }
 
@@ -410,6 +393,7 @@ public class NoteInteractor {
         if(index > 0) {
             saveNote();
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index -1));
+            noteModel.refreshBoundNote();
         } else System.out.println("This is the first element in the list so we can go no further");
     }
 
@@ -423,8 +407,9 @@ public class NoteInteractor {
     }
 
     public void printAllNotes() {
+        System.out.println("Bound Note: " + noteModel.getBoundNote().getId() + " date: " + noteModel.getBoundNote().getTimestamp());
         for(NoteDTO note : noteModel.getNotes()) {
-            System.out.println("note: " + note.getId() + " WO: " + note.getWorkOrder());
+            System.out.println("note: " + note.getId() + " date: " + note.formattedDate());
         }
     }
 
@@ -435,12 +420,12 @@ public class NoteInteractor {
             if(noteDTO.getId() == noteModel.getBoundNote().getId()) {
                 // copies bound note to the note in the list with matching id
                 noteDTO.copyFrom(noteModel.getBoundNote());
-                // TODO save to database here
                 if(noteRepo.noteExists(noteDTO)) {
-                    System.out.println("The Note exists, we need to update");
+                    logger.info("Updated note: {}", noteDTO.getId());
+                    noteRepo.updateNote(noteDTO);
                 } else {
-                    System.out.println("The Note does not exist, we need to insert it");
                     noteDTO.setId(noteRepo.insertNote(noteDTO));
+                    logger.info("Inserted note: {}", noteDTO.getId());
                 }
             }
         }

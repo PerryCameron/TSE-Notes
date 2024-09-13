@@ -25,9 +25,10 @@ public class NoteController extends Controller<NoteMessage> {
     @Override
     public Region getView() {
         noteInteractor.loadEntitlements();
-        noteInteractor.loadNotes();
+        noteInteractor.loadNotes();  // good past this point, correct Timestamp is in bound note
         noteInteractor.printBoundNote();
         noteInteractor.setCurrentEntitlement();
+        System.out.println("In NoteController.getView()" + noteView.getNoteModel().getBoundNote().getTimestamp());
         return noteView.build();
     }
 
@@ -51,7 +52,7 @@ public class NoteController extends Controller<NoteMessage> {
             case NEXT_NOTE -> noteInteractor.displayNextNote();
             case PREVIOUS_NOTE -> noteInteractor.displayPreviousNote();
             case SAVE_NOTE -> noteInteractor.saveNote();
-            case LOAD_NOTES -> noteInteractor.loadNotes();
+//            case LOAD_NOTES -> noteInteractor.loadNotes();
         };
     }
 

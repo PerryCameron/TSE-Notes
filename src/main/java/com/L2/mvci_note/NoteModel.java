@@ -24,8 +24,12 @@ public class NoteModel {
         boundNote.get().getPartOrders().clear();
         boundNote.get().setSelectedPartOrder(null);
         boundNote.get().clear();
-        setClearCalled(true);
-        setClearCalled(false);
+        refreshBoundNote();
+    }
+
+    public void refreshBoundNote() {  // to refresh fields without bindings
+        setRefreshBoundNote(true);
+        setRefreshBoundNote(false);
     }
 
     public boolean isRefreshBoundNote() {
