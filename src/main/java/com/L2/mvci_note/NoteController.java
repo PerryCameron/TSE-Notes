@@ -51,6 +51,7 @@ public class NoteController extends Controller<NoteMessage> {
             case DELETE_PART -> noteInteractor.deletePart();
             case INSERT_PART -> noteInteractor.insertPart();
             case UPDATE_PART -> noteInteractor.updatePart();
+            case TEST -> noteInteractor.test();
         };
     }
 

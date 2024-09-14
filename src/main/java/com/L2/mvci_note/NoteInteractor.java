@@ -376,7 +376,8 @@ public class NoteInteractor {
             saveNote();
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
             checkAndLoadPartOrdersIfNeeded();
-        } else System.out.println("This is the last element in the list so we can go no further");
+        } else logger.debug("You have reached the last element on the list");
+        noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId()  + "  " + noteModel.getBoundNote().formattedDate());
     }
 
     public void displayPreviousNote() {
@@ -385,7 +386,8 @@ public class NoteInteractor {
             saveNote();
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
             checkAndLoadPartOrdersIfNeeded();
-        } else System.out.println("This is the first element in the list so we can go no further");
+        } else logger.debug("You have reached the first element on the list");
+        noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId() + "  " + noteModel.getBoundNote().formattedDate());
     }
 
     private void checkAndLoadPartOrdersIfNeeded() {
@@ -395,6 +397,7 @@ public class NoteInteractor {
             noteDTO.setPartOrders(FXCollections.observableArrayList(partOrderRepo.findAllPartOrdersByNoteId(noteDTO.getId())));
             if(noteModel.getBoundNote().getPartOrders().size() > 0) {
                 logger.debug("{} part orders loaded into memory", noteDTO.getPartOrders().size());
+                noteModel.getBoundNote().setSelectedPartOrder(noteDTO.getPartOrders().getFirst());
                 getAllPartsForEachPartOrder();
             }
             else logger.debug("There are no part orders for this note");
@@ -419,7 +422,7 @@ public class NoteInteractor {
     }
 
     public void printAllNotes() {
-        System.out.println("Bound Note: " + noteModel.getBoundNote().getId() + " date: " + noteModel.getBoundNote().getTimestamp());
+        System.out.println("Bound Note: " + noteModel.getBoundNote().getId() + " date: " + noteModel.getBoundNote().formattedDate());
         for (NoteDTO note : noteModel.getNotes()) {
             System.out.println("note: " + note.getId() + " date: " + note.formattedDate());
         }
@@ -440,10 +443,6 @@ public class NoteInteractor {
                 }
             }
         }
-    }
-
-    public void printBoundNote() {
-        System.out.println(noteModel.getBoundNote());
     }
 
     public void insertPartOrder() {
@@ -476,5 +475,14 @@ public class NoteInteractor {
         PartDTO partDTO = noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart();
         partOrderRepo.updatePart(partDTO);
         logger.debug("Updated part order: {} part # {}", partDTO.getId(), partDTO.getPartNumber());
+    }
+
+    public void test() {
+        System.out.println("Bound Note: " + noteModel.getBoundNote());
+        System.out.println("Selected Part Order: " + noteModel.getBoundNote().getSelectedPartOrder());
+        if(noteModel.getBoundNote().getSelectedPartOrder() == null)
+            System.out.println("Selected Part Order is null");
+        else
+        System.out.println("Selected part: " + noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart());
     }
 }

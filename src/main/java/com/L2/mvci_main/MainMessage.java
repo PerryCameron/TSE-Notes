@@ -1,10 +1,10 @@
 package com.L2.mvci_main;
 
 public enum MainMessage {
-    OPEN_NEW_CASE,
+    OPEN_NOTES,
     OPEN_SETTINGS,
     PRIMARY_STAGE_COMPLETE,
     SELECT_TAB,
     SHOW_LOG,
-    NONE
+    PREVIOUS_NOTE, NEXT_NOTE, SET_COMPLETE, NEW_NOTE, SAVE_NOTE, TEST, NONE
 }

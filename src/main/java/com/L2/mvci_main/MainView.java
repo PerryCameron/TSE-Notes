@@ -1,6 +1,8 @@
 package com.L2.mvci_main;
 
 import com.L2.mvci_main.components.TitleBar;
+import com.L2.mvci_note.NoteMessage;
+import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -66,7 +68,7 @@ public class MainView implements Builder<Region> {
 
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
-        MenuItem openNewCase = MenuFx.menuItemOf("Open New Case", x -> action.accept(MainMessage.OPEN_NEW_CASE), null);
+        MenuItem openNewCase = MenuFx.menuItemOf("Open New Case", x -> action.accept(MainMessage.OPEN_NOTES), null);
         MenuItem close = MenuFx.menuItemOf("Settings", x -> action.accept(MainMessage.OPEN_SETTINGS), null);
         menu.getItems().addAll(close, openNewCase);
         return menu;
@@ -84,7 +86,29 @@ public class MainView implements Builder<Region> {
 
     private Node setUpBottomPane() {
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(statusLabel());
+
+        Button prevNoteButton = ButtonFx.utilityButton( () -> {
+            action.accept(MainMessage.PREVIOUS_NOTE);
+        }, "Previous", "/images/back-16.png");
+        Button nextNoteButton = ButtonFx.utilityButton( () -> {
+            action.accept(MainMessage.NEXT_NOTE);
+        }, "Next", "/images/forward-16.png");
+        Button setCompletedButton = ButtonFx.utilityButton( () -> {
+            action.accept(MainMessage.SET_COMPLETE);
+        }, "Set Completed", "/images/thumbs-16.png");
+
+        Button newNoteButton = ButtonFx.utilityButton( () -> {
+            action.accept(MainMessage.NEW_NOTE);
+        }, "New Note", "/images/new-16.png");
+
+        Button saveNoteButton = ButtonFx.utilityButton( () -> {
+            action.accept(MainMessage.SAVE_NOTE);
+        }, "Save", "/images/Save-16.png");
+
+        Button testButton = ButtonFx.utilityButton( () -> {
+            action.accept(MainMessage.TEST);
+        }, "Test Dammit", "/images/apply-16.png");
+        hBox.getChildren().addAll(statusLabel(),prevNoteButton, nextNoteButton, setCompletedButton, newNoteButton, saveNoteButton, testButton);
         hBox.getStyleClass().add("bottom-pane");
         return hBox;
     }
@@ -103,7 +127,7 @@ public class MainView implements Builder<Region> {
     private Node setUpCenterPane() {
         TabPane tabPane = new TabPane();
         mainModel.setMainTabPane(tabPane);
-        action.accept(MainMessage.OPEN_NEW_CASE);
+        action.accept(MainMessage.OPEN_NOTES);
 //        action.accept(MainMessage.OPEN_SETTINGS);
         return tabPane;
     }

@@ -2,6 +2,7 @@ package com.L2.mvci_main;
 
 import com.L2.interfaces.Controller;
 import com.L2.mvci_note.NoteController;
+import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_settings.SettingsController;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
@@ -31,8 +32,14 @@ public class MainController extends Controller<MainMessage> {
     @Override
     public void action(MainMessage action) {
         switch (action) {
-            case OPEN_NEW_CASE -> openCaseTab();
+            case OPEN_NOTES -> openNoteTab();
             case OPEN_SETTINGS -> openSettingsTab();
+            case PREVIOUS_NOTE -> noteController.action(NoteMessage.PREVIOUS_NOTE);
+            case NEXT_NOTE -> noteController.action(NoteMessage.NEXT_NOTE);
+            case SAVE_NOTE -> noteController.action(NoteMessage.SAVE_NOTE);
+            case SET_COMPLETE -> noteController.action(NoteMessage.SET_COMPLETE);
+            case NEW_NOTE -> noteController.action(NoteMessage.NEW_NOTE);
+            case TEST -> noteController.action(NoteMessage.TEST);
         }
     }
 
@@ -40,7 +47,7 @@ public class MainController extends Controller<MainMessage> {
         mainInteractor.setStatusBar(status);
     }
 
-    private void openCaseTab() {
+    private void openNoteTab() {
             noteController = new NoteController(this);
             mainView.addNewTab("Note", noteController.getView(), false);
     }
