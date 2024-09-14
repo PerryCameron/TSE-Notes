@@ -233,6 +233,10 @@ public class PartOrderBoxList implements Component<Region> {
     private TableColumn<PartDTO, String> col1() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partNumberProperty,"Part Number");
         col.setStyle("-fx-alignment: center-left");
+        col.setOnEditCommit(event -> {
+            noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartNumber(event.getNewValue());
+            noteView.getAction().accept(NoteMessage.UPDATE_PART);
+        });
         return col;
     }
 
@@ -240,12 +244,20 @@ public class PartOrderBoxList implements Component<Region> {
     private TableColumn<PartDTO, String> col2() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partDescriptionProperty,"Part Description");
         col.setStyle("-fx-alignment: center-left");
+        col.setOnEditCommit(event -> {
+            noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartDescription(event.getNewValue());
+            noteView.getAction().accept(NoteMessage.UPDATE_PART);
+        });
         return col;
     }
 
     private TableColumn<PartDTO, String> col3() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partQuantityProperty,"Qty");
         col.setStyle("-fx-alignment: center-left");
+        col.setOnEditCommit(event -> {
+            noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartQuantity(event.getNewValue());
+            noteView.getAction().accept(NoteMessage.UPDATE_PART);
+        });
         col.setMaxWidth(70.0);
         return col;
     }

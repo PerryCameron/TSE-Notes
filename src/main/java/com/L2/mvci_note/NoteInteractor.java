@@ -471,4 +471,10 @@ public class NoteInteractor {
         partDTO.setId(partOrderRepo.insertPart(partDTO)); // TODO changes this when hooked to database
         noteModel.getBoundNote().getSelectedPartOrder().getParts().add(partDTO);
     }
+
+    public void updatePart() {
+        PartDTO partDTO = noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart();
+        partOrderRepo.updatePart(partDTO);
+        logger.debug("Updated part order: {} part # {}", partDTO.getId(), partDTO.getPartNumber());
+    }
 }
