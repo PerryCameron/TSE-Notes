@@ -4,6 +4,7 @@ import atlantafx.base.theme.PrimerLight;
 import com.L2.mvci_main.MainController;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -55,7 +56,7 @@ public class BaseApplication extends Application {
         primaryStage.setScene(new Scene(new MainController().getView()));
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         primaryStage.getScene().getStylesheets().add("css/dark/tabpane.css");
-
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/app-icon-64.png")));
         // Mouse pressed for dragging the window
         primaryStage.getScene().setOnMousePressed(event -> {
             if (!isResizing) { // Only allow moving if not resizing
