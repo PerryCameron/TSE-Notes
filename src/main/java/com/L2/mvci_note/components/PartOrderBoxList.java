@@ -158,7 +158,6 @@ public class PartOrderBoxList implements Component<Region> {
         return iconBox;
     }
 
-
     public TableView<PartDTO> buildTable(PartOrderDTO partOrderDTO) {
         this.tableView = TableViewFx.of(PartDTO.class);
         tableView.setItems(partOrderDTO.getParts()); // Set the ObservableList here
@@ -170,7 +169,6 @@ public class PartOrderBoxList implements Component<Region> {
         // Key event for Tab navigation
         // Handle key events for the TableView, only when focused
         tableView.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            System.out.print("Key pressed: ");
             if (event.getCode() == KeyCode.TAB) {
                 System.out.print("Tab key, Focused Row: ");
                 // Consume the event to stop focus from moving out of the table
@@ -239,7 +237,6 @@ public class PartOrderBoxList implements Component<Region> {
         });
         return col;
     }
-
 
     private TableColumn<PartDTO, String> col2() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partDescriptionProperty,"Part Description");

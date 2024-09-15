@@ -463,6 +463,7 @@ public class NoteInteractor {
     }
 
     public void deletePart() {
+        partOrderRepo.deletePart(noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart());
     }
 
     public void insertPart() {
