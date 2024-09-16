@@ -21,20 +21,21 @@ public class NoteListController extends Controller<NoteListMessage> {
         NoteListModel noteListModel = new NoteListModel();
         noteListInteractor = new NoteListInteractor(noteListModel);
         noteListView = new NoteListView(noteListModel, this::action);
+        action(NoteListMessage.REFERENCE_NOTES);
     }
 
     @Override
     public Region getView() {
+        mainController.getNotes();
         return noteListView.build();
     }
 
     @Override
     public void action(NoteListMessage action) {
         switch (action) {
+            case REFERENCE_NOTES: {
+                noteListInteractor.setNotes(mainController.getNotes());
+            }
         }
-    }
-
-    private void setNotesReference() {
-        noteListInteractor.setNotesReference(mainController.getMainModel().getNotes());
     }
 }

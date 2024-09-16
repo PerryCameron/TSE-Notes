@@ -9,8 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.layout.VBox;
 
 public class NoteModel {
-    // reference to mainModel notes
-    private ObservableList<NoteDTO> notes;
+    private ObservableList<NoteDTO> notes = FXCollections.observableArrayList();
     private ObjectProperty<NoteDTO> boundNote = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
@@ -19,7 +18,6 @@ public class NoteModel {
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
     private BooleanProperty clearCalled  = new SimpleBooleanProperty(false);
     private BooleanProperty refreshBoundNote = new SimpleBooleanProperty(false);
-
 
     public void clearBoundNoteFields() {
         boundNote.get().getPartOrders().clear();

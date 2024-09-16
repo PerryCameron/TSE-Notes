@@ -1,9 +1,12 @@
 package com.L2.mvci_main;
 
+import com.L2.dto.NoteDTO;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_note.NoteController;
 import com.L2.mvci_note.NoteMessage;
+import com.L2.mvci_notelist.NoteListController;
 import com.L2.mvci_settings.SettingsController;
+import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +20,7 @@ public class MainController extends Controller<MainMessage> {
     // sub-controllers
     private NoteController noteController = null;
     private SettingsController settingsController = null;
+    private NoteListController noteListController = null;
 
     public MainController() {
         mainModel = new MainModel();
@@ -34,13 +38,19 @@ public class MainController extends Controller<MainMessage> {
         switch (action) {
             case OPEN_NOTES -> openNoteTab();
             case OPEN_SETTINGS -> openSettingsTab();
+            case OPEN_NOTES_LIST -> openNoteListTab();
             case PREVIOUS_NOTE -> noteController.action(NoteMessage.PREVIOUS_NOTE);
             case NEXT_NOTE -> noteController.action(NoteMessage.NEXT_NOTE);
             case SAVE_NOTE -> noteController.action(NoteMessage.SAVE_NOTE);
             case SET_COMPLETE -> noteController.action(NoteMessage.SET_COMPLETE);
             case NEW_NOTE -> noteController.action(NoteMessage.NEW_NOTE);
             case TEST -> noteController.action(NoteMessage.TEST);
+
         }
+    }
+
+    public ObservableList<NoteDTO> getNotes() {
+        return noteController.getNotes();
     }
 
     public void setStatusBar(String status) {
@@ -57,7 +67,12 @@ public class MainController extends Controller<MainMessage> {
             mainView.addNewTab("Settings", settingsController.getView(), true);
     }
 
-    public NoteController getCaseController() {
+    private void openNoteListTab() {
+        noteListController = new NoteListController(this);
+        mainView.addNewTab("Note List", noteListController.getView(), true);
+    }
+
+    public NoteController getNoteController() {
         return noteController;
     }
 

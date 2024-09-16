@@ -487,7 +487,8 @@ public class NoteInteractor {
         System.out.println("Selected part: " + noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart());
     }
 
-    public void setNotesReference(ObservableList<NoteDTO> notes) {
-        noteModel.setNotes(notes);
+    public ObservableList<NoteDTO> getNotes() {
+        return noteModel.getNotes();
     }
+
 }

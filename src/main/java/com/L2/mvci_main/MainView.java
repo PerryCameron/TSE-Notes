@@ -68,9 +68,10 @@ public class MainView implements Builder<Region> {
 
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
-        MenuItem openNewCase = MenuFx.menuItemOf("Open New Case", x -> action.accept(MainMessage.OPEN_NOTES), null);
+//        MenuItem openNewCase = MenuFx.menuItemOf("Open New Case", x -> action.accept(MainMessage.OPEN_NOTES), null);
+        MenuItem openNotesList = MenuFx.menuItemOf("Open Notes List", x -> action.accept(MainMessage.OPEN_NOTES_LIST), null);
         MenuItem close = MenuFx.menuItemOf("Settings", x -> action.accept(MainMessage.OPEN_SETTINGS), null);
-        menu.getItems().addAll(close, openNewCase);
+        menu.getItems().addAll(close, openNotesList);
         return menu;
     }
 

@@ -3,6 +3,7 @@ package com.L2.mvci_notelist;
 import com.L2.mvci_main.MainMessage;
 import com.L2.mvci_main.MainModel;
 import com.L2.mvci_main.components.TitleBar;
+import com.L2.mvci_notelist.components.NotesTable;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
@@ -19,10 +20,12 @@ import java.util.function.Consumer;
 
 public class NoteListView implements Builder<Region> {
     private final NoteListModel noteListModel;
+    private final NotesTable notesTable;
     Consumer<NoteListMessage> action;
 
     public NoteListView(NoteListModel noteListModel, Consumer<NoteListMessage> m) {
         this.noteListModel = noteListModel;
+        this.notesTable = new NotesTable(this);
         action = m;
     }
 
@@ -54,6 +57,10 @@ public class NoteListView implements Builder<Region> {
     }
 
     private Node setUpCenterPane() {
-        return null;
+        return notesTable.build();
+    }
+
+    public NoteListModel getNoteListModel() {
+        return noteListModel;
     }
 }

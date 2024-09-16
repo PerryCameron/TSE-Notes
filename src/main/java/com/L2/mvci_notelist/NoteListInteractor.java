@@ -17,7 +17,12 @@ public class NoteListInteractor implements ApplicationPaths {
 
     }
 
-    public void setNotesReference(ObservableList<NoteDTO> notes) {
+    public void setReferences(ObservableList<NoteDTO> notes, NoteDTO boundNote) {
+        noteListModel.setNotes(notes);
+        noteListModel.setBoundNote(boundNote);
+    }
+
+    public void setNotes(ObservableList<NoteDTO> notes) {
         noteListModel.setNotes(notes);
     }
 }

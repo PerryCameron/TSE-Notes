@@ -1,7 +1,9 @@
 package com.L2.mvci_note;
 
+import com.L2.dto.NoteDTO;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
+import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 
 public class NoteController extends Controller<NoteMessage> {
@@ -15,7 +17,6 @@ public class NoteController extends Controller<NoteMessage> {
         NoteModel noteModel = new NoteModel();
         this.noteInteractor = new NoteInteractor(noteModel);
         this.noteView = new NoteView(noteModel, this::action);
-        setNotesReference();
         action(NoteMessage.LOAD_USER);
     }
 
@@ -56,8 +57,8 @@ public class NoteController extends Controller<NoteMessage> {
         };
     }
 
-    private void setNotesReference() {
-        noteInteractor.setNotesReference(mainController.getMainModel().getNotes());
+    public ObservableList<NoteDTO> getNotes() {
+        return noteInteractor.getNotes();
     }
 
     private void changeStatusBar() {

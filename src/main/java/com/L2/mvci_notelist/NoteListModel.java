@@ -11,7 +11,21 @@ import javafx.scene.control.TabPane;
 public class NoteListModel {
     // reference to mainModel notes
     private ObservableList<NoteDTO> notes;
+    // reference to mainModel boundNote;
+    private ObjectProperty<NoteDTO> boundNote;
 
+
+    public NoteDTO getBoundNote() {
+        return boundNote.get();
+    }
+
+    public ObjectProperty<NoteDTO> boundNoteProperty() {
+        return boundNote;
+    }
+
+    public void setBoundNote(NoteDTO boundNote) {
+        this.boundNote.set(boundNote);
+    }
 
     public ObservableList<NoteDTO> getNotes() {
         return notes;
