@@ -1,14 +1,7 @@
 package com.L2.wrapper;
 
 import com.L2.dto.NoteDTO;
-import com.L2.dto.PartOrderDTO;
-import com.L2.mvci_note.NoteModel;
-import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-
-import java.time.LocalDateTime;
-
 
 // note sure I want to do this
 public class NoteDTOWrapper {

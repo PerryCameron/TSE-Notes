@@ -31,17 +31,9 @@ public class NoteListController extends Controller<NoteListMessage> {
     @Override
     public void action(NoteListMessage action) {
         switch (action) {
-            case REFERENCE_NOTES: {
-                noteListInteractor.setNotes(mainController.getNotes());
-                break;
-            }
-            case REFERENCE_BOUND_NOTE_PROPERTY: {
-                noteListInteractor.setBoundNote(mainController.getBoundNote());
-                break;
-            }
-            case UPDATE_BOUND_NOTE: {
-                noteListInteractor.updateBoundNote();
-            }
+            case REFERENCE_NOTES -> noteListInteractor.setNotes(mainController.getNotes());
+            case REFERENCE_BOUND_NOTE_PROPERTY -> noteListInteractor.setBoundNote(mainController.getBoundNote());
+            case UPDATE_BOUND_NOTE -> noteListInteractor.updateBoundNote();
         }
     }
 }

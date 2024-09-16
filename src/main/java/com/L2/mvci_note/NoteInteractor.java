@@ -374,22 +374,25 @@ public class NoteInteractor {
     public void displayNextNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index < noteModel.getNotes().size() - 1) {
-
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
-            checkAndLoadPartOrdersIfNeeded();
+//            checkAndLoadPartOrdersIfNeeded();
         } else logger.debug("You have reached the last element on the list");
         noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId()  + "  " + noteModel.getBoundNote().formattedDate());
+    }
+
+    public void refreshPartOrders() {
+        logger.debug("Refreshing bound note, and UI, setting to: {}", noteModel.getBoundNote().getId() );
+        checkAndLoadPartOrdersIfNeeded();
     }
 
     public void displayPreviousNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index > 0) {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
-            checkAndLoadPartOrdersIfNeeded();
+//            checkAndLoadPartOrdersIfNeeded();
         } else logger.debug("You have reached the first element on the list");
         noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId() + "  " + noteModel.getBoundNote().formattedDate());
     }
-
 
     private void checkAndLoadPartOrdersIfNeeded() {
         NoteDTO noteDTO = noteModel.getBoundNote();
@@ -497,7 +500,4 @@ public class NoteInteractor {
     }
 
 
-    public void refreshPartOrders() {
-
-    }
 }
