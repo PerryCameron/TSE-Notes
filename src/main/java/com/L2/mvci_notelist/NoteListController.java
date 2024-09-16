@@ -1,10 +1,7 @@
 package com.L2.mvci_notelist;
 
 import com.L2.interfaces.Controller;
-import com.L2.mvci_main.MainInteractor;
-import com.L2.mvci_main.MainMessage;
-import com.L2.mvci_main.MainModel;
-import com.L2.mvci_main.MainView;
+import com.L2.mvci_main.*;
 import com.L2.mvci_note.NoteController;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_settings.SettingsController;
@@ -17,10 +14,10 @@ public class NoteListController extends Controller<NoteListMessage> {
     private final NoteListInteractor noteListInteractor;
     private final NoteListView noteListView;
     private static final Logger logger = LoggerFactory.getLogger(NoteListController.class);
-    private NoteController noteController = null;
+    private MainController mainController = null;
 
-
-    public NoteListController() {
+    public NoteListController(MainController mc) {
+        this.mainController = mc;
         NoteListModel noteListModel = new NoteListModel();
         noteListInteractor = new NoteListInteractor(noteListModel);
         noteListView = new NoteListView(noteListModel, this::action);
@@ -35,5 +32,9 @@ public class NoteListController extends Controller<NoteListMessage> {
     public void action(NoteListMessage action) {
         switch (action) {
         }
+    }
+
+    private void setNotesReference() {
+        noteListInteractor.setNotesReference(mainController.getMainModel().getNotes());
     }
 }

@@ -18,7 +18,6 @@ public class MainController extends Controller<MainMessage> {
     private NoteController noteController = null;
     private SettingsController settingsController = null;
 
-
     public MainController() {
         mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);

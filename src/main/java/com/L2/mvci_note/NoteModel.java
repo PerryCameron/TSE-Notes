@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.layout.VBox;
 
 public class NoteModel {
+    // reference to mainModel notes
     private ObservableList<NoteDTO> notes;
     private ObjectProperty<NoteDTO> boundNote = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
