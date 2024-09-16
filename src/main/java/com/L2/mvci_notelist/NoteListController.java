@@ -17,7 +17,6 @@ public class NoteListController extends Controller<NoteListMessage> {
     private final NoteListInteractor noteListInteractor;
     private final NoteListView noteListView;
     private static final Logger logger = LoggerFactory.getLogger(NoteListController.class);
-    // sub-controllers
     private NoteController noteController = null;
 
 

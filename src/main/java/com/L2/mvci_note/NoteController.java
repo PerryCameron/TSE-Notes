@@ -15,6 +15,7 @@ public class NoteController extends Controller<NoteMessage> {
         NoteModel noteModel = new NoteModel();
         this.noteInteractor = new NoteInteractor(noteModel);
         this.noteView = new NoteView(noteModel, this::action);
+        setNotesReference();
         action(NoteMessage.LOAD_USER);
     }
 
@@ -53,6 +54,10 @@ public class NoteController extends Controller<NoteMessage> {
             case UPDATE_PART -> noteInteractor.updatePart();
             case TEST -> noteInteractor.test();
         };
+    }
+
+    private void setNotesReference() {
+        noteInteractor.setNotesReference(mainController.getMainModel().getNotes());
     }
 
     private void changeStatusBar() {

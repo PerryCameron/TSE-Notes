@@ -12,6 +12,7 @@ public class MainController extends Controller<MainMessage> {
 
     private final MainInteractor mainInteractor;
     private final MainView mainView;
+    private final MainModel mainModel;
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
     // sub-controllers
     private NoteController noteController = null;
@@ -19,7 +20,7 @@ public class MainController extends Controller<MainMessage> {
 
 
     public MainController() {
-        MainModel mainModel = new MainModel();
+        mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::action);
     }
@@ -63,5 +64,9 @@ public class MainController extends Controller<MainMessage> {
 
     public SettingsController getSettingsController() {
         return settingsController;
+    }
+
+    public MainModel getMainModel() {
+        return mainModel;
     }
 }
