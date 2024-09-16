@@ -11,8 +11,9 @@ import javafx.scene.control.TabPane;
 public class NoteListModel {
     // reference to mainModel notes
     private ObservableList<NoteDTO> notes;
+    private ObjectProperty<NoteDTO> selectedNote = new SimpleObjectProperty<>();
     // reference to mainModel boundNote;
-    private ObjectProperty<NoteDTO> boundNote;
+    protected ObjectProperty<NoteDTO> boundNote;
 
 
     public NoteDTO getBoundNote() {
@@ -33,5 +34,17 @@ public class NoteListModel {
 
     public void setNotes(ObservableList<NoteDTO> notes) {
         this.notes = notes;
+    }
+
+    public NoteDTO getSelectedNote() {
+        return selectedNote.get();
+    }
+
+    public ObjectProperty<NoteDTO> selectedNoteProperty() {
+        return selectedNote;
+    }
+
+    public void setSelectedNote(NoteDTO selectedNote) {
+        this.selectedNote.set(selectedNote);
     }
 }

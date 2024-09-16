@@ -44,6 +44,7 @@ public class NoteView implements Builder<Region> {
         scrollPane.setContent(setMainVBox());
         setUpStatusBarCommunication();
         refreshBoundNoteListener();
+        boundNoteListener();
         return scrollPane;
     }
 
@@ -55,6 +56,12 @@ public class NoteView implements Builder<Region> {
                dateTimePicker.refreshFields();
                basicInformation.refreshFields();
            }
+        });
+    }
+
+    private void boundNoteListener() {
+        noteModel.getBoundNote().idProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Bound Note Refresh Called: " + newValue);
         });
     }
 

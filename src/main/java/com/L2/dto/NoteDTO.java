@@ -30,6 +30,7 @@ public class NoteDTO {
     private StringProperty schedulingTerms = new SimpleStringProperty();
     private StringProperty upsStatus = new SimpleStringProperty();
     private BooleanProperty loadSupported = new SimpleBooleanProperty();
+    private StringProperty title = new SimpleStringProperty();
     private StringProperty issue = new SimpleStringProperty();
     private StringProperty contactName = new SimpleStringProperty();
     private StringProperty contactPhoneNumber = new SimpleStringProperty();
@@ -43,12 +44,10 @@ public class NoteDTO {
     private StringProperty createdWorkOrder = new SimpleStringProperty();
     private StringProperty tex = new SimpleStringProperty();
     private IntegerProperty partsOrder = new SimpleIntegerProperty();
-//    private StringProperty entitlement = new SimpleStringProperty();
     private BooleanProperty completed = new SimpleBooleanProperty();
     private BooleanProperty isEmail = new SimpleBooleanProperty();
     private StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
     private StringProperty relatedCaseNumber = new SimpleStringProperty();
-
     private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
     private ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
     public NoteDTO() {
@@ -71,6 +70,7 @@ public class NoteDTO {
         this.schedulingTerms.set("");
         this.upsStatus.set("");
         this.loadSupported.set(true);
+        this.title.set("");
         this.issue.set("");
         this.contactName.set("");
         this.contactPhoneNumber.set("");
@@ -86,7 +86,6 @@ public class NoteDTO {
         this.createdWorkOrder.set("");
         this.tex.set("");
         this.partsOrder.set(0);
-//        this.entitlement.set("");
         this.completed.set(false);
         this.isEmail.set(isEmail);
         this.additionalCorrectiveActionText.set("");
@@ -96,7 +95,7 @@ public class NoteDTO {
     public NoteDTO(Integer id, LocalDateTime timestamp, String workOrder, String caseNumber, String serialNumber,
                    String modelNumber, String callInPerson, String callInPhoneNumber, String callInEmail,
                    Boolean underWarranty, String activeServiceContract, String serviceLevel, String schedulingTerms,
-                   String upsStatus, Boolean loadSupported, String issue, String contactName,
+                   String upsStatus, Boolean loadSupported, String title, String issue, String contactName,
                    String contactPhoneNumber, String contactEmail, String street, String installedAt,
                    String city, String state, String zip, String country,
                    String createdWorkOrder, String tex, Integer partsOrder,
@@ -118,6 +117,7 @@ public class NoteDTO {
         this.upsStatus = new SimpleStringProperty(upsStatus);
         this.loadSupported = new SimpleBooleanProperty(loadSupported);
         this.issue = new SimpleStringProperty(issue);
+        this.title = new SimpleStringProperty(title);
         this.contactName = new SimpleStringProperty(contactName);
         this.contactPhoneNumber = new SimpleStringProperty(contactPhoneNumber);
         this.contactEmail = new SimpleStringProperty(contactEmail);
@@ -131,7 +131,6 @@ public class NoteDTO {
         this.createdWorkOrder = new SimpleStringProperty(createdWorkOrder);
         this.tex = new SimpleStringProperty(tex);
         this.partsOrder = new SimpleIntegerProperty(partsOrder);
-//        this.entitlement = new SimpleStringProperty(entitlement);
         this.completed = new SimpleBooleanProperty(completed);
         this.isEmail = new SimpleBooleanProperty(isEmail);
         this.additionalCorrectiveActionText = new SimpleStringProperty(additionalCorrectiveActionText);
@@ -154,6 +153,7 @@ public class NoteDTO {
         noteDTO.upsStatus.set(upsStatus.get());
         noteDTO.loadSupported.set(isLoadSupported());
         noteDTO.issue.set(issue.get());
+        noteDTO.title.set(title.get());
         noteDTO.contactName.set(contactName.get());
         noteDTO.contactPhoneNumber.set(contactPhoneNumber.get());
         noteDTO.contactEmail.set(contactEmail.get());
@@ -169,7 +169,6 @@ public class NoteDTO {
         noteDTO.createdWorkOrder.set(createdWorkOrder.get());
         noteDTO.tex.set(tex.get());
         noteDTO.partsOrder.set(partsOrder.get());
-//        noteDTO.entitlement.set(entitlement.get());
         noteDTO.completed.set(isCompleted() );
         noteDTO.isEmail.set(isEmail());
         noteDTO.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
@@ -194,6 +193,7 @@ public class NoteDTO {
         clone.upsStatus.set(upsStatus.get());
         clone.loadSupported.set(loadSupported.get());
         clone.issue.set(issue.get());
+        clone.title.set(title.get());
         clone.contactName.set(contactName.get());
         clone.contactPhoneNumber.set(contactPhoneNumber.get());
         clone.contactEmail.set(contactEmail.get());
@@ -208,7 +208,6 @@ public class NoteDTO {
         clone.createdWorkOrder.set(createdWorkOrder.get());
         clone.tex.set(tex.get());
         clone.partsOrder.set(partsOrder.get());
-//        clone.entitlement.set(entitlement.get());
         clone.completed.set(completed.get());
         clone.isEmail.set(isEmail.get());
         clone.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
@@ -217,7 +216,6 @@ public class NoteDTO {
     }
 
     public void copyFrom(NoteDTO noteDTO) {
-        System.out.println("copied fields from " + noteDTO + "(id " + noteDTO.id.get() + ") to: " + this);
         id.set(noteDTO.getId());
         timestamp.set(noteDTO.getTimestamp());
         workOrder.set(noteDTO.getWorkOrder());
@@ -234,6 +232,7 @@ public class NoteDTO {
         upsStatus.set(noteDTO.getUpsStatus());
         loadSupported.set(noteDTO.isLoadSupported());
         issue.set(noteDTO.getIssue());
+        title.set(noteDTO.getTitle());
         contactName.set(noteDTO.getContactName());
         contactPhoneNumber.set(noteDTO.getContactPhoneNumber());
         contactEmail.set(noteDTO.getContactEmail());
@@ -248,7 +247,6 @@ public class NoteDTO {
         createdWorkOrder.set(noteDTO.getCreatedWorkOrder());
         tex.set(noteDTO.getTex());
         partsOrder.set(noteDTO.getPartsOrder());
-//        entitlement.set(noteDTO.getEntitlement());
         completed.set(noteDTO.isCompleted());
         isEmail.set(noteDTO.isEmail());
         additionalCorrectiveActionText.set(noteDTO.getAdditionalCorrectiveActionText());
@@ -286,6 +284,7 @@ public class NoteDTO {
         this.upsStatus.set("");
         this.loadSupported.set(true);
         this.issue.set("");
+        this.title.set("");
         this.contactName.set("");
         this.contactPhoneNumber.set("");
         this.contactEmail.set("");
@@ -300,7 +299,6 @@ public class NoteDTO {
         this.createdWorkOrder.set("");
         this.tex.set("");
         this.partsOrder.set(0);
-//        this.entitlement.set("");
         this.completed.set(false);
         this.isEmail.set(false);
         this.additionalCorrectiveActionText.set("");
@@ -323,6 +321,22 @@ public class NoteDTO {
 
     /////////////////////////////////////////////////////////////
 
+    public StringProperty formattedTimestampProperty() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return new SimpleStringProperty(timestamp.get().format(formatter));
+    }
+
+    public String getTitle() {
+        return title.get();
+    }
+
+    public StringProperty titleProperty() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title.set(title);
+    }
 
     public String getRelatedCaseNumber() {
         return relatedCaseNumber.get();

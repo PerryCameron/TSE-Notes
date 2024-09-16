@@ -10,6 +10,7 @@ import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ClipboardUtils;
 import com.L2.static_tools.FakeData;
 import com.L2.static_tools.TableFormatter;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
@@ -491,4 +492,7 @@ public class NoteInteractor {
         return noteModel.getNotes();
     }
 
+    public ObjectProperty<NoteDTO> getBoundNoteProperty() {
+        return noteModel.boundNoteProperty();
+    }
 }

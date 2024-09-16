@@ -31,6 +31,7 @@ public class NotesRowMapper implements RowMapper<NoteDTO> {
                 rs.getString("schedulingTerms"),
                 rs.getString("upsStatus"),
                 rs.getInt("loadSupported") == 1,  // Convert INTEGER to Boolean
+                rs.getString("title"),
                 rs.getString("issue"),
                 rs.getString("contactName"),
                 rs.getString("contactPhoneNumber"),

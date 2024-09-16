@@ -32,35 +32,16 @@ public class NoteListView implements Builder<Region> {
     @Override
     public Region build() {
         VBox root = new VBox();
-        BorderPane borderPane = new BorderPane();
-//        borderPane.setPrefSize(1028, 830);
-        borderPane.setTop(setUpTopPane());
-        borderPane.setCenter(setUpCenterPane());
-        borderPane.setBottom(setUpBottomPane());
-        root.getChildren().add(borderPane);
+        root.getChildren().add(notesTable.build());
         root.setStyle("-fx-border-color: #878484; -fx-border-width: 1;");
         return root;
     }
 
-    private Node setUpTopPane() {
-        return null;
-    }
-
-    private Node setUpMenuBar() {
-        return null;
-    }
-
-    private Node setUpBottomPane() {
-        HBox hBox = new HBox();
-
-        return hBox;
-    }
-
-    private Node setUpCenterPane() {
-        return notesTable.build();
-    }
-
     public NoteListModel getNoteListModel() {
         return noteListModel;
+    }
+
+    public Consumer<NoteListMessage> getAction() {
+        return action;
     }
 }

@@ -3,6 +3,7 @@ package com.L2.mvci_note;
 import com.L2.dto.NoteDTO;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 
@@ -59,6 +60,10 @@ public class NoteController extends Controller<NoteMessage> {
 
     public ObservableList<NoteDTO> getNotes() {
         return noteInteractor.getNotes();
+    }
+
+    public ObjectProperty<NoteDTO> getBoundNote() {
+        return noteInteractor.getBoundNoteProperty();
     }
 
     private void changeStatusBar() {

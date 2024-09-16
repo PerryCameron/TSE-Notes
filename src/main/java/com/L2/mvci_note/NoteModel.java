@@ -19,6 +19,10 @@ public class NoteModel {
     private BooleanProperty clearCalled  = new SimpleBooleanProperty(false);
     private BooleanProperty refreshBoundNote = new SimpleBooleanProperty(false);
 
+//    public ObjectProperty<NoteDTO> boundNoteProperty() {
+//        return boundNote;
+//    }
+
     public void clearBoundNoteFields() {
         boundNote.get().getPartOrders().clear();
         boundNote.get().setSelectedPartOrder(null);
@@ -126,4 +130,6 @@ public class NoteModel {
     public void setCurrentEntitlement(EntitlementDTO currentEntitlement) {
         this.currentEntitlement.set(currentEntitlement);
     }
+
+
 }

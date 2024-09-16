@@ -6,6 +6,7 @@ import com.L2.mvci_note.NoteController;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_notelist.NoteListController;
 import com.L2.mvci_settings.SettingsController;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
@@ -51,6 +52,10 @@ public class MainController extends Controller<MainMessage> {
 
     public ObservableList<NoteDTO> getNotes() {
         return noteController.getNotes();
+    }
+
+    public ObjectProperty<NoteDTO> getBoundNote() {
+        return noteController.getBoundNote();
     }
 
     public void setStatusBar(String status) {
