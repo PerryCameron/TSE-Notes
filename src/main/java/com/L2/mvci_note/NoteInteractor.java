@@ -374,7 +374,7 @@ public class NoteInteractor {
     public void displayNextNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index < noteModel.getNotes().size() - 1) {
-            saveNote();
+
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
             checkAndLoadPartOrdersIfNeeded();
         } else logger.debug("You have reached the last element on the list");
@@ -384,12 +384,12 @@ public class NoteInteractor {
     public void displayPreviousNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index > 0) {
-            saveNote();
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
             checkAndLoadPartOrdersIfNeeded();
         } else logger.debug("You have reached the first element on the list");
         noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId() + "  " + noteModel.getBoundNote().formattedDate());
     }
+
 
     private void checkAndLoadPartOrdersIfNeeded() {
         NoteDTO noteDTO = noteModel.getBoundNote();
@@ -494,5 +494,10 @@ public class NoteInteractor {
 
     public ObjectProperty<NoteDTO> getBoundNoteProperty() {
         return noteModel.boundNoteProperty();
+    }
+
+
+    public void refreshPartOrders() {
+
     }
 }

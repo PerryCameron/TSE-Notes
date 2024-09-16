@@ -62,6 +62,7 @@ public class NoteView implements Builder<Region> {
     private void boundNoteListener() {
         noteModel.getBoundNote().idProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println("Bound Note Refresh Called: " + newValue);
+            action.accept(NoteMessage.REFRESH_PART_ORDERS);
         });
     }
 

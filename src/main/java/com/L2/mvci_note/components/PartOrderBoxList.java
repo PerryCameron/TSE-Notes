@@ -12,8 +12,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -168,54 +166,54 @@ public class PartOrderBoxList implements Component<Region> {
         tableView.setPrefHeight(160);
         // Key event for Tab navigation
         // Handle key events for the TableView, only when focused
-        tableView.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.TAB) {
-                System.out.print("Tab key, Focused Row: ");
-                // Consume the event to stop focus from moving out of the table
-                event.consume();
-
-                // Get the currently focused cell
-                TablePosition<PartDTO, String> focusedCell = tableView.getFocusModel().getFocusedCell();
-                int row = focusedCell.getRow();
-                int column = focusedCell.getColumn();
-                // Determine the next cell position
-                if (!event.isShiftDown()) {
-                    // Forward tabbing
-                    if (column < tableView.getColumns().size() - 1) {
-                        column++;
-                    } else {
-                        column = 0;
-                        row++;
-                    }
-                } else {
-                    // Reverse tabbing (Shift + Tab)
-                    if (column > 0) {
-                        column--;
-                    } else {
-                        column = tableView.getColumns().size() - 1;
-                        row--;
-                    }
-                }
-                // Prevent navigating out of bounds
-                if (row >= 0 && row < tableView.getItems().size()) {
-                    // Select the next cell
-                    tableView.layout();
-                    tableView.requestFocus();
-                    //        // Select row 0 and focus the first column
-                    tableView.getSelectionModel().select(row);
-                    tableView.getFocusModel().focus(row, tableView.getColumns().get(column));  // Focus the first column (index 0)
-                    tableView.edit(row, tableView.getColumns().get(column));  // Edit row 0, first column
-
-//                    tableView.getSelectionModel().clearAndSelect(row, tableView.getColumns().get(column));
-//                    tableView.getFocusModel().focus(row, tableView.getColumns().get(column));
-//                    tableView.edit(row, tableView.getColumns().get(column)); // selects correctly but does not open to edit
-                }
-                System.out.println(row + " Column: " + column);
-
-                // Ensure the table retains focus
-                tableView.requestFocus();
-            }
-        });
+//        tableView.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+//            if (event.getCode() == KeyCode.TAB) {
+//                System.out.print("Tab key, Focused Row: ");
+//                // Consume the event to stop focus from moving out of the table
+//                event.consume();
+//
+//                // Get the currently focused cell
+//                TablePosition<PartDTO, String> focusedCell = tableView.getFocusModel().getFocusedCell();
+//                int row = focusedCell.getRow();
+//                int column = focusedCell.getColumn();
+//                // Determine the next cell position
+//                if (!event.isShiftDown()) {
+//                    // Forward tabbing
+//                    if (column < tableView.getColumns().size() - 1) {
+//                        column++;
+//                    } else {
+//                        column = 0;
+//                        row++;
+//                    }
+//                } else {
+//                    // Reverse tabbing (Shift + Tab)
+//                    if (column > 0) {
+//                        column--;
+//                    } else {
+//                        column = tableView.getColumns().size() - 1;
+//                        row--;
+//                    }
+//                }
+//                // Prevent navigating out of bounds
+//                if (row >= 0 && row < tableView.getItems().size()) {
+//                    // Select the next cell
+//                    tableView.layout();
+//                    tableView.requestFocus();
+//                    //        // Select row 0 and focus the first column
+//                    tableView.getSelectionModel().select(row);
+//                    tableView.getFocusModel().focus(row, tableView.getColumns().get(column));  // Focus the first column (index 0)
+//                    tableView.edit(row, tableView.getColumns().get(column));  // Edit row 0, first column
+//
+////                    tableView.getSelectionModel().clearAndSelect(row, tableView.getColumns().get(column));
+////                    tableView.getFocusModel().focus(row, tableView.getColumns().get(column));
+////                    tableView.edit(row, tableView.getColumns().get(column)); // selects correctly but does not open to edit
+//                }
+//                System.out.println(row + " Column: " + column);
+//
+//                // Ensure the table retains focus
+//                tableView.requestFocus();
+//            }
+//        });
 
         // auto selector
         TableView.TableViewSelectionModel<PartDTO> selectionModel = tableView.getSelectionModel();

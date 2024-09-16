@@ -146,13 +146,13 @@ public class BasicInformation implements Component<Region> {
 
     private Node callInInfo() {
         VBox vBox = VBoxFx.of(5.5, new Insets(0, 40, 0, 0));
-        textFields[0] = TextFieldFx.createValidatedTextField(200,"WO-", StringChecker::formatWorkOrder);
-        textFields[1] = TextFieldFx.createValidatedTextField(200,"Case-", StringChecker::formatCaseNumber);
-        textFields[2] = TextFieldFx.standardTextField(200, "Model");
-        textFields[3] = TextFieldFx.standardTextField(200, "Serial");
-        textFields[4] = TextFieldFx.standardTextField(200, "Call-in Contact");
-        textFields[5] = TextFieldFx.createValidatedTextField(200,"Call-in Phone", StringChecker::formatPhoneNumber);
-        textFields[6] = TextFieldFx.createValidatedTextField(200,"Call-in Email", StringChecker::formatEmail);
+        textFields[0] = TextFieldFx.createValidatedTextField(200,"WO-", StringChecker::formatWorkOrder, noteView);
+        textFields[1] = TextFieldFx.createValidatedTextField(200,"Case-", StringChecker::formatCaseNumber, noteView);
+        textFields[2] = TextFieldFx.standardTextField(200, "Model", noteView);
+        textFields[3] = TextFieldFx.standardTextField(200, "Serial", noteView);
+        textFields[4] = TextFieldFx.standardTextField(200, "Call-in Contact", noteView);
+        textFields[5] = TextFieldFx.createValidatedTextField(200,"Call-in Phone", StringChecker::formatPhoneNumber, noteView);
+        textFields[6] = TextFieldFx.createValidatedTextField(200,"Call-in Email", StringChecker::formatEmail, noteView);
         for (TextField textField : textFields) {
             vBox.getChildren().add(textField);
         }

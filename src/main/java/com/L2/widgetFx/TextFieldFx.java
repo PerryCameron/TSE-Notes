@@ -1,6 +1,8 @@
 package com.L2.widgetFx;
 
 import com.L2.dto.ResultDTO;
+import com.L2.mvci_note.NoteMessage;
+import com.L2.mvci_note.NoteView;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
@@ -47,16 +49,17 @@ public class TextFieldFx {
         return passwordField;
     }
 
-    public static TextField standardTextField(double width, String prompt) {
+    public static TextField standardTextField(double width, String prompt, NoteView noteView) {
         TextField textField = TextFieldFx.of(width, prompt);
         textField.focusedProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue)
                 Platform.runLater(textField::selectAll);
+            else noteView.getAction().accept(NoteMessage.SAVE_NOTE);
         });
         return textField;
     }
 
-    public static TextField createValidatedTextField(double width, String promptText, Function<String, ResultDTO> validationFunction) {
+    public static TextField createValidatedTextField(double width, String promptText, Function<String, ResultDTO> validationFunction, NoteView noteView) {
         TextField textField = TextFieldFx.of(width, promptText);
 
         textField.focusedProperty().addListener((obs, oldValue, newValue) -> {
@@ -67,8 +70,11 @@ public class TextFieldFx {
                 if (resultDTO.isSuccess()) {
                     textField.setText(resultDTO.getFieldName());
                     textField.getStyleClass().remove("text-field-error");  // Remove error class
+                    noteView.getAction().accept(NoteMessage.SAVE_NOTE);
                 } else {
-                    if (!textField.getStyleClass().contains("text-field-error")) {
+                    if(textField.getText().equals(""))
+                        textField.getStyleClass().remove("text-field-error");  // Remove error class
+                    else if(!textField.getStyleClass().contains("text-field-error")) {
                         textField.getStyleClass().add("text-field-error");  // Add error class
                     }
                 }

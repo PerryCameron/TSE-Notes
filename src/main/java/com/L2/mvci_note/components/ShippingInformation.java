@@ -53,9 +53,9 @@ public class ShippingInformation implements Component<Region> {
     private Node contact() {
         VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         vBox.getStyleClass().add("inner-decorative-hbox");
-        cTextFields[0] = TextFieldFx.standardTextField(200, "Contact Name");
-        cTextFields[1] = TextFieldFx.createValidatedTextField(200,"Contact Phone", StringChecker::formatPhoneNumber);
-        cTextFields[2] = TextFieldFx.createValidatedTextField(200,"Contact Email", StringChecker::formatEmail);
+        cTextFields[0] = TextFieldFx.standardTextField(200, "Contact Name", noteView);
+        cTextFields[1] = TextFieldFx.createValidatedTextField(200,"Contact Phone", StringChecker::formatPhoneNumber, noteView);
+        cTextFields[2] = TextFieldFx.createValidatedTextField(200,"Contact Email", StringChecker::formatEmail, noteView);
         Button clearButton = ButtonFx.utilityButton(() -> {
             noteModel.getBoundNote().clearContact();
             for(TextField textField : cTextFields) textField.setText("");
@@ -79,13 +79,13 @@ public class ShippingInformation implements Component<Region> {
         VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         vBox.getStyleClass().add("inner-decorative-hbox");
         HBox hBox = new HBox(5);
-        aTextFields[0] = TextFieldFx.standardTextField(200, "Related Account / Installed at");
+        aTextFields[0] = TextFieldFx.standardTextField(200, "Related Account / Installed at", noteView);
         streetTextArea.setPrefWidth(400);
         streetTextArea.setPromptText("Street");
-        aTextFields[1] = TextFieldFx.standardTextField(250, "City");
-        aTextFields[2] = TextFieldFx.standardTextField(50, "State/Province");
-        aTextFields[3] = TextFieldFx.standardTextField(100, "zip Code");
-        aTextFields[4] = TextFieldFx.standardTextField(200, "Country");
+        aTextFields[1] = TextFieldFx.standardTextField(250, "City", noteView);
+        aTextFields[2] = TextFieldFx.standardTextField(50, "State/Province", noteView);
+        aTextFields[3] = TextFieldFx.standardTextField(100, "zip Code", noteView);
+        aTextFields[4] = TextFieldFx.standardTextField(200, "Country", noteView);
         Button clearButton = ButtonFx.utilityButton(() -> {
             noteModel.getBoundNote().clearAddress();
             for (TextField textField : aTextFields)

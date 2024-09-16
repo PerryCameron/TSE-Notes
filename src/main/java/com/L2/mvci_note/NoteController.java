@@ -55,8 +55,10 @@ public class NoteController extends Controller<NoteMessage> {
             case INSERT_PART -> noteInteractor.insertPart();
             case UPDATE_PART -> noteInteractor.updatePart();
             case TEST -> noteInteractor.test();
+            case REFRESH_PART_ORDERS -> noteInteractor.refreshPartOrders();
         };
     }
+
 
     public ObservableList<NoteDTO> getNotes() {
         return noteInteractor.getNotes();

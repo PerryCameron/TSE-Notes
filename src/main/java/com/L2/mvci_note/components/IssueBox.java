@@ -6,6 +6,7 @@ import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -44,6 +45,10 @@ public class IssueBox implements Component<Region> {
         Button[] buttons = new Button[] { clearButton, copyButton };
         root.getChildren().addAll(TitleBarFx.of("Issue", buttons), textAreaIssue);
         refreshFields();
+        textAreaIssue.focusedProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue);
+            else noteView.getAction().accept(NoteMessage.SAVE_NOTE);
+        });
         return root;
     }
 

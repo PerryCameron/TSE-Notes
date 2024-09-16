@@ -21,14 +21,18 @@ public class WorkOrderBox implements Component<Region> {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox root;
-    TextField texTextField = TextFieldFx.standardTextField(200,  "TEX-");
-    TextField relatedCaseTextField = TextFieldFx.standardTextField(200,  "Related Case");
-    TextField createdWorkOrderTextField = TextFieldFx.standardTextField(200,  "WO-");
+    TextField texTextField;
+    TextField relatedCaseTextField;
+    TextField createdWorkOrderTextField;
 
 
     public WorkOrderBox(NoteView noteView) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
+        this.root = new VBox();
+        this.texTextField = TextFieldFx.standardTextField(200,  "TEX-", noteView);
+        this.relatedCaseTextField = TextFieldFx.standardTextField(200,  "Related Case", noteView);
+        this.createdWorkOrderTextField = TextFieldFx.standardTextField(200,  "WO-", noteView);
     }
 
     @Override
