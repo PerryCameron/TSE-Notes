@@ -216,7 +216,6 @@ public class NoteDTO {
     }
 
     public void copyFrom(NoteDTO noteDTO) {
-        id.set(noteDTO.getId());
         timestamp.set(noteDTO.getTimestamp());
         workOrder.set(noteDTO.getWorkOrder());
         caseNumber.set(noteDTO.getCaseNumber());
@@ -251,6 +250,7 @@ public class NoteDTO {
         isEmail.set(noteDTO.isEmail());
         additionalCorrectiveActionText.set(noteDTO.getAdditionalCorrectiveActionText());
         relatedCaseNumber.set(noteDTO.getRelatedCaseNumber());
+        id.set(noteDTO.getId()); // since this is listened to, it must copy last
     }
 
     public void clearAddress() {

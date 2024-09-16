@@ -59,7 +59,7 @@ public class NoteInteractor {
         checkAndLoadPartOrdersIfNeeded();
     }
 
-    public void setActiveServieContract() {
+    public void setActiveServiceContract() {
         EntitlementDTO entitlementDTO = noteModel.getEntitlements().stream().filter(DTO -> DTO.getName()
                 .equals(noteModel.getBoundNote().getActiveServiceContract())).findFirst().orElse(null);
         noteModel.setCurrentEntitlement(entitlementDTO);
@@ -371,10 +371,22 @@ public class NoteInteractor {
         logger.info("Current entitlement set to: {}", noteModel.getCurrentEntitlement());
     }
 
+//    public void loadNotes() {
+//        NoteDTO boundNote = new NoteDTO();
+//        noteModel.setBoundNote(boundNote);
+//        noteModel.getNotes().addAll(noteRepo.getAllNotes());
+//        noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp));
+//        boundNote.copyFrom(noteModel.getNotes().getLast());
+//        checkAndLoadPartOrdersIfNeeded();
+//        noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId() + "  " + noteModel.getBoundNote().formattedDate());
+//    }
+
     public void displayNextNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index < noteModel.getNotes().size() - 1) {
+            System.out.println("displayNextNote: copying info to the bound note");
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
+            System.out.print("displayNextNote: now copied: " + noteModel.getBoundNote().getId() + " Date: " + noteModel.getBoundNote().getTimestamp());
         } else logger.debug("You have reached the last element on the list");
     }
 
@@ -387,6 +399,7 @@ public class NoteInteractor {
     public void displayPreviousNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index > 0) {
+            System.out.println("displayPreviousNote: copying info to the bound note");
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
         } else logger.debug("You have reached the first element on the list");
     }

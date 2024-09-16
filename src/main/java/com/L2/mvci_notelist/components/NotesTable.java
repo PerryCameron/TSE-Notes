@@ -44,7 +44,7 @@ public class NotesTable implements Component<Region> {
                     setStyle(""); // Reset style for empty rows
                 } else {
                     if (note.isEmail()) {
-                        setStyle("-fx-background-color: #f6d39f;");
+                        setStyle("-fx-background-color: #faf5e8;");
                     } else {
                         setStyle(""); // Reset to default if not applicable
                     }
@@ -105,9 +105,8 @@ public class NotesTable implements Component<Region> {
         TableColumn<NoteDTO, String> col = TableColumnFx.editableStringTableColumn(NoteDTO::titleProperty,"Problem");
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
-            System.out.println("saving title");
-//            noteListView.getNoteListModel().getBoundNote().setTitle(event.getNewValue());
-//            noteListView.getAction().accept(NoteListMessage.UPDATE_NOTE);
+            noteListView.getNoteListModel().getBoundNote().setTitle(event.getNewValue());
+            noteListView.getAction().accept(NoteListMessage.SAVE_NOTE);
         });
         return col;
     }

@@ -5,6 +5,7 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -87,11 +88,14 @@ public class MainView implements Builder<Region> {
 
     private Node setUpBottomPane() {
         HBox hBox = new HBox();
-
+        hBox.setAlignment(Pos.BASELINE_LEFT);
+        hBox.setStyle("-fx-background-color: grey");
         Button prevNoteButton = ButtonFx.utilityButton( () -> {
+            System.out.println("<- Previous Note Button clicked");
             action.accept(MainMessage.PREVIOUS_NOTE);
         }, "Previous", "/images/back-16.png");
         Button nextNoteButton = ButtonFx.utilityButton( () -> {
+            System.out.println("-> Next Note Button clicked");
             action.accept(MainMessage.NEXT_NOTE);
         }, "Next", "/images/forward-16.png");
         Button setCompletedButton = ButtonFx.utilityButton( () -> {

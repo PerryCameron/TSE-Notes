@@ -2,6 +2,7 @@ package com.L2.mvci_notelist;
 
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.*;
+import com.L2.mvci_note.NoteMessage;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ public class NoteListController extends Controller<NoteListMessage> {
             case REFERENCE_NOTES -> noteListInteractor.setNotes(mainController.getNotes());
             case REFERENCE_BOUND_NOTE_PROPERTY -> noteListInteractor.setBoundNote(mainController.getBoundNote());
             case UPDATE_BOUND_NOTE -> noteListInteractor.updateBoundNote();
+            case SAVE_NOTE -> mainController.getNoteController().action(NoteMessage.SAVE_NOTE);
         }
     }
 }
