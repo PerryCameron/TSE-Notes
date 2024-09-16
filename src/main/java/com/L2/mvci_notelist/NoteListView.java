@@ -32,8 +32,8 @@ public class NoteListView implements Builder<Region> {
     @Override
     public Region build() {
         VBox root = new VBox();
+        root.setPadding(new Insets(5, 5, 5, 5));
         root.getChildren().add(notesTable.build());
-        root.setStyle("-fx-border-color: #878484; -fx-border-width: 1;");
         return root;
     }
 

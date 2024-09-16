@@ -59,7 +59,6 @@ public class NoteController extends Controller<NoteMessage> {
         };
     }
 
-
     public ObservableList<NoteDTO> getNotes() {
         return noteInteractor.getNotes();
     }

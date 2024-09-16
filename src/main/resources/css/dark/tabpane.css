@@ -5,14 +5,14 @@
 
 /* Style for unselected tabs */
 .tab {
-    -fx-background-color: #f6f8fa; /* Unselected tab background color */
-    -fx-text-fill: white;           /* Unselected tab text color */
+    -fx-background-color: #f3f3f3; /* Unselected tab background color */
+    -fx-text-fill: black;           /* Unselected tab text color */
 
 }
 
 /* Style for the selected tab */
 .tab:selected {
-    -fx-background-color: #3a6684; /* Selected tab background color */     /* Selected tab text color */
+    -fx-background-color: white; /* Selected tab background color */     /* Selected tab text color */
 }
 
 .tab .tab-label {
@@ -21,7 +21,7 @@
 }
 
 .tab:selected .tab-label {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-font-weight: bold;
 }
 
