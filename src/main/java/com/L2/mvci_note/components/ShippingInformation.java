@@ -53,7 +53,7 @@ public class ShippingInformation implements Component<Region> {
     private Node contact() {
         VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         vBox.getStyleClass().add("inner-decorative-hbox");
-        cTextFields[0] = TextFieldFx.standardTextField(200, "Contact Name", noteView);
+        cTextFields[0] = TextFieldFx.createValidatedTextField(200, "Contact Name", StringChecker::formatName, noteView);
         cTextFields[1] = TextFieldFx.createValidatedTextField(200,"Contact Phone", StringChecker::formatPhoneNumber, noteView);
         cTextFields[2] = TextFieldFx.createValidatedTextField(200,"Contact Email", StringChecker::formatEmail, noteView);
         Button clearButton = ButtonFx.utilityButton(() -> {

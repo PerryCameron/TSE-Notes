@@ -13,6 +13,7 @@ public class StringChecker {
             case "Work Order" -> formatWorkOrder(fieldValue);
             case "Case" -> formatCaseNumber(fieldValue);
             case "Call-in Email" -> formatEmail(fieldValue);
+            case "Contact Name" -> formatName(fieldValue);
             default -> new ResultDTO(fieldValue, Boolean.TRUE);
         };
     }
@@ -107,4 +108,52 @@ public class StringChecker {
         resultDTO.setFieldName(String.format("(%s)-%s-%s", digits.substring(0, 3), digits.substring(3, 6), digits.substring(6, 10)));
         return resultDTO;
     }
+
+    public static ResultDTO formatName(String input) {
+        ResultDTO result = new ResultDTO();
+        if (input == null || input.isEmpty()) {
+            result.setFieldName(input);
+            result.setSuccess(false);
+            return result;
+        }
+        // Trim leading and trailing whitespace
+        input = input.trim();
+        // Split name into words
+        String[] words = input.split("\\s+");
+        StringBuilder formattedName = new StringBuilder();
+        // Regular expression for Irish/Scottish "Mac" and "Mc" names
+        Pattern macPattern = Pattern.compile("^(Mac|Mc)([A-Z][a-z]+)$");
+        for (String word : words) {
+            if (word.length() > 2 && (word.startsWith("Mac") || word.startsWith("Mc"))) {
+                // Handle names starting with "Mac" or "Mc"
+                Matcher matcher = macPattern.matcher(word);
+                if (matcher.matches()) {
+                    // Capitalize correctly for names like "MacGregor", "McEwan", etc.
+                    formattedName.append(matcher.group(1)); // Mac or Mc
+                    formattedName.append(matcher.group(2)); // Capitalize rest
+                } else {
+                    formattedName.append(capitalizeFirstLetter(word)); // Fallback capitalization
+                }
+            } else {
+                // Capitalize the first letter of any other word
+                formattedName.append(capitalizeFirstLetter(word));
+            }
+            formattedName.append(" ");
+        }
+        // Remove the trailing space
+        String finalName = formattedName.toString().trim();
+        // Set the results
+        result.setFieldName(finalName);
+        result.setSuccess(true);
+        return result;
+    }
+
+    // Helper method to capitalize the first letter of each word
+    private static String capitalizeFirstLetter(String word) {
+        if (word == null || word.isEmpty()) {
+            return word;
+        }
+        return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+    }
+
 }
