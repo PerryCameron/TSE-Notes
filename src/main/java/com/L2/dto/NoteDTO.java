@@ -4,12 +4,10 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -136,84 +134,6 @@ public class NoteDTO {
         this.isEmail = new SimpleBooleanProperty(isEmail);
         this.additionalCorrectiveActionText = new SimpleStringProperty(additionalCorrectiveActionText);
         this.relatedCaseNumber = new SimpleStringProperty(relatedCaseNumber);
-    }
-
-    public void updateCase(NoteDTO noteDTO) {
-        noteDTO.timestamp.set(timestamp.get());
-        noteDTO.workOrder.set(workOrder.get());
-        noteDTO.caseNumber.set(caseNumber.get());
-        noteDTO.serialNumber.set(serialNumber.get());
-        noteDTO.modelNumber.set(modelNumber.get());
-        noteDTO.callInPerson.set(callInPerson.get());
-        noteDTO.callInPhoneNumber.set(callInPhoneNumber.get());
-        noteDTO.callInEmail.set(callInEmail.get());
-        noteDTO.underWarranty.set(isUnderWarranty());
-        noteDTO.activeServiceContract.set(activeServiceContract.get());
-        noteDTO.serviceLevel.set(serviceLevel.get());
-        noteDTO.schedulingTerms.set(schedulingTerms.get());
-        noteDTO.upsStatus.set(upsStatus.get());
-        noteDTO.loadSupported.set(isLoadSupported());
-        noteDTO.issue.set(issue.get());
-        noteDTO.title.set(title.get());
-        noteDTO.contactName.set(contactName.get());
-        noteDTO.contactPhoneNumber.set(contactPhoneNumber.get());
-        noteDTO.contactEmail.set(contactEmail.get());
-        noteDTO.street.set(street.get());
-        noteDTO.installedAt.set(installedAt.get());
-        noteDTO.city.set(city.get());
-        noteDTO.state.set(state.get());
-        noteDTO.zip.set(zip.get());
-        noteDTO.country.set(country.get());
-        noteDTO.partOrders.clear();
-        noteDTO.partOrders.set(partOrders.get());
-        noteDTO.selectedPartOrder.set(selectedPartOrder.get());
-        noteDTO.createdWorkOrder.set(createdWorkOrder.get());
-        noteDTO.tex.set(tex.get());
-        noteDTO.partsOrder.set(partsOrder.get());
-        noteDTO.completed.set(isCompleted() );
-        noteDTO.isEmail.set(isEmail());
-        noteDTO.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
-        noteDTO.relatedCaseNumber.set(relatedCaseNumber.get());
-    }
-
-    public NoteDTO cloneCase(int id) {
-        NoteDTO clone = new NoteDTO();
-        clone.id.set(id);
-        clone.timestamp.set(LocalDateTime.now());
-        clone.workOrder.set(workOrder.get());
-        clone.caseNumber.set(caseNumber.get());
-        clone.serialNumber.set(serialNumber.get());
-        clone.modelNumber.set(modelNumber.get());
-        clone.callInPerson.set(callInPerson.get());
-        clone.callInPhoneNumber.set(callInPhoneNumber.get());
-        clone.callInEmail.set(callInEmail.get());
-        clone.underWarranty.set(underWarranty.get());
-        clone.activeServiceContract.set(activeServiceContract.get());
-        clone.serviceLevel.set(serviceLevel.get());
-        clone.schedulingTerms.set(schedulingTerms.get());
-        clone.upsStatus.set(upsStatus.get());
-        clone.loadSupported.set(loadSupported.get());
-        clone.issue.set(issue.get());
-        clone.title.set(title.get());
-        clone.contactName.set(contactName.get());
-        clone.contactPhoneNumber.set(contactPhoneNumber.get());
-        clone.contactEmail.set(contactEmail.get());
-        clone.street.set(street.get());
-        clone.installedAt.set(installedAt.get());
-        clone.city.set(city.get());
-        clone.state.set(state.get());
-        clone.zip.set(zip.get());
-        clone.country.set(country.get());
-        clone.partOrders.set(FXCollections.observableArrayList());
-        clone.selectedPartOrder.set(selectedPartOrder.get());
-        clone.createdWorkOrder.set(createdWorkOrder.get());
-        clone.tex.set(tex.get());
-        clone.partsOrder.set(partsOrder.get());
-        clone.completed.set(completed.get());
-        clone.isEmail.set(isEmail.get());
-        clone.additionalCorrectiveActionText.set(additionalCorrectiveActionText.get());
-        clone.relatedCaseNumber.set(relatedCaseNumber.get());
-        return clone;
     }
 
     public void copyFrom(NoteDTO noteDTO) {
@@ -410,18 +330,6 @@ public class NoteDTO {
     public void setSchedulingTerms(String schedulingTerms) {
         this.schedulingTerms.set(schedulingTerms);
     }
-
-//    public String getEntitlement() {
-//        return entitlement.get();
-//    }
-//
-//    public StringProperty entitlementProperty() {
-//        return entitlement;
-//    }
-//
-//    public void setEntitlement(String entitlement) {
-//        this.entitlement.set(entitlement);
-//    }
 
     public int getId() {
         return id.get();
@@ -769,19 +677,5 @@ public class NoteDTO {
 
     public void setPartsList(List<PartOrderDTO> partsList) {
         this.parts.set(FXCollections.observableArrayList(partsList));
-    }
-
-
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
-        out.writeObject(new ArrayList<>(parts.get()));
-    }
-
-
-    @SuppressWarnings("unchecked")
-    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        List<PartOrderDTO> savedParts = (List<PartOrderDTO>) in.readObject();
-        this.parts = new SimpleListProperty<>(FXCollections.observableArrayList(savedParts));
     }
 }
