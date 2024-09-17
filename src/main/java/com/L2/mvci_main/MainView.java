@@ -133,7 +133,7 @@ public class MainView implements Builder<Region> {
         TabPane tabPane = new TabPane();
         mainModel.setMainTabPane(tabPane);
         action.accept(MainMessage.OPEN_NOTES);
-//        action.accept(MainMessage.OPEN_SETTINGS);
+        action.accept(MainMessage.OPEN_NOTES_LIST);
         return tabPane;
     }
 

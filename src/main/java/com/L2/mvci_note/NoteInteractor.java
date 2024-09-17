@@ -371,16 +371,6 @@ public class NoteInteractor {
         logger.info("Current entitlement set to: {}", noteModel.getCurrentEntitlement());
     }
 
-//    public void loadNotes() {
-//        NoteDTO boundNote = new NoteDTO();
-//        noteModel.setBoundNote(boundNote);
-//        noteModel.getNotes().addAll(noteRepo.getAllNotes());
-//        noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp));
-//        boundNote.copyFrom(noteModel.getNotes().getLast());
-//        checkAndLoadPartOrdersIfNeeded();
-//        noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId() + "  " + noteModel.getBoundNote().formattedDate());
-//    }
-
     public void displayNextNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index < noteModel.getNotes().size() - 1) {

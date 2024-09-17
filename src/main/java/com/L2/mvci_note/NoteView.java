@@ -51,9 +51,9 @@ public class NoteView implements Builder<Region> {
     private void refreshBoundNoteListener() {
         noteModel.refreshBoundNoteProperty().addListener((observable, oldValue, newValue) -> {
            if (newValue != true) {
-               System.out.println("Refreshing Part Order Box, Date/Time Picker and Basic Information");
-               System.out.print("Note Loaded: " + noteModel.getBoundNote().getId());
-               System.out.println(" Date/Time: " + noteModel.getBoundNote().getTimestamp());
+//               System.out.println("Refreshing Part Order Box, Date/Time Picker and Basic Information");
+//               System.out.print("Note Loaded: " + noteModel.getBoundNote().getId());
+//               System.out.println(" Date/Time: " + noteModel.getBoundNote().getTimestamp());
                partOrderBoxList.refreshFields();
                dateTimePicker.refreshFields();
                basicInformation.refreshFields();

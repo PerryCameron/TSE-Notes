@@ -6,11 +6,11 @@ import com.L2.mvci_notelist.NoteListMessage;
 import com.L2.mvci_notelist.NoteListView;
 import com.L2.widgetFx.TableColumnFx;
 import com.L2.widgetFx.TableViewFx;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
+import javafx.util.Callback;
 
 import java.util.Arrays;
 
@@ -29,28 +29,11 @@ public class NotesTable implements Component<Region> {
         this.tableView = TableViewFx.of(NoteDTO.class);
         tableView.setItems(noteListView.getNoteListModel().getNotes()); // Set the ObservableList here
         tableView.setEditable(true);
-        tableView.getColumns().addAll(Arrays.asList(col0(), col1(),col3(),col2()));
+        tableView.getColumns().addAll(Arrays.asList(col0(), mail(), col1(),col3(),col2()));
         tableView.setPlaceholder(new Label(""));
 
         // auto selector
         TableView.TableViewSelectionModel<NoteDTO> selectionModel = tableView.getSelectionModel();
-
-        // Set row factory to conditionally change row color
-        tableView.setRowFactory(tv -> new TableRow<>() {
-            @Override
-            protected void updateItem(NoteDTO note, boolean empty) {
-                super.updateItem(note, empty);
-                if (note == null || empty) {
-                    setStyle(""); // Reset style for empty rows
-                } else {
-                    if (note.isEmail()) {
-                        setStyle("-fx-background-color: #faf5e8;");
-                    } else {
-                        setStyle(""); // Reset to default if not applicable
-                    }
-                }
-            }
-        });
 
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -61,17 +44,12 @@ public class NotesTable implements Component<Region> {
         return tableView;
     }
 
-
     private TableColumn<NoteDTO, String> col0() {
         TableColumn<NoteDTO, String> col = TableColumnFx.editableStringTableColumn(NoteDTO::formattedTimestampProperty,"Date/Time");
         col.setStyle("-fx-alignment: center-left");
-        col.setPrefWidth(150);
-        col.setMinWidth(150);
-        col.setMaxWidth(150);
-//        col.setOnEditCommit(event -> {
-//            noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartNumber(event.getNewValue());
-//            noteView.getAction().accept(NoteMessage.UPDATE_PART);
-//        });
+        col.setPrefWidth(124);
+        col.setMinWidth(124);
+        col.setMaxWidth(124);
         return col;
     }
 
@@ -81,10 +59,6 @@ public class NotesTable implements Component<Region> {
         col.setPrefWidth(150);
         col.setMinWidth(150);
         col.setMaxWidth(150);
-//        col.setOnEditCommit(event -> {
-//            noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartNumber(event.getNewValue());
-//            noteView.getAction().accept(NoteMessage.UPDATE_PART);
-//        });
         return col;
     }
 
@@ -94,10 +68,6 @@ public class NotesTable implements Component<Region> {
         col.setPrefWidth(150);
         col.setMinWidth(150);
         col.setMaxWidth(150);
-//        col.setOnEditCommit(event -> {
-//            noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartQuantity(event.getNewValue());
-//            noteView.getAction().accept(NoteMessage.UPDATE_PART);
-//        });
         return col;
     }
 
@@ -110,6 +80,38 @@ public class NotesTable implements Component<Region> {
         });
         return col;
     }
+
+    private TableColumn<NoteDTO, Boolean> mail() {
+        TableColumn<NoteDTO, Boolean> emailCol = new TableColumn<>("");
+        emailCol.setPrefWidth(25);
+        emailCol.setMaxWidth(25);
+        // Define the cell factory
+        emailCol.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<NoteDTO, Boolean> call(TableColumn<NoteDTO, Boolean> param) {
+                return new TableCell<>() {
+                    private final ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/mail-16.png")));
+
+                    @Override
+                    protected void updateItem(Boolean isEmail, boolean empty) {
+                        super.updateItem(isEmail, empty);
+                        if (empty || isEmail == null || !isEmail) {
+                            setGraphic(null); // No image if not email
+                        } else {
+                            imageView.setFitWidth(16);
+                            imageView.setFitHeight(16);
+                            setGraphic(imageView); // Display the email icon
+                        }
+                    }
+                };
+            }
+        });
+        // Bind the isEmail property to the column's value
+        emailCol.setCellValueFactory(cellData -> cellData.getValue().isEmailProperty());
+
+        return emailCol;
+    }
+
 
     @Override
     public void flash() {
