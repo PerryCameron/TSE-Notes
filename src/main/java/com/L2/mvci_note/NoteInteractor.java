@@ -6,10 +6,7 @@ import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
 import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.repository.implementations.PartOrderRepositoryImpl;
-import com.L2.static_tools.AppFileTools;
-import com.L2.static_tools.ClipboardUtils;
-import com.L2.static_tools.FakeData;
-import com.L2.static_tools.TableFormatter;
+import com.L2.static_tools.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -434,18 +431,21 @@ public class NoteInteractor {
 
     // this synchronizes the bound object to the correct object in the list
     public void saveOrUpdateNote() {
+        // iterate through list of notes
         for (NoteDTO noteDTO : noteModel.getNotes()) {
-            System.out.println("Saving Note");
+            // let's find the correct note in the list
             if (noteDTO.getId() == noteModel.getBoundNote().getId()) {
-                // copies bound note to the note in the list with matching id
-                noteDTO.copyFrom(noteModel.getBoundNote());
-                if (noteRepo.noteExists(noteDTO)) {
-                    logger.debug("Updated note: {}", noteDTO.getId());
-                    noteRepo.updateNote(noteDTO);
-                } else {
-                    noteDTO.setId(noteRepo.insertNote(noteDTO));
-                    logger.debug("Inserted note: {}", noteDTO.getId());
-                }
+                // compares bound note to matching list note, if there is a change it logs it and copies it.
+                if(!NoteTools.notesAreTheSameAndSync(noteDTO, noteModel.getBoundNote())) {
+                    // copies bound note to the note in the list with matching id
+                    if (noteRepo.noteExists(noteDTO)) {
+                        logger.debug("Updated note: {}", noteDTO.getId());
+                        noteRepo.updateNote(noteDTO);
+                    } else {
+                        noteDTO.setId(noteRepo.insertNote(noteDTO));
+                        logger.debug("Inserted note: {}", noteDTO.getId());
+                    }
+                } else logger.debug("No changes have been made to fields, ignoring call to save");
             }
         }
     }

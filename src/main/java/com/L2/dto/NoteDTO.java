@@ -50,6 +50,7 @@ public class NoteDTO {
     private StringProperty relatedCaseNumber = new SimpleStringProperty();
     private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
     private ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
+
     public NoteDTO() {
     }
 
