@@ -360,6 +360,7 @@ public class NoteInteractor {
         NoteDTO noteDTO = new NoteDTO(0, false);
         noteDTO.setId(noteRepo.insertNote(noteDTO));
         noteModel.getNotes().add(noteDTO);
+        noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         noteModel.getBoundNote().setId(noteDTO.getId());
         noteModel.clearBoundNoteFields();
     }
