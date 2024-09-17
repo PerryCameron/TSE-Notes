@@ -359,7 +359,7 @@ public class NoteInteractor {
 
     public void createNewNote() {
         // let's update the list note before moving on
-        saveNote();
+        saveOrUpdateNote();
         NoteDTO noteDTO = new NoteDTO(0, false);
         noteDTO.setId(noteRepo.insertNote(noteDTO));
         noteModel.getNotes().add(noteDTO);
@@ -433,8 +433,9 @@ public class NoteInteractor {
     }
 
     // this synchronizes the bound object to the correct object in the list
-    public void saveNote() {
+    public void saveOrUpdateNote() {
         for (NoteDTO noteDTO : noteModel.getNotes()) {
+            System.out.println("Saving Note");
             if (noteDTO.getId() == noteModel.getBoundNote().getId()) {
                 // copies bound note to the note in the list with matching id
                 noteDTO.copyFrom(noteModel.getBoundNote());
@@ -458,7 +459,6 @@ public class NoteInteractor {
     }
 
     public void updatePartOrder() {
-        System.out.println("updating part order");
         partOrderRepo.updatePartOrder(noteModel.getBoundNote().getSelectedPartOrder());
     }
 
@@ -483,12 +483,8 @@ public class NoteInteractor {
     }
 
     public void test() {
-        System.out.println("Bound Note: " + noteModel.getBoundNote());
-        System.out.println("Selected Part Order: " + noteModel.getBoundNote().getSelectedPartOrder());
-        if(noteModel.getBoundNote().getSelectedPartOrder() == null)
-            System.out.println("Selected Part Order is null");
-        else
-        System.out.println("Selected part: " + noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart());
+        System.out.println("NoteDTO: " + noteModel.getBoundNote().getId() + " date: " + noteModel.getBoundNote().formattedDate());
+        System.out.println("Title: " + noteModel.getBoundNote().getTitle());
     }
 
     public ObservableList<NoteDTO> getNotes() {

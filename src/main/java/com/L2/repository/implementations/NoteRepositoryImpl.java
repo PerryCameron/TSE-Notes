@@ -1,9 +1,12 @@
 package com.L2.repository.implementations;
 
 import com.L2.dto.NoteDTO;
+import com.L2.mvci_main.MainController;
 import com.L2.repository.interfaces.NoteRepository;
 import com.L2.repository.rowmappers.NotesRowMapper;
 import com.L2.static_tools.DatabaseConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -14,6 +17,7 @@ import java.util.List;
 
 public class NoteRepositoryImpl implements NoteRepository {
 
+    private static final Logger logger = LoggerFactory.getLogger(NoteRepositoryImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
     // Constructor to pass in the manually created JdbcTemplate
@@ -93,6 +97,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     @Override
     public void updateNote(NoteDTO note) {
+        logger.debug("Updating note {} title is: ", note.getId(), note.getTitle());
         String sql = "UPDATE Notes SET " +
                 "timestamp = ?, workOrder = ?, caseNumber = ?, serialNumber = ?, modelNumber = ?, " +
                 "callInPerson = ?, callInPhoneNumber = ?, callInEmail = ?, underWarranty = ?, " +
@@ -100,7 +105,7 @@ public class NoteRepositoryImpl implements NoteRepository {
                 "loadSupported = ?, issue = ?, contactName = ?, contactPhoneNumber = ?, " +
                 "contactEmail = ?, street = ?, installedAt = ?, city = ?, state = ?, zip = ?, " +
                 "country = ?, createdWorkOrder = ?, tex = ?, partsOrder = ?, " +
-                "completed = ?, isEmail = ?, additionalCorrectiveActionText = ?, relatedCaseNumber = ? " +
+                "completed = ?, isEmail = ?, additionalCorrectiveActionText = ?, relatedCaseNumber = ?, title = ? " +
                 "WHERE id = ?";
 
         jdbcTemplate.update(sql,
@@ -135,6 +140,7 @@ public class NoteRepositoryImpl implements NoteRepository {
                 note.isEmail() ? 1 : 0,
                 note.getAdditionalCorrectiveActionText(),
                 note.getRelatedCaseNumber(),
+                note.getTitle(),
                 note.getId()  // WHERE clause based on id
         );
     }

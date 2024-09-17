@@ -46,7 +46,7 @@ public class IssueBox implements Component<Region> {
         refreshFields();
         textAreaIssue.focusedProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue);
-            else noteView.getAction().accept(NoteMessage.SAVE_NOTE);
+            else noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
         });
         return root;
     }

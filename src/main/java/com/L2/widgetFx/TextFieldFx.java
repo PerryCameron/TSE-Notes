@@ -54,7 +54,7 @@ public class TextFieldFx {
         textField.focusedProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue)
                 Platform.runLater(textField::selectAll);
-            else noteView.getAction().accept(NoteMessage.SAVE_NOTE);
+            else noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
         });
         return textField;
     }
@@ -70,7 +70,7 @@ public class TextFieldFx {
                 if (resultDTO.isSuccess()) {
                     textField.setText(resultDTO.getFieldName());
                     textField.getStyleClass().remove("text-field-error");  // Remove error class
-                    noteView.getAction().accept(NoteMessage.SAVE_NOTE);
+                    noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
                 } else {
                     if(textField.getText().equals(""))
                         textField.getStyleClass().remove("text-field-error");  // Remove error class

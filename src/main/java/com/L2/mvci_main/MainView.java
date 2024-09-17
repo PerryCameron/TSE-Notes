@@ -1,7 +1,6 @@
 package com.L2.mvci_main;
 
 import com.L2.mvci_main.components.TitleBar;
-import com.L2.mvci_note.NoteMessage;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
@@ -107,7 +106,7 @@ public class MainView implements Builder<Region> {
         }, "New Note", "/images/new-16.png");
 
         Button saveNoteButton = ButtonFx.utilityButton( () -> {
-            action.accept(MainMessage.SAVE_NOTE);
+            action.accept(MainMessage.SAVE_OR_UPDATE_NOTE);
         }, "Save", "/images/Save-16.png");
 
         Button testButton = ButtonFx.utilityButton( () -> {

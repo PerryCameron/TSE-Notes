@@ -76,7 +76,7 @@ public class NotesTable implements Component<Region> {
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
             noteListView.getNoteListModel().getBoundNote().setTitle(event.getNewValue());
-            noteListView.getAction().accept(NoteListMessage.SAVE_NOTE);
+            noteListView.getAction().accept(NoteListMessage.SAVE_OR_UPDATE_NOTE);
         });
         return col;
     }
