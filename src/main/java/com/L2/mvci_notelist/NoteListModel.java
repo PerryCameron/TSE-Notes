@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableView;
 
 public class NoteListModel {
     // reference to mainModel notes
@@ -14,6 +15,7 @@ public class NoteListModel {
     private ObjectProperty<NoteDTO> selectedNote = new SimpleObjectProperty<>();
     // reference to mainModel boundNote;
     protected ObjectProperty<NoteDTO> boundNote;
+    private ObjectProperty<TableView<NoteDTO>> noteTable = new SimpleObjectProperty<>();
 
 
     public NoteDTO getBoundNote() {
@@ -46,5 +48,17 @@ public class NoteListModel {
 
     public void setSelectedNote(NoteDTO selectedNote) {
         this.selectedNote.set(selectedNote);
+    }
+
+    public TableView<NoteDTO> getNoteTable() {
+        return noteTable.get();
+    }
+
+    public ObjectProperty<TableView<NoteDTO>> noteTableProperty() {
+        return noteTable;
+    }
+
+    public void setNoteTable(TableView<NoteDTO> noteTable) {
+        this.noteTable.set(noteTable);
     }
 }

@@ -31,5 +31,9 @@ public class NoteListInteractor implements ApplicationPaths {
         noteListModel.getBoundNote().copyFrom(noteListModel.getSelectedNote());
     }
 
-
+    // when bound note changes this is a message that gets sent to select a row in the table
+    // the problem is that the bound note is not the actual object, so I may need to do a for loop here
+    public void selectBoundNoteInTable() {
+        noteListModel.getNoteTable().getSelectionModel().select(noteListModel.getBoundNote());
+    }
 }

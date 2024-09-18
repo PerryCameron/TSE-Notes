@@ -1,11 +1,16 @@
 package com.L2.static_tools;
 
+import com.L2.mvci_main.MainController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class SQLiteTableListExample {
+
 
     public static void main(String[] args) {
         // Path to your SQLite database file

@@ -27,6 +27,7 @@ public class NotesTable implements Component<Region> {
     @Override
     public TableView<NoteDTO> build() {
         this.tableView = TableViewFx.of(NoteDTO.class);
+        noteListView.getNoteListModel().setNoteTable(tableView);
         tableView.setItems(noteListView.getNoteListModel().getNotes()); // Set the ObservableList here
         tableView.setEditable(true);
         tableView.getColumns().addAll(Arrays.asList(col0(), mail(), col1(),col3(),col2()));

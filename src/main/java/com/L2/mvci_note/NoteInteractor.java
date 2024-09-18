@@ -51,8 +51,8 @@ public class NoteInteractor {
         NoteDTO boundNote = new NoteDTO();
         noteModel.setBoundNote(boundNote);
         noteModel.getNotes().addAll(noteRepo.getAllNotes());
-        noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp));
-        boundNote.copyFrom(noteModel.getNotes().getLast());
+        noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
+        boundNote.copyFrom(noteModel.getNotes().getFirst());
         checkAndLoadPartOrdersIfNeeded();
     }
 

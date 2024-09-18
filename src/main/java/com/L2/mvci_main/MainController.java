@@ -81,6 +81,10 @@ public class MainController extends Controller<MainMessage> {
         return noteController;
     }
 
+    public NoteListController getNoteListController() {
+        return noteListController;
+    }
+
     public SettingsController getSettingsController() {
         return settingsController;
     }

@@ -116,7 +116,6 @@ public class DateTimePicker implements Component<Region> {
     @Override
     public void refreshFields() {
         LocalDateTime localDateTime = noteView.getNoteModel().getBoundNote().getTimestamp();
-        System.out.println("Local Date time: " + localDateTime);
         datePicker.setValue(localDateTime.toLocalDate());
         hourSpinner.getValueFactory().setValue(localDateTime.getHour());
         minuteSpinner.getValueFactory().setValue(localDateTime.getMinute());

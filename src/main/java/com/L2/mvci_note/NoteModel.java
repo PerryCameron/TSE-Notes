@@ -6,6 +6,7 @@ import com.L2.dto.UserDTO;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
 public class NoteModel {
@@ -19,9 +20,6 @@ public class NoteModel {
     private BooleanProperty clearCalled  = new SimpleBooleanProperty(false);
     private BooleanProperty refreshBoundNote = new SimpleBooleanProperty(false);
 
-//    public ObjectProperty<NoteDTO> boundNoteProperty() {
-//        return boundNote;
-//    }
 
     public void clearBoundNoteFields() {
         boundNote.get().getPartOrders().clear();
@@ -130,6 +128,4 @@ public class NoteModel {
     public void setCurrentEntitlement(EntitlementDTO currentEntitlement) {
         this.currentEntitlement.set(currentEntitlement);
     }
-
-
 }
