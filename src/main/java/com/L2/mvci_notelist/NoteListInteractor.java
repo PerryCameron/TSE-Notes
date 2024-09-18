@@ -8,6 +8,8 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
+
 public class NoteListInteractor implements ApplicationPaths {
 
     private static final Logger logger = LoggerFactory.getLogger(NoteListInteractor.class);
@@ -39,5 +41,9 @@ public class NoteListInteractor implements ApplicationPaths {
                 noteListModel.getNoteTable().getSelectionModel().select(note);
             }
         }
+    }
+
+    public void refreshTableView() {
+        noteListModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
     }
 }

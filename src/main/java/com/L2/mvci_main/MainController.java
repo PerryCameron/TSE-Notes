@@ -5,6 +5,7 @@ import com.L2.interfaces.Controller;
 import com.L2.mvci_note.NoteController;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_notelist.NoteListController;
+import com.L2.mvci_notelist.NoteListMessage;
 import com.L2.mvci_settings.SettingsController;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
@@ -47,6 +48,7 @@ public class MainController extends Controller<MainMessage> {
             case NEW_NOTE -> noteController.action(NoteMessage.NEW_NOTE);
             case TEST -> noteController.action(NoteMessage.TEST);
             case SELECT_BOUND_NOTE_IN_TABLE -> noteController.action(NoteMessage.SELECT_BOUND_NOTE_IN_TABLE);
+            case REFRESH_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.REFRESH_NOTE_TABLEVIEW);
         }
     }
 
@@ -74,7 +76,7 @@ public class MainController extends Controller<MainMessage> {
 
     private void openNoteListTab() {
         noteListController = new NoteListController(this);
-        mainView.addNewTab("Note List", noteListController.getView(), true);
+        mainView.addNewTab("Manage Notes", noteListController.getView(), true);
     }
 
     public NoteController getNoteController() {

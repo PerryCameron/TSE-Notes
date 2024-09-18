@@ -37,6 +37,7 @@ public class NoteListController extends Controller<NoteListMessage> {
             case UPDATE_BOUND_NOTE -> noteListInteractor.updateBoundNote();
             case SAVE_OR_UPDATE_NOTE -> mainController.getNoteController().action(NoteMessage.SAVE_OR_UPDATE_NOTE);
             case SELECT_BOUND_NOTE_IN_TABLE -> noteListInteractor.selectBoundNoteInTable();
+            case REFRESH_NOTE_TABLEVIEW -> noteListInteractor.refreshTableView();
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.L2.mvci_main;
 
 import com.L2.mvci_main.components.TitleBar;
-import com.L2.mvci_note.NoteMessage;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
@@ -119,6 +118,11 @@ public class MainView implements Builder<Region> {
         action.accept(MainMessage.OPEN_NOTES_LIST);
         // this is a message for the tableView to select the correct NoteDTO
         action.accept(MainMessage.SELECT_BOUND_NOTE_IN_TABLE);
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            if(newTab != null) {
+                if(newTab.getText().equals("Manage Notes")) action.accept(MainMessage.REFRESH_NOTE_TABLEVIEW);
+            }
+        });
         return tabPane;
     }
 
