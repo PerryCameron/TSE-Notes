@@ -128,8 +128,10 @@ public class MainView implements Builder<Region> {
 
     protected void addNewTab(String name, Region region, boolean closeable) {
         Tab newTab = new Tab(name, region);
+        if(name.equals("Note")) mainModel.setNoteTab(newTab);
         newTab.setClosable(closeable);
         mainModel.getMainTabPane().getTabs().add(newTab);
         mainModel.getMainTabPane().getSelectionModel().select(newTab);
     }
+
 }

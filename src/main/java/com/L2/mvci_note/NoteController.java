@@ -3,6 +3,7 @@ package com.L2.mvci_note;
 import com.L2.dto.NoteDTO;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
+import com.L2.mvci_main.MainMessage;
 import com.L2.mvci_notelist.NoteListMessage;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
@@ -58,6 +59,7 @@ public class NoteController extends Controller<NoteMessage> {
             case TEST -> noteInteractor.test();
             case REFRESH_PART_ORDERS -> noteInteractor.refreshPartOrders();
             case SELECT_BOUND_NOTE_IN_TABLE -> mainController.getNoteListController().action(NoteListMessage.SELECT_BOUND_NOTE_IN_TABLE);
+            case UPDATE_NOTE_TAB_NAME -> mainController.action(MainMessage.UPDATE_NOTE_TAB_NAME);
         };
     }
 

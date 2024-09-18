@@ -1,6 +1,8 @@
 package com.L2.mvci_main;
 
+import com.L2.dto.NoteDTO;
 import com.L2.static_tools.ApplicationPaths;
+import javafx.beans.property.ObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,10 @@ public class MainInteractor implements ApplicationPaths {
 
     public void setStatusBar(String status) {
         mainModel.statusLabelProperty().set(status);
+    }
+
+    public void updateNoteTabName(ObjectProperty<NoteDTO> boundNote) {
+        mainModel.getNoteTab().setText("Note " + boundNote.get().getId());
     }
 
 //    public boolean tabIsNotOpen(int msId) {  // find if tab is open

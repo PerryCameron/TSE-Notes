@@ -49,6 +49,7 @@ public class MainController extends Controller<MainMessage> {
             case TEST -> noteController.action(NoteMessage.TEST);
             case SELECT_BOUND_NOTE_IN_TABLE -> noteController.action(NoteMessage.SELECT_BOUND_NOTE_IN_TABLE);
             case REFRESH_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.REFRESH_NOTE_TABLEVIEW);
+            case UPDATE_NOTE_TAB_NAME -> mainInteractor.updateNoteTabName(getBoundNote());
         }
     }
 

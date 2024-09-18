@@ -64,6 +64,8 @@ public class NoteView implements Builder<Region> {
             action.accept(NoteMessage.REFRESH_PART_ORDERS);
             // sends signal to noteListInteractor to select current NoteDTO
             action.accept(NoteMessage.SELECT_BOUND_NOTE_IN_TABLE);
+            // sends signal to mainInteractor to change note tab name
+            action.accept(NoteMessage.UPDATE_NOTE_TAB_NAME);
         });
     }
 
