@@ -25,7 +25,7 @@ public class NoteController extends Controller<NoteMessage> {
     @Override
     public Region getView() {
         noteInteractor.loadEntitlements();
-        noteInteractor.loadNotes();  // good past this point, correct Timestamp is in bound note
+        noteInteractor.loadNotes();
         noteInteractor.setActiveServiceContract();
         return noteView.build();
     }

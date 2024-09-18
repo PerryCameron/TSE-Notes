@@ -47,12 +47,18 @@ public class NoteInteractor {
         }
     }
 
+    // loads notes on start-up
     public void loadNotes() {
+        // create and set our bound note
         NoteDTO boundNote = new NoteDTO();
         noteModel.setBoundNote(boundNote);
+        // get all the notes and load them to memory
         noteModel.getNotes().addAll(noteRepo.getAllNotes());
+        // set notes to the direction we like
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
+        // set bound note to copy information from latest note
         boundNote.copyFrom(noteModel.getNotes().getFirst());
+        // add part orders as needed
         checkAndLoadPartOrdersIfNeeded();
     }
 
@@ -70,12 +76,37 @@ public class NoteInteractor {
         logger.info("Number of part orders changed to: {}", noteModel.getBoundNote().getPartOrders().size());
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////
+
     public void copyPartOrder() {
         ClipboardUtils.copyHtmlToClipboard(buildPartOrderToHTML(), buildPartOrderToPlainText());
     }
 
+    public void copyNameDate() {
+        ClipboardUtils.copyHtmlToClipboard(buildNameDateToHTML(), buildNameDateToPlainText());
+    }
+
+    public void copyShippingInformation() {
+        ClipboardUtils.copyHtmlToClipboard(shippingInformationToHTML(), shippingInformationToPlainText());
+    }
+
+    public void copyBasicInformation() {
+        ClipboardUtils.copyHtmlToClipboard(basicInformationToHTML(), basicInformationToPlainText());
+    }
+
+    public void copyCorrectiveAction() {
+        logger.info("Copying corrective action, flashing group B (FinalBox, Related, Part Orders, Name/Date");
+        ClipboardUtils.copyHtmlToClipboard(correctiveActionToHTML(), correctiveActionToPlainText());
+    }
+
+    public void copyCustomerRequest() {
+        logger.info("Copying customer request, flashing Group A (Name/Date, Basic Information, Issue, Part Orders and Shipping Information.");
+        ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), customerRequestToPlainText());
+    }
+
     public String copyAllPartOrdersToPlainText() {
         if (noteModel.getBoundNote().getPartOrders().size() > 1) {
+            System.out.println("there is more than one part order");
             StringBuilder builder = new StringBuilder();
             for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
                 noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
@@ -83,8 +114,9 @@ public class NoteInteractor {
             }
             return builder.toString();
         } else if (noteModel.getBoundNote().getPartOrders().size() == 1) {
+            System.out.println("there is single part order");
             return buildPartOrderToPlainText();
-        }
+        } else System.out.println("There are no part orders");
         return "";
     }
 
@@ -146,9 +178,6 @@ public class NoteInteractor {
         logger.info("Loading user: {}", noteModel.getUser().getSesa());
     }
 
-    public void copyNameDate() {
-        ClipboardUtils.copyHtmlToClipboard(buildNameDateToHTML(), buildNameDateToPlainText());
-    }
 
     private String buildNameDateToPlainText() {
         return noteModel.getUser().getFullName() + "\t\t" + noteModel.getBoundNote().formattedDate();
@@ -170,10 +199,6 @@ public class NoteInteractor {
                 noteModel.getBoundNote().formattedDate() +
                 "</span>" +
                 "</span></td></tr></tbody></table>";
-    }
-
-    public void copyShippingInformation() {
-        ClipboardUtils.copyHtmlToClipboard(shippingInformationToHTML(), shippingInformationToPlainText());
     }
 
     private String shippingInformationToPlainText() {
@@ -211,10 +236,6 @@ public class NoteInteractor {
                     .append(noteModel.getBoundNote().getZip()).append("<br>")
                     .append(noteModel.getBoundNote().getCountry());
         return stringBuilder.toString();
-    }
-
-    public void copyBasicInformation() {
-        ClipboardUtils.copyHtmlToClipboard(basicInformationToHTML(), basicInformationToPlainText());
     }
 
     private String basicInformationToPlainText() {
@@ -271,11 +292,6 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
-    public void copyCustomerRequest() {
-        logger.info("Copying customer request, flashing Group A (Name/Date, Basic Information, Issue, Part Orders and Shipping Information.");
-        ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), customerRequestToPlainText());
-    }
-
     private String customerRequestToPlainText() {
         return buildNameDateToPlainText() + "\r\n" + "\r\n" +
                 basicInformationToPlainText() + "\r\n" +
@@ -305,11 +321,6 @@ public class NoteInteractor {
     private String issueToHTML() {
         return "<strong>Issue</strong>" + "<br>" +
                 noteModel.getBoundNote().getIssue() + "<br>";
-    }
-
-    public void copyCorrectiveAction() {
-        logger.info("Copying corrective action, flashing group B (FinalBox, Related, Part Orders, Name/Date");
-        ClipboardUtils.copyHtmlToClipboard(correctiveActionToHTML(), correctiveActionToPlainText());
     }
 
     private String correctiveActionToPlainText() {
@@ -369,13 +380,18 @@ public class NoteInteractor {
         logger.info("Current entitlement set to: {}", noteModel.getCurrentEntitlement());
     }
 
-    public void displayNextNote() {
+    public void displayPreviousNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index < noteModel.getNotes().size() - 1) {
-            System.out.println("displayNextNote: copying info to the bound note");
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
-            System.out.print("displayNextNote: now copied: " + noteModel.getBoundNote().getId() + " Date: " + noteModel.getBoundNote().getTimestamp());
         } else logger.debug("You have reached the last element on the list");
+    }
+
+    public void displayNextNote() {
+        int index = getIndexById(noteModel.getBoundNote().getId());
+        if (index > 0) {
+            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
+        } else logger.debug("You have reached the first element on the list");
     }
 
     public void refreshPartOrders() {
@@ -384,20 +400,12 @@ public class NoteInteractor {
         noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId() + "  " + noteModel.getBoundNote().formattedDate());
     }
 
-    public void displayPreviousNote() {
-        int index = getIndexById(noteModel.getBoundNote().getId());
-        if (index > 0) {
-            System.out.println("displayPreviousNote: copying info to the bound note");
-            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
-        } else logger.debug("You have reached the first element on the list");
-    }
-
     private void checkAndLoadPartOrdersIfNeeded() {
         NoteDTO noteDTO = noteModel.getBoundNote();
         if(noteDTO.getPartOrders().isEmpty()) {
             logger.debug("No Part orders found in memory, checking database..");
             noteDTO.setPartOrders(FXCollections.observableArrayList(partOrderRepo.findAllPartOrdersByNoteId(noteDTO.getId())));
-            if(noteModel.getBoundNote().getPartOrders().size() > 0) {
+            if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
                 logger.debug("{} part orders loaded into memory", noteDTO.getPartOrders().size());
                 noteModel.getBoundNote().setSelectedPartOrder(noteDTO.getPartOrders().getFirst());
                 getAllPartsForEachPartOrder();
@@ -495,6 +503,4 @@ public class NoteInteractor {
     public ObjectProperty<NoteDTO> getBoundNoteProperty() {
         return noteModel.boundNoteProperty();
     }
-
-
 }

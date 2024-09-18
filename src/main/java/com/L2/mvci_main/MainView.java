@@ -1,6 +1,7 @@
 package com.L2.mvci_main;
 
 import com.L2.mvci_main.components.TitleBar;
+import com.L2.mvci_note.NoteMessage;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
@@ -89,29 +90,12 @@ public class MainView implements Builder<Region> {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.BASELINE_LEFT);
         hBox.setStyle("-fx-background-color: grey");
-        Button prevNoteButton = ButtonFx.utilityButton( () -> {
-            System.out.println("<- Previous Note Button clicked");
-            action.accept(MainMessage.PREVIOUS_NOTE);
-        }, "Previous", "/images/back-16.png");
-        Button nextNoteButton = ButtonFx.utilityButton( () -> {
-            System.out.println("-> Next Note Button clicked");
-            action.accept(MainMessage.NEXT_NOTE);
-        }, "Next", "/images/forward-16.png");
-        Button setCompletedButton = ButtonFx.utilityButton( () -> {
-            action.accept(MainMessage.SET_COMPLETE);
-        }, "Set Completed", "/images/thumbs-16.png");
-
-        Button newNoteButton = ButtonFx.utilityButton( () -> {
-            action.accept(MainMessage.NEW_NOTE);
-        }, "New Note", "/images/new-16.png");
-
-        Button saveNoteButton = ButtonFx.utilityButton( () -> {
-            action.accept(MainMessage.SAVE_OR_UPDATE_NOTE);
-        }, "Save", "/images/Save-16.png");
-
-        Button testButton = ButtonFx.utilityButton( () -> {
-            action.accept(MainMessage.TEST);
-        }, "Test Dammit", "/images/apply-16.png");
+        Button prevNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.PREVIOUS_NOTE), "Previous", "/images/back-16.png");
+        Button nextNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEXT_NOTE), "Next", "/images/forward-16.png");
+        Button setCompletedButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SET_COMPLETE), "Set Completed", "/images/thumbs-16.png");
+        Button newNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/new-16.png");
+        Button saveNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SAVE_OR_UPDATE_NOTE), "Save", "/images/Save-16.png");
+        Button testButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.TEST), "Test Dammit", "/images/apply-16.png");
         hBox.getChildren().addAll(statusLabel(),prevNoteButton, nextNoteButton, setCompletedButton, newNoteButton, saveNoteButton, testButton);
         hBox.getStyleClass().add("bottom-pane");
         return hBox;
@@ -133,6 +117,8 @@ public class MainView implements Builder<Region> {
         mainModel.setMainTabPane(tabPane);
         action.accept(MainMessage.OPEN_NOTES);
         action.accept(MainMessage.OPEN_NOTES_LIST);
+        // this is a message for the tableView to select the correct NoteDTO
+        action.accept(MainMessage.SELECT_BOUND_NOTE_IN_TABLE);
         return tabPane;
     }
 

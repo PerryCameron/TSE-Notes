@@ -49,7 +49,6 @@ public class TitleBar implements Builder<Region> {
         titleLabel.getStyleClass().add(Styles.TITLE_4);
         titleLabel.setStyle("-fx-text-fill: white;");
 
-
         // Create an HBox to push the close button to the right
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -58,19 +57,16 @@ public class TitleBar implements Builder<Region> {
         Button closeButton = new Button("X");
         closeButton.setOnAction(e -> primaryStage.close());
 
-
         // Handle dragging of the stage
         hbox.setOnMousePressed(event -> {
             xOffset = event.getScreenX() - primaryStage.getX();
             yOffset = event.getScreenY() - primaryStage.getY();
         });
 
-
         hbox.setOnMouseDragged(event -> {
             primaryStage.setX(event.getScreenX() - xOffset);
             primaryStage.setY(event.getScreenY() - yOffset);
         });
-
 
         // Add the image, title, spacer, and close button to the title bar
         hbox.getChildren().addAll(imageView, titleLabel, spacer, createCloseButton());
@@ -84,24 +80,19 @@ public class TitleBar implements Builder<Region> {
         closeButton.setAlignment(Pos.CENTER); // Center the 'X' inside the HBox
         closeButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
 
-
         // Create the label for 'X'
         Label closeLabel = new Label("X");
         closeLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
 
-
         // Add the label to the HBox
         closeButton.getChildren().add(closeLabel);
-
 
         // Add hover effect to change background color to red
         closeButton.setOnMouseEntered(event -> closeButton.setStyle("-fx-background-color: red; -fx-cursor: hand;"));
         closeButton.setOnMouseExited(event -> closeButton.setStyle("-fx-background-color: transparent;"));
 
-
         // Set the action to close the stage when clicked
         closeButton.setOnMouseClicked(event -> primaryStage.close());
-
 
         return closeButton;
     }

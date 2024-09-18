@@ -12,5 +12,5 @@ public enum MainMessage {
     NEW_NOTE,
     SAVE_OR_UPDATE_NOTE,
     TEST, OPEN_NOTES_LIST,
-    NONE
+    SELECT_BOUND_NOTE_IN_TABLE, NONE
 }

@@ -46,7 +46,7 @@ public class MainController extends Controller<MainMessage> {
             case SET_COMPLETE -> noteController.action(NoteMessage.SET_COMPLETE);
             case NEW_NOTE -> noteController.action(NoteMessage.NEW_NOTE);
             case TEST -> noteController.action(NoteMessage.TEST);
-
+            case SELECT_BOUND_NOTE_IN_TABLE -> noteController.action(NoteMessage.SELECT_BOUND_NOTE_IN_TABLE);
         }
     }
 
