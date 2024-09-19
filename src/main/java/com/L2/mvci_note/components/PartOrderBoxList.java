@@ -29,6 +29,8 @@ public class PartOrderBoxList implements Component<Region> {
     private VBox root;
     private TableView<PartDTO> tableView;
     private final Map<PartOrderDTO, VBox> partOrderMap = new HashMap<>();
+    private boolean currentRowLocked = false;
+
     public PartOrderBoxList(NoteView noteView) {
         this.noteModel = noteView.getNoteModel();
         this.noteView = noteView;
@@ -159,69 +161,20 @@ public class PartOrderBoxList implements Component<Region> {
     public TableView<PartDTO> buildTable(PartOrderDTO partOrderDTO) {
         this.tableView = TableViewFx.of(PartDTO.class);
         tableView.setItems(partOrderDTO.getParts()); // Set the ObservableList here
-//        tableView.getSelectionModel().setCellSelectionEnabled(true);
         tableView.setEditable(true);
         tableView.getColumns().addAll(Arrays.asList(col1(),col2(),col3()));
         tableView.setPlaceholder(new Label(""));
         tableView.setPrefHeight(160);
-        // Key event for Tab navigation
-        // Handle key events for the TableView, only when focused
-//        tableView.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-//            if (event.getCode() == KeyCode.TAB) {
-//                System.out.print("Tab key, Focused Row: ");
-//                // Consume the event to stop focus from moving out of the table
-//                event.consume();
-//
-//                // Get the currently focused cell
-//                TablePosition<PartDTO, String> focusedCell = tableView.getFocusModel().getFocusedCell();
-//                int row = focusedCell.getRow();
-//                int column = focusedCell.getColumn();
-//                // Determine the next cell position
-//                if (!event.isShiftDown()) {
-//                    // Forward tabbing
-//                    if (column < tableView.getColumns().size() - 1) {
-//                        column++;
-//                    } else {
-//                        column = 0;
-//                        row++;
-//                    }
-//                } else {
-//                    // Reverse tabbing (Shift + Tab)
-//                    if (column > 0) {
-//                        column--;
-//                    } else {
-//                        column = tableView.getColumns().size() - 1;
-//                        row--;
-//                    }
-//                }
-//                // Prevent navigating out of bounds
-//                if (row >= 0 && row < tableView.getItems().size()) {
-//                    // Select the next cell
-//                    tableView.layout();
-//                    tableView.requestFocus();
-//                    //        // Select row 0 and focus the first column
-//                    tableView.getSelectionModel().select(row);
-//                    tableView.getFocusModel().focus(row, tableView.getColumns().get(column));  // Focus the first column (index 0)
-//                    tableView.edit(row, tableView.getColumns().get(column));  // Edit row 0, first column
-//
-////                    tableView.getSelectionModel().clearAndSelect(row, tableView.getColumns().get(column));
-////                    tableView.getFocusModel().focus(row, tableView.getColumns().get(column));
-////                    tableView.edit(row, tableView.getColumns().get(column)); // selects correctly but does not open to edit
-//                }
-//                System.out.println(row + " Column: " + column);
-//
-//                // Ensure the table retains focus
-//                tableView.requestFocus();
-//            }
-//        });
 
         // auto selector
         TableView.TableViewSelectionModel<PartDTO> selectionModel = tableView.getSelectionModel();
 
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) partOrderDTO.setSelectedPart(newSelection);
-            noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
-            noteModel.getBoundNote().getSelectedPartOrder().setSelectedPart(newSelection);
+            if(!currentRowLocked) {
+                if (newSelection != null) partOrderDTO.setSelectedPart(newSelection);
+                noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+                noteModel.getBoundNote().getSelectedPartOrder().setSelectedPart(newSelection);
+            }
         });
         return tableView;
     }
@@ -229,19 +182,38 @@ public class PartOrderBoxList implements Component<Region> {
     private TableColumn<PartDTO, String> col1() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partNumberProperty,"Part Number");
         col.setStyle("-fx-alignment: center-left");
+        col.setOnEditStart(event -> {
+            currentRowLocked = true;  // Lock the row
+        });
         col.setOnEditCommit(event -> {
             noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartNumber(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
+            currentRowLocked = false;
         });
+        // When the editing is canceled (e.g., pressing Escape)
+        col.setOnEditCancel(event -> {
+            currentRowLocked = false;  // Unlock the row
+        });
+        col.setMaxWidth(150);
+        col.setPrefWidth(150);
         return col;
     }
 
     private TableColumn<PartDTO, String> col2() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partDescriptionProperty,"Part Description");
         col.setStyle("-fx-alignment: center-left");
+        // When the cell starts being edited
+        col.setOnEditStart(event -> {
+            currentRowLocked = true;  // Lock the row
+        });
         col.setOnEditCommit(event -> {
             noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartDescription(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
+            currentRowLocked = false;
+        });
+        // When the editing is canceled (e.g., pressing Escape)
+        col.setOnEditCancel(event -> {
+            currentRowLocked = false;  // Unlock the row
         });
         return col;
     }
@@ -249,9 +221,18 @@ public class PartOrderBoxList implements Component<Region> {
     private TableColumn<PartDTO, String> col3() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partQuantityProperty,"Qty");
         col.setStyle("-fx-alignment: center-left");
+        // When the cell starts being edited
+        col.setOnEditStart(event -> {
+            currentRowLocked = true;  // Lock the row
+        });
         col.setOnEditCommit(event -> {
             noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartQuantity(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
+            currentRowLocked = false;
+        });
+        // When the editing is canceled (e.g., pressing Escape)
+        col.setOnEditCancel(event -> {
+            currentRowLocked = false;  // Unlock the row
         });
         col.setMaxWidth(70.0);
         return col;
