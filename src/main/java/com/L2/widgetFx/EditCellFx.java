@@ -81,11 +81,14 @@ public class EditCellFx<S, T> extends TableCell<S, T> {
     // commits the edit. Update property if possible and revert to text display
     @Override
     public void commitEdit(T item) {
+//        if(item == null && converter == IDENTITY_CONVERTER) {
+//            item = (T) "";
+//        }
 
         // This block is necessary to support commit on losing focus, because the baked-in mechanism
         // sets our editing state to false before we can intercept the loss of focus.
         // The default commitEdit(...) method simply bails if we are not editing...
-        if (! isEditing() && ! item.equals(getItem())) {
+        if (!isEditing() && !item.equals(getItem())) {
             TableView<S> table = getTableView();
             if (table != null) {
                 TableColumn<S, T> column = getTableColumn();

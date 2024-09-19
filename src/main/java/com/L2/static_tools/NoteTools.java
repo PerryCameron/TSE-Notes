@@ -92,6 +92,7 @@ public class NoteTools {
                 noteDTO1.setLoadSupported(noteDTO2.isLoadSupported());
                 areSame = false;
             }
+            if(noteDTO2.getTitle() != null)
             if (!noteDTO1.getTitle().equals(noteDTO2.getTitle())) {
                 logger.debug("Field 'title' has changed: {} -> {}", noteDTO1.getTitle(), noteDTO2.getTitle());
                 noteDTO1.setTitle(noteDTO2.getTitle());

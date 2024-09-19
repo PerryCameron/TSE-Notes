@@ -18,6 +18,7 @@ public class NotesTable implements Component<Region> {
 
     private final NoteListView noteListView;
     private TableView<NoteDTO> tableView;
+    private boolean currentRowLocked = false;
 
     public NotesTable(NoteListView noteListView) {
         this.noteListView = noteListView;
@@ -30,23 +31,25 @@ public class NotesTable implements Component<Region> {
         noteListView.getNoteListModel().setNoteTable(tableView);
         tableView.setItems(noteListView.getNoteListModel().getNotes()); // Set the ObservableList here
         tableView.setEditable(true);
-        tableView.getColumns().addAll(Arrays.asList(col0(), mail(), col1(),col3(),col2()));
+        tableView.getColumns().addAll(Arrays.asList(col0(), mail(), col1(), col3(), col2()));
         tableView.setPlaceholder(new Label(""));
 
         // auto selector
         TableView.TableViewSelectionModel<NoteDTO> selectionModel = tableView.getSelectionModel();
 
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                noteListView.getNoteListModel().setSelectedNote(newSelection);
-                noteListView.getAction().accept(NoteListMessage.UPDATE_BOUND_NOTE);
+            if (!currentRowLocked) {
+                if (newSelection != null) {
+                    noteListView.getNoteListModel().setSelectedNote(newSelection);
+                    noteListView.getAction().accept(NoteListMessage.UPDATE_BOUND_NOTE);
+                }
             }
         });
         return tableView;
     }
 
     private TableColumn<NoteDTO, String> col0() {
-        TableColumn<NoteDTO, String> col = TableColumnFx.editableStringTableColumn(NoteDTO::formattedTimestampProperty,"Date/Time");
+        TableColumn<NoteDTO, String> col = TableColumnFx.stringTableColumn(NoteDTO::formattedTimestampProperty, "Date/Time");
         col.setStyle("-fx-alignment: center-left");
         col.setPrefWidth(124);
         col.setMinWidth(124);
@@ -55,7 +58,7 @@ public class NotesTable implements Component<Region> {
     }
 
     private TableColumn<NoteDTO, String> col1() {
-        TableColumn<NoteDTO, String> col = TableColumnFx.editableStringTableColumn(NoteDTO::callInPersonProperty,"Caller");
+        TableColumn<NoteDTO, String> col = TableColumnFx.stringTableColumn(NoteDTO::callInPersonProperty, "Caller");
         col.setStyle("-fx-alignment: center-left");
         col.setPrefWidth(150);
         col.setMinWidth(150);
@@ -64,7 +67,7 @@ public class NotesTable implements Component<Region> {
     }
 
     private TableColumn<NoteDTO, String> col3() {
-        TableColumn<NoteDTO, String> col = TableColumnFx.editableStringTableColumn(NoteDTO::modelNumberProperty,"Model");
+        TableColumn<NoteDTO, String> col = TableColumnFx.stringTableColumn(NoteDTO::modelNumberProperty, "Model");
         col.setStyle("-fx-alignment: center-left");
         col.setPrefWidth(150);
         col.setMinWidth(150);
@@ -73,11 +76,22 @@ public class NotesTable implements Component<Region> {
     }
 
     private TableColumn<NoteDTO, String> col2() {
-        TableColumn<NoteDTO, String> col = TableColumnFx.editableStringTableColumn(NoteDTO::titleProperty,"Problem");
+        TableColumn<NoteDTO, String> col = TableColumnFx.editableStringTableColumn(NoteDTO::titleProperty, "Problem");
         col.setStyle("-fx-alignment: center-left");
+        col.setSortable(false);
+        col.setOnEditStart(event -> {
+            currentRowLocked = true;  // Lock the row
+        });
         col.setOnEditCommit(event -> {
-            noteListView.getNoteListModel().getBoundNote().setTitle(event.getNewValue());
-            noteListView.getAction().accept(NoteListMessage.SAVE_OR_UPDATE_NOTE);
+            if(event.getNewValue() != null) {
+                noteListView.getNoteListModel().getBoundNote().setTitle(event.getNewValue());
+                noteListView.getAction().accept(NoteListMessage.SAVE_OR_UPDATE_NOTE);
+                currentRowLocked = false;
+            }
+        });
+        // When the editing is canceled (e.g., pressing Escape)
+        col.setOnEditCancel(event -> {
+            currentRowLocked = false;  // Unlock the row
         });
         return col;
     }
