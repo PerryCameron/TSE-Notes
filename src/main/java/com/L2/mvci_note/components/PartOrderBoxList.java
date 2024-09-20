@@ -48,11 +48,18 @@ public class PartOrderBoxList implements Component<Region> {
 
     public Node createPartOrderBox(PartOrderDTO partOrderDTO) {
         VBox box = new VBox(10);
+        TableView<PartDTO> tableView = buildTable(partOrderDTO);
+        box.setOnMouseEntered(event -> {
+            noteModel.setSelectedPartOrder(partOrderDTO);
+        });
+        box.setOnMouseExited(event -> {
+            tableView.getSelectionModel().clearSelection();
+        });
         partOrderMap.put(partOrderDTO, box);
         box.getStyleClass().add("decorative-hbox");
         box.setPadding(new Insets(5, 5, 10, 5));
         HBox hBox = new HBox(5);
-        hBox.getChildren().addAll(buildTable(partOrderDTO), menu(partOrderDTO));
+        hBox.getChildren().addAll(tableView, menu(partOrderDTO));
         box.setSpacing(5);
         box.getChildren().addAll(toolbar(partOrderDTO), hBox);
         return box;
@@ -63,7 +70,7 @@ public class PartOrderBoxList implements Component<Region> {
         vBox.setPadding(new Insets(5, 5, 5, 5));
         vBox.setPrefWidth(300);
         Button addPartButton = ButtonFx.utilityButton(() -> {
-            noteModel.setSelectedPartOrder(partOrderDTO);
+//            noteModel.setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.INSERT_PART);
 
             // Sort parts in reverse order
@@ -83,8 +90,6 @@ public class PartOrderBoxList implements Component<Region> {
 
 
         Button deleteButton = ButtonFx.utilityButton( () -> {
-            noteModel.setSelectedPartOrder(partOrderDTO);
-//            partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart());
             partOrderDTO.getParts().remove(noteModel.getSelectedPart());
             noteView.getAction().accept(NoteMessage.DELETE_PART);
         }, "Delete", "/images/delete-16.png");
@@ -98,7 +103,7 @@ public class PartOrderBoxList implements Component<Region> {
         textField.textProperty().set(partOrderDTO.getOrderNumber());
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                noteModel.setSelectedPartOrder(partOrderDTO);
+//                noteModel.setSelectedPartOrder(partOrderDTO);
                 partOrderDTO.setOrderNumber(textField.getText());
                 noteView.getAction().accept(NoteMessage.UPDATE_PART_ORDER);
             }
@@ -140,14 +145,14 @@ public class PartOrderBoxList implements Component<Region> {
     private Node createButtons(PartOrderDTO partOrderDTO) {
         HBox iconBox = HBoxFx.iconBox();
         Button deleteButton = ButtonFx.utilityButton( () -> {
-            noteModel.setSelectedPartOrder(partOrderDTO);
+//            noteModel.setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.DELETE_PART_ORDER);
             noteModel.getBoundNote().getPartOrders().remove(partOrderDTO);
                 root.getChildren().remove(partOrderMap.get(partOrderDTO));
         }, "Delete PO", "/images/delete-16.png");
 
         Button copyButton = ButtonFx.utilityButton( () -> {
-            noteModel.setSelectedPartOrder(partOrderDTO);
+//            noteModel.setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
             VBox vBox = partOrderMap.get(partOrderDTO);
             vBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
@@ -171,17 +176,10 @@ public class PartOrderBoxList implements Component<Region> {
         TableView.TableViewSelectionModel<PartDTO> selectionModel = tableView.getSelectionModel();
 
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if(!currentRowLocked) {
+//            if(!currentRowLocked) {
                 if (newSelection != null)
                 noteModel.setSelectedPart(newSelection);
-                // below is too complex since you can only select one part anyway
-                // partOrderDTO.setSelectedPart(newSelection);
-                System.out.println("selected part: " + noteModel.getSelectedPart());
-//                noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
-                noteModel.setSelectedPartOrder(partOrderDTO);
-                System.out.println("Selected partOrder: " + noteModel.getSelectedPartOrder());
-//                noteModel.getBoundNote().getSelectedPartOrder().setSelectedPart(newSelection);
-            }
+//            }
         });
         return tableView;
     }
@@ -189,18 +187,21 @@ public class PartOrderBoxList implements Component<Region> {
     private TableColumn<PartDTO, String> col1() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partNumberProperty,"Part Number");
         col.setStyle("-fx-alignment: center-left");
-        col.setOnEditStart(event -> {
-            currentRowLocked = true;  // Lock the row
-        });
+//        col.setOnEditStart(event -> {
+//            currentRowLocked = true;  // Lock the row
+//        });
         col.setOnEditCommit(event -> {
             noteModel.getSelectedPart().setPartNumber(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
-            currentRowLocked = false;
+            // use a delay before unlocking the row
+//            PauseTransition delay = new PauseTransition(Duration.millis(500));  // 200ms delay
+//            delay.setOnFinished(e -> currentRowLocked = false);  // Unlock the row after the delay
+//            delay.play();
         });
         // When the editing is canceled (e.g., pressing Escape)
-        col.setOnEditCancel(event -> {
-            currentRowLocked = false;  // Unlock the row
-        });
+//        col.setOnEditCancel(event -> {
+//            currentRowLocked = false;  // Unlock the row
+//        });
         col.setMaxWidth(150);
         col.setPrefWidth(150);
         return col;
@@ -210,18 +211,18 @@ public class PartOrderBoxList implements Component<Region> {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partDescriptionProperty,"Part Description");
         col.setStyle("-fx-alignment: center-left");
         // When the cell starts being edited
-        col.setOnEditStart(event -> {
-            currentRowLocked = true;  // Lock the row
-        });
+//        col.setOnEditStart(event -> {
+//            currentRowLocked = true;  // Lock the row
+//        });
         col.setOnEditCommit(event -> {
             noteModel.getSelectedPart().setPartDescription(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
-            currentRowLocked = false;
+//            currentRowLocked = false;
         });
         // When the editing is canceled (e.g., pressing Escape)
-        col.setOnEditCancel(event -> {
-            currentRowLocked = false;  // Unlock the row
-        });
+//        col.setOnEditCancel(event -> {
+//            currentRowLocked = false;  // Unlock the row
+//        });
         return col;
     }
 
@@ -229,18 +230,18 @@ public class PartOrderBoxList implements Component<Region> {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partQuantityProperty,"Qty");
         col.setStyle("-fx-alignment: center-left");
         // When the cell starts being edited
-        col.setOnEditStart(event -> {
-            currentRowLocked = true;  // Lock the row
-        });
+//        col.setOnEditStart(event -> {
+////            currentRowLocked = true;  // Lock the row
+//        });
         col.setOnEditCommit(event -> {
             noteModel.getSelectedPart().setPartQuantity(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
-            currentRowLocked = false;
+//            currentRowLocked = false;
         });
         // When the editing is canceled (e.g., pressing Escape)
-        col.setOnEditCancel(event -> {
-            currentRowLocked = false;  // Unlock the row
-        });
+//        col.setOnEditCancel(event -> {
+//            currentRowLocked = false;  // Unlock the row
+//        });
         col.setMaxWidth(70.0);
         return col;
     }

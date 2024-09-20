@@ -29,7 +29,6 @@ public class BaseApplication extends Application {
                 System.out.println("Running in test mode.");
             }
         }
-
         launch(args);
     }
 

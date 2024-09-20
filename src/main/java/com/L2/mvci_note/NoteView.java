@@ -45,7 +45,14 @@ public class NoteView implements Builder<Region> {
         setUpStatusBarCommunication();
         refreshBoundNoteListener();
         boundNoteListener();
+        tempPartListener();
         return scrollPane;
+    }
+
+    private void tempPartListener() {
+        noteModel.selectedPartProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(noteModel.selectedPartProperty().get().toTestString());
+        });
     }
 
     private void refreshBoundNoteListener() {

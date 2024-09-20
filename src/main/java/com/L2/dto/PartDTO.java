@@ -134,12 +134,9 @@ public class PartDTO {
 
     public String toTestString() {
         return this +
-                " PartDTO{" +
-                "id=" + id +
+                " ID: " + id +
                 ", partOrderId=" + partOrderId +
-                ", partNumber=" + partNumber +
-                ", partDescription=" + partDescription +
-                '}';
+                ", partNumber=" + partNumber;
     }
 }
 

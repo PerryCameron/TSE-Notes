@@ -78,30 +78,23 @@ public class EditCellFx<S, T> extends TableCell<S, T> {
         setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
 
-    // commits the edit. Update property if possible and revert to text display
     @Override
     public void commitEdit(T item) {
-//        if(item == null && converter == IDENTITY_CONVERTER) {
-//            item = (T) "";
-//        }
+        TableView<S> table = getTableView();
+        if (table != null) {
+            TableColumn<S, T> column = getTableColumn();
+            int editingRow = getIndex();  // Get the current row being edited
+            TablePosition<S, T> currentPosition = table.getFocusModel().getFocusedCell();  // Get the current row with focus
 
-        // This block is necessary to support commit on losing focus, because the baked-in mechanism
-        // sets our editing state to false before we can intercept the loss of focus.
-        // The default commitEdit(...) method simply bails if we are not editing...
-        if (!isEditing() && !item.equals(getItem())) {
-            TableView<S> table = getTableView();
-            if (table != null) {
-                TableColumn<S, T> column = getTableColumn();
+            // Ensure the edit is committed to the correct row
+            if (currentPosition.getRow() == editingRow) {
                 CellEditEvent<S, T> event = new CellEditEvent<>(table,
-                        new TablePosition<>(table, getIndex(), column),
+                        new TablePosition<>(table, editingRow, column),
                         TableColumn.editCommitEvent(), item);
                 Event.fireEvent(column, event);
             }
         }
-
         super.commitEdit(item);
-
-        setContentDisplay(ContentDisplay.TEXT_ONLY);
+        setContentDisplay(ContentDisplay.TEXT_ONLY);  // Revert back to text display
     }
-
 }

@@ -18,7 +18,6 @@ public class NotesTable implements Component<Region> {
 
     private final NoteListView noteListView;
     private TableView<NoteDTO> tableView;
-    private boolean currentRowLocked = false;
 
     public NotesTable(NoteListView noteListView) {
         this.noteListView = noteListView;
@@ -38,11 +37,9 @@ public class NotesTable implements Component<Region> {
         TableView.TableViewSelectionModel<NoteDTO> selectionModel = tableView.getSelectionModel();
 
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (!currentRowLocked) {
                 if (newSelection != null) {
                     noteListView.getNoteListModel().setSelectedNote(newSelection);
                     noteListView.getAction().accept(NoteListMessage.UPDATE_BOUND_NOTE);
-                }
             }
         });
         return tableView;
@@ -79,19 +76,11 @@ public class NotesTable implements Component<Region> {
         TableColumn<NoteDTO, String> col = TableColumnFx.editableStringTableColumn(NoteDTO::titleProperty, "Problem");
         col.setStyle("-fx-alignment: center-left");
         col.setSortable(false);
-        col.setOnEditStart(event -> {
-            currentRowLocked = true;  // Lock the row
-        });
         col.setOnEditCommit(event -> {
             if(event.getNewValue() != null) {
                 noteListView.getNoteListModel().getBoundNote().setTitle(event.getNewValue());
                 noteListView.getAction().accept(NoteListMessage.SAVE_OR_UPDATE_NOTE);
-                currentRowLocked = false;
             }
-        });
-        // When the editing is canceled (e.g., pressing Escape)
-        col.setOnEditCancel(event -> {
-            currentRowLocked = false;  // Unlock the row
         });
         return col;
     }
