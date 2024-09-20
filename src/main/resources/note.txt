@@ -1,0 +1,9 @@
+setx JAVA_HOME "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full"
+
+
+To ensure the change takes effect, restart the terminal or run:
+Refreshenv
+
+Verify the change by running:
+
+echo %JAVA_HOME%

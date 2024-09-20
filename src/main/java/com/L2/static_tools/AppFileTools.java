@@ -6,9 +6,7 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -44,6 +42,17 @@ public class AppFileTools {
             }
         }
         return FXCollections.observableArrayList(); // return an empty ObservableList if the file doesn't exist or an error occurs
+    }
+
+    public static void startFileLogger() {
+        try {
+            File outputFile = File.createTempFile("debug", ".log", new File(ApplicationPaths.settingsDir.toString()));
+            PrintStream output = new PrintStream(new BufferedOutputStream(new FileOutputStream(outputFile)), true);
+            System.setOut(output);
+            System.setErr(output);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

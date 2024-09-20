@@ -2,6 +2,7 @@ package com.L2;
 
 import atlantafx.base.theme.PrimerLight;
 import com.L2.mvci_main.MainController;
+import com.L2.static_tools.AppFileTools;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -19,7 +20,10 @@ public class BaseApplication extends Application {
 
     public static Stage primaryStage;
 
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+//        AppFileTools.startFileLogger();
+        launch(args);
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
 
@@ -46,36 +50,38 @@ public class BaseApplication extends Application {
 
     @Override
     public void start(Stage stage) {
-        logAppVersion();
-        primaryStage = stage;
-        primaryStage.setWidth(1028);
-        primaryStage.setHeight(840);
-        primaryStage.setMinHeight(600);
-        primaryStage.setMinWidth(800);
-        primaryStage.setResizable(true);
-        primaryStage.setScene(new Scene(new MainController().getView()));
-        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-        primaryStage.getScene().getStylesheets().add("css/dark/tabpane.css");
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/app-icon-64.png")));
-        // Mouse pressed for dragging the window
-        primaryStage.getScene().setOnMousePressed(event -> {
-            if (!isResizing) { // Only allow moving if not resizing
-                xOffset = event.getSceneX();
-                yOffset = event.getSceneY();
-            }
-        });
+//        logAppVersion();
+        try {
+            primaryStage = stage;
+            primaryStage.setWidth(1028);
+            primaryStage.setHeight(840);
+            primaryStage.setMinHeight(600);
+            primaryStage.setMinWidth(800);
+            primaryStage.setResizable(true);
+            primaryStage.setScene(new Scene(new MainController().getView()));
+            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+            primaryStage.getScene().getStylesheets().add("css/dark/tabpane.css");
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/app-icon-64.png")));
+            // Mouse pressed for dragging the window
+            primaryStage.getScene().setOnMousePressed(event -> {
+                if (!isResizing) { // Only allow moving if not resizing
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
 
-        // Mouse dragged for dragging the window
-        primaryStage.getScene().setOnMouseDragged(event -> {
-            if (!isResizing) { // Only allow moving if not resizing
-                primaryStage.setX(event.getScreenX() - xOffset);
-                primaryStage.setY(event.getScreenY() - yOffset);
-            }
-        });
+            // Mouse dragged for dragging the window
+            primaryStage.getScene().setOnMouseDragged(event -> {
+                if (!isResizing) { // Only allow moving if not resizing
+                    primaryStage.setX(event.getScreenX() - xOffset);
+                    primaryStage.setY(event.getScreenY() - yOffset);
+                }
+            });
 
-        primaryStage.initStyle(StageStyle.UNDECORATED);
-        addResizeListeners(primaryStage, primaryStage.getScene());
-        primaryStage.show();
+            primaryStage.initStyle(StageStyle.UNDECORATED);
+            addResizeListeners(primaryStage, primaryStage.getScene());
+            primaryStage.show();
+        } catch (Exception ex) { ex.printStackTrace(); }
     }
 
     private void addResizeListeners(Stage stage, Scene scene) {
