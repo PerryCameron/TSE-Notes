@@ -46,7 +46,7 @@ public class NoteDTO {
     private BooleanProperty isEmail = new SimpleBooleanProperty();
     private StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
     private StringProperty relatedCaseNumber = new SimpleStringProperty();
-    private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
+//    private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
     private ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public NoteDTO() {
@@ -81,7 +81,7 @@ public class NoteDTO {
         this.zip.set("");
         this.country.set("");
         this.partOrders.set(FXCollections.observableArrayList(partOrders));
-        this.selectedPartOrder.set(null);
+//        this.selectedPartOrder.set(null);
         this.createdWorkOrder.set("");
         this.tex.set("");
         this.partsOrder.set(0);
@@ -126,7 +126,7 @@ public class NoteDTO {
         this.state = new SimpleStringProperty(state);
         this.zip = new SimpleStringProperty(zip);
         this.country = new SimpleStringProperty(country);
-        this.selectedPartOrder = new SimpleObjectProperty<>(null);
+//        this.selectedPartOrder = new SimpleObjectProperty<>(null);
         this.createdWorkOrder = new SimpleStringProperty(createdWorkOrder);
         this.tex = new SimpleStringProperty(tex);
         this.partsOrder = new SimpleIntegerProperty(partsOrder);
@@ -163,7 +163,7 @@ public class NoteDTO {
         zip.set(noteDTO.getZip());
         country.set(noteDTO.getCountry());
         partOrders.set(noteDTO.getPartOrders());
-        selectedPartOrder.set(noteDTO.getSelectedPartOrder());
+//        selectedPartOrder.set(noteDTO.getSelectedPartOrder());
         createdWorkOrder.set(noteDTO.getCreatedWorkOrder());
         tex.set(noteDTO.getTex());
         partsOrder.set(noteDTO.getPartsOrder());
@@ -216,7 +216,7 @@ public class NoteDTO {
         this.zip.set("");
         this.country.set("");
         this.partOrders.set(FXCollections.observableArrayList());
-        this.selectedPartOrder.set(null);
+//        this.selectedPartOrder.set(null);
         this.createdWorkOrder.set("");
         this.tex.set("");
         this.partsOrder.set(0);
@@ -655,17 +655,17 @@ public class NoteDTO {
         this.partOrders.set(partOrders);
     }
 
-    public PartOrderDTO getSelectedPartOrder() {
-        return selectedPartOrder.get();
-    }
-
-    public ObjectProperty<PartOrderDTO> selectedPartOrderProperty() {
-        return selectedPartOrder;
-    }
-
-    public void setSelectedPartOrder(PartOrderDTO selectedPartOrder) {
-        this.selectedPartOrder.set(selectedPartOrder);
-    }
+//    public PartOrderDTO getSelectedPartOrder() {
+//        return selectedPartOrder.get();
+//    }
+//
+//    public ObjectProperty<PartOrderDTO> selectedPartOrderProperty() {
+//        return selectedPartOrder;
+//    }
+//
+//    public void setSelectedPartOrder(PartOrderDTO selectedPartOrder) {
+//        this.selectedPartOrder.set(selectedPartOrder);
+//    }
 
     private transient ListProperty<PartOrderDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
 

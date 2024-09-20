@@ -10,7 +10,7 @@ public class PartOrderDTO {
     private final IntegerProperty noteId = new SimpleIntegerProperty();
     private final StringProperty orderNumber = new SimpleStringProperty();
     private final ListProperty<PartDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
+//    private ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
 
     public PartOrderDTO(Integer id, Integer noteId, String orderNumber) {
         this.id.set(id);
@@ -42,17 +42,17 @@ public class PartOrderDTO {
         this.parts.set(parts);
     }
 
-    public PartDTO getSelectedPart() {
-        return selectedPart.get();
-    }
-
-    public ObjectProperty<PartDTO> selectedPartProperty() {
-        return selectedPart;
-    }
-
-    public void setSelectedPart(PartDTO selectedPart) {
-        this.selectedPart.set(selectedPart);
-    }
+//    public PartDTO getSelectedPart() {
+//        return selectedPart.get();
+//    }
+//
+//    public ObjectProperty<PartDTO> selectedPartProperty() {
+//        return selectedPart;
+//    }
+//
+//    public void setSelectedPart(PartDTO selectedPart) {
+//        this.selectedPart.set(selectedPart);
+//    }
 
     public int getId() {
         return id.get();

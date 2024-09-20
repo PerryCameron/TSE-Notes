@@ -109,7 +109,7 @@ public class NoteInteractor {
             System.out.println("there is more than one part order");
             StringBuilder builder = new StringBuilder();
             for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
-                noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+                noteModel.setSelectedPartOrder(partOrderDTO);
                 builder.append(buildPartOrderToPlainText());
             }
             return builder.toString();
@@ -124,7 +124,7 @@ public class NoteInteractor {
         if (noteModel.getBoundNote().getPartOrders().size() > 1) {
             StringBuilder builder = new StringBuilder();
             for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
-                noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+                noteModel.setSelectedPartOrder(partOrderDTO);
                 builder.append(buildPartOrderToHTML()).append("<br>");
             }
             return builder.toString();
@@ -138,14 +138,14 @@ public class NoteInteractor {
         StringBuilder stringBuilder = new StringBuilder();
         // Start the table and add headers
         logger.info("Copying Part Order");
-        if (!noteModel.getBoundNote().getSelectedPartOrder().getParts().isEmpty()) {
+        if (!noteModel.getSelectedPartOrder().getParts().isEmpty()) {
             stringBuilder.append("<b>Parts Needed</b><br>")
             .append("<table border=\"1\">");
-            logger.info("Adding order: {}", noteModel.getBoundNote().getSelectedPartOrder().getOrderNumber());
-            if (!noteModel.getBoundNote().getSelectedPartOrder().getOrderNumber().isEmpty()) {
+            logger.info("Adding order: {}", noteModel.getSelectedPartOrder().getOrderNumber());
+            if (!noteModel.getSelectedPartOrder().getOrderNumber().isEmpty()) {
                 stringBuilder.append("<tr><th colspan=\"3\" style=\"background-color: lightgrey;\">")
                         .append("Part Order: ")
-                        .append(noteModel.getBoundNote().getSelectedPartOrder().getOrderNumber())
+                        .append(noteModel.getSelectedPartOrder().getOrderNumber())
                         .append("</th></tr>");
             }
             stringBuilder.append("<tr>")
@@ -154,7 +154,7 @@ public class NoteInteractor {
                     .append("<th>Qty</th>")
                     .append("</tr>");
             // Loop through each PartDTO to add table rows
-            noteModel.getBoundNote().getSelectedPartOrder().getParts().forEach(partDTO -> stringBuilder.append("<tr>")
+            noteModel.getSelectedPartOrder().getParts().forEach(partDTO -> stringBuilder.append("<tr>")
                     .append("<td>").append(partDTO.getPartNumber()).append("</td>")
                     .append("<td>").append(partDTO.getPartDescription()).append("</td>")
                     .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
@@ -167,8 +167,8 @@ public class NoteInteractor {
     }
 
     private String buildPartOrderToPlainText() {
-        ObservableList<PartDTO> parts = noteModel.getBoundNote().getSelectedPartOrder().getParts();
-        String orderNumber = noteModel.getBoundNote().getSelectedPartOrder().getOrderNumber();
+        ObservableList<PartDTO> parts = noteModel.getSelectedPartOrder().getParts();
+        String orderNumber = noteModel.getSelectedPartOrder().getOrderNumber();
         return TableFormatter.buildPartsTableString(parts, orderNumber);
     }
 
@@ -407,7 +407,7 @@ public class NoteInteractor {
             noteDTO.setPartOrders(FXCollections.observableArrayList(partOrderRepo.findAllPartOrdersByNoteId(noteDTO.getId())));
             if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
                 logger.debug("{} part orders loaded into memory", noteDTO.getPartOrders().size());
-                noteModel.getBoundNote().setSelectedPartOrder(noteDTO.getPartOrders().getFirst());
+                noteModel.setSelectedPartOrder(noteDTO.getPartOrders().getFirst());
                 getAllPartsForEachPartOrder();
             }
             else logger.debug("There are no part orders for this note");
@@ -464,29 +464,29 @@ public class NoteInteractor {
         PartOrderDTO partOrderDTO = new PartOrderDTO(0, noteId,"");
         partOrderDTO.setId(partOrderRepo.insertPartOrder(partOrderDTO));
         noteModel.getBoundNote().getPartOrders().add(partOrderDTO);
-        noteModel.getBoundNote().setSelectedPartOrder(noteModel.getBoundNote().getPartOrders().getLast());
+        noteModel.setSelectedPartOrder(noteModel.getBoundNote().getPartOrders().getLast());
     }
 
     public void updatePartOrder() {
-        partOrderRepo.updatePartOrder(noteModel.getBoundNote().getSelectedPartOrder());
+        partOrderRepo.updatePartOrder(noteModel.getSelectedPartOrder());
     }
 
     public void deletePartOrder() {
-        partOrderRepo.deletePartOrder(noteModel.getBoundNote().getSelectedPartOrder());
+        partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
     }
 
     public void deletePart() {
-        partOrderRepo.deletePart(noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart());
+        partOrderRepo.deletePart(noteModel.getSelectedPart());
     }
 
     public void insertPart() {
-        PartDTO partDTO = new PartDTO(noteModel.getBoundNote().getSelectedPartOrder().getId());
+        PartDTO partDTO = new PartDTO(noteModel.getSelectedPartOrder().getId());
         partDTO.setId(partOrderRepo.insertPart(partDTO)); // TODO changes this when hooked to database
-        noteModel.getBoundNote().getSelectedPartOrder().getParts().add(partDTO);
+        noteModel.getSelectedPartOrder().getParts().add(partDTO);
     }
 
     public void updatePart() {
-        PartDTO partDTO = noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart();
+        PartDTO partDTO = noteModel.getSelectedPart();
         partOrderRepo.updatePart(partDTO);
         logger.debug("Updated part order: {} part # {}", partDTO.getId(), partDTO.getPartNumber());
     }

@@ -132,18 +132,18 @@ public class PartDTO {
         this.partEditable.set(partEditable);
     }
 
-    @Override
-    public String toString() {
-        return "PartDTO{" +
-                "id=" + id +
-                ", partOrderId=" + partOrderId +
-                ", partNumber=" + partNumber +
-                ", partDescription=" + partDescription +
-                ", partQuantity=" + partQuantity +
-                ", serialReplaced=" + serialReplaced +
-                ", partEditable=" + partEditable +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "PartDTO{" +
+//                "id=" + id +
+//                ", partOrderId=" + partOrderId +
+//                ", partNumber=" + partNumber +
+//                ", partDescription=" + partDescription +
+//                ", partQuantity=" + partQuantity +
+//                ", serialReplaced=" + serialReplaced +
+//                ", partEditable=" + partEditable +
+//                '}';
+//    }
 }
 
 

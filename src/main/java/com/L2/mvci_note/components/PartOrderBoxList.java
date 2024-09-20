@@ -63,7 +63,7 @@ public class PartOrderBoxList implements Component<Region> {
         vBox.setPadding(new Insets(5, 5, 5, 5));
         vBox.setPrefWidth(300);
         Button addPartButton = ButtonFx.utilityButton(() -> {
-            noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+            noteModel.setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.INSERT_PART);
 
             // Sort parts in reverse order
@@ -83,8 +83,9 @@ public class PartOrderBoxList implements Component<Region> {
 
 
         Button deleteButton = ButtonFx.utilityButton( () -> {
-            noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
-            partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart());
+            noteModel.setSelectedPartOrder(partOrderDTO);
+//            partOrderDTO.getParts().remove(partOrderDTO.getSelectedPart());
+            partOrderDTO.getParts().remove(noteModel.getSelectedPart());
             noteView.getAction().accept(NoteMessage.DELETE_PART);
         }, "Delete", "/images/delete-16.png");
         TextField textField = TextFieldFx.of(250, "Search");
@@ -97,7 +98,7 @@ public class PartOrderBoxList implements Component<Region> {
         textField.textProperty().set(partOrderDTO.getOrderNumber());
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+                noteModel.setSelectedPartOrder(partOrderDTO);
                 partOrderDTO.setOrderNumber(textField.getText());
                 noteView.getAction().accept(NoteMessage.UPDATE_PART_ORDER);
             }
@@ -139,14 +140,14 @@ public class PartOrderBoxList implements Component<Region> {
     private Node createButtons(PartOrderDTO partOrderDTO) {
         HBox iconBox = HBoxFx.iconBox();
         Button deleteButton = ButtonFx.utilityButton( () -> {
-            noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+            noteModel.setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.DELETE_PART_ORDER);
             noteModel.getBoundNote().getPartOrders().remove(partOrderDTO);
                 root.getChildren().remove(partOrderMap.get(partOrderDTO));
         }, "Delete PO", "/images/delete-16.png");
 
         Button copyButton = ButtonFx.utilityButton( () -> {
-            noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+            noteModel.setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
             VBox vBox = partOrderMap.get(partOrderDTO);
             vBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
@@ -171,9 +172,15 @@ public class PartOrderBoxList implements Component<Region> {
 
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if(!currentRowLocked) {
-                if (newSelection != null) partOrderDTO.setSelectedPart(newSelection);
-                noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
-                noteModel.getBoundNote().getSelectedPartOrder().setSelectedPart(newSelection);
+                if (newSelection != null)
+                noteModel.setSelectedPart(newSelection);
+                // below is too complex since you can only select one part anyway
+                // partOrderDTO.setSelectedPart(newSelection);
+                System.out.println("selected part: " + noteModel.getSelectedPart());
+//                noteModel.getBoundNote().setSelectedPartOrder(partOrderDTO);
+                noteModel.setSelectedPartOrder(partOrderDTO);
+                System.out.println("Selected partOrder: " + noteModel.getSelectedPartOrder());
+//                noteModel.getBoundNote().getSelectedPartOrder().setSelectedPart(newSelection);
             }
         });
         return tableView;
@@ -186,7 +193,7 @@ public class PartOrderBoxList implements Component<Region> {
             currentRowLocked = true;  // Lock the row
         });
         col.setOnEditCommit(event -> {
-            noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartNumber(event.getNewValue());
+            noteModel.getSelectedPart().setPartNumber(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
             currentRowLocked = false;
         });
@@ -207,7 +214,7 @@ public class PartOrderBoxList implements Component<Region> {
             currentRowLocked = true;  // Lock the row
         });
         col.setOnEditCommit(event -> {
-            noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartDescription(event.getNewValue());
+            noteModel.getSelectedPart().setPartDescription(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
             currentRowLocked = false;
         });
@@ -226,7 +233,7 @@ public class PartOrderBoxList implements Component<Region> {
             currentRowLocked = true;  // Lock the row
         });
         col.setOnEditCommit(event -> {
-            noteModel.getBoundNote().getSelectedPartOrder().getSelectedPart().setPartQuantity(event.getNewValue());
+            noteModel.getSelectedPart().setPartQuantity(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
             currentRowLocked = false;
         });

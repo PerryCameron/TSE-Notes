@@ -1,8 +1,6 @@
 package com.L2.mvci_note;
 
-import com.L2.dto.NoteDTO;
-import com.L2.dto.EntitlementDTO;
-import com.L2.dto.UserDTO;
+import com.L2.dto.*;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,7 +9,12 @@ import javafx.scene.layout.VBox;
 
 public class NoteModel {
     private ObservableList<NoteDTO> notes = FXCollections.observableArrayList();
+    // this is a NoteDTO that never moves, it just copies and pastes its values to the real notes
     private ObjectProperty<NoteDTO> boundNote = new SimpleObjectProperty<>();
+    // you can only select one part at a time, so simpler to keep here.
+    private ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
+    // you can only have one part order focused at time, so simpler to keep here as well
+    private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
     private ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
@@ -23,7 +26,7 @@ public class NoteModel {
 
     public void clearBoundNoteFields() {
         boundNote.get().getPartOrders().clear();
-        boundNote.get().setSelectedPartOrder(null);
+        setSelectedPartOrder(null);
         boundNote.get().clear();
         refreshBoundNote();
     }
@@ -31,6 +34,30 @@ public class NoteModel {
     public void refreshBoundNote() {  // to refresh fields without bindings
         setRefreshBoundNote(true);
         setRefreshBoundNote(false);
+    }
+
+    public PartOrderDTO getSelectedPartOrder() {
+        return selectedPartOrder.get();
+    }
+
+    public ObjectProperty<PartOrderDTO> selectedPartOrderProperty() {
+        return selectedPartOrder;
+    }
+
+    public void setSelectedPartOrder(PartOrderDTO selectedPartOrder) {
+        this.selectedPartOrder.set(selectedPartOrder);
+    }
+
+    public PartDTO getSelectedPart() {
+        return selectedPart.get();
+    }
+
+    public ObjectProperty<PartDTO> selectedPartProperty() {
+        return selectedPart;
+    }
+
+    public void setSelectedPart(PartDTO selectedPart) {
+        this.selectedPart.set(selectedPart);
     }
 
     public boolean isRefreshBoundNote() {
