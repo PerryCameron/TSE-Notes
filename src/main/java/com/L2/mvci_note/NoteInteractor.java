@@ -476,7 +476,8 @@ public class NoteInteractor {
     }
 
     public void deletePart() {
-        partOrderRepo.deletePart(noteModel.getSelectedPart());
+//        partOrderRepo.deletePart(noteModel.getSelectedPart());
+        System.out.println(noteModel.getSelectedPart().toTestString());
     }
 
     public void insertPart() {

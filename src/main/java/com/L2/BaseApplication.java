@@ -19,9 +19,17 @@ import java.util.Properties;
 public class BaseApplication extends Application {
 
     public static Stage primaryStage;
+    public static boolean testMode = false;
 
     public static void main(String[] args) {
 //        AppFileTools.startFileLogger();
+        for (String arg : args) {
+            if ("test".equalsIgnoreCase(arg)) {
+                testMode = true;
+                System.out.println("Running in test mode.");
+            }
+        }
+
         launch(args);
     }
 

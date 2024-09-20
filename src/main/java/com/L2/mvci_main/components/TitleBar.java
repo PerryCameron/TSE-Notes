@@ -2,6 +2,7 @@ package com.L2.mvci_main.components;
 
 
 import atlantafx.base.theme.Styles;
+import com.L2.BaseApplication;
 import com.L2.mvci_main.MainView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -44,8 +45,12 @@ public class TitleBar implements Builder<Region> {
         imageView.setFitHeight(40);
         imageView.setFitWidth(40);
 
+        Label titleLabel = null;
         // Create the title label
-        Label titleLabel = new Label("TSE Notes");
+        if(BaseApplication.testMode)
+            titleLabel = new Label("TSE Notes (Test Mode)");
+        else
+            titleLabel = new Label("TSE Notes");
         titleLabel.getStyleClass().add(Styles.TITLE_4);
         titleLabel.setStyle("-fx-text-fill: white;");
 
