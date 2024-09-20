@@ -51,7 +51,12 @@ public class NoteView implements Builder<Region> {
 
     private void tempPartListener() {
         noteModel.selectedPartProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(noteModel.selectedPartProperty().get().toTestString());
+            if(noteModel.selectedPartProperty().get() != null) {
+                System.out.println(noteModel.selectedPartProperty().get().toTestString());
+            } else {
+                System.out.println("Selected part currently set to null");
+            }
+
         });
     }
 
