@@ -1,6 +1,7 @@
 package com.L2.static_tools;
 
 import com.L2.dto.NoteDTO;
+import com.L2.dto.ResultDTO;
 
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
@@ -17,13 +18,12 @@ public class NoteDTOProcessor {
         String[] lines = email.split("\n");
 
         // Initialize NoteDTO
-        NoteDTO noteDTO = new NoteDTO();
+        NoteDTO noteDTO = new NoteDTO(id,true);
         noteDTO.setIssue(email);
-        noteDTO.setIsEmail(true);
         // this is important to save the same note
-        noteDTO.setId(id);
         noteDTO.setTitle("FSR Request - 3Phase Power");
         noteDTO.setTimestamp(LocalDateTime.now());
+        noteDTO.setCaseNumber("");
 
         // Variables to store data
         String firstName = "";
@@ -37,22 +37,28 @@ public class NoteDTOProcessor {
                 firstName = line.replace("First Name:", "").trim();
             } else if (line.startsWith("Last Name:")) {
                 lastName = line.replace("Last Name:", "").trim();
-                callInPerson = firstName + " " + lastName;
-                noteDTO.callInPersonProperty().set(callInPerson);
+                ResultDTO resultDTO = StringChecker.formatName(firstName + " " + lastName);
+                noteDTO.callInPersonProperty().set(resultDTO.getFieldName());
             } else if (line.startsWith("Site Name:")) {
                 noteDTO.installedAtProperty().set(line.replace("Site Name:", "").trim());
             } else if (line.startsWith("Phone:")) {
-                noteDTO.callInPhoneNumberProperty().set(line.replace("Phone:", "").trim());
+                ResultDTO resultDTO = StringChecker.formatPhoneNumber(line.replace("Phone:", "").trim());
+                noteDTO.callInPhoneNumberProperty().set(resultDTO.getFieldName());
             } else if (line.startsWith("Email:")) {
-                noteDTO.callInEmailProperty().set(line.replace("Email:", "").trim());
+                ResultDTO resultDTO = StringChecker.formatEmail(line.replace("Email:", "").trim());
+                noteDTO.callInEmailProperty().set(resultDTO.getFieldName());
             } else if (line.startsWith("WO:")) {
-                noteDTO.workOrderProperty().set(line.replace("WO:", "").trim());
+                ResultDTO resultDTO = StringChecker.formatWorkOrder(line.replace("WO:", "").trim());
+                noteDTO.workOrderProperty().set(resultDTO.getFieldName());
             } else if (line.startsWith("Name:")) {
-                noteDTO.contactNameProperty().set(line.replace("Name:", "").trim());
+                ResultDTO resultDTO = StringChecker.formatName(line.replace("Name:", "").trim());
+                noteDTO.contactNameProperty().set(resultDTO.getFieldName());
             } else if (line.startsWith("Phone Number:")) {
-                noteDTO.contactPhoneNumberProperty().set(line.replace("Phone Number:", "").trim());
+                ResultDTO resultDTO = StringChecker.formatPhoneNumber(line.replace("Phone Number:", "").trim());
+                noteDTO.contactPhoneNumberProperty().set(resultDTO.getFieldName());
             } else if (line.startsWith("Email:")) {
-                noteDTO.contactEmailProperty().set(line.replace("Email:", "").trim());
+                ResultDTO resultDTO = StringChecker.formatEmail(line.replace("Email:", "").trim());
+                noteDTO.contactEmailProperty().set(resultDTO.getFieldName());
             } else if (line.startsWith("Address:")) {
                 noteDTO.streetProperty().set(lines[i + 1].trim());    // Mapping the full address to street for simplicity
                 parseAddress(lines[i+2], noteDTO);

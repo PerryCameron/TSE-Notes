@@ -32,6 +32,8 @@ public class NoteTools {
                 noteDTO1.setWorkOrder(noteDTO2.getWorkOrder());
                 areSame = false;
             }
+            if(noteDTO1.getCaseNumber() == null) System.out.println(noteDTO1.toTest());
+            if(noteDTO2.getCaseNumber() == null) System.out.println("noteDTO2 is null");
             if (!noteDTO1.getCaseNumber().equals(noteDTO2.getCaseNumber())) {
                 logger.debug("Field 'caseNumber' has changed: {} -> {}", noteDTO1.getCaseNumber(), noteDTO2.getCaseNumber());
                 noteDTO1.setCaseNumber(noteDTO2.getCaseNumber());
