@@ -46,7 +46,6 @@ public class NoteDTO {
     private BooleanProperty isEmail = new SimpleBooleanProperty();
     private StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
     private StringProperty relatedCaseNumber = new SimpleStringProperty();
-//    private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
     private ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public NoteDTO() {
@@ -81,7 +80,6 @@ public class NoteDTO {
         this.zip.set("");
         this.country.set("");
         this.partOrders.set(FXCollections.observableArrayList(partOrders));
-//        this.selectedPartOrder.set(null);
         this.createdWorkOrder.set("");
         this.tex.set("");
         this.partsOrder.set(0);
@@ -126,7 +124,6 @@ public class NoteDTO {
         this.state = new SimpleStringProperty(state);
         this.zip = new SimpleStringProperty(zip);
         this.country = new SimpleStringProperty(country);
-//        this.selectedPartOrder = new SimpleObjectProperty<>(null);
         this.createdWorkOrder = new SimpleStringProperty(createdWorkOrder);
         this.tex = new SimpleStringProperty(tex);
         this.partsOrder = new SimpleIntegerProperty(partsOrder);
@@ -163,7 +160,6 @@ public class NoteDTO {
         zip.set(noteDTO.getZip());
         country.set(noteDTO.getCountry());
         partOrders.set(noteDTO.getPartOrders());
-//        selectedPartOrder.set(noteDTO.getSelectedPartOrder());
         createdWorkOrder.set(noteDTO.getCreatedWorkOrder());
         tex.set(noteDTO.getTex());
         partsOrder.set(noteDTO.getPartsOrder());
@@ -216,7 +212,6 @@ public class NoteDTO {
         this.zip.set("");
         this.country.set("");
         this.partOrders.set(FXCollections.observableArrayList());
-//        this.selectedPartOrder.set(null);
         this.createdWorkOrder.set("");
         this.tex.set("");
         this.partsOrder.set(0);
@@ -655,18 +650,6 @@ public class NoteDTO {
         this.partOrders.set(partOrders);
     }
 
-//    public PartOrderDTO getSelectedPartOrder() {
-//        return selectedPartOrder.get();
-//    }
-//
-//    public ObjectProperty<PartOrderDTO> selectedPartOrderProperty() {
-//        return selectedPartOrder;
-//    }
-//
-//    public void setSelectedPartOrder(PartOrderDTO selectedPartOrder) {
-//        this.selectedPartOrder.set(selectedPartOrder);
-//    }
-
     private transient ListProperty<PartOrderDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
 
 
@@ -677,5 +660,45 @@ public class NoteDTO {
 
     public void setPartsList(List<PartOrderDTO> partsList) {
         this.parts.set(FXCollections.observableArrayList(partsList));
+    }
+
+    public String toTest() {
+        return "NoteDTO{" +
+                "id=" + id +
+                ", timestamp=" + timestamp +
+                ", workOrder=" + workOrder +
+                ", caseNumber=" + caseNumber +
+                ", serialNumber=" + serialNumber +
+                ", modelNumber=" + modelNumber +
+                ", callInPerson=" + callInPerson +
+                ", callInPhoneNumber=" + callInPhoneNumber +
+                ", callInEmail=" + callInEmail +
+                ", underWarranty=" + underWarranty +
+                ", activeServiceContract=" + activeServiceContract +
+                ", serviceLevel=" + serviceLevel +
+                ", schedulingTerms=" + schedulingTerms +
+                ", upsStatus=" + upsStatus +
+                ", loadSupported=" + loadSupported +
+                ", title=" + title +
+                ", issue=" + issue +
+                ", contactName=" + contactName +
+                ", contactPhoneNumber=" + contactPhoneNumber +
+                ", contactEmail=" + contactEmail +
+                ", street=" + street +
+                ", installedAt=" + installedAt +
+                ", city=" + city +
+                ", state=" + state +
+                ", zip=" + zip +
+                ", country=" + country +
+                ", createdWorkOrder=" + createdWorkOrder +
+                ", tex=" + tex +
+                ", partsOrder=" + partsOrder +
+                ", completed=" + completed +
+                ", isEmail=" + isEmail +
+                ", additionalCorrectiveActionText=" + additionalCorrectiveActionText +
+                ", relatedCaseNumber=" + relatedCaseNumber +
+                ", partOrders=" + partOrders +
+                ", parts=" + parts +
+                '}';
     }
 }

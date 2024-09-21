@@ -1,9 +1,11 @@
 package com.L2.mvci_note.components;
 
+import com.L2.dto.NoteDTO;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
+import com.L2.static_tools.NoteDTOProcessor;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
@@ -23,7 +25,7 @@ public class IssueBox implements Component<Region> {
     public IssueBox(NoteView noteView) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
-        this.textAreaIssue  = TextAreaFx.of(true, 200, 16, 5);
+        this.textAreaIssue = TextAreaFx.of(true, 200, 16, 5);
     }
 
     @Override
@@ -32,21 +34,29 @@ public class IssueBox implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         textAreaIssue.setPrefWidth(900);
         textAreaIssue.textProperty().bindBidirectional(noteModel.getBoundNote().issueProperty());
-        Button clearButton = ButtonFx.utilityButton( () -> {
-        textAreaIssue.setText("");
+        Button clearButton = ButtonFx.utilityButton(() -> {
+            textAreaIssue.setText("");
         }, "Clear", "/images/clear-16.png");
         clearButton.setTooltip(ToolTipFx.of("Clear Issue"));
-        Button copyButton = ButtonFx.utilityButton( () -> {
+        Button copyButton = ButtonFx.utilityButton(() -> {
             flash();
             noteView.getAction().accept(NoteMessage.COPY_ISSUE);
         }, "Copy", "/images/copy-16.png");
         copyButton.setTooltip(ToolTipFx.of("Copy Issue"));
-        Button[] buttons = new Button[] { clearButton, copyButton };
+        Button[] buttons = new Button[]{clearButton, copyButton};
         root.getChildren().addAll(TitleBarFx.of("Issue", buttons), textAreaIssue);
         refreshFields();
         textAreaIssue.focusedProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue);
-            else noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+            if (newValue) ;
+            else {  // focus removed
+                // is this an email?
+                if (NoteDTOProcessor.isEmail(textAreaIssue.getText())) {
+                    // process that into a note dto
+                    NoteDTO noteDTO = NoteDTOProcessor.processEmail(textAreaIssue.getText(), noteModel.getBoundNote().getId());
+                    noteModel.getBoundNote().copyFrom(noteDTO);
+                }
+                noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+            }
         });
         return root;
     }

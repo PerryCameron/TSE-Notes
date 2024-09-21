@@ -477,13 +477,11 @@ public class NoteInteractor {
 
     public void deletePart() {
         PartDTO partDTO = noteModel.getSelectedPart();
+        PartOrderDTO partOrderDTO = noteModel.getSelectedPartOrder();
         System.out.println("Part to be deleted: " + partDTO.getId());
         partOrderRepo.deletePart(partDTO);
         noteModel.setSelectedPart(null);
-        for(PartOrderDTO po: noteModel.getBoundNote().getPartOrders()) {
-            System.out.println("Part Order: " + po.getId());
-            if(po.getId() == partDTO.getPartOrderId()) po.getParts().remove(partDTO);
-        }
+        partOrderDTO.getParts().remove(partDTO);
     }
 
     public void insertPart() {
