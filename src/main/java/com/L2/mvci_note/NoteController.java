@@ -52,7 +52,7 @@ public class NoteController extends Controller<NoteMessage> {
             case SAVE_OR_UPDATE_NOTE -> noteInteractor.saveOrUpdateNote();
             case INSERT_PART_ORDER -> noteInteractor.insertPartOrder();
             case UPDATE_PART_ORDER -> noteInteractor.updatePartOrder();
-            case DELETE_PART_ORDER -> noteInteractor.deletePartOrder();
+            case DELETE_PART_ORDER -> noteInteractor.deleteSelectedPartOrder();
             case DELETE_PART -> noteInteractor.deletePart();
             case INSERT_PART -> noteInteractor.insertPart();
             case UPDATE_PART -> noteInteractor.updatePart();
@@ -60,6 +60,7 @@ public class NoteController extends Controller<NoteMessage> {
             case REFRESH_PART_ORDERS -> noteInteractor.refreshPartOrders();
             case SELECT_BOUND_NOTE_IN_TABLE -> mainController.getNoteListController().action(NoteListMessage.SELECT_BOUND_NOTE_IN_TABLE);
             case UPDATE_NOTE_TAB_NAME -> mainController.action(MainMessage.UPDATE_NOTE_TAB_NAME);
+            case DELETE_NOTE -> noteInteractor.deleteNote();
         };
     }
 

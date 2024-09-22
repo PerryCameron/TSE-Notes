@@ -12,4 +12,6 @@ public interface NoteRepository {
     int insertNote(NoteDTO note);
 
     void updateNote(NoteDTO note);
+
+    int deleteNote(NoteDTO noteDTO);
 }

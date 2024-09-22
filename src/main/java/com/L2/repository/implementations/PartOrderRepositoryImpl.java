@@ -6,6 +6,8 @@ import com.L2.repository.interfaces.PartOrderRepository;
 import com.L2.repository.rowmappers.PartOrderRowMapper;
 import com.L2.repository.rowmappers.PartRowMapper;
 import com.L2.static_tools.DatabaseConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -18,6 +20,8 @@ import java.util.Objects;
 public class PartOrderRepositoryImpl implements PartOrderRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(PartOrderRepositoryImpl.class);
+
 
     public PartOrderRepositoryImpl() {
         this.jdbcTemplate = new JdbcTemplate(DatabaseConnector.getDataSource());
@@ -60,6 +64,7 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
 
     @Override
     public int deletePartOrder(PartOrderDTO partOrderDTO) {
+        logger.info("Deleting PartOrder: {}", partOrderDTO);
         String sql = "DELETE FROM PartOrders WHERE id = ?";
         // Execute the update query to delete the PartOrder by its id
         return jdbcTemplate.update(sql, partOrderDTO.getId());
@@ -90,7 +95,6 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
     @Override
     public int updatePart(PartDTO partDTO) {
         String sql = "UPDATE Parts SET partOrderId = ?, partNumber = ?, partDescription = ?, partQuantity = ?, serialReplaced = ?, partEditable = ? WHERE id = ?";
-
         return jdbcTemplate.update(sql,
                 partDTO.getPartOrderId(),
                 partDTO.getPartNumber(),
@@ -103,6 +107,7 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
 
     @Override
     public int deletePart(PartDTO partDTO) {
+        logger.info("Deleting part: {}", partDTO.getId());
         String sql = "DELETE FROM Parts WHERE id = ?";
         return jdbcTemplate.update(sql, partDTO.getId());
     }

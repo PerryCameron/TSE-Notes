@@ -188,4 +188,9 @@ public class NoteTools {
             // If no differences are found, return true, otherwise false
             return areSame;
         }
+
+        public static NoteDTO createFirstNote() {
+            NoteDTO noteDTO = new NoteDTO(1,false);
+            return noteDTO;
+        }
 }

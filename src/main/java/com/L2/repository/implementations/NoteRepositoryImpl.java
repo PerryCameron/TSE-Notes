@@ -1,7 +1,6 @@
 package com.L2.repository.implementations;
 
 import com.L2.dto.NoteDTO;
-import com.L2.mvci_main.MainController;
 import com.L2.repository.interfaces.NoteRepository;
 import com.L2.repository.rowmappers.NotesRowMapper;
 import com.L2.static_tools.DatabaseConnector;
@@ -143,5 +142,12 @@ public class NoteRepositoryImpl implements NoteRepository {
                 note.getTitle(),
                 note.getId()  // WHERE clause based on id
         );
+    }
+
+    @Override
+    public int deleteNote(NoteDTO noteDTO) {
+        logger.info("Deleting Note: {}", noteDTO.getId());
+        String sql = "DELETE FROM Notes WHERE id = ?";
+        return jdbcTemplate.update(sql, noteDTO.getId());
     }
 }

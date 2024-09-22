@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Iterator;
 
 import static com.L2.static_tools.ApplicationPaths.entitlementsFile;
 import static com.L2.static_tools.ApplicationPaths.settingsDir;
@@ -56,6 +57,12 @@ public class NoteInteractor {
         noteModel.getNotes().addAll(noteRepo.getAllNotes());
         // set notes to the direction we like
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
+        // if starting up for first time create first empty note
+        if(noteModel.getNotes().isEmpty()) {
+            NoteDTO noteDTO = new NoteDTO(1,false);
+            noteModel.getNotes().add(new NoteDTO(1,false));
+            noteRepo.insertNote(noteDTO);
+        }
         // set bound note to copy information from latest note
         boundNote.copyFrom(noteModel.getNotes().getFirst());
         // add part orders as needed
@@ -471,9 +478,7 @@ public class NoteInteractor {
         partOrderRepo.updatePartOrder(noteModel.getSelectedPartOrder());
     }
 
-    public void deletePartOrder() {
-        partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
-    }
+
 
     public void deletePart() {
         PartDTO partDTO = noteModel.getSelectedPart();
@@ -508,4 +513,42 @@ public class NoteInteractor {
     public ObjectProperty<NoteDTO> getBoundNoteProperty() {
         return noteModel.boundNoteProperty();
     }
+
+    public void deleteNote() {
+        // Use an iterator to safely remove elements while iterating
+        Iterator<NoteDTO> iterator = noteModel.getNotes().iterator();
+
+        while (iterator.hasNext()) {
+            NoteDTO noteDTO = iterator.next();
+            if (noteDTO.getId() == noteModel.getBoundNote().getId()) {
+                // Find all parts orders
+                // Delete all parts in each parts order
+                noteRepo.deleteNote(noteDTO);  // Delete the note from repository
+
+                // Safely remove the note from the list using the iterator
+                iterator.remove();
+            }
+        }
+    }
+
+//    public void deletePartOrder() {
+//        partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
+//    }
+
+    public void deleteSelectedPartOrder() {
+        deletePartOrder(noteModel.getSelectedPartOrder());
+    }
+
+    public void deletePartOrder(PartOrderDTO partOrderDTO) {
+        if(!partOrderDTO.getParts().isEmpty()) {
+            Iterator<PartDTO> iterator = partOrderDTO.getParts().iterator();
+            while (iterator.hasNext()) {
+                PartDTO partDTO = iterator.next();
+                partOrderRepo.deletePart(partDTO);  // Delete the note from repository
+                iterator.remove();
+            }
+        }
+        partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
+    }
+
 }

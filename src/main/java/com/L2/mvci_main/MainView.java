@@ -91,11 +91,12 @@ public class MainView implements Builder<Region> {
         hBox.setStyle("-fx-background-color: grey");
         Button prevNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.PREVIOUS_NOTE), "Previous", "/images/back-16.png");
         Button nextNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEXT_NOTE), "Next", "/images/forward-16.png");
-        Button setCompletedButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SET_COMPLETE), "Set Completed", "/images/thumbs-16.png");
+//        Button setCompletedButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SET_COMPLETE), "Set Completed", "/images/thumbs-16.png");
         Button newNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/new-16.png");
-        Button saveNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SAVE_OR_UPDATE_NOTE), "Save", "/images/Save-16.png");
-        Button testButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.TEST), "Test Dammit", "/images/apply-16.png");
-        hBox.getChildren().addAll(statusLabel(),prevNoteButton, nextNoteButton, setCompletedButton, newNoteButton, saveNoteButton, testButton);
+//        Button saveNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SAVE_OR_UPDATE_NOTE), "Save", "/images/Save-16.png");
+        Button cloneButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.CLONE_NOTE), "Clone Note", "/images/clone-16.png");
+        Button deleteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.DELETE_NOTE), "Delete Note", "/images/delete-16.png");
+        hBox.getChildren().addAll(statusLabel(),prevNoteButton, nextNoteButton, newNoteButton, cloneButton, deleteButton);
         hBox.getStyleClass().add("bottom-pane");
         return hBox;
     }
