@@ -51,7 +51,13 @@ public class MainController extends Controller<MainMessage> {
             case REFRESH_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.REFRESH_NOTE_TABLEVIEW);
             case UPDATE_NOTE_TAB_NAME -> mainInteractor.updateNoteTabName(getBoundNote());
             case DELETE_NOTE -> noteController.action(NoteMessage.DELETE_NOTE);
+            case SELECT_NOTE_TAB -> mainInteractor.selectNoteTab();
+            case UPDATE_STATUSBAR -> updateStatusBar();
         }
+    }
+
+    public void updateStatusBar() {
+        noteController.action(NoteMessage.UPDATE_STATUSBAR);
     }
 
     public ObservableList<NoteDTO> getNotes() {
@@ -65,6 +71,8 @@ public class MainController extends Controller<MainMessage> {
     public void setStatusBar(String status) {
         mainInteractor.setStatusBar(status);
     }
+
+    public void selectNoteTab() { action(MainMessage.SELECT_NOTE_TAB); }
 
     private void openNoteTab() {
             noteController = new NoteController(this);

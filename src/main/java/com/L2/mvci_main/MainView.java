@@ -93,7 +93,6 @@ public class MainView implements Builder<Region> {
         Button nextNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEXT_NOTE), "Next", "/images/forward-16.png");
 //        Button setCompletedButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SET_COMPLETE), "Set Completed", "/images/thumbs-16.png");
         Button newNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/new-16.png");
-//        Button saveNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SAVE_OR_UPDATE_NOTE), "Save", "/images/Save-16.png");
         Button cloneButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.CLONE_NOTE), "Clone Note", "/images/clone-16.png");
         Button deleteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.DELETE_NOTE), "Delete Note", "/images/delete-16.png");
         hBox.getChildren().addAll(statusLabel(),prevNoteButton, nextNoteButton, newNoteButton, cloneButton, deleteButton);
@@ -112,13 +111,20 @@ public class MainView implements Builder<Region> {
         return vBox;
     }
 
+//    noteListView.getAction().accept(NoteListMessage.UPDATE_BOUND_NOTE);
+
     private Node setUpCenterPane() {
         TabPane tabPane = new TabPane();
         mainModel.setMainTabPane(tabPane);
+        // Open our initial tabs
         action.accept(MainMessage.OPEN_NOTES);
         action.accept(MainMessage.OPEN_NOTES_LIST);
+        action.accept(MainMessage.SELECT_NOTE_TAB);
         // this is a message for the tableView to select the correct NoteDTO
         action.accept(MainMessage.SELECT_BOUND_NOTE_IN_TABLE);
+        action.accept(MainMessage.UPDATE_NOTE_TAB_NAME);
+        action.accept(MainMessage.UPDATE_STATUSBAR);
+//        action.accept(MainMessage.UPDATE_BOUND_NOTE);
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab != null) {
                 if(newTab.getText().equals("Manage Notes")) action.accept(MainMessage.REFRESH_NOTE_TABLEVIEW);

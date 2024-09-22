@@ -18,6 +18,8 @@ public class NoteModel {
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
     private ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
+
+    // shouldn't this be under maincontroller???????
     private StringProperty statusLabel = new SimpleStringProperty();
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
     private BooleanProperty clearCalled  = new SimpleBooleanProperty(false);
@@ -100,9 +102,9 @@ public class NoteModel {
         this.user.set(user);
     }
 
-    public String getStatusLabel() {
-        return statusLabel.get();
-    }
+//    public String getStatusLabel() {
+//        return statusLabel.get();
+//    }
 
     public StringProperty statusLabelProperty() {
         return statusLabel;

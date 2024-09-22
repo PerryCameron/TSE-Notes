@@ -515,25 +515,27 @@ public class NoteInteractor {
     }
 
     public void deleteNote() {
-        // Use an iterator to safely remove elements while iterating
-        Iterator<NoteDTO> iterator = noteModel.getNotes().iterator();
 
-        while (iterator.hasNext()) {
-            NoteDTO noteDTO = iterator.next();
-            if (noteDTO.getId() == noteModel.getBoundNote().getId()) {
-                // Find all parts orders
-                // Delete all parts in each parts order
-                noteRepo.deleteNote(noteDTO);  // Delete the note from repository
-
-                // Safely remove the note from the list using the iterator
-                iterator.remove();
+        int id  = noteModel.getBoundNote().getId();
+        System.out.println("deleting note: " + id);
+        // deletedNoteDTO will be the reference to the correct NoteDTO in the list
+        NoteDTO deletedNoteDTO = null;
+        for(NoteDTO noteDTO : noteModel.getNotes()) {
+            if (noteDTO.idProperty().get() == id) {
+                deletedNoteDTO = noteDTO;
             }
         }
+        System.out.println("Bound Note: " + noteModel.getBoundNote() + " id: " + noteModel.getBoundNote().getId());
+        System.out.println("Deleted Note: " + deletedNoteDTO + " id: " + deletedNoteDTO.getId());
+        System.out.println("Bound note has " + noteModel.getBoundNote().getPartOrders().size() + " part orders");
+        System.out.println("Deleted Note has " + deletedNoteDTO.getPartOrders().size() + " part orders");
+        // we will use the bound note to get related part orders, because they are already there
+        if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
+            noteModel.getBoundNote().getPartOrders().forEach(partOrder -> deletePartOrder(partOrder));
+        }
+        noteRepo.testDeleteNote(deletedNoteDTO);  // Delete the note from repository
+//        noteModel.getNotes().remove(deletedNoteDTO);
     }
-
-//    public void deletePartOrder() {
-//        partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
-//    }
 
     public void deleteSelectedPartOrder() {
         deletePartOrder(noteModel.getSelectedPartOrder());
@@ -544,11 +546,13 @@ public class NoteInteractor {
             Iterator<PartDTO> iterator = partOrderDTO.getParts().iterator();
             while (iterator.hasNext()) {
                 PartDTO partDTO = iterator.next();
-                partOrderRepo.deletePart(partDTO);  // Delete the note from repository
+//                partOrderRepo.deletePart(partDTO);  // Delete the note from repository
+                partOrderRepo.testDeletePart(partDTO);
                 iterator.remove();
             }
         }
-        partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
+//        partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
+        partOrderRepo.testDeletePartOrder(partOrderDTO);
     }
 
 }

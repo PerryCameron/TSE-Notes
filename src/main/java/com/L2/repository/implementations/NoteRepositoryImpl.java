@@ -150,4 +150,9 @@ public class NoteRepositoryImpl implements NoteRepository {
         String sql = "DELETE FROM Notes WHERE id = ?";
         return jdbcTemplate.update(sql, noteDTO.getId());
     }
+
+    public int testDeleteNote(NoteDTO noteDTO) {
+        System.out.println("NoteRepository: Deleted Note: " + noteDTO.getId());
+        return 1;
+    }
 }

@@ -35,7 +35,7 @@ public class NoteController extends Controller<NoteMessage> {
     public void action(NoteMessage message) {
         switch (message) {
             case LOAD_USER -> noteInteractor.loadUser();
-            case STATUS_BAR_CHANGE -> changeStatusBar();
+            case UPDATE_STATUSBAR -> changeStatusBar();
             case REPORT_NUMBER_OF_PART_ORDERS -> noteInteractor.reportNumberOfPartOrders();
             case COPY_PART_ORDER -> noteInteractor.copyPartOrder();
             case COPY_NAME_DATE -> noteInteractor.copyNameDate();
@@ -74,6 +74,7 @@ public class NoteController extends Controller<NoteMessage> {
 
     private void changeStatusBar() {
         mainController.setStatusBar(noteInteractor.getStatus());
+        System.out.println("Setting Status Bar: " + noteInteractor.getStatus());
     }
 
     public NoteView getCaseView() {

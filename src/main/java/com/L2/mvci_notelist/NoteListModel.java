@@ -12,6 +12,7 @@ import javafx.scene.control.TableView;
 public class NoteListModel {
     // reference to mainModel notes
     private ObservableList<NoteDTO> notes;
+    // this is the note that is selected in the TableView
     private ObjectProperty<NoteDTO> selectedNote = new SimpleObjectProperty<>();
     // reference to mainModel boundNote;
     protected ObjectProperty<NoteDTO> boundNote;

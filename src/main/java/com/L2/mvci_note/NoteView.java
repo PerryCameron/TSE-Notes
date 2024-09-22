@@ -73,7 +73,7 @@ public class NoteView implements Builder<Region> {
     private void setUpStatusBarCommunication() {
         noteModel.statusLabelProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                action.accept(NoteMessage.STATUS_BAR_CHANGE);
+                action.accept(NoteMessage.UPDATE_STATUSBAR);
             }
         });
     }
