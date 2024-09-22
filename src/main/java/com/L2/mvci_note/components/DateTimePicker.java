@@ -18,6 +18,7 @@ import javafx.util.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 public class DateTimePicker implements Component<Region> {
 
@@ -67,7 +68,7 @@ public class DateTimePicker implements Component<Region> {
     private Button refreshButton() {
         Button refreshButton = ButtonFx.utilityButton( () -> {
             noteView.getNoteModel().setStatusLabel("Refreshing date and time to now.");
-            setDateTime(LocalDateTime.now());
+            setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
         }, "Sync", "/images/sync-16.png");
         refreshButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
         return refreshButton;

@@ -4,6 +4,7 @@ import com.L2.dto.NoteDTO;
 import com.L2.dto.ResultDTO;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 public class NoteDTOProcessor {
@@ -22,7 +23,7 @@ public class NoteDTOProcessor {
         noteDTO.setIssue(email);
         // this is important to save the same note
         noteDTO.setTitle("FSR Request - 3Phase Power");
-        noteDTO.setTimestamp(LocalDateTime.now());
+        noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
         noteDTO.setCaseNumber("");
 
         // Variables to store data

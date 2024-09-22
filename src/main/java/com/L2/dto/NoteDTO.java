@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -54,7 +55,7 @@ public class NoteDTO {
     public NoteDTO(int id, boolean isEmail) {
         // Initialize properties with passed values
         this.id.set(id);
-        this.timestamp.set(LocalDateTime.now());
+        this.timestamp.set(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
         this.workOrder.set("");
         this.caseNumber.set("");
         this.serialNumber.set("");
@@ -186,7 +187,7 @@ public class NoteDTO {
     }
 
     public void clear() {
-        this.timestamp.set(LocalDateTime.now());
+        this.timestamp.set(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
         this.workOrder.set("");
         this.caseNumber.set("");
         this.serialNumber.set("");
