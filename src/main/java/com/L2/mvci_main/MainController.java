@@ -38,26 +38,24 @@ public class MainController extends Controller<MainMessage> {
     @Override
     public void action(MainMessage action) {
         switch (action) {
-            case OPEN_NOTES -> openNoteTab();
+            case OPEN_NOTE_TAB -> openNoteTab();
             case OPEN_SETTINGS -> openSettingsTab();
-            case OPEN_NOTES_LIST -> openNoteListTab();
+            case OPEN_NOTESLIST_TAB -> openNoteListTab();
             case PREVIOUS_NOTE -> noteController.action(NoteMessage.PREVIOUS_NOTE);
             case NEXT_NOTE -> noteController.action(NoteMessage.NEXT_NOTE);
             case SAVE_OR_UPDATE_NOTE -> noteController.action(NoteMessage.SAVE_OR_UPDATE_NOTE);
             case SET_COMPLETE -> noteController.action(NoteMessage.SET_COMPLETE);
             case NEW_NOTE -> noteController.action(NoteMessage.NEW_NOTE);
             case TEST -> noteController.action(NoteMessage.TEST); // TODO delete
-            case SELECT_BOUND_NOTE_IN_TABLE -> noteController.action(NoteMessage.SELECT_BOUND_NOTE_IN_TABLE);
+            case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT ->
+                    noteListController.action(NoteListMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
             case REFRESH_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.REFRESH_NOTE_TABLEVIEW);
             case UPDATE_NOTE_TAB_NAME -> mainInteractor.updateNoteTabName(getBoundNote());
             case DELETE_NOTE -> noteController.action(NoteMessage.DELETE_NOTE);
             case SELECT_NOTE_TAB -> mainInteractor.selectNoteTab();
-            case UPDATE_STATUSBAR -> updateStatusBar();
+            case UPDATE_STATUSBAR_WITH_STRING -> noteController.action(NoteMessage.UPDATE_STATUSBAR_WITH_STRING);
+            case REFRESH_PART_ORDERS -> noteController.action(NoteMessage.REFRESH_PART_ORDERS);
         }
-    }
-
-    public void updateStatusBar() {
-        noteController.action(NoteMessage.UPDATE_STATUSBAR);
     }
 
     public ObservableList<NoteDTO> getNotes() {
@@ -71,8 +69,6 @@ public class MainController extends Controller<MainMessage> {
     public void setStatusBar(String status) {
         mainInteractor.setStatusBar(status);
     }
-
-    public void selectNoteTab() { action(MainMessage.SELECT_NOTE_TAB); }
 
     private void openNoteTab() {
             noteController = new NoteController(this);

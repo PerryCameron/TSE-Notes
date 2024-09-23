@@ -17,7 +17,8 @@ public class MainInteractor implements ApplicationPaths {
     }
 
     public void setStatusBar(String status) {
-        mainModel.statusLabelProperty().set(status);
+        System.out.println("MainInteractor::setStatusBar -> " + status);
+        mainModel.statusStringProperty().set(status);
     }
 
     public void updateNoteTabName(ObjectProperty<NoteDTO> boundNote) {

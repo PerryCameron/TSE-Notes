@@ -76,6 +76,7 @@ public class NoteInteractor {
     }
 
     public String getStatus() {
+        System.out.println(("NoteInteractor::getStatus -> statusLabelProperty (StringProperty): " + noteModel.statusLabelProperty().get()));
         return noteModel.statusLabelProperty().get();
     }
 
@@ -402,8 +403,14 @@ public class NoteInteractor {
     }
 
     public void refreshPartOrders() {
+        System.out.println("NoteInteractor::refreshPartOrders -> setStatusLabelWithNoteInformaiton()");
         logger.debug("Refreshing bound note, and UI, setting to: {}", noteModel.getBoundNote().getId() );
         checkAndLoadPartOrdersIfNeeded();
+        setStatusLabelWithNoteInformation();
+    }
+
+    public void setStatusLabelWithNoteInformation() {
+        System.out.println("NoteInteractor::setStatusLabelWithNoteInformation -> noteModel.setStatusLabel('stuff here')");
         noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId() + "  " + noteModel.getBoundNote().formattedDate());
     }
 
@@ -477,8 +484,6 @@ public class NoteInteractor {
     public void updatePartOrder() {
         partOrderRepo.updatePartOrder(noteModel.getSelectedPartOrder());
     }
-
-
 
     public void deletePart() {
         PartDTO partDTO = noteModel.getSelectedPart();

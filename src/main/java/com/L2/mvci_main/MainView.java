@@ -69,7 +69,7 @@ public class MainView implements Builder<Region> {
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
 //        MenuItem openNewCase = MenuFx.menuItemOf("Open New Case", x -> action.accept(MainMessage.OPEN_NOTES), null);
-        MenuItem openNotesList = MenuFx.menuItemOf("Open Notes List", x -> action.accept(MainMessage.OPEN_NOTES_LIST), null);
+        MenuItem openNotesList = MenuFx.menuItemOf("Open Notes List", x -> action.accept(MainMessage.OPEN_NOTESLIST_TAB), null);
         MenuItem close = MenuFx.menuItemOf("Settings", x -> action.accept(MainMessage.OPEN_SETTINGS), null);
         menu.getItems().addAll(close, openNotesList);
         return menu;
@@ -105,8 +105,8 @@ public class MainView implements Builder<Region> {
         vBox.setPrefWidth(400);
         Label statusLabel = new Label();
         statusLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
-        statusLabel.textProperty().bind(mainModel.statusLabelProperty());
-        mainModel.statusLabelProperty().set("(Not Connected) Ready.");
+        statusLabel.textProperty().bind(mainModel.statusStringProperty());
+//        mainModel.statusStringProperty().set("(Not Connected) Ready.");
         vBox.getChildren().add(statusLabel);
         return vBox;
     }
@@ -117,14 +117,15 @@ public class MainView implements Builder<Region> {
         TabPane tabPane = new TabPane();
         mainModel.setMainTabPane(tabPane);
         // Open our initial tabs
-        action.accept(MainMessage.OPEN_NOTES);
-        action.accept(MainMessage.OPEN_NOTES_LIST);
+        action.accept(MainMessage.OPEN_NOTE_TAB);
+        action.accept(MainMessage.OPEN_NOTESLIST_TAB);
         action.accept(MainMessage.SELECT_NOTE_TAB);
-        // this is a message for the tableView to select the correct NoteDTO
-        action.accept(MainMessage.SELECT_BOUND_NOTE_IN_TABLE);
+        // this is a message for the tableView to select the correct row to match selected NoteDTO
+        action.accept(MainMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
+        // obviously to put the correct number on the tab
         action.accept(MainMessage.UPDATE_NOTE_TAB_NAME);
-        action.accept(MainMessage.UPDATE_STATUSBAR);
-//        action.accept(MainMessage.UPDATE_BOUND_NOTE);
+        action.accept(MainMessage.UPDATE_STATUSBAR_WITH_STRING);
+
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab != null) {
                 if(newTab.getText().equals("Manage Notes")) action.accept(MainMessage.REFRESH_NOTE_TABLEVIEW);

@@ -8,7 +8,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
 public class MainModel {
-    private StringProperty statusLabel = new SimpleStringProperty(""); // keeper here
+    private StringProperty statusLabelStringProperty = new SimpleStringProperty(""); // keeper here
     private ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
     private ObjectProperty<Tab> noteTab = new SimpleObjectProperty<>();
 
@@ -37,8 +37,8 @@ public class MainModel {
     }
 
 
-    public StringProperty statusLabelProperty() {
-        return statusLabel;
+    public StringProperty statusStringProperty() {
+        return statusLabelStringProperty;
     }
 
 }

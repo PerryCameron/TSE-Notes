@@ -106,6 +106,8 @@ public class NoteModel {
 //        return statusLabel.get();
 //    }
 
+
+    // gets the text in the StringPropery
     public StringProperty statusLabelProperty() {
         return statusLabel;
     }
