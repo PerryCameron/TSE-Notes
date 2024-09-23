@@ -56,11 +56,11 @@ public class ShippingInformation implements Component<Region> {
         cTextFields[0] = TextFieldFx.createValidatedTextField(200, "Contact Name", StringChecker::formatName, noteView);
         cTextFields[1] = TextFieldFx.createValidatedTextField(200,"Contact Phone", StringChecker::formatPhoneNumber, noteView);
         cTextFields[2] = TextFieldFx.createValidatedTextField(200,"Contact Email", StringChecker::formatEmail, noteView);
-        Button clearButton = ButtonFx.utilityButton(() -> {
-            noteModel.getBoundNote().clearContact();
-            for(TextField textField : cTextFields) textField.setText("");
-        }, "Clear", "/images/clear-16.png");
-        clearButton.setTooltip(ToolTipFx.of("Clear Shipping Contact"));
+//        Button clearButton = ButtonFx.utilityButton(() -> {
+//            noteModel.getBoundNote().clearContact();
+//            for(TextField textField : cTextFields) textField.setText("");
+//        }, "Clear", "/images/clear-16.png");
+//        clearButton.setTooltip(ToolTipFx.of("Clear Shipping Contact"));
 
         Button pasteButton = ButtonFx.utilityButton(() -> {
             String[] contactInfo = CopyPastaParser.extractContactInfo();
@@ -70,7 +70,7 @@ public class ShippingInformation implements Component<Region> {
         }, "Paste", "/images/paste-16.png");
         pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Contact Information"));
 
-        Button[] buttons = new Button[]{clearButton, pasteButton};
+        Button[] buttons = new Button[]{pasteButton};
         vBox.getChildren().addAll(TitleBarFx.of("Contact", buttons), cTextFields[0], cTextFields[1], cTextFields[2]);
         return vBox;
     }
@@ -86,14 +86,14 @@ public class ShippingInformation implements Component<Region> {
         aTextFields[2] = TextFieldFx.standardTextField(50, "State/Province", noteView);
         aTextFields[3] = TextFieldFx.standardTextField(100, "zip Code", noteView);
         aTextFields[4] = TextFieldFx.standardTextField(200, "Country", noteView);
-        Button clearButton = ButtonFx.utilityButton(() -> {
-            noteModel.getBoundNote().clearAddress();
-            for (TextField textField : aTextFields)
-                textField.clear();
-            streetTextArea.textProperty().set("");
-
-        }, "Clear", "/images/clear-16.png");
-        clearButton.setTooltip(ToolTipFx.of("Clear Shipping Address"));
+//        Button clearButton = ButtonFx.utilityButton(() -> {
+//            noteModel.getBoundNote().clearAddress();
+//            for (TextField textField : aTextFields)
+//                textField.clear();
+//            streetTextArea.textProperty().set("");
+//
+//        }, "Clear", "/images/clear-16.png");
+//        clearButton.setTooltip(ToolTipFx.of("Clear Shipping Address"));
 
         Button pasteButton = ButtonFx.utilityButton(() -> {
             String[] addressInfo = CopyPastaParser.parseAddress();
@@ -105,7 +105,7 @@ public class ShippingInformation implements Component<Region> {
             aTextFields[4].textProperty().set(addressInfo[5]);
         }, "Paste", "/images/paste-16.png");
         pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Address Information"));
-        Button[] buttons = new Button[]{clearButton, pasteButton};
+        Button[] buttons = new Button[]{pasteButton};
         hBox.getChildren().addAll(aTextFields[1], aTextFields[2], aTextFields[3]);
         vBox.getChildren().addAll(TitleBarFx.of("Address", buttons), aTextFields[0], streetTextArea, hBox, aTextFields[4]);
         return vBox;
