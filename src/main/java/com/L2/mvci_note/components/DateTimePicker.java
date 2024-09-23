@@ -104,6 +104,7 @@ public class DateTimePicker implements Component<Region> {
         LocalDate date = datePicker.getValue();
         LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
         noteView.getNoteModel().getBoundNote().timestampProperty().set(LocalDateTime.of(date, time));
+        noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
     }
 
     @Override
