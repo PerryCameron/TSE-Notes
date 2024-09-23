@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -368,20 +370,30 @@ public class NoteInteractor {
     }
 
     public void setComplete() {
-//        logger.info("Note {} has been set to completed", noteModel.getBoundNote().getId() );
-//        noteModel.getBoundNote().setCompleted(true);
-        printAllNotes();
+        logger.info("Note {} has been set to completed", noteModel.getBoundNote().getId() );
+        noteModel.getBoundNote().setCompleted(true);
     }
 
     public void createNewNote() {
         // let's update the list note before moving on
-        saveOrUpdateNote();
+        saveOrUpdateNote(); // I feel like this can go
         NoteDTO noteDTO = new NoteDTO(0, false);
         noteDTO.setId(noteRepo.insertNote(noteDTO));
         noteModel.getNotes().add(noteDTO);
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         noteModel.getBoundNote().setId(noteDTO.getId());
         noteModel.clearBoundNoteFields();
+    }
+
+    public void cloneNote() {
+        NoteDTO noteDTO = new NoteDTO(0, false);
+        noteDTO.copyFrom(noteModel.getBoundNote());
+        noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        noteDTO.setId(noteRepo.insertNote(noteDTO));
+        noteModel.getNotes().add(noteDTO);
+        noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
+        noteModel.getBoundNote().setId(noteDTO.getId());
+        System.out.println("Clone Note");
     }
 
     public void logCurrentEntitlement() {
@@ -403,14 +415,12 @@ public class NoteInteractor {
     }
 
     public void refreshPartOrders() {
-        System.out.println("NoteInteractor::refreshPartOrders -> setStatusLabelWithNoteInformaiton()");
         logger.debug("Refreshing bound note, and UI, setting to: {}", noteModel.getBoundNote().getId() );
         checkAndLoadPartOrdersIfNeeded();
         setStatusLabelWithNoteInformation();
     }
 
     public void setStatusLabelWithNoteInformation() {
-        System.out.println("NoteInteractor::setStatusLabelWithNoteInformation -> noteModel.setStatusLabel('stuff here')");
         noteModel.setStatusLabel("Note: " + noteModel.getBoundNote().getId() + "  " + noteModel.getBoundNote().formattedDate());
     }
 
@@ -443,13 +453,6 @@ public class NoteInteractor {
             }
         }
         return -1;
-    }
-
-    public void printAllNotes() {
-        System.out.println("Bound Note: " + noteModel.getBoundNote().getId() + " date: " + noteModel.getBoundNote().formattedDate());
-        for (NoteDTO note : noteModel.getNotes()) {
-            System.out.println("note: " + note.getId() + " date: " + note.formattedDate());
-        }
     }
 
     // this synchronizes the bound object to the correct object in the list
@@ -559,5 +562,4 @@ public class NoteInteractor {
 //        partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
         partOrderRepo.testDeletePartOrder(partOrderDTO);
     }
-
 }

@@ -55,6 +55,7 @@ public class MainController extends Controller<MainMessage> {
             case SELECT_NOTE_TAB -> mainInteractor.selectNoteTab();
             case UPDATE_STATUSBAR_WITH_STRING -> noteController.action(NoteMessage.UPDATE_STATUSBAR_WITH_STRING);
             case REFRESH_PART_ORDERS -> noteController.action(NoteMessage.REFRESH_PART_ORDERS);
+            case CLONE_NOTE -> noteController.action(NoteMessage.CLONE_NOTE);
         }
     }
 

@@ -59,6 +59,7 @@ public class NoteView implements Builder<Region> {
     }
 
     private void boundNoteListener() {
+        System.out.println("NoteView::boundNoteListener");
         noteModel.getBoundNote().idProperty().addListener((observable, oldValue, newValue) -> {
             // sends signal to noteListener to add part orders to currently selected NoteDTO
             action.accept(NoteMessage.REFRESH_PART_ORDERS);

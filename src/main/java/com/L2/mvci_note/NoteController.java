@@ -64,6 +64,7 @@ public class NoteController extends Controller<NoteMessage> {
             case UPDATE_NOTE_TAB_NAME -> mainController.action(MainMessage.UPDATE_NOTE_TAB_NAME);
             case DELETE_NOTE -> noteInteractor.deleteNote();
             case UPDATE_STATUSBAR_WITH_STRING ->  noteInteractor.setStatusLabelWithNoteInformation();
+            case CLONE_NOTE -> noteInteractor.cloneNote();
         };
     }
 
