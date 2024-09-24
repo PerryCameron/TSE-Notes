@@ -89,7 +89,7 @@ public class NoteInteractor {
     ////////////////////////////////////////////////////////////////////////////////////////
 
     public void copyPartOrder() {
-        ClipboardUtils.copyHtmlToClipboard(buildPartOrderToHTML(), buildPartOrderToPlainText());
+        ClipboardUtils.copyHtmlToClipboard(buildPartOrderToHTML(true), buildPartOrderToPlainText());
     }
 
     public void copyNameDate() {
@@ -130,33 +130,39 @@ public class NoteInteractor {
         return "";
     }
 
-    public String copyAllPartOrdersToHTML() {
+    public String copyAllPartOrdersToHTML(boolean includePOHeader) {
         if (noteModel.getBoundNote().getPartOrders().size() > 1) {
             StringBuilder builder = new StringBuilder();
             for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
                 noteModel.setSelectedPartOrder(partOrderDTO);
-                builder.append(buildPartOrderToHTML()).append("<br>");
+                builder.append(buildPartOrderToHTML(includePOHeader)).append("<br>");
             }
             return builder.toString();
         } else if (noteModel.getBoundNote().getPartOrders().size() == 1) {
-            return buildPartOrderToHTML();
+            return buildPartOrderToHTML(includePOHeader);
         }
         return "";
     }
 
-    private String buildPartOrderToHTML() {
+    private String buildPartOrderToHTML(boolean includePOHeader) {
         StringBuilder stringBuilder = new StringBuilder();
         // Start the table and add headers
         logger.info("Copying Part Order");
         if (!noteModel.getSelectedPartOrder().getParts().isEmpty()) {
-            stringBuilder.append("<b>Parts Needed</b><br>")
-            .append("<table border=\"1\">");
+            if(includePOHeader) {
+                stringBuilder.append("<b>Parts Ordered</b><br>");
+            } else {
+                stringBuilder.append("<b>Parts Needed</b><br>");
+            }
+            stringBuilder.append("<table border=\"1\">");
             logger.info("Adding order: {}", noteModel.getSelectedPartOrder().getOrderNumber());
-            if (!noteModel.getSelectedPartOrder().getOrderNumber().isEmpty()) {
-                stringBuilder.append("<tr><th colspan=\"3\" style=\"background-color: lightgrey;\">")
-                        .append("Part Order: ")
-                        .append(noteModel.getSelectedPartOrder().getOrderNumber())
-                        .append("</th></tr>");
+            if(includePOHeader) {
+                if (!noteModel.getSelectedPartOrder().getOrderNumber().isEmpty()) {
+                    stringBuilder.append("<tr><th colspan=\"3\" style=\"background-color: lightgrey;\">")
+                            .append("Part Order: ")
+                            .append(noteModel.getSelectedPartOrder().getOrderNumber())
+                            .append("</th></tr>");
+                }
             }
             stringBuilder.append("<tr>")
                     .append("<th>Part Number</th>")
@@ -315,7 +321,7 @@ public class NoteInteractor {
         return buildNameDateToHTML() + "<br>" + "\r\n" +
                 basicInformationToHTML() + "<br>" + "\r\n" +
                 issueToHTML() + "<br>" + "\r\n" +
-                copyAllPartOrdersToHTML() + "<br>" +
+                copyAllPartOrdersToHTML(false) + "<br>" +
                 shippingInformationToHTML() + "<br>" + "\r\n";
     }
 
@@ -361,7 +367,7 @@ public class NoteInteractor {
         if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("<br>").append("<br>");
         }
-        stringBuilder.append(copyAllPartOrdersToHTML()).append("<br>");
+        stringBuilder.append(copyAllPartOrdersToHTML(true)).append("<br>");
         if (!noteModel.getBoundNote().getTex().isEmpty()) {
             stringBuilder.append("Created ")
             .append(noteModel.getBoundNote().getTex()).append("<br>");

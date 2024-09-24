@@ -34,10 +34,6 @@ public class IssueBox implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         textAreaIssue.setPrefWidth(900);
         textAreaIssue.textProperty().bindBidirectional(noteModel.getBoundNote().issueProperty());
-//        Button clearButton = ButtonFx.utilityButton(() -> {
-//            textAreaIssue.setText("");
-//        }, "Clear", "/images/clear-16.png");
-//        clearButton.setTooltip(ToolTipFx.of("Clear Issue"));
         Button copyButton = ButtonFx.utilityButton(() -> {
             flash();
             noteView.getAction().accept(NoteMessage.COPY_ISSUE);
@@ -50,12 +46,17 @@ public class IssueBox implements Component<Region> {
             if (newValue) ;
             else {  // focus removed
                 // is this an email?
-                if (NoteDTOProcessor.isEmail(textAreaIssue.getText())) {
-                    // process that into a note dto
-                    NoteDTO noteDTO = NoteDTOProcessor.processEmail(textAreaIssue.getText(), noteModel.getBoundNote().getId());
-                    noteModel.getBoundNote().copyFrom(noteDTO);
+                if(!noteModel.getBoundNote().isEmail()) {
+                    if (NoteDTOProcessor.isEmail(textAreaIssue.getText())) {
+                        // process that into a note dto
+                        NoteDTO noteDTO = NoteDTOProcessor.processEmail(textAreaIssue.getText(), noteModel.getBoundNote().getId());
+                        noteModel.getBoundNote().copyFrom(noteDTO);
+                    }
+                    noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+                    System.out.println("this is an email so we process");
+                } else {
+                    System.out.println("This is already an email, so do nothing");
                 }
-                noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
             }
         });
         return root;

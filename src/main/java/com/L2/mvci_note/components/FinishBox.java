@@ -37,9 +37,6 @@ public class FinishBox implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
-//        Button clearButton = ButtonFx.utilityButton(() -> {
-//            textArea.setText("");
-//        },"Clear","/images/clear-16.png");
         Button[] buttons = new Button[] {  };
         hBox.getChildren().addAll(correctiveText(), buttonBox());
         root.getChildren().addAll(TitleBarFx.of("Final", buttons), hBox);
