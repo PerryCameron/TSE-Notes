@@ -65,7 +65,7 @@ public class WorkOrderBox implements Component<Region> {
         VBox vbox = new VBox();
         vbox.setSpacing(2);
         vbox.setPadding(new Insets(2, 0, 2, 2));
-        Label label = new Label("Related Case");
+        Label label = new Label("Created Case");
         label.setPadding(new Insets(0,0,0,5));
         relatedCaseTextField.textProperty().bindBidirectional(noteModel.getBoundNote().relatedCaseNumberProperty());
         vbox.getChildren().addAll(label, relatedCaseTextField);
@@ -76,7 +76,7 @@ public class WorkOrderBox implements Component<Region> {
         VBox vbox = new VBox();
         vbox.setSpacing(2);
         vbox.setPadding(new Insets(2, 0, 5, 5));
-        Label label = new Label("Follow Up Work Order");
+        Label label = new Label("Created Work Order");
         label.setPadding(new Insets(0,0,0,5));
         createdWorkOrderTextField.textProperty().bindBidirectional(noteModel.getBoundNote().createdWorkOrderProperty());
         vbox.getChildren().addAll(label, createdWorkOrderTextField);

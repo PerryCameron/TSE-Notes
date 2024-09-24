@@ -88,7 +88,6 @@ public class PartOrderBoxList implements Component<Region> {
 
 
         Button deleteButton = ButtonFx.utilityButton( () -> {
-//            partOrderDTO.getParts().remove(noteModel.getSelectedPart());
             noteView.getAction().accept(NoteMessage.DELETE_PART);
         }, "Delete", "/images/delete-16.png");
         TextField textField = TextFieldFx.of(250, "Search");
@@ -101,7 +100,6 @@ public class PartOrderBoxList implements Component<Region> {
         textField.textProperty().set(partOrderDTO.getOrderNumber());
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-//                noteModel.setSelectedPartOrder(partOrderDTO);
                 partOrderDTO.setOrderNumber(textField.getText());
                 noteView.getAction().accept(NoteMessage.UPDATE_PART_ORDER);
             }
@@ -224,6 +222,7 @@ public class PartOrderBoxList implements Component<Region> {
 
     @Override
     public void refreshFields() {
+        System.out.println("PartOrderBoxList::refreshFields()");
         root.getChildren().clear();
         noteModel.getBoundNote().getPartOrders().forEach((partOrderDTO) -> root.getChildren().add(createPartOrderBox(partOrderDTO)));
     }

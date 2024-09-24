@@ -392,8 +392,8 @@ public class NoteInteractor {
         noteDTO.setId(noteRepo.insertNote(noteDTO));
         noteModel.getNotes().add(noteDTO);
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
-        noteModel.getBoundNote().setId(noteDTO.getId());
-        System.out.println("Clone Note");
+        noteModel.clearBoundNoteFields();
+        noteModel.getBoundNote().copyFrom(noteDTO);
     }
 
     public void logCurrentEntitlement() {
@@ -415,6 +415,7 @@ public class NoteInteractor {
     }
 
     public void refreshPartOrders() {
+        System.out.println("NoteInteractor::refreshPartOrders()");
         logger.debug("Refreshing bound note, and UI, setting to: {}", noteModel.getBoundNote().getId() );
         checkAndLoadPartOrdersIfNeeded();
         setStatusLabelWithNoteInformation();
