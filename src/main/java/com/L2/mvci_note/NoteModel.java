@@ -24,6 +24,7 @@ public class NoteModel {
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
     private BooleanProperty clearCalled  = new SimpleBooleanProperty(false);
     private BooleanProperty refreshBoundNote = new SimpleBooleanProperty(false);
+    private BooleanProperty openNoteTab = new SimpleBooleanProperty(false);
 
 
     public void clearBoundNoteFields() {
@@ -158,5 +159,14 @@ public class NoteModel {
 
     public void setCurrentEntitlement(EntitlementDTO currentEntitlement) {
         this.currentEntitlement.set(currentEntitlement);
+    }
+
+    public BooleanProperty openNoteTabProperty() {
+        return openNoteTab;
+    }
+
+    public void openNoteTab() {
+        this.openNoteTab.set(true);
+        this.openNoteTab.set(false);
     }
 }

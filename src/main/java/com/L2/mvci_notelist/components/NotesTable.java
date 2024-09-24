@@ -9,6 +9,7 @@ import com.L2.widgetFx.TableViewFx;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
 
@@ -42,6 +43,18 @@ public class NotesTable implements Component<Region> {
                     noteListView.getAction().accept(NoteListMessage.UPDATE_BOUND_NOTE);
             }
         });
+
+        tableView.setRowFactory(tv -> {
+            TableRow<NoteDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                //  NoteDTO noteDTO = row.getItem();
+                    noteListView.getAction().accept(NoteListMessage.SELECT_NOTE_TAB);
+                }
+            });
+            return row;
+        });
+
         return tableView;
     }
 

@@ -383,6 +383,7 @@ public class NoteInteractor {
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         noteModel.getBoundNote().setId(noteDTO.getId());
         noteModel.clearBoundNoteFields();
+        noteModel.openNoteTab();
     }
 
     public void cloneNote() {
@@ -394,6 +395,7 @@ public class NoteInteractor {
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         noteModel.clearBoundNoteFields();
         noteModel.getBoundNote().copyFrom(noteDTO);
+        noteModel.openNoteTab();
     }
 
     public void logCurrentEntitlement() {
