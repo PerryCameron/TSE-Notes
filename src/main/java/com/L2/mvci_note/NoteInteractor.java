@@ -323,12 +323,24 @@ public class NoteInteractor {
 
 
 
+//    private String customerRequestToHTML() {
+//        return buildNameDateToHTML() + "<br>" + "\r\n" +
+//                basicInformationToHTML() + "<br>" + "\r\n" +
+//                issueToHTML() + "<br>" + "\r\n" +
+//                copyAllPartOrdersToHTML(false) + "<br>" +
+//                shippingInformationToHTML() + "<br>" + "\r\n";
+//    }
+
     private String customerRequestToHTML() {
-        return buildNameDateToHTML() + "<br>" + "\r\n" +
-                basicInformationToHTML() + "<br>" + "\r\n" +
-                issueToHTML() + "<br>" + "\r\n" +
-                copyAllPartOrdersToHTML(false) + "<br>" +
-                shippingInformationToHTML() + "<br>" + "\r\n";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(buildNameDateToHTML()).append("<br>").append("\r\n");
+        stringBuilder.append(basicInformationToHTML()).append("<br>").append("\r\n");
+        stringBuilder.append(issueToHTML()).append("<br>").append("\r\n");
+        if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
+            stringBuilder.append(copyAllPartOrdersToHTML(false)).append("<br>").append("\r\n");
+        }
+        stringBuilder.append(shippingInformationToHTML()).append("<br>").append("\r\n");
+        return stringBuilder.toString();
     }
 
     public void copyIssue() {
