@@ -68,7 +68,7 @@ public class DateTimePicker implements Component<Region> {
     private Button refreshButton() {
         Button refreshButton = ButtonFx.utilityButton( () -> {
             noteView.getNoteModel().setStatusLabel("Refreshing date and time to now.");
-            setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+            setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         }, "Sync", "/images/sync-16.png");
         refreshButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
         return refreshButton;

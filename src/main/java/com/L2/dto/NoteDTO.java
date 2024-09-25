@@ -55,7 +55,7 @@ public class NoteDTO {
     public NoteDTO(int id, boolean isEmail) {
         // Initialize properties with passed values
         this.id.set(id);
-        this.timestamp.set(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        this.timestamp.set(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         this.workOrder.set("");
         this.caseNumber.set("");
         this.serialNumber.set("");
@@ -171,23 +171,8 @@ public class NoteDTO {
         id.set(noteDTO.getId()); // since this is listened to, it must copy last
     }
 
-    public void clearAddress() {
-        installedAt.set("");
-        street.set("");
-        city.set("");
-        state.set("");
-        zip.set("");
-        country.set("");
-    }
-
-    public void clearContact() {
-        contactName.set("");
-        contactPhoneNumber.set("");
-        contactEmail.set("");
-    }
-
     public void clear() {
-        this.timestamp.set(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        this.timestamp.set(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         this.workOrder.set("");
         this.caseNumber.set("");
         this.serialNumber.set("");

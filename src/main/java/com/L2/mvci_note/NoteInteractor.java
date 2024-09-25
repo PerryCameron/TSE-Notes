@@ -399,15 +399,23 @@ public class NoteInteractor {
     }
 
     public void cloneNote() {
+        // create a new note
         NoteDTO noteDTO = new NoteDTO(0, false);
+        // copy fields from bound note to our new note
         noteDTO.copyFrom(noteModel.getBoundNote());
-        noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        // set the timestamp on our new note
+//        noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        // let's insert the note and get the id from the database
         noteDTO.setId(noteRepo.insertNote(noteDTO));
+        // let's add the note to our list of notes
         noteModel.getNotes().add(noteDTO);
+        // let's sort our list so our new note sits on top
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
-        noteModel.clearBoundNoteFields();
+//        noteModel.clearBoundNoteFields();
         noteModel.getBoundNote().copyFrom(noteDTO);
-        noteModel.openNoteTab();
+        System.out.println("Part Orders " + noteModel.getBoundNote().getPartOrders().size());
+        noteModel.getBoundNote().getPartOrders().clear();
+        noteModel.refreshBoundNote();
     }
 
     public void logCurrentEntitlement() {
@@ -548,15 +556,9 @@ public class NoteInteractor {
                 deletedNoteDTO = noteDTO;
             }
         }
-//        System.out.println("Bound Note: " + noteModel.getBoundNote() + " id: " + noteModel.getBoundNote().getId());
-//        System.out.println("Deleted Note: " + deletedNoteDTO + " id: " + deletedNoteDTO.getId());
-//        System.out.println("Bound note has " + noteModel.getBoundNote().getPartOrders().size() + " part orders");
-//        System.out.println("Deleted Note has " + deletedNoteDTO.getPartOrders().size() + " part orders");
-        // we will use the bound note to get related part orders, because they are already there
         if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
             noteModel.getBoundNote().getPartOrders().forEach(partOrder -> deletePartOrder(partOrder));
         }
-//        noteRepo.testDeleteNote(deletedNoteDTO);  // Delete the note from repository
         noteRepo.deleteNote(deletedNoteDTO);
         noteModel.getNotes().remove(deletedNoteDTO);
     }
@@ -571,11 +573,9 @@ public class NoteInteractor {
             while (iterator.hasNext()) {
                 PartDTO partDTO = iterator.next();
                 partOrderRepo.deletePart(partDTO);  // Delete the note from repository
-//                partOrderRepo.testDeletePart(partDTO);
                 iterator.remove();
             }
         }
         partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
-//        partOrderRepo.testDeletePartOrder(partOrderDTO);
     }
 }

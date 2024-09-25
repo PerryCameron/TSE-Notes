@@ -23,7 +23,7 @@ public class NoteDTOProcessor {
         noteDTO.setIssue(email);
         // this is important to save the same note
         noteDTO.setTitle("FSR Request - 3Phase Power");
-        noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         noteDTO.setCaseNumber("");
 
         // Variables to store data

@@ -103,11 +103,6 @@ public class NoteModel {
         this.user.set(user);
     }
 
-//    public String getStatusLabel() {
-//        return statusLabel.get();
-//    }
-
-
     // gets the text in the StringPropery
     public StringProperty statusLabelProperty() {
         return statusLabel;
