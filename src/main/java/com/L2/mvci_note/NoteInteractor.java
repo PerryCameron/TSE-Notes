@@ -308,14 +308,20 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
-    private String customerRequestToPlainText() {
-        return buildNameDateToPlainText() + "\r\n" + "\r\n" +
-                basicInformationToPlainText() + "\r\n" +
-                issueToPlainText() + "\r\n" +
-                "--- Parts Needed ---" + "\r\n" +
-                copyAllPartOrdersToPlainText() + "\r\n" +
-                shippingInformationToPlainText() + "\r\n";
+        private String customerRequestToPlainText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
+        stringBuilder.append(basicInformationToPlainText()).append("\r\n");
+        stringBuilder.append(issueToPlainText()).append("\r\n");
+        if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
+            stringBuilder.append("\r\n").append("--- Parts Needed ---").append("\r\n");
+        }
+        stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
+        stringBuilder.append(shippingInformationToPlainText()).append("\r\n");
+        return stringBuilder.toString();
     }
+
+
 
     private String customerRequestToHTML() {
         return buildNameDateToHTML() + "<br>" + "\r\n" +
@@ -542,16 +548,17 @@ public class NoteInteractor {
                 deletedNoteDTO = noteDTO;
             }
         }
-        System.out.println("Bound Note: " + noteModel.getBoundNote() + " id: " + noteModel.getBoundNote().getId());
-        System.out.println("Deleted Note: " + deletedNoteDTO + " id: " + deletedNoteDTO.getId());
-        System.out.println("Bound note has " + noteModel.getBoundNote().getPartOrders().size() + " part orders");
-        System.out.println("Deleted Note has " + deletedNoteDTO.getPartOrders().size() + " part orders");
+//        System.out.println("Bound Note: " + noteModel.getBoundNote() + " id: " + noteModel.getBoundNote().getId());
+//        System.out.println("Deleted Note: " + deletedNoteDTO + " id: " + deletedNoteDTO.getId());
+//        System.out.println("Bound note has " + noteModel.getBoundNote().getPartOrders().size() + " part orders");
+//        System.out.println("Deleted Note has " + deletedNoteDTO.getPartOrders().size() + " part orders");
         // we will use the bound note to get related part orders, because they are already there
         if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
             noteModel.getBoundNote().getPartOrders().forEach(partOrder -> deletePartOrder(partOrder));
         }
-        noteRepo.testDeleteNote(deletedNoteDTO);  // Delete the note from repository
-//        noteModel.getNotes().remove(deletedNoteDTO);
+//        noteRepo.testDeleteNote(deletedNoteDTO);  // Delete the note from repository
+        noteRepo.deleteNote(deletedNoteDTO);
+        noteModel.getNotes().remove(deletedNoteDTO);
     }
 
     public void deleteSelectedPartOrder() {
@@ -563,12 +570,12 @@ public class NoteInteractor {
             Iterator<PartDTO> iterator = partOrderDTO.getParts().iterator();
             while (iterator.hasNext()) {
                 PartDTO partDTO = iterator.next();
-//                partOrderRepo.deletePart(partDTO);  // Delete the note from repository
-                partOrderRepo.testDeletePart(partDTO);
+                partOrderRepo.deletePart(partDTO);  // Delete the note from repository
+//                partOrderRepo.testDeletePart(partDTO);
                 iterator.remove();
             }
         }
-//        partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
-        partOrderRepo.testDeletePartOrder(partOrderDTO);
+        partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
+//        partOrderRepo.testDeletePartOrder(partOrderDTO);
     }
 }
