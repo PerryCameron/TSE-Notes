@@ -38,12 +38,14 @@ public class TitleBar implements Builder<Region> {
         hbox.setSpacing(5);
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.setPrefHeight(40);
+        hbox.setMinHeight(40);
 
 
         // Load the image
-        ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/AppList.targetsize-40_altform-unplated.png")));
-        imageView.setFitHeight(40);
-        imageView.setFitWidth(40);
+        ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/TSELogo-32.png")));
+        imageView.setFitHeight(32);
+        imageView.setFitWidth(32);
+
 
         Label titleLabel = null;
         // Create the title label

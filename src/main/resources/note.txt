@@ -7,3 +7,8 @@ Refreshenv
 Verify the change by running:
 
 echo %JAVA_HOME%
+
+
+// this is how to do it temporary for a session
+$env:Path = "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin;" + $env:Path
+

@@ -23,6 +23,7 @@ public class BaseApplication extends Application {
 
     public static void main(String[] args) {
 //        AppFileTools.startFileLogger();
+        System.out.println("BaseApplication main method is running...");
         for (String arg : args) {
             if ("test".equalsIgnoreCase(arg)) {
                 testMode = true;
@@ -68,7 +69,7 @@ public class BaseApplication extends Application {
             primaryStage.setScene(new Scene(new MainController().getView()));
             Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
             primaryStage.getScene().getStylesheets().add("css/dark/tabpane.css");
-            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/app-icon-64.png")));
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/TSELogo-64.png")));
             // Mouse pressed for dragging the window
             primaryStage.getScene().setOnMousePressed(event -> {
                 if (!isResizing) { // Only allow moving if not resizing

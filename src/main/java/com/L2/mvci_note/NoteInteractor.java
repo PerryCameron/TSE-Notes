@@ -321,16 +321,6 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
-
-
-//    private String customerRequestToHTML() {
-//        return buildNameDateToHTML() + "<br>" + "\r\n" +
-//                basicInformationToHTML() + "<br>" + "\r\n" +
-//                issueToHTML() + "<br>" + "\r\n" +
-//                copyAllPartOrdersToHTML(false) + "<br>" +
-//                shippingInformationToHTML() + "<br>" + "\r\n";
-//    }
-
     private String customerRequestToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToHTML()).append("<br>").append("\r\n");
@@ -416,14 +406,14 @@ public class NoteInteractor {
         // copy fields from bound note to our new note
         noteDTO.copyFrom(noteModel.getBoundNote());
         // set the timestamp on our new note
-//        noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         // let's insert the note and get the id from the database
         noteDTO.setId(noteRepo.insertNote(noteDTO));
         // let's add the note to our list of notes
         noteModel.getNotes().add(noteDTO);
         // let's sort our list so our new note sits on top
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
-//        noteModel.clearBoundNoteFields();
+        // let's make the bound note copy our new note
         noteModel.getBoundNote().copyFrom(noteDTO);
         System.out.println("Part Orders " + noteModel.getBoundNote().getPartOrders().size());
         noteModel.getBoundNote().getPartOrders().clear();

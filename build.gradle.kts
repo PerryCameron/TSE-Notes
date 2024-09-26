@@ -1,6 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-// Gradle 8.8
+// I am using Gradle 8.8
+// I am also using bellsoft-jdk21.0.4+9-windows-amd64-full - This is an SDK with JavaFX included, I am using it to simplify this instillation
 plugins {
     application
     java
@@ -23,6 +24,7 @@ repositories {
 val appVersion: String by project
 
 // Process and copy app.properties with version replacement
+// this doesn't work yet, but will be for versioning my app
 tasks.register<Copy>("processAppProperties") {
     from("src/main/resources")
     into(layout.buildDirectory.dir("resources/"))
@@ -116,9 +118,31 @@ tasks.register<Exec>("packageApp") {
     )
 }
 
+tasks.register<Exec>("packageAppInstallerMac") {
+    group = "build"
+    description = "Packages the application with a bundled JRE using jpackage for macOS"
+
+    doFirst {
+        delete(file("build/jpackage/TSENotesInstaller"))
+    }
+
+    commandLine(
+        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin/jpackage",  // Assuming jpackage is on your PATH
+        "--input", "build/libs",
+        "--main-jar", "TSENotes-all.jar",
+        "--main-class", "com.L2.BaseApplication",
+        "--name", "TSENotes",
+        "--type", "pkg",  // You can use dmg for macOS disk image installer
+        "--runtime-image", "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full",
+        "--dest", "build/jpackage/TSENotesInstaller",
+        "--install-dir", System.getProperty("user.home") + "/TSENotes",  // Default to user's home directory
+        "--icon", "src/main/resources/images/app-icon-64.png"
+    )
+}
+
 
 tasks.test {
     useJUnitPlatform()
 }
 
-
+// so after running
