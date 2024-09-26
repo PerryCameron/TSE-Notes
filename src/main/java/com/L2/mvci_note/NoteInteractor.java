@@ -6,6 +6,7 @@ import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
 import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.repository.implementations.PartOrderRepositoryImpl;
+import com.L2.repository.implementations.UserRepositoryImpl;
 import com.L2.static_tools.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -28,12 +29,14 @@ public class NoteInteractor {
     private static final Logger logger = LoggerFactory.getLogger(NoteInteractor.class);
     private final NoteRepositoryImpl noteRepo;
     private final PartOrderRepositoryImpl partOrderRepo;
+    private final UserRepositoryImpl userRepo;
 
     public NoteInteractor(NoteModel noteModel) {
 
         this.noteModel = noteModel;
         this.noteRepo = new NoteRepositoryImpl();
         this.partOrderRepo = new PartOrderRepositoryImpl();
+        this.userRepo = new UserRepositoryImpl();
     }
 
     public void loadEntitlements() {
@@ -190,7 +193,7 @@ public class NoteInteractor {
 
     public void loadUser() {
         // will eventually pull user off of hard disk
-        noteModel.setUser(FakeData.createPerson());
+        noteModel.setUser(userRepo.getUser());
         logger.info("Loading user: {}", noteModel.getUser().getSesa());
     }
 

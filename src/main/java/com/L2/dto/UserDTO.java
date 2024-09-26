@@ -1,17 +1,28 @@
 package com.L2.dto;
 
 public class UserDTO {
+    int id;
     String firstName;
     String lastName;
     String email;
     String sesa;
     String profileLink;
 
-    public UserDTO(String firstName, String lastName, String email, String sesa) {
+    public UserDTO(int id, String firstName, String lastName, String email, String sesa, String profileLink) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.sesa = sesa;
+        this.profileLink = profileLink;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFullName() {

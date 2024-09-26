@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 
 public class FakeData {
 
-    public static UserDTO createPerson() {
-        UserDTO userDTO = new UserDTO("Parrish","Cameron","parrish.cameron@se.com", "91827");
-        userDTO.setProfileLink("https://se.lightning.force.com/lightning/r/005A0000001pSZBIA2/view");
-        return userDTO;
-    }
+//    public static UserDTO createPerson() {
+//        UserDTO userDTO = new UserDTO("Parrish","Cameron","parrish.cameron@se.com", "91827");
+//        userDTO.setProfileLink("https://se.lightning.force.com/lightning/r/005A0000001pSZBIA2/view");
+//        return userDTO;
+//    }
 
 //    public static NoteDTO createFakeCase() {
 //        NoteDTO c = new NoteDTO();

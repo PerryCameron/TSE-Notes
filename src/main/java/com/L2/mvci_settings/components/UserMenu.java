@@ -36,11 +36,11 @@ public class UserMenu implements Builder<Region> {
         tf3.setPromptText("SESA #");
         tf3.setPrefSize(200,20);
         TextField tf4 = new TextField();
-        tf4.setPromptText("SESA #");
+        tf4.setPromptText("URL");
         tf4.setPrefSize(200,20);
         Button btn1 = new Button("Save");
         btn1.setOnAction(event -> action.accept(SettingsMessage.SAVE_USER));
-        vBox.getChildren().addAll(tf1, tf2, btn1);
+        vBox.getChildren().addAll(tf1, tf2, tf3, tf4, btn1);
         return vBox;
     }
 }

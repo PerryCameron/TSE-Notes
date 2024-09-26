@@ -114,7 +114,7 @@ tasks.register<Exec>("packageApp") {
         "--type", "app-image",  // You can also use pkg, dmg, exe, etc.
         "--runtime-image", "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full",  // Path to Java 21 runtime image
         "--dest", "build/jpackage",  // Output destination
-        "--icon", "src/main/resources/images/app-icon-64.png"  // Optional: Path to your app's icon
+        "--icon", "src/main/resources/images/TSELogo.ico"  // Optional: Path to your app's icon
     )
 }
 
@@ -138,7 +138,7 @@ tasks.register<Exec>("packageAppInstallerWindows") {
         "--runtime-image", "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full",
         "--dest", "build/jpackage/TSENotesInstaller",
         "--install-dir", System.getenv("UserProfile") + "/TSENotes",  // Install in user's home directory
-        "--icon", "src/main/resources/icons/TSELogo-256.ico",  // Path to your ICO file for Windows
+        "--icon", "src/main/resources/images/TSELogo.ico",  // Path to your ICO file for Windows
         "--win-menu",  // Adds an entry to the Start Menu
         "--win-shortcut",  // Creates a desktop shortcut
         "--win-console"  // Optional: Displays console output
