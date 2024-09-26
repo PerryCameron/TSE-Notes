@@ -118,25 +118,30 @@ tasks.register<Exec>("packageApp") {
     )
 }
 
-tasks.register<Exec>("packageAppInstallerMac") {
+tasks.register<Exec>("packageAppInstallerWindows") {
     group = "build"
-    description = "Packages the application with a bundled JRE using jpackage for macOS"
+    description = "Packages the application with a bundled JRE using jpackage for Windows"
+
 
     doFirst {
         delete(file("build/jpackage/TSENotesInstaller"))
     }
 
+
     commandLine(
-        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin/jpackage",  // Assuming jpackage is on your PATH
+        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin/jpackage",
         "--input", "build/libs",
         "--main-jar", "TSENotes-all.jar",
         "--main-class", "com.L2.BaseApplication",
         "--name", "TSENotes",
-        "--type", "pkg",  // You can use dmg for macOS disk image installer
+        "--type", "exe",  // You can also use "msi" for a Windows installer
         "--runtime-image", "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full",
         "--dest", "build/jpackage/TSENotesInstaller",
-        "--install-dir", System.getProperty("user.home") + "/TSENotes",  // Default to user's home directory
-        "--icon", "src/main/resources/images/app-icon-64.png"
+        "--install-dir", System.getenv("UserProfile") + "/TSENotes",  // Install in user's home directory
+        "--icon", "src/main/resources/icons/TSELogo-256.ico",  // Path to your ICO file for Windows
+        "--win-menu",  // Adds an entry to the Start Menu
+        "--win-shortcut",  // Creates a desktop shortcut
+        "--win-console"  // Optional: Displays console output
     )
 }
 
