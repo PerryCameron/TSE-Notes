@@ -8,14 +8,12 @@ import javafx.beans.property.StringProperty;
 import java.io.*;
 
 
-public class EntitlementDTO implements Serializable {
+public class EntitlementDTO  {
 
-    private static final long serialVersionUID = 1234567890123456789L;
-
-    private transient IntegerProperty id = new SimpleIntegerProperty();
-    private transient StringProperty name = new SimpleStringProperty();
-    private transient StringProperty includes = new SimpleStringProperty();
-    private transient StringProperty notIncludes = new SimpleStringProperty();
+    private IntegerProperty id = new SimpleIntegerProperty();
+    private StringProperty name = new SimpleStringProperty();
+    private StringProperty includes = new SimpleStringProperty();
+    private StringProperty notIncludes = new SimpleStringProperty();
     // Default constructor
     public EntitlementDTO() {}
     // Copy Constructor
@@ -31,6 +29,13 @@ public class EntitlementDTO implements Serializable {
         this.name.set("New Entitlement");
         this.includes.set("");
         this.notIncludes.set("");
+    }
+
+    public EntitlementDTO(Integer id, String name, String includes, String notIncludes) {
+        this.id.set(id);
+        this.name.set(name);
+        this.includes.set(includes);
+        this.notIncludes.set(notIncludes);
     }
 
     // Getters and Setters for id
@@ -104,31 +109,10 @@ public class EntitlementDTO implements Serializable {
     }
 
     public void copy(EntitlementDTO original) {
-        System.out.println("Copying current entitlement");
         id.set(original.getId());
         name.set(original.getName());
         includes.set(original.getIncludes());
         notIncludes.set(original.getNotIncludes());
-        System.out.println(toFancyString());
-    }
-
-    // Custom serialization logic
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
-        out.writeInt(getId());
-        out.writeUTF(getName());
-        out.writeUTF(getIncludes());
-        out.writeUTF(getNotIncludes());
-    }
-
-
-    // Custom deserialization logic
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        id = new SimpleIntegerProperty(in.readInt());
-        name = new SimpleStringProperty(in.readUTF());
-        includes = new SimpleStringProperty(in.readUTF());
-        notIncludes = new SimpleStringProperty(in.readUTF());
     }
 
     public String toFancyString() {
