@@ -3,6 +3,7 @@ package com.L2.mvci_settings.components;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
+import com.L2.widgetFx.ButtonFx;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
@@ -77,9 +78,8 @@ public class UserMenu implements Builder<Region> {
             }
         });
 
-        Button btn1 = new Button("Save");
-        btn1.setOnAction(event -> action.accept(SettingsMessage.SAVE_USER));
-        vBox.getChildren().addAll(tf1, tf2, ef3, tf3, tf4, btn1);
+        Button saveButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.SAVE_USER), "Save", "/images/save-16.png");
+        vBox.getChildren().addAll(tf1, tf2, ef3, tf3, tf4, saveButton);
         return vBox;
     }
 }
