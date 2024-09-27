@@ -1,6 +1,7 @@
 package com.L2.mvci_main;
 
 import com.L2.dto.NoteDTO;
+import com.L2.dto.UserDTO;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_note.NoteController;
 import com.L2.mvci_note.NoteMessage;
@@ -46,7 +47,6 @@ public class MainController extends Controller<MainMessage> {
             case SAVE_OR_UPDATE_NOTE -> noteController.action(NoteMessage.SAVE_OR_UPDATE_NOTE);
             case SET_COMPLETE -> noteController.action(NoteMessage.SET_COMPLETE);
             case NEW_NOTE -> noteController.action(NoteMessage.NEW_NOTE);
-            case TEST -> noteController.action(NoteMessage.TEST); // TODO delete
             case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT ->
                     noteListController.action(NoteListMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
             case REFRESH_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.REFRESH_NOTE_TABLEVIEW);
@@ -57,6 +57,10 @@ public class MainController extends Controller<MainMessage> {
             case REFRESH_PART_ORDERS -> noteController.action(NoteMessage.REFRESH_PART_ORDERS);
             case CLONE_NOTE -> noteController.action(NoteMessage.CLONE_NOTE);
         }
+    }
+
+    public UserDTO getUser() {
+        return noteController.getUser();
     }
 
     public ObservableList<NoteDTO> getNotes() {
@@ -72,13 +76,13 @@ public class MainController extends Controller<MainMessage> {
     }
 
     private void openNoteTab() {
-            noteController = new NoteController(this);
-            mainView.addNewTab("Note", noteController.getView(), false);
+        noteController = new NoteController(this);
+        mainView.addNewTab("Note", noteController.getView(), false);
     }
 
     private void openSettingsTab() {
-            settingsController = new SettingsController(this);
-            mainView.addNewTab("Settings", settingsController.getView(), true);
+        settingsController = new SettingsController(this);
+        mainView.addNewTab("Settings", settingsController.getView(), true);
     }
 
     private void openNoteListTab() {

@@ -91,7 +91,6 @@ public class MainView implements Builder<Region> {
         hBox.setStyle("-fx-background-color: grey");
         Button prevNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.PREVIOUS_NOTE), "Previous", "/images/back-16.png");
         Button nextNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEXT_NOTE), "Next", "/images/forward-16.png");
-//        Button setCompletedButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SET_COMPLETE), "Set Completed", "/images/thumbs-16.png");
         Button newNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/new-16.png");
         Button cloneButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.CLONE_NOTE), "Clone Note", "/images/clone-16.png");
         Button deleteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.DELETE_NOTE), "Delete Note", "/images/delete-16.png");
@@ -106,12 +105,9 @@ public class MainView implements Builder<Region> {
         Label statusLabel = new Label();
         statusLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
         statusLabel.textProperty().bind(mainModel.statusStringProperty());
-//        mainModel.statusStringProperty().set("(Not Connected) Ready.");
         vBox.getChildren().add(statusLabel);
         return vBox;
     }
-
-//    noteListView.getAction().accept(NoteListMessage.UPDATE_BOUND_NOTE);
 
     private Node setUpCenterPane() {
         TabPane tabPane = new TabPane();

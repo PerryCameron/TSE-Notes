@@ -1,9 +1,6 @@
 package com.L2.mvci_note;
 
-import com.L2.dto.NoteDTO;
-import com.L2.dto.EntitlementDTO;
-import com.L2.dto.PartDTO;
-import com.L2.dto.PartOrderDTO;
+import com.L2.dto.*;
 import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.repository.implementations.PartOrderRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
@@ -582,5 +579,9 @@ public class NoteInteractor {
             }
         }
         partOrderRepo.deletePartOrder(noteModel.getSelectedPartOrder());
+    }
+
+    public UserDTO getUser() {
+        return noteModel.getUser();
     }
 }

@@ -1,7 +1,9 @@
 package com.L2.mvci_settings;
 
 import com.L2.dto.EntitlementDTO;
+import com.L2.dto.UserDTO;
 import com.L2.mvci_note.NoteModel;
+import com.L2.repository.implementations.UserRepositoryImpl;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
@@ -15,9 +17,12 @@ import java.util.ArrayList;
 public class SettingsInteractor {
 
     private final SettingsModel settingsModel;
+    private final UserRepositoryImpl userRepo;
 
     public SettingsInteractor(SettingsModel settingsModel) {
+        
         this.settingsModel = settingsModel;
+        this.userRepo = new UserRepositoryImpl();
     }
 
     private static final Logger logger = LoggerFactory.getLogger(SettingsInteractor.class);
@@ -83,5 +88,11 @@ public class SettingsInteractor {
         settingsModel.setEntitlements(noteModel.getEntitlements());
     }
 
+    public void setUser(UserDTO user) {
+        settingsModel.setUser(user);
+    }
 
+    public void saveUser() {
+        userRepo.updateUserDTO(settingsModel.getUser());
+    }
 }

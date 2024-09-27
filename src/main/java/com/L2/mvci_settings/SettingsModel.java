@@ -1,6 +1,7 @@
 package com.L2.mvci_settings;
 
 import com.L2.dto.EntitlementDTO;
+import com.L2.dto.UserDTO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -18,7 +19,19 @@ public class SettingsModel {
     private ObjectProperty<TextArea> tFInclude = new SimpleObjectProperty<>();
     private ObjectProperty<TextArea> tFIncludeNot = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = null;
+    private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>(null);
 
+    public UserDTO getUser() {
+        return user.get();
+    }
+
+    public ObjectProperty<UserDTO> userProperty() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user.set(user);
+    }
 
     public TextField gettFEntitlement() {
         return tFEntitlement.get();

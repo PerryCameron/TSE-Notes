@@ -32,6 +32,7 @@ public class SettingsView implements Builder<Region> {
         VBox vBox = VBoxFx.of(150.0, 10.0, new Insets(30, 0, 0, 10));
         Button button1 = ButtonFx.of("User", 130.0);
         Button button2 = ButtonFx.of("Entitlements", 130.0);
+        //        Button setCompletedButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SET_COMPLETE), "Set Completed", "/images/thumbs-16.png");
         button1.setOnAction(e -> action.accept(SettingsMessage.SHOW_USER));
         button2.setOnAction(e -> action.accept(SettingsMessage.SHOW_ENTITLEMENTS));
         vBox.getChildren().addAll(button1, button2);

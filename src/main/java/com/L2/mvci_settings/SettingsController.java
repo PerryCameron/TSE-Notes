@@ -1,6 +1,7 @@
 package com.L2.mvci_settings;
 
 import com.L2.interfaces.Controller;
+import com.L2.mvci_main.MainMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_settings.components.EntitlementsMenu;
@@ -40,6 +41,8 @@ public class SettingsController extends Controller<SettingsMessage> {
             case SHOW_ENTITLEMENTS -> settingsInteractor.changeMenu(new EntitlementsMenu(settingsView).build());
             case NEW_ENTITLEMENT -> settingsInteractor.createNewEntitlement();
             case DELETE_ENTITLEMENT -> settingsInteractor.deleteEntitlement();
+            case MAKE_REFERENCE_TO_USER -> settingsInteractor.setUser(mainController.getUser());
+            case SAVE_USER -> settingsInteractor.saveUser();
         };
     }
 }

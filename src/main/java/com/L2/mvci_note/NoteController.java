@@ -1,6 +1,7 @@
 package com.L2.mvci_note;
 
 import com.L2.dto.NoteDTO;
+import com.L2.dto.UserDTO;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_main.MainMessage;
@@ -68,6 +69,8 @@ public class NoteController extends Controller<NoteMessage> {
             case SELECT_NOTE_TAB -> mainController.action(MainMessage.SELECT_NOTE_TAB);
         };
     }
+
+    public UserDTO getUser() { return noteInteractor.getUser(); }
 
     public ObservableList<NoteDTO> getNotes() {
         return noteInteractor.getNotes();
