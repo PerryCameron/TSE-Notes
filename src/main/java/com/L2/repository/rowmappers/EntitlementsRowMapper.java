@@ -15,9 +15,9 @@ public class EntitlementsRowMapper implements RowMapper<EntitlementDTO> {
     public EntitlementDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new EntitlementDTO(
                 rs.getInt("id"),
-                rs.getString("workOrder"),
-                rs.getString("caseNumber"),
-                rs.getString("serialNumber")
+                rs.getString("name"),
+                rs.getString("includes"),
+                rs.getString("not_included")
         );
     }
 }

@@ -1,6 +1,7 @@
 package com.L2.mvci_note;
 
 import com.L2.dto.*;
+import com.L2.repository.implementations.EntitlementsRepositoryImpl;
 import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.repository.implementations.PartOrderRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
@@ -27,6 +28,7 @@ public class NoteInteractor {
     private final NoteRepositoryImpl noteRepo;
     private final PartOrderRepositoryImpl partOrderRepo;
     private final UserRepositoryImpl userRepo;
+    private final EntitlementsRepositoryImpl entitlementsRepo;
 
     public NoteInteractor(NoteModel noteModel) {
 
@@ -34,6 +36,7 @@ public class NoteInteractor {
         this.noteRepo = new NoteRepositoryImpl();
         this.partOrderRepo = new PartOrderRepositoryImpl();
         this.userRepo = new UserRepositoryImpl();
+        this.entitlementsRepo = new EntitlementsRepositoryImpl();
     }
 
     public void loadEntitlements() {
@@ -41,7 +44,7 @@ public class NoteInteractor {
             // Ensure the directory and file exist
             AppFileTools.createFileIfNotExists(settingsDir);
             // Load the entitlements
-            ObservableList<EntitlementDTO> entitlements = AppFileTools.getEntitlements(entitlementsFile);
+            ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList(entitlementsRepo.getAllEntitlements());
             noteModel.setEntitlements(entitlements);
             logger.info("Loaded entitlements: {}", entitlements.size());
         } catch (IOException e) {
