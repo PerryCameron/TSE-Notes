@@ -25,7 +25,7 @@ public class IssueBox implements Component<Region> {
     public IssueBox(NoteView noteView) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
-        this.textAreaIssue = TextAreaFx.of(true, 200, 16, 5);
+        this.textAreaIssue = TextAreaFx.of(true, 200, 16, 2);
     }
 
     @Override

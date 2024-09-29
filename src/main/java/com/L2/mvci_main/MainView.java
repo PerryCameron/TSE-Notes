@@ -7,12 +7,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class MainView implements Builder<Region> {
@@ -44,8 +47,6 @@ public class MainView implements Builder<Region> {
 
     private Node setUpMenuBar() {
         MenuBar menuBar = new MenuBar();
-        menuBar.setPadding(new Insets(0, 0, 0, 0));
-        menuBar.setMaxHeight(15);
         menuBar.getMenus().addAll(createFileMenu(), createDebugMenu());
         return menuBar;
     }
@@ -67,7 +68,6 @@ public class MainView implements Builder<Region> {
     private Node setUpBottomPane() {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.BASELINE_LEFT);
-        hBox.setStyle("-fx-background-color: grey");
         Button prevNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.PREVIOUS_NOTE), "Previous", "/images/back-16.png");
         Button nextNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEXT_NOTE), "Next", "/images/forward-16.png");
         Button newNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/create-16.png");
@@ -114,8 +114,13 @@ public class MainView implements Builder<Region> {
         return vBox;
     }
 
-    protected void addNewTab(String name, Region region, boolean closeable) {
+    protected void addNewTab(String name, Region region, boolean closeable, String image) {
         Tab newTab = new Tab(name, region);
+        if(!image.isEmpty()) {
+            Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(image)));
+            ImageView imageViewCopy = new ImageView(copyIcon);
+            newTab.setGraphic(imageViewCopy);
+        }
         if(name.equals("Note")) mainModel.setNoteTab(newTab);
         newTab.setClosable(closeable);
         mainModel.getMainTabPane().getTabs().add(newTab);

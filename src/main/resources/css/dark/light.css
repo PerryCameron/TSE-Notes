@@ -35,6 +35,13 @@
     -fx-background-color: #e2e1e1;
 }
 
+
+.bottom-pane {
+    -fx-background-color: grey;
+}
+
+
+
 /* Optional: Remove focus border from tabs */
 .tab-pane:focused > .tab-header-area > .tab:selected {
     -fx-background-color: #2980b9; /* Match this to selected tab color to remove focus border */

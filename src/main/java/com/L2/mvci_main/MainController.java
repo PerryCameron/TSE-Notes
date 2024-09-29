@@ -77,17 +77,17 @@ public class MainController extends Controller<MainMessage> {
 
     private void openNoteTab() {
         noteController = new NoteController(this);
-        mainView.addNewTab("Note", noteController.getView(), false);
+        mainView.addNewTab("Note", noteController.getView(), false,"/images/notes-16.png");
     }
 
     private void openSettingsTab() {
         settingsController = new SettingsController(this);
-        mainView.addNewTab("Settings", settingsController.getView(), true);
+        mainView.addNewTab("Settings", settingsController.getView(), true,"/images/gear-16.png");
     }
 
     private void openNoteListTab() {
         noteListController = new NoteListController(this);
-        mainView.addNewTab("Manage Notes", noteListController.getView(), true);
+        mainView.addNewTab("Notes", noteListController.getView(), false,"/images/list-16.png");
     }
 
     public NoteController getNoteController() {
