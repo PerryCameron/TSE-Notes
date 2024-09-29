@@ -17,7 +17,6 @@ public class MainInteractor implements ApplicationPaths {
     }
 
     public void setStatusBar(String status) {
-        System.out.println("MainInteractor::setStatusBar -> " + status);
         mainModel.statusStringProperty().set(status);
     }
 

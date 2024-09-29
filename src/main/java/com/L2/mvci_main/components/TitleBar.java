@@ -3,12 +3,17 @@ package com.L2.mvci_main.components;
 
 import atlantafx.base.theme.Styles;
 import com.L2.BaseApplication;
+import com.L2.mvci_main.MainMessage;
 import com.L2.mvci_main.MainView;
+import com.L2.widgetFx.ButtonFx;
+import com.L2.widgetFx.MenuFx;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
@@ -16,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
 import javafx.util.Builder;
+import javafx.util.Duration;
 
 import static com.L2.BaseApplication.primaryStage;
 
@@ -42,9 +48,9 @@ public class TitleBar implements Builder<Region> {
 
 
         // Load the image
-        ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/TSELogo-32.png")));
-        imageView.setFitHeight(32);
-        imageView.setFitWidth(32);
+        ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/TSELogo-24.png")));
+        imageView.setFitHeight(24);
+        imageView.setFitWidth(24);
 
 
         Label titleLabel = null;
@@ -79,6 +85,20 @@ public class TitleBar implements Builder<Region> {
         hbox.getChildren().addAll(imageView, titleLabel, spacer, createCloseButton());
         return hbox;
     }
+
+    // the point of this is to hide a MenuBar until you click on the button.  I then want to be able to click on the menus and menu items.  I want the menu to go away and the button comes back if your mouse exists the menu or sub menus, or menu items
+//    private Node menu() {
+//        HBox hbox = new HBox();
+//        hbox.setAlignment(Pos.CENTER);
+//        Button button = ButtonFx.utilityButton("/images/menu-24.png");
+//        MenuBar menuBar = setUpMenuBar(hbox, button);
+//        button.setOnAction(e -> { // this works great to show the menu
+//            hbox.getChildren().remove(button);
+//            hbox.getChildren().add(menuBar);
+//        });
+//        hbox.getChildren().addAll(button);
+//        return hbox;
+//    }
 
     private Node createCloseButton() {
         // Create an HBox to contain the 'X'

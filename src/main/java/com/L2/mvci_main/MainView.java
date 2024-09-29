@@ -7,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -29,7 +28,6 @@ public class MainView implements Builder<Region> {
     public Region build() {
         VBox root = new VBox();
         BorderPane borderPane = new BorderPane();
-//        borderPane.setPrefSize(1028, 830);
         borderPane.setTop(setUpTopPane());
         borderPane.setCenter(setUpCenterPane());
         borderPane.setBottom(setUpBottomPane());
@@ -41,8 +39,6 @@ public class MainView implements Builder<Region> {
     private Node setUpTopPane() {
         VBox topElements = new VBox();
         topElements.getChildren().add(setUpMenuBar());
-        ToolBar toolbar = new ToolBar();
-        topElements.getChildren().add(toolbar);
         return topElements;
     }
 
@@ -50,37 +46,20 @@ public class MainView implements Builder<Region> {
         MenuBar menuBar = new MenuBar();
         menuBar.setPadding(new Insets(0, 0, 0, 0));
         menuBar.setMaxHeight(15);
-        menuBar.getMenus().addAll(createFileMenu(), createEditMenu(), createDebugMenu());
+        menuBar.getMenus().addAll(createFileMenu(), createDebugMenu());
         return menuBar;
-    }
-
-    private Menu createEditMenu() {
-        Menu menu = new Menu("Edit");
-        MenuItem undo = MenuFx.menuItemOf("Undo", x -> System.out.println("undo"), KeyCode.Z);
-        MenuItem redo = MenuFx.menuItemOf("Redo", x -> System.out.println("Redo"), KeyCode.R);
-        SeparatorMenuItem editSeparator = new SeparatorMenuItem();
-        MenuItem cut = MenuFx.menuItemOf("Cut", x -> System.out.println("Cut"), KeyCode.X);
-        MenuItem copy = MenuFx.menuItemOf("Copy", x -> System.out.println("Copy"), KeyCode.C);
-        MenuItem paste = MenuFx.menuItemOf("Paste", x -> System.out.println("Paste"), KeyCode.V);
-        menu.getItems().addAll(undo, redo, editSeparator, cut, copy, paste);
-        return menu;
     }
 
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
-//        MenuItem openNewCase = MenuFx.menuItemOf("Open New Case", x -> action.accept(MainMessage.OPEN_NOTES), null);
-        MenuItem openNotesList = MenuFx.menuItemOf("Open Notes List", x -> action.accept(MainMessage.OPEN_NOTESLIST_TAB), null);
         MenuItem close = MenuFx.menuItemOf("Settings", x -> action.accept(MainMessage.OPEN_SETTINGS), null);
-        menu.getItems().addAll(close, openNotesList);
+        menu.getItems().addAll(close);
         return menu;
     }
 
     private Menu createDebugMenu() {
         Menu menu = new Menu("Debug");
-//        MenuItem findDebugLog = new MenuItem("Find Debug Log folder");
-//        findDebugLog.setOnAction(e -> showDebugLogFolder());
         MenuItem showDebugLog = MenuFx.menuItemOf("Show Log", x -> action.accept(MainMessage.SHOW_LOG), null);
-//        showDebugLog.setOnAction(event -> showDebugLog());
         menu.getItems().add(showDebugLog);
         return menu;
     }
@@ -91,7 +70,7 @@ public class MainView implements Builder<Region> {
         hBox.setStyle("-fx-background-color: grey");
         Button prevNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.PREVIOUS_NOTE), "Previous", "/images/back-16.png");
         Button nextNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEXT_NOTE), "Next", "/images/forward-16.png");
-        Button newNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/new-16.png");
+        Button newNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/create-16.png");
         Button cloneButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.CLONE_NOTE), "Clone Note", "/images/clone-16.png");
         Button deleteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.DELETE_NOTE), "Delete Note", "/images/delete-16.png");
         hBox.getChildren().addAll(statusLabel(),prevNoteButton, nextNoteButton, newNoteButton, cloneButton, deleteButton);
@@ -110,7 +89,11 @@ public class MainView implements Builder<Region> {
     }
 
     private Node setUpCenterPane() {
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(4,0,0,0));
+        vBox.getStyleClass().add("center-pane");
         TabPane tabPane = new TabPane();
+        tabPane.setStyle("-fx-background-color: white");
         mainModel.setMainTabPane(tabPane);
         // Open our initial tabs
         action.accept(MainMessage.OPEN_NOTE_TAB);
@@ -127,7 +110,8 @@ public class MainView implements Builder<Region> {
                 if(newTab.getText().equals("Manage Notes")) action.accept(MainMessage.REFRESH_NOTE_TABLEVIEW);
             }
         });
-        return tabPane;
+        vBox.getChildren().add(tabPane);
+        return vBox;
     }
 
     protected void addNewTab(String name, Region region, boolean closeable) {
@@ -138,4 +122,7 @@ public class MainView implements Builder<Region> {
         mainModel.getMainTabPane().getSelectionModel().select(newTab);
     }
 
+    public Consumer<MainMessage> getAction() {
+        return action;
+    }
 }

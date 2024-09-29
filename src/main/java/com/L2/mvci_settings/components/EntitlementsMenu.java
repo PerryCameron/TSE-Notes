@@ -5,6 +5,7 @@ import com.L2.dto.EntitlementDTO;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
+import com.L2.widgetFx.ButtonFx;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -42,8 +43,7 @@ public class EntitlementsMenu implements Builder<Region> {
 
     @Override
     public Region build() {
-//        HBox hBox = new HBox(10);
-        InputGroup inputGroup = new InputGroup();
+        InputGroup inputGroup = new InputGroup(); // extends hbox
         inputGroup.setSpacing(10);
         inputGroup.getChildren().addAll(new EntitlementsTableView(view).build(), CreateEditFields());
         return inputGroup;
@@ -66,18 +66,10 @@ public class EntitlementsMenu implements Builder<Region> {
 
     private Node createButtonRow() {
         HBox hBox = new HBox(5);
-        Button btn1 = new Button("Save");
-        btn1.getStyleClass().add("success");
-        btn1.setOnAction(event -> action.accept(SettingsMessage.SAVE_ENTITLEMENTS));
-        Button btn2 = new Button("Delete");
-        btn2.getStyleClass().add("danger");
-        btn2.setOnAction(event -> action.accept(SettingsMessage.DELETE_ENTITLEMENT));
-        Button btn3 = new Button("New");
-        btn3.getStyleClass().add("accent");
-        btn3.setOnAction(event -> action.accept(SettingsMessage.NEW_ENTITLEMENT));
-        Button btn4 = new Button("Print Entitlements");
-        btn4.setOnAction(event -> action.accept(SettingsMessage.PRINT_ENTITLEMENTS));
-        hBox.getChildren().addAll(btn1, btn2, btn3, btn4);
+        Button saveButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.SAVE_ENTITLEMENTS), "Save", "/images/save-16.png");
+        Button deleteButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.DELETE_ENTITLEMENT), "Delete", "/images/delete-16.png");
+        Button newButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.NEW_ENTITLEMENT), "New", "/images/create-16.png");
+        hBox.getChildren().addAll(saveButton, deleteButton, newButton);
         return hBox;
     }
 }

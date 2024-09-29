@@ -81,7 +81,6 @@ public class NoteInteractor {
     }
 
     public String getStatus() {
-        System.out.println(("NoteInteractor::getStatus -> statusLabelProperty (StringProperty): " + noteModel.statusLabelProperty().get()));
         return noteModel.statusLabelProperty().get();
     }
 

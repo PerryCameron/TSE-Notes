@@ -2,7 +2,6 @@ package com.L2;
 
 import atlantafx.base.theme.PrimerLight;
 import com.L2.mvci_main.MainController;
-import com.L2.static_tools.AppFileTools;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -68,7 +67,7 @@ public class BaseApplication extends Application {
             primaryStage.setResizable(true);
             primaryStage.setScene(new Scene(new MainController().getView()));
             Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-            primaryStage.getScene().getStylesheets().add("css/dark/tabpane.css");
+            primaryStage.getScene().getStylesheets().add("css/dark/light.css");
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/TSELogo-64.png")));
             // Mouse pressed for dragging the window
             primaryStage.getScene().setOnMousePressed(event -> {

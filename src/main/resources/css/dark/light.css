@@ -5,7 +5,7 @@
 
 /* Style for unselected tabs */
 .tab {
-    -fx-background-color: #f3f3f3; /* Unselected tab background color */
+    -fx-background-color: #f4f2f2; /* Unselected tab background color */
     -fx-text-fill: black;           /* Unselected tab text color */
 
 }
@@ -23,6 +23,16 @@
 .tab:selected .tab-label {
     -fx-text-fill: black;
     -fx-font-weight: bold;
+}
+
+/*This is the space to the right of the tabs at the top*/
+.tab-header-background {
+    -fx-background-color: #e2e1e1;
+}
+
+/*This controls the background of the entire center pane*/
+.center-pane {
+    -fx-background-color: #e2e1e1;
 }
 
 /* Optional: Remove focus border from tabs */
@@ -122,4 +132,40 @@
     -fx-text-fill: black; /* Text color in the selected cell */
 }
 
+
+.menu-bar {
+    -fx-background-color: transparent; /* Make the background transparent */
+    -fx-border-color: transparent;     /* Remove any borders */
+}
+
+.menu-bar .menu {
+    -fx-text-fill: white;              /* Set menu text color to white */
+    -fx-background-color: transparent; /* Make menu background transparent */
+}
+
+.menu-bar .menu-item {
+    -fx-text-fill: white;
+}
+
+.menu-bar .menu:hover {
+    -fx-background-color: transparent; /* Prevent hover background color */
+
+}
+
+.menu-bar .menu-button {
+    -fx-background-color: transparent; /* Make the menu button transparent */
+}
+
+/*.menu-bar .menu-item {*/
+/*    -fx-background-color: transparent; !* Remove menu item background *!*/
+/*    -fx-text-fill: white;              !* Set menu item text color to white *!*/
+/*}*/
+
+.menu-bar .menu-item:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1); /* Slight hover effect for items */
+}
+
+.menu-bar .label {
+    -fx-fill: white;
+}
 
