@@ -27,6 +27,7 @@ public class DateTimePicker implements Component<Region> {
     private final Spinner<Integer> hourSpinner;
     private final Spinner<Integer> minuteSpinner;
     private final VBox root;
+    boolean isInitializing = true;
 
 
     public DateTimePicker(NoteView noteView) {
@@ -53,6 +54,7 @@ public class DateTimePicker implements Component<Region> {
         Button[] buttons = new Button[] { syncButton(), copyButton() };
         root.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons) ,dateTimePicker());
         refreshFields();
+        isInitializing = false; // this is kind of a hack to prevent stuff from happening until it is all loaded.
         return root;
     }
 
@@ -69,7 +71,7 @@ public class DateTimePicker implements Component<Region> {
         Button syncButton = ButtonFx.utilityButton( () -> {
             noteView.getNoteModel().setStatusLabel("Refreshing date and time to now.");
             setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-//            noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+
         }, "Sync", "/images/sync-16.png");
         syncButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
         return syncButton;
@@ -77,9 +79,10 @@ public class DateTimePicker implements Component<Region> {
 
     private Node dateTimePicker() {
         HBox hBox = new HBox(10);
+
         // Configure the spinners
-        hourSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, LocalTime.now().getHour()));
-        minuteSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, LocalTime.now().getMinute()));
+        hourSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23));
+        minuteSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59));
 
         hourSpinner.setPrefWidth(80);
         minuteSpinner.setPrefWidth(80);
@@ -94,9 +97,27 @@ public class DateTimePicker implements Component<Region> {
         hBox.setAlignment(Pos.CENTER);
 
         // Bind the dateTimeProperty to the current selection
-        datePicker.setOnAction(event -> updateDateTime());
-        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
-        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
+        datePicker.setOnAction(event -> {
+            if(!isInitializing) {
+                System.out.println("datePicker::updateDateTime()");
+                updateDateTime();
+            }
+        });
+        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if(!isInitializing) {
+                System.out.println(newValue);
+                System.out.println("hourSpinner::updateDateTime()"); // Ok it is still printing this
+                updateDateTime();
+            }
+        });
+        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if(!isInitializing) {
+                System.out.println(newValue);
+                System.out.println("minuteSpinner::updateDateTime()"); // it is still printing this
+                updateDateTime();
+            }
+        });
+
         // Initialize with the current date and time
         return hBox;
     }
@@ -106,6 +127,8 @@ public class DateTimePicker implements Component<Region> {
         LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
         noteView.getNoteModel().getBoundNote().timestampProperty().set(LocalDateTime.of(date, time));
         noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+        noteView.getAction().accept(NoteMessage.REFRESH_NOTE_TABLEVIEW);
+        noteView.getAction().accept(NoteMessage.SORT_NOTE_TABLEVIEW);
     }
 
     @Override
