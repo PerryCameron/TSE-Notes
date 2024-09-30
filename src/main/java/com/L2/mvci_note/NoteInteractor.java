@@ -18,7 +18,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import static com.L2.static_tools.ApplicationPaths.entitlementsFile;
 import static com.L2.static_tools.ApplicationPaths.settingsDir;
 
 public class NoteInteractor {
@@ -585,5 +584,9 @@ public class NoteInteractor {
 
     public UserDTO getUser() {
         return noteModel.getUser();
+    }
+
+    public void refreshEntitlementComboBox() {
+        noteModel.refreshEntitlements();
     }
 }

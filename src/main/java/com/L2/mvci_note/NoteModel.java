@@ -4,27 +4,27 @@ import com.L2.dto.*;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
 public class NoteModel {
     private ObservableList<NoteDTO> notes = FXCollections.observableArrayList();
     // this is a NoteDTO that never moves, it just copies and pastes its values to the real notes
-    private ObjectProperty<NoteDTO> boundNote = new SimpleObjectProperty<>();
+    private final ObjectProperty<NoteDTO> boundNote = new SimpleObjectProperty<>();
     // you can only select one part at a time, so simpler to keep here.
-    private ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
+    private final ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
     // you can only have one part order focused at time, so simpler to keep here as well
-    private ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
+    private final ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
-    private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
-    private ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
+    private final ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
+    private final ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
 
-    // shouldn't this be under maincontroller???????
-    private StringProperty statusLabel = new SimpleStringProperty();
-    private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
-    private BooleanProperty clearCalled  = new SimpleBooleanProperty(false);
-    private BooleanProperty refreshBoundNote = new SimpleBooleanProperty(false);
-    private BooleanProperty openNoteTab = new SimpleBooleanProperty(false);
+    // shouldn't this be under main controller???????
+    private final StringProperty statusLabel = new SimpleStringProperty();
+    private final ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
+    private final BooleanProperty clearCalled  = new SimpleBooleanProperty(false);
+    private final BooleanProperty refreshBoundNote = new SimpleBooleanProperty(false);
+    private final BooleanProperty refreshEntitlements = new SimpleBooleanProperty(false);
+    private final BooleanProperty openNoteTab = new SimpleBooleanProperty(false);
 
 
     public void clearBoundNoteFields() {
@@ -103,7 +103,7 @@ public class NoteModel {
         this.user.set(user);
     }
 
-    // gets the text in the StringPropery
+    // gets the text in the StringProperty
     public StringProperty statusLabelProperty() {
         return statusLabel;
     }
@@ -142,6 +142,15 @@ public class NoteModel {
 
     public void setBoundNote(NoteDTO boundNote) {
         this.boundNote.set(boundNote);
+    }
+
+    public BooleanProperty refreshEntitlementsProperty() {
+        return refreshEntitlements;
+    }
+
+    public void refreshEntitlements() {
+        refreshEntitlements.set(true);
+        refreshEntitlements.set(false);
     }
 
     public EntitlementDTO getCurrentEntitlement() {

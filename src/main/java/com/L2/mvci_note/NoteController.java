@@ -69,6 +69,7 @@ public class NoteController extends Controller<NoteMessage> {
             case SELECT_NOTE_TAB -> mainController.action(MainMessage.SELECT_NOTE_TAB);
             case REFRESH_NOTE_TABLEVIEW -> mainController.action(MainMessage.REFRESH_NOTE_TABLEVIEW);
             case SORT_NOTE_TABLEVIEW -> mainController.action(MainMessage.SORT_NOTE_TABLEVIEW);
+            case REFRESH_ENTITLEMENT_COMBO_BOX -> noteInteractor.refreshEntitlementComboBox();
         };
     }
 

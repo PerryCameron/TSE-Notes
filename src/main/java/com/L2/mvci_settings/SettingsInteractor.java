@@ -38,7 +38,7 @@ public class SettingsInteractor {
     }
 
     public void createNewEntitlement() {
-        EntitlementDTO entitlementDTO = new EntitlementDTO(0,"","","");
+        EntitlementDTO entitlementDTO = new EntitlementDTO();
         entitlementDTO.setId(entitlementRepo.insertEntitlement(entitlementDTO));
         settingsModel.getEntitlements().add(entitlementDTO);
         // Automatically select the new entitlement in the TableView

@@ -43,6 +43,7 @@ public class SettingsController extends Controller<SettingsMessage> {
             case DELETE_ENTITLEMENT -> settingsInteractor.deleteEntitlement();
             case MAKE_REFERENCE_TO_USER -> settingsInteractor.setUser(mainController.getUser());
             case SAVE_USER -> settingsInteractor.saveUser();
+            case REFRESH_ENTITLEMENT_COMBO_BOX -> mainController.action(MainMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
         };
     }
 }

@@ -9,6 +9,7 @@ import com.L2.mvci_note.NoteView;
 import com.L2.static_tools.StringChecker;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -71,6 +72,19 @@ public class BasicInformation implements Component<Region> {
         return vBox;
     }
 
+    private void refreshEntitlementListener() {
+        noteModel.refreshEntitlementsProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                System.out.println("Refreshing ComboBox");
+                // Re-bind the items in the ComboBox to the ObservableList from noteModel
+                servicePlanComboBox.setItems(FXCollections.observableArrayList(noteModel.getEntitlements()));
+                // Optional: Set default selection based on the active service contract
+//                selectActiveServiceContract();
+            }
+        });
+    }
+
+
     private Node setEntitlementBox() {
         // the name of the entitlement is saved in the CaseDTO (String)
         // a list of Entitlements is pulled from hard disk (EntitlementDTO)
@@ -98,12 +112,16 @@ public class BasicInformation implements Component<Region> {
             }
         });
         servicePlanComboBox.setOnAction(e -> {
-            noteModel.getBoundNote().setActiveServiceContract(servicePlanComboBox.getValue().toString());
-            noteModel.setCurrentEntitlement(servicePlanComboBox.getValue());
-            noteView.getAction().accept(NoteMessage.LOG_CURRENT_ENTITLEMENT);
-            noteView.getServicePlanDetails().updateDetails();
+
+            if(servicePlanComboBox.getValue() != null) {
+                noteModel.getBoundNote().setActiveServiceContract(servicePlanComboBox.getValue().toString());
+                noteModel.setCurrentEntitlement(servicePlanComboBox.getValue());
+                noteView.getAction().accept(NoteMessage.LOG_CURRENT_ENTITLEMENT);
+                noteView.getServicePlanDetails().updateDetails();
+            }
         });
         vBox.getChildren().addAll(label, servicePlanComboBox);
+        refreshEntitlementListener();
         return vBox;
     }
 

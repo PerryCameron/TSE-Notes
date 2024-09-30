@@ -38,7 +38,7 @@ public class EntitlementsMenu implements Builder<Region> {
         if (settingsModel.getEntitlements().isEmpty()) {
             logger.info("No entitlements exist, creating a new one");
             settingsModel.setCurrentEntitlement(new EntitlementDTO());
-        } else settingsModel.setCurrentEntitlement(new EntitlementDTO(settingsModel.getEntitlements().get(0)));
+        } else settingsModel.setCurrentEntitlement(new EntitlementDTO(settingsModel.getEntitlements().getFirst()));
     }
 
     @Override
@@ -66,7 +66,10 @@ public class EntitlementsMenu implements Builder<Region> {
 
     private Node createButtonRow() {
         HBox hBox = new HBox(5);
-        Button saveButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.SAVE_ENTITLEMENTS), "Save", "/images/save-16.png");
+        Button saveButton = ButtonFx.utilityButton( () -> {
+            action.accept(SettingsMessage.SAVE_ENTITLEMENTS);
+            action.accept(SettingsMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
+        }, "Save", "/images/save-16.png");
         Button deleteButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.DELETE_ENTITLEMENT), "Delete", "/images/delete-16.png");
         Button newButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.NEW_ENTITLEMENT), "New Entitlement", "/images/create-16.png");
         hBox.getChildren().addAll(saveButton, deleteButton, newButton);
