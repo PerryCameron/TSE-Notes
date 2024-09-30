@@ -73,8 +73,9 @@ public class MainView implements Builder<Region> {
         Button newNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/create-16.png");
         Button cloneButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.CLONE_NOTE), "Clone Note", "/images/clone-16.png");
         Button deleteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.DELETE_NOTE), "Delete Note", "/images/delete-16.png");
-        Button refreshButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.REFRESH_TABLE), "Refresh Table", "/images/thumbs-16.png");
-        hBox.getChildren().addAll(statusLabel(),prevNoteButton, nextNoteButton, newNoteButton, cloneButton, deleteButton, refreshButton);
+        Button refreshButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.REFRESH_NOTE_TABLEVIEW), "Refresh", "/images/thumbs-16.png");
+        Button sortButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SORT_NOTE_TABLEVIEW), "sort", "/images/thumbs-16.png");
+        hBox.getChildren().addAll(statusLabel(),prevNoteButton, nextNoteButton, newNoteButton, cloneButton, deleteButton, refreshButton, sortButton);
         hBox.getStyleClass().add("bottom-pane");
         return hBox;
     }

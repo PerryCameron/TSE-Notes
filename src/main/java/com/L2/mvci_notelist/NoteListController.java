@@ -39,7 +39,7 @@ public class NoteListController extends Controller<NoteListMessage> {
             case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT -> noteListInteractor.selectBoundNoteAndUseToSelectRowInTable();
             case SORT_NOTE_TABLEVIEW -> noteListInteractor.sortTableView();
             case SELECT_NOTE_TAB -> mainController.action(MainMessage.SELECT_NOTE_TAB);
-            case REFRESH_TABLE -> noteListInteractor.refreshTableView();
+            case REFRESH_NOTE_TABLEVIEW -> noteListInteractor.refreshTableView();
         }
     }
 }

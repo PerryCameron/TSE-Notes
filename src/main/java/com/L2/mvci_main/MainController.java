@@ -50,13 +50,13 @@ public class MainController extends Controller<MainMessage> {
             case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT ->
                     noteListController.action(NoteListMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
             case SORT_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.SORT_NOTE_TABLEVIEW);
+            case REFRESH_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.REFRESH_NOTE_TABLEVIEW);
             case UPDATE_NOTE_TAB_NAME -> mainInteractor.updateNoteTabName(getBoundNote());
             case DELETE_NOTE -> noteController.action(NoteMessage.DELETE_NOTE);
             case SELECT_NOTE_TAB -> mainInteractor.selectNoteTab();
             case UPDATE_STATUSBAR_WITH_STRING -> noteController.action(NoteMessage.UPDATE_STATUSBAR_WITH_STRING);
             case REFRESH_PART_ORDERS -> noteController.action(NoteMessage.REFRESH_PART_ORDERS);
             case CLONE_NOTE -> noteController.action(NoteMessage.CLONE_NOTE);
-            case REFRESH_TABLE -> noteListController.action(NoteListMessage.REFRESH_TABLE);
         }
     }
 
