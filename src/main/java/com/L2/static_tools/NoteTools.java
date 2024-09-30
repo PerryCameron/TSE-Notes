@@ -26,6 +26,8 @@ public class NoteTools {
                 logger.debug("Field 'timestamp' has changed: {} -> {}", noteDTO1.getTimestamp(), noteDTO2.getTimestamp());
                 noteDTO1.setTimestamp(noteDTO2.getTimestamp());
                 areSame = false;
+            } else {
+                System.out.println("timestamp hasn't changed");
             }
             if (!noteDTO1.getWorkOrder().equals(noteDTO2.getWorkOrder())) {
                 logger.debug("Field 'workOrder' has changed: {} -> {}", noteDTO1.getWorkOrder(), noteDTO2.getWorkOrder());

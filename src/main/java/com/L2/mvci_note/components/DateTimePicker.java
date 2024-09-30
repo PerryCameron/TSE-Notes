@@ -50,7 +50,7 @@ public class DateTimePicker implements Component<Region> {
     @Override
     public Region build() {
         root.getStyleClass().add("decorative-hbox");
-        Button[] buttons = new Button[] { refreshButton(), copyButton() };
+        Button[] buttons = new Button[] { syncButton(), copyButton() };
         root.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons) ,dateTimePicker());
         refreshFields();
         return root;
@@ -65,13 +65,14 @@ public class DateTimePicker implements Component<Region> {
         return copyButton;
     }
 
-    private Button refreshButton() {
-        Button refreshButton = ButtonFx.utilityButton( () -> {
+    private Button syncButton() {
+        Button syncButton = ButtonFx.utilityButton( () -> {
             noteView.getNoteModel().setStatusLabel("Refreshing date and time to now.");
             setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+//            noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
         }, "Sync", "/images/sync-16.png");
-        refreshButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
-        return refreshButton;
+        syncButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
+        return syncButton;
     }
 
     private Node dateTimePicker() {

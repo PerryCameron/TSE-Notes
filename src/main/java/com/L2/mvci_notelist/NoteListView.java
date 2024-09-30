@@ -22,8 +22,13 @@ public class NoteListView implements Builder<Region> {
     @Override
     public Region build() {
         VBox root = new VBox();
-        root.setPadding(new Insets(5, 5, 5, 5));
+        root.setPadding(new Insets(10, 10, 0, 10));
         root.getChildren().add(notesTable.build());
+        noteListModel.refreshTableProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                getNotesTable().refreshFields();
+            }
+        }) ;
         return root;
     }
 
@@ -33,5 +38,9 @@ public class NoteListView implements Builder<Region> {
 
     public Consumer<NoteListMessage> getAction() {
         return action;
+    }
+
+    public NotesTable getNotesTable() {
+        return notesTable;
     }
 }

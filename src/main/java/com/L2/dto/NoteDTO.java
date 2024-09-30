@@ -15,7 +15,7 @@ import java.util.List;
 public class NoteDTO {
 
     private IntegerProperty id = new SimpleIntegerProperty();
-    private ObjectProperty<LocalDateTime> timestamp = new SimpleObjectProperty<>();
+    private ObjectProperty<LocalDateTime> timestamp = new SimpleObjectProperty<>(); // this is the field not updating
     private StringProperty workOrder = new SimpleStringProperty();
     private StringProperty caseNumber = new SimpleStringProperty();
     private StringProperty serialNumber = new SimpleStringProperty();

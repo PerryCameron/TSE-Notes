@@ -43,7 +43,11 @@ public class NoteListInteractor implements ApplicationPaths {
         }
     }
 
-    public void refreshTableView() {
+    public void sortTableView() {
         noteListModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
+    }
+
+    public void refreshTableView() {
+        noteListModel.refreshTable();
     }
 }

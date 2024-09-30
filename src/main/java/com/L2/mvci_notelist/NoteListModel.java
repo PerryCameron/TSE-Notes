@@ -1,10 +1,7 @@
 package com.L2.mvci_notelist;
 
 import com.L2.dto.NoteDTO;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
@@ -17,6 +14,7 @@ public class NoteListModel {
     // reference to mainModel boundNote;
     protected ObjectProperty<NoteDTO> boundNote;
     private ObjectProperty<TableView<NoteDTO>> noteTable = new SimpleObjectProperty<>();
+    private BooleanProperty refreshTable = new SimpleBooleanProperty(false);
 
 
     public NoteDTO getBoundNote() {
@@ -61,5 +59,14 @@ public class NoteListModel {
 
     public void setNoteTable(TableView<NoteDTO> noteTable) {
         this.noteTable.set(noteTable);
+    }
+
+    public BooleanProperty refreshTableProperty() {
+        return refreshTable;
+    }
+
+    public void refreshTable() {
+        this.refreshTableProperty().set(true);
+        this.refreshTableProperty().set(false);
     }
 }

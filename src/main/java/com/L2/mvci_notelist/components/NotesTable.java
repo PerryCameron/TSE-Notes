@@ -137,6 +137,6 @@ public class NotesTable implements Component<Region> {
 
     @Override
     public void refreshFields() {
-
+        tableView.refresh();
     }
 }
