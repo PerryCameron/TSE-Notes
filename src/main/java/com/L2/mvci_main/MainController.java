@@ -58,6 +58,7 @@ public class MainController extends Controller<MainMessage> {
             case REFRESH_PART_ORDERS -> noteController.action(NoteMessage.REFRESH_PART_ORDERS);
             case CLONE_NOTE -> noteController.action(NoteMessage.CLONE_NOTE);
             case REFRESH_ENTITLEMENT_COMBO_BOX -> noteController.action(NoteMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
+            case CREATE_DATABASE -> mainInteractor.createDataBase();
         }
     }
 

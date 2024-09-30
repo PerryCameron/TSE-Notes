@@ -75,15 +75,11 @@ public class BasicInformation implements Component<Region> {
     private void refreshEntitlementListener() {
         noteModel.refreshEntitlementsProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                System.out.println("Refreshing ComboBox");
                 // Re-bind the items in the ComboBox to the ObservableList from noteModel
                 servicePlanComboBox.setItems(FXCollections.observableArrayList(noteModel.getEntitlements()));
-                // Optional: Set default selection based on the active service contract
-//                selectActiveServiceContract();
             }
         });
     }
-
 
     private Node setEntitlementBox() {
         // the name of the entitlement is saved in the CaseDTO (String)

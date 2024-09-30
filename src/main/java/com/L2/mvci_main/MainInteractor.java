@@ -2,6 +2,7 @@ package com.L2.mvci_main;
 
 import com.L2.dto.NoteDTO;
 import com.L2.static_tools.ApplicationPaths;
+import com.L2.static_tools.SQLiteDatabaseCreator;
 import javafx.beans.property.ObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,4 +29,7 @@ public class MainInteractor implements ApplicationPaths {
         mainModel.getMainTabPane().getSelectionModel().select(mainModel.getNoteTab());
     }
 
+    public void createDataBase() {
+        SQLiteDatabaseCreator.createDataBase();
+    }
 }

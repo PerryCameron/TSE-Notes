@@ -75,4 +75,14 @@ CREATE TABLE entitlements
     name     TEXT NOT NULL,
     includes TEXT,
     url      TEXT
-)
+);
+
+CREATE TABLE settings
+(
+    id            INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique identifier for each setting
+    key           TEXT NOT NULL,                     -- Setting name or key, e.g., "theme", "fontSize"
+    value         TEXT,                              -- Value for the setting, e.g., "dark", "12"
+    group_name    TEXT,                              -- Logical grouping of settings, e.g., "display", "editor"
+    description   TEXT,                              -- Optional description for better understanding of the setting
+    last_modified DATETIME DEFAULT CURRENT_TIMESTAMP -- Timestamp of the last modification
+);

@@ -2,6 +2,7 @@ package com.L2;
 
 import atlantafx.base.theme.PrimerLight;
 import com.L2.mvci_main.MainController;
+import com.L2.static_tools.AppFileTools;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -22,7 +23,7 @@ public class BaseApplication extends Application {
 
     public static void main(String[] args) {
 //        AppFileTools.startFileLogger();
-        System.out.println("BaseApplication main method is running...");
+        logger.info("TSENotes version 1.0 Starting...");
         for (String arg : args) {
             if ("test".equalsIgnoreCase(arg)) {
                 testMode = true;
