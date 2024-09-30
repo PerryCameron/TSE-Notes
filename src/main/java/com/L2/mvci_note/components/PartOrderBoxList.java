@@ -222,7 +222,6 @@ public class PartOrderBoxList implements Component<Region> {
 
     @Override
     public void refreshFields() {
-        System.out.println("PartOrderBoxList::refreshFields()");
         root.getChildren().clear();
         noteModel.getBoundNote().getPartOrders().forEach((partOrderDTO) -> root.getChildren().add(createPartOrderBox(partOrderDTO)));
     }

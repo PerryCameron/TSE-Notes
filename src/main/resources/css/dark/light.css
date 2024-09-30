@@ -176,3 +176,9 @@
     -fx-fill: white;
 }
 
+/*The colon for the DateTime*/
+/*.colon-label {*/
+/*    -fx-font-weight: bold;*/
+/*    -fx-font-size: 16;*/
+/*}*/
+

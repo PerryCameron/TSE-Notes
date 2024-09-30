@@ -27,8 +27,6 @@ public class DateTimePicker implements Component<Region> {
     private final Spinner<Integer> hourSpinner;
     private final Spinner<Integer> minuteSpinner;
     private final VBox root;
-    boolean isInitializing = true;
-
 
     public DateTimePicker(NoteView noteView) {
         this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
@@ -53,8 +51,6 @@ public class DateTimePicker implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         Button[] buttons = new Button[] { syncButton(), copyButton() };
         root.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons) ,dateTimePicker());
-        refreshFields();
-        isInitializing = false; // this is kind of a hack to prevent stuff from happening until it is all loaded.
         return root;
     }
 
@@ -90,35 +86,17 @@ public class DateTimePicker implements Component<Region> {
 
         // Label for separating hours and minutes
         Label colonLabel = new Label(":");
+//        colonLabel.getStyleClass().add("colon-label");
         colonLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16");
 
         // Add components to the HBox
         hBox.getChildren().addAll(datePicker, hourSpinner, colonLabel, minuteSpinner);
         hBox.setAlignment(Pos.CENTER);
-
+        refreshFields();
         // Bind the dateTimeProperty to the current selection
-        datePicker.setOnAction(event -> {
-            if(!isInitializing) {
-                System.out.println("datePicker::updateDateTime()");
-                updateDateTime();
-            }
-        });
-        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if(!isInitializing) {
-                System.out.println(newValue);
-                System.out.println("hourSpinner::updateDateTime()"); // Ok it is still printing this
-                updateDateTime();
-            }
-        });
-        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if(!isInitializing) {
-                System.out.println(newValue);
-                System.out.println("minuteSpinner::updateDateTime()"); // it is still printing this
-                updateDateTime();
-            }
-        });
-
-        // Initialize with the current date and time
+        datePicker.setOnAction(event -> updateDateTime());
+        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
+        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
         return hBox;
     }
 

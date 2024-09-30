@@ -484,15 +484,12 @@ public class NoteInteractor {
 
     // this synchronizes the bound object to the correct object in the list
     public void saveOrUpdateNote() {
-        System.out.println("NoteINteractor::saveOrUpdateNote");
         // iterate through list of notes
         for (NoteDTO noteDTO : noteModel.getNotes()) {
             // let's find the correct note in the list
             if (noteDTO.getId() == noteModel.getBoundNote().getId()) {
                 // compares bound note to matching list note, if there is a change it logs it and copies it.
                 if(!NoteTools.notesAreTheSameAndSync(noteDTO, noteModel.getBoundNote())) {
-                    System.out.println("List Note" + noteDTO.getTimestamp());
-                    System.out.println("BoundNote " + noteModel.getBoundNote().getTimestamp());
                     // copies bound note to the note in the list with matching id
                     if (noteRepo.noteExists(noteDTO)) {
                         logger.debug("Updated note: {}", noteDTO.getId());
