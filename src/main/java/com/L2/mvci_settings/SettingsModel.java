@@ -15,9 +15,9 @@ public class SettingsModel {
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
     private ObjectProperty<Region> currentMenu = new SimpleObjectProperty<>();
     private ObjectProperty<TableView> entitlementsTableView = new SimpleObjectProperty<>();
-    private ObjectProperty<TextField> tFEntitlement = new SimpleObjectProperty<>();
-    private ObjectProperty<TextArea> tFInclude = new SimpleObjectProperty<>();
-    private ObjectProperty<TextArea> tFIncludeNot = new SimpleObjectProperty<>();
+    private ObjectProperty<TextField> entitlementTextField = new SimpleObjectProperty<>();
+    private ObjectProperty<TextArea> includeTextArea = new SimpleObjectProperty<>();
+    private ObjectProperty<TextArea> includeNotTextArea = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = null;
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>(null);
 
@@ -33,40 +33,40 @@ public class SettingsModel {
         this.user.set(user);
     }
 
-    public TextField gettFEntitlement() {
-        return tFEntitlement.get();
+    public TextField getEntitlementTextField() {
+        return entitlementTextField.get();
     }
 
-    public ObjectProperty<TextField> tFEntitlementProperty() {
-        return tFEntitlement;
+    public ObjectProperty<TextField> entitlementTextFieldProperty() {
+        return entitlementTextField;
     }
 
-    public void settFEntitlement(TextField tFEntitlement) {
-        this.tFEntitlement.set(tFEntitlement);
+    public void setEntitlementTextField(TextField entitlementTextField) {
+        this.entitlementTextField.set(entitlementTextField);
     }
 
-    public TextArea gettFInclude() {
-        return tFInclude.get();
+    public TextArea getIncludeTextArea() {
+        return includeTextArea.get();
     }
 
-    public ObjectProperty<TextArea> tFIncludeProperty() {
-        return tFInclude;
+    public ObjectProperty<TextArea> includeTextAreaProperty() {
+        return includeTextArea;
     }
 
-    public void settFInclude(TextArea tFInclude) {
-        this.tFInclude.set(tFInclude);
+    public void setIncludeTextArea(TextArea includeTextArea) {
+        this.includeTextArea.set(includeTextArea);
     }
 
-    public TextArea gettFIncludeNot() {
-        return tFIncludeNot.get();
+    public TextArea getIncludeNotTextArea() {
+        return includeNotTextArea.get();
     }
 
-    public ObjectProperty<TextArea> tFIncludeNotProperty() {
-        return tFIncludeNot;
+    public ObjectProperty<TextArea> includeNotTextAreaProperty() {
+        return includeNotTextArea;
     }
 
-    public void settFIncludeNot(TextArea tFIncludeNot) {
-        this.tFIncludeNot.set(tFIncludeNot);
+    public void setIncludeNotTextArea(TextArea includeNotTextArea) {
+        this.includeNotTextArea.set(includeNotTextArea);
     }
 
     public TableView<EntitlementDTO> getEntitlementsTableView() {

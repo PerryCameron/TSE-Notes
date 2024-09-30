@@ -53,13 +53,13 @@ public class EntitlementsMenu implements Builder<Region> {
         VBox vBox = new VBox(5);
         vBox.setPrefWidth(500);
         TextField tf1 = new TextField();
-        settingsModel.settFEntitlement(tf1);
+        settingsModel.setEntitlementTextField(tf1);
         tf1.setPromptText("Entitlement Name");
         TextArea tf2 = new TextArea();
-        settingsModel.settFInclude(tf2);
+        settingsModel.setIncludeTextArea(tf2);
         TextArea tf3 = new TextArea();
         tf3.setPromptText("Does Not Include");
-        settingsModel.settFIncludeNot(tf3);
+        settingsModel.setIncludeNotTextArea(tf3);
         vBox.getChildren().addAll(new Label("Plan"), tf1, new Label("Includes"), tf2, new Label("Does not include"), tf3, createButtonRow());
         return vBox;
     }
@@ -68,7 +68,7 @@ public class EntitlementsMenu implements Builder<Region> {
         HBox hBox = new HBox(5);
         Button saveButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.SAVE_ENTITLEMENTS), "Save", "/images/save-16.png");
         Button deleteButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.DELETE_ENTITLEMENT), "Delete", "/images/delete-16.png");
-        Button newButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.NEW_ENTITLEMENT), "New", "/images/create-16.png");
+        Button newButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.NEW_ENTITLEMENT), "New Entitlement", "/images/create-16.png");
         hBox.getChildren().addAll(saveButton, deleteButton, newButton);
         return hBox;
     }

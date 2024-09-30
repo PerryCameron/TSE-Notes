@@ -14,9 +14,7 @@ public class EntitlementDTO  {
     private StringProperty name = new SimpleStringProperty();
     private StringProperty includes = new SimpleStringProperty();
     private StringProperty notIncludes = new SimpleStringProperty();
-    // Default constructor
-    public EntitlementDTO() {}
-    // Copy Constructor
+
     public EntitlementDTO(EntitlementDTO original) {
         this.id.set(original.getId());
         this.name.set(original.getName());
@@ -27,6 +25,13 @@ public class EntitlementDTO  {
     public EntitlementDTO(Integer id) {
         this.id.set(id);
         this.name.set("New Entitlement");
+        this.includes.set("");
+        this.notIncludes.set("");
+    }
+
+    public EntitlementDTO() {
+        this.id.set(0);
+        this.name.set("");
         this.includes.set("");
         this.notIncludes.set("");
     }

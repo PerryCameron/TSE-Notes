@@ -7,7 +7,11 @@ import com.L2.static_tools.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 
 public class EntitlementsRepositoryImpl implements EntitlementsRepository {
@@ -31,7 +35,17 @@ public class EntitlementsRepositoryImpl implements EntitlementsRepository {
     @Override
     public int insertEntitlement(EntitlementDTO entitlement) {
         String sql = "INSERT INTO entitlements (name, includes, not_included) VALUES (?, ?, ?)";
-        return jdbcTemplate.update(sql, entitlement.getName(), entitlement.getIncludes(), entitlement.getNotIncludes());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, entitlement.getName());
+            ps.setString(2, entitlement.getIncludes());
+            ps.setString(3, entitlement.getNotIncludes());
+            return ps;
+        }, keyHolder);
+        // Retrieve the generated ID from the KeyHolder
+        return keyHolder.getKey().intValue();
     }
 
     // Update an existing entitlement row based on its id
