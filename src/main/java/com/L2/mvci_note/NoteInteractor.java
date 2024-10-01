@@ -12,13 +12,10 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Iterator;
-
-import static com.L2.static_tools.ApplicationPaths.settingsDir;
 
 public class NoteInteractor {
 
@@ -39,17 +36,10 @@ public class NoteInteractor {
     }
 
     public void loadEntitlements() {
-        try {
-            // Ensure the directory and file exist
-            AppFileTools.createFileIfNotExists(settingsDir);
             // Load the entitlements
             ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList(entitlementsRepo.getAllEntitlements());
             noteModel.setEntitlements(entitlements);
             logger.info("Loaded entitlements: {}", entitlements.size());
-        } catch (IOException e) {
-            logger.error("Failed to load entitlements: {}", e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     // loads notes on start-up
@@ -440,7 +430,6 @@ public class NoteInteractor {
     }
 
     public void refreshPartOrders() {
-        System.out.println("NoteInteractor::refreshPartOrders()");
         logger.debug("Refreshing bound note, and UI, setting to: {}", noteModel.getBoundNote().getId() );
         checkAndLoadPartOrdersIfNeeded();
         setStatusLabelWithNoteInformation();

@@ -60,8 +60,11 @@ public class MainController extends Controller<MainMessage> {
             case REFRESH_ENTITLEMENT_COMBO_BOX -> noteController.action(NoteMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
             case CREATE_DATABASE -> mainInteractor.createDataBase();
             case CHECK_FOR_DATABASE -> mainInteractor.checkForDataBase();
+            case SHOW_LOG -> mainInteractor.showLog();
         }
     }
+
+
 
     public UserDTO getUser() {
         return noteController.getUser();

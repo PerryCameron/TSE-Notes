@@ -46,11 +46,11 @@ public class BasicInformation implements Component<Region> {
         hBox.setPadding(new Insets(0, 5, 5, 5));
         hBox.getChildren().addAll(callInInfo(), servicePlan());
 
-        Button copyButton = ButtonFx.utilityButton(() -> {
-            flash();
-            noteView.getAction().accept(NoteMessage.COPY_BASIC_INFORMATION);
-        }, "Copy", "/images/copy-16.png");
-        copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
+//        Button copyButton = ButtonFx.utilityButton(() -> {
+//            flash();
+//            noteView.getAction().accept(NoteMessage.COPY_BASIC_INFORMATION);
+//        }, "Copy", "/images/copy-16.png");
+//        copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
 
 //        Button clearButton = ButtonFx.utilityButton(() -> {
 //            clear();
@@ -61,7 +61,7 @@ public class BasicInformation implements Component<Region> {
         }, "Pasta", "/images/paste-16.png");
         pasteButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
 
-        Button[] buttons = new Button[]{pasteButton, copyButton};
+        Button[] buttons = new Button[]{pasteButton};
         root.getChildren().addAll(TitleBarFx.of("Basic Information", buttons), hBox);
         return root;
     }

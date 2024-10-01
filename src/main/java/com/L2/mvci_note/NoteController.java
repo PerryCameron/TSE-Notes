@@ -23,7 +23,7 @@ public class NoteController extends Controller<NoteMessage> {
         NoteModel noteModel = new NoteModel();
         this.noteInteractor = new NoteInteractor(noteModel);
         this.noteView = new NoteView(noteModel, this::action);
-        action(NoteMessage.LOAD_USER);
+//        action(NoteMessage.LOAD_USER);
     }
 
     @Override
@@ -31,6 +31,7 @@ public class NoteController extends Controller<NoteMessage> {
         noteInteractor.loadEntitlements();
         noteInteractor.loadNotes();
         noteInteractor.setActiveServiceContract();
+        action(NoteMessage.LOAD_USER);
         return noteView.build();
     }
 

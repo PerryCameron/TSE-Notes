@@ -5,15 +5,15 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class SQLiteDatabaseCreator {
 
     private static final Logger logger = LoggerFactory.getLogger(SQLiteDatabaseCreator.class);
+
+    public static void main(String[] args) {
+        createDataBase(Path.of(ApplicationPaths.homeDir + "/TSENotes"));
+    }
 
     public static void createDataBase(Path path) {
         logger.info("Creating database...");
@@ -116,6 +116,11 @@ public class SQLiteDatabaseCreator {
                 (6, 'None', '', '');
                 """;
 
+        String insertBlankUser = """
+                INSERT INTO user (id, first_name, last_name, email, sesa_number, url) VALUES
+                (1,'first','last','email','sesa','BFO URL');
+                """;
+
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement()) {
 
@@ -127,6 +132,10 @@ public class SQLiteDatabaseCreator {
             stmt.executeUpdate(insertEntitlements);
             logger.info("Initial data inserted successfully.");
 
+            stmt.executeUpdate(insertBlankUser);
+            logger.info("Created a blank user.");
+
+            System.exit(0);
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }

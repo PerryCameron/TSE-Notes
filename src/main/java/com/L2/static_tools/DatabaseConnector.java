@@ -9,7 +9,9 @@ import org.sqlite.SQLiteDataSource;
 import java.sql.SQLException;
 
 public class DatabaseConnector {
+
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConnector.class);
+
     public static SQLiteDataSource getDataSource() {
         String DATABASE_URL = "jdbc:sqlite:" + BaseApplication.dataBaseLocation;
         if(BaseApplication.testMode)

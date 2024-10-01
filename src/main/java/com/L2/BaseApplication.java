@@ -3,6 +3,7 @@ package com.L2;
 import atlantafx.base.theme.PrimerLight;
 import com.L2.mvci_main.MainController;
 import com.L2.static_tools.AppFileTools;
+import com.L2.static_tools.ApplicationPaths;
 import com.L2.static_tools.StartUpManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -15,19 +16,24 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
 
 public class BaseApplication extends Application {
 
     public static Stage primaryStage;
     public static boolean testMode = false;
     public static String dataBaseLocation = "";
+    private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
+    private double xOffset = 0.0;
+    private double yOffset = 0.0;
+    private boolean isResizing = false; // Flag to indicate whether resizing is active
 
     public static void main(String[] args) {
-
-//        AppFileTools.startFileLogger();
+        AppFileTools.createFileIfNotExists(ApplicationPaths.settingsDir);
+        AppFileTools.startFileLogger();
         logger.info("TSENotes version 1.0 Starting...");
-        dataBaseLocation = StartUpManager.validateDatabase();
         for (String arg : args) {
             if ("test".equalsIgnoreCase(arg)) {
                 testMode = true;
@@ -36,30 +42,13 @@ public class BaseApplication extends Application {
                 logger.info("Running in normal mode.");
             }
         }
+        // below is where we switch to JavaFX thead and problems begin
         launch(args);
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
-
-    private double xOffset = 0.0;
-    private double yOffset = 0.0;
-
-    private boolean isResizing = false; // Flag to indicate whether resizing is active
-
-    private static String logAppVersion() {
-        Properties properties = new Properties();
-        try (InputStream input = BaseApplication.class.getClassLoader().getResourceAsStream("app.properties")) {
-            if (input == null) {
-                logger.error("Sorry, unable to find app.properties");
-                return "unknown" ;
-            }
-            properties.load(input);
-            String appVersion = properties.getProperty("app.version");
-            logger.info("Starting GlobalSpares Application version: " + appVersion);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return properties.getProperty("app.version");
+    @Override
+    public void init() {
+        dataBaseLocation = StartUpManager.validateDatabase();
     }
 
     @Override
@@ -83,7 +72,6 @@ public class BaseApplication extends Application {
                     yOffset = event.getSceneY();
                 }
             });
-
             // Mouse dragged for dragging the window
             primaryStage.getScene().setOnMouseDragged(event -> {
                 if (!isResizing) { // Only allow moving if not resizing
@@ -91,7 +79,6 @@ public class BaseApplication extends Application {
                     primaryStage.setY(event.getScreenY() - yOffset);
                 }
             });
-
             primaryStage.initStyle(StageStyle.UNDECORATED);
             addResizeListeners(primaryStage, primaryStage.getScene());
             primaryStage.show();
@@ -120,5 +107,22 @@ public class BaseApplication extends Application {
                 stage.setHeight(event.getY());
             }
         });
+    }
+
+
+    private static String logAppVersion() {
+        Properties properties = new Properties();
+        try (InputStream input = BaseApplication.class.getClassLoader().getResourceAsStream("app.properties")) {
+            if (input == null) {
+                logger.error("Sorry, unable to find app.properties");
+                return "unknown" ;
+            }
+            properties.load(input);
+            String appVersion = properties.getProperty("app.version");
+            logger.info("Starting GlobalSpares Application version: " + appVersion);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return properties.getProperty("app.version");
     }
 }

@@ -9,22 +9,29 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 
 public class AppFileTools {
 
     private static final Logger logger = LoggerFactory.getLogger(AppFileTools.class);
+    public static File outputFile;
 
-    public static void createFileIfNotExists(Path settingsDir) throws IOException {
+    public static void createFileIfNotExists(Path settingsDir)  {
         if (!Files.exists(settingsDir)) {
-            Files.createDirectories(settingsDir);
+            try {
+                Files.createDirectories(settingsDir);
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+                throw new RuntimeException(e);
+            }
         }
     }
 
     public static void startFileLogger() {
         try {
-            File outputFile = File.createTempFile("debug", ".log", new File(ApplicationPaths.settingsDir.toString()));
+            outputFile = File.createTempFile("debug", ".log", new File(ApplicationPaths.settingsDir.toString()));
             PrintStream output = new PrintStream(new BufferedOutputStream(new FileOutputStream(outputFile)), true);
             System.setOut(output);
             System.setErr(output);
