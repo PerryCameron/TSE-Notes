@@ -15,9 +15,10 @@ public class SQLiteDatabaseCreator {
 
     private static final Logger logger = LoggerFactory.getLogger(SQLiteDatabaseCreator.class);
 
-    public static void createDataBase() {
-        String path = createDirectoryIfNotExists();
-        String url = "jdbc:sqlite:" + path +"/notes.db";
+    public static void createDataBase(Path path) {
+        logger.info("Creating database...");
+        String dirPath = createDirectoryIfNotExists(path);
+        String url = "jdbc:sqlite:" + dirPath +"/notes.db";
 
         // SQL commands for creating tables
         String createTables = """
@@ -132,24 +133,17 @@ public class SQLiteDatabaseCreator {
     }
 
     // Helper method to create directories if they don't exist
-    private static String createDirectoryIfNotExists() {
-        Path path;
-        String preferredPath = ApplicationPaths.homeDir + "/OneDrive - Schneider Electric";
-        // If we can get to the one drive lets make our path: onedrive + TSENotes
-        if(Files.exists(Paths.get(preferredPath))) {
-            path = Path.of(preferredPath + "/TSENotes");
-        } else {
-            // we don't have access to the one drive so we will default to the home directory
-            String secondaryPath = ApplicationPaths.homeDir.toString();
-            path = Path.of(secondaryPath + "/TSENotes");
-        }
+    private static String createDirectoryIfNotExists(Path path) {
         if (!Files.exists(path)) {
+            logger.info("Database directory does not exist: {}", path);
             try {
                 Files.createDirectories(path);
-                System.out.println("Directory created: " + path);
+                logger.info("Directory created: {}", path);
             } catch (Exception e) {
-                System.err.println("Failed to create directory: " + e.getMessage());
+                logger.error("Failed to create directory: {}", e.getMessage());
             }
+        } else {
+            logger.info("Directory already exists: {}", path);
         }
         return path.toString();
     }

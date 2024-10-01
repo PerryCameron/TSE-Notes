@@ -30,6 +30,10 @@ public class MainInteractor implements ApplicationPaths {
     }
 
     public void createDataBase() {
-        SQLiteDatabaseCreator.createDataBase();
+//        SQLiteDatabaseCreator.createDataBase();
+    }
+
+    public void checkForDataBase() {
+
     }
 }

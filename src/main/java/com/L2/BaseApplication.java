@@ -3,6 +3,7 @@ package com.L2;
 import atlantafx.base.theme.PrimerLight;
 import com.L2.mvci_main.MainController;
 import com.L2.static_tools.AppFileTools;
+import com.L2.static_tools.StartUpManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -20,14 +21,19 @@ public class BaseApplication extends Application {
 
     public static Stage primaryStage;
     public static boolean testMode = false;
+    public static String dataBaseLocation = "";
 
     public static void main(String[] args) {
+
 //        AppFileTools.startFileLogger();
         logger.info("TSENotes version 1.0 Starting...");
+        dataBaseLocation = StartUpManager.validateDatabase();
         for (String arg : args) {
             if ("test".equalsIgnoreCase(arg)) {
                 testMode = true;
-                System.out.println("Running in test mode.");
+                logger.info("Running in test mode.");
+            } else {
+                logger.info("Running in normal mode.");
             }
         }
         launch(args);

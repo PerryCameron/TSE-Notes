@@ -22,28 +22,6 @@ public class AppFileTools {
         }
     }
 
-    public static ObservableList<EntitlementDTO> getEntitlements(Path path) {
-        if (Files.exists(path)) {
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
-                Object object = ois.readObject();
-                if (object instanceof ArrayList<?>) {
-                    ArrayList<EntitlementDTO> list = (ArrayList<EntitlementDTO>) object;
-                    if (list.stream().allMatch(item -> item instanceof EntitlementDTO)) {
-                        return FXCollections.observableArrayList(list);
-                    } else {
-                        logger.error("Invalid data in entitlements file.");
-                    }
-                } else {
-                    logger.error("Unexpected data format in entitlements file.");
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                logger.error(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-        return FXCollections.observableArrayList(); // return an empty ObservableList if the file doesn't exist or an error occurs
-    }
-
     public static void startFileLogger() {
         try {
             File outputFile = File.createTempFile("debug", ".log", new File(ApplicationPaths.settingsDir.toString()));
@@ -54,7 +32,4 @@ public class AppFileTools {
             e.printStackTrace();
         }
     }
-
-
-
 }

@@ -100,6 +100,7 @@ public class MainView implements Builder<Region> {
         tabPane.setStyle("-fx-background-color: white");
         mainModel.setMainTabPane(tabPane);
         // Open our initial tabs
+        action.accept(MainMessage.CHECK_FOR_DATABASE);
         action.accept(MainMessage.OPEN_NOTE_TAB);
         action.accept(MainMessage.OPEN_NOTESLIST_TAB);
         action.accept(MainMessage.SELECT_NOTE_TAB);
