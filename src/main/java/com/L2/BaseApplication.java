@@ -32,7 +32,7 @@ public class BaseApplication extends Application {
 
     public static void main(String[] args) {
         AppFileTools.createFileIfNotExists(ApplicationPaths.settingsDir);
-        AppFileTools.startFileLogger();
+//        AppFileTools.startFileLogger();
         logger.info("TSENotes version 1.0 Starting...");
         for (String arg : args) {
             if ("test".equalsIgnoreCase(arg)) {

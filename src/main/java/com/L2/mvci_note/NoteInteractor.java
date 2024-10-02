@@ -334,8 +334,11 @@ public class NoteInteractor {
     }
 
     private String issueToHTML() {
-        return "<strong>Issue</strong>" + "<br>" +
-                noteModel.getBoundNote().getIssue() + "<br>";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<strong>Issue</strong><br>");
+        stringBuilder.append(noteModel.getBoundNote().getIssue().replaceAll("\\r\\n|\\n|\\r", "<br>"));
+        stringBuilder.append("<br>");
+        return stringBuilder.toString();
     }
 
     private String correctiveActionToPlainText() {
