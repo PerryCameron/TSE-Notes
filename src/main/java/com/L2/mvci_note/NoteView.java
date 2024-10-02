@@ -112,6 +112,18 @@ public class NoteView implements Builder<Region> {
     public void flashGroupB() {
         workOrderBox.flash();
         partOrderBoxList.flash();
+        finishBox.flash();
+    }
+
+    public void flashGroupC() {
+        basicInformation.flash();
+        dateTimePicker.flash();
+        issueBox.flash();
+        partOrderBoxList.flash();
+        shippingInformation.flash();
+        workOrderBox.flash();
+        partOrderBoxList.flash();
+        finishBox.flash();
     }
 
     private Node setBox3Info() {

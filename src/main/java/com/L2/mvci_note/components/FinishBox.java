@@ -72,7 +72,7 @@ public class FinishBox implements Component<Region> {
         }, "Answer to Customer", "/images/corrective-16.png");
 
         Button logCallActionButton = ButtonFx.utilityButton(() -> {
-            noteView.flashGroupB();
+            noteView.flashGroupC();
             noteView.getAction().accept(NoteMessage.COPY_LOGGED_CALL);
         }, "Log Call", "/images/call-16.png");
 
