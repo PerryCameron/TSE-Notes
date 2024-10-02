@@ -37,7 +37,7 @@ public class FinishBox implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
-        Button[] buttons = new Button[] {  };
+        Button[] buttons = new Button[]{};
         hBox.getChildren().addAll(correctiveText(), buttonBox());
         root.getChildren().addAll(TitleBarFx.of("Final", buttons), hBox);
         refreshFields();
@@ -48,6 +48,11 @@ public class FinishBox implements Component<Region> {
         this.textArea = TextAreaFx.of(true, 100, 16, 4);
         textArea.setPromptText("Additional corrective action text");
         textArea.textProperty().bindBidirectional(noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
+        textArea.focusedProperty().addListener((obs, oldValue, newValue) -> {
+            if (!newValue) {
+                noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+            }
+        });
         HBox.setHgrow(textArea, Priority.ALWAYS);
         return textArea;
     }
@@ -56,12 +61,12 @@ public class FinishBox implements Component<Region> {
         VBox vBox = new VBox(10);
         vBox.setPrefWidth(200);
         vBox.setPadding(new Insets(0, 0, 0, 10));
-        Button customerRequestButton = ButtonFx.utilityButton( () -> {
+        Button customerRequestButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupA();
             noteView.getAction().accept(NoteMessage.COPY_CUSTOMER_REQUEST);
         }, "Customer Request", "/images/about-16.png");
 
-        Button correctiveActionButton = ButtonFx.utilityButton( () -> {
+        Button correctiveActionButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupB();
             noteView.getAction().accept(NoteMessage.COPY_CORRECTIVE_ACTION);
         }, "Corrective Action", "/images/corrective-16.png");
