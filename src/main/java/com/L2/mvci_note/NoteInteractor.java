@@ -367,7 +367,8 @@ public class NoteInteractor {
             .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("<br><br>");
         }
         if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
-            stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("<br>").append("<br>");
+//            stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("<br>").append("<br>");
+            stringBuilder.append(getCorrectiveActionText());
         }
         stringBuilder.append(copyAllPartOrdersToHTML(true)).append("<br>");
         if (!noteModel.getBoundNote().getTex().isEmpty()) {
@@ -375,6 +376,13 @@ public class NoteInteractor {
             .append(noteModel.getBoundNote().getTex()).append("<br>");
         }
         return stringBuilder.toString();
+    }
+
+    private String getCorrectiveActionText() {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText().replaceAll("\\r\\n|\\n|\\r", "<br>"));
+            stringBuilder.append("<br>");
+            return stringBuilder.toString();
     }
 
     public void setComplete() {

@@ -109,7 +109,6 @@ public class BaseApplication extends Application {
         });
     }
 
-
     private static String logAppVersion() {
         Properties properties = new Properties();
         try (InputStream input = BaseApplication.class.getClassLoader().getResourceAsStream("app.properties")) {
