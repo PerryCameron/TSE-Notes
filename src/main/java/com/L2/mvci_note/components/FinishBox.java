@@ -64,12 +64,12 @@ public class FinishBox implements Component<Region> {
         Button customerRequestButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupA();
             noteView.getAction().accept(NoteMessage.COPY_CUSTOMER_REQUEST);
-        }, "Customer Request", "/images/about-16.png");
+        }, "Customer Request", "/images/question-16.png");
 
         Button correctiveActionButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupB();
             noteView.getAction().accept(NoteMessage.COPY_ANSWER_TO_CUSTOMER);
-        }, "Answer to Customer", "/images/corrective-16.png");
+        }, "Answer to Customer", "/images/smile-16.png");
 
         Button logCallActionButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupC();
