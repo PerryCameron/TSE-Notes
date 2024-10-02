@@ -14,6 +14,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IssueBox implements Component<Region> {
 
@@ -21,6 +23,7 @@ public class IssueBox implements Component<Region> {
     private final NoteModel noteModel;
     private VBox root;
     private TextArea textAreaIssue;
+    private static final Logger logger = LoggerFactory.getLogger(IssueBox.class);
 
     public IssueBox(NoteView noteView) {
         this.noteView = noteView;
@@ -51,11 +54,9 @@ public class IssueBox implements Component<Region> {
                         // process that into a note dto
                         NoteDTO noteDTO = NoteDTOProcessor.processEmail(textAreaIssue.getText(), noteModel.getBoundNote().getId());
                         noteModel.getBoundNote().copyFrom(noteDTO);
+                        logger.info("Processing an email...");
                     }
                     noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
-                    System.out.println("this is an email so we process");
-                } else {
-                    System.out.println("This is already an email, so do nothing");
                 }
             }
         });

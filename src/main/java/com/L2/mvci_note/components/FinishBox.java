@@ -68,10 +68,15 @@ public class FinishBox implements Component<Region> {
 
         Button correctiveActionButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupB();
-            noteView.getAction().accept(NoteMessage.COPY_CORRECTIVE_ACTION);
-        }, "Corrective Action", "/images/corrective-16.png");
+            noteView.getAction().accept(NoteMessage.COPY_ANSWER_TO_CUSTOMER);
+        }, "Answer to Customer", "/images/corrective-16.png");
 
-        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton);
+        Button logCallActionButton = ButtonFx.utilityButton(() -> {
+            noteView.flashGroupB();
+            noteView.getAction().accept(NoteMessage.COPY_LOGGED_CALL);
+        }, "Log Call", "/images/call-16.png");
+
+        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, logCallActionButton);
         return vBox;
     }
 

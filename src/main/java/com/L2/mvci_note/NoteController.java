@@ -5,10 +5,7 @@ import com.L2.dto.UserDTO;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_main.MainMessage;
-import com.L2.mvci_notelist.NoteListMessage;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 
@@ -47,7 +44,7 @@ public class NoteController extends Controller<NoteMessage> {
             case COPY_BASIC_INFORMATION -> noteInteractor.copyBasicInformation();
             case COPY_CUSTOMER_REQUEST -> noteInteractor.copyCustomerRequest();
             case COPY_ISSUE -> noteInteractor.copyIssue();
-            case COPY_CORRECTIVE_ACTION -> noteInteractor.copyCorrectiveAction();
+            case COPY_ANSWER_TO_CUSTOMER -> noteInteractor.copyAnswerToCustomer();
             case SET_COMPLETE -> noteInteractor.setComplete();
             case NEW_NOTE -> noteInteractor.createNewNote();
             case LOG_CURRENT_ENTITLEMENT -> noteInteractor.logCurrentEntitlement();
@@ -71,6 +68,7 @@ public class NoteController extends Controller<NoteMessage> {
             case REFRESH_NOTE_TABLEVIEW -> mainController.action(MainMessage.REFRESH_NOTE_TABLEVIEW);
             case SORT_NOTE_TABLEVIEW -> mainController.action(MainMessage.SORT_NOTE_TABLEVIEW);
             case REFRESH_ENTITLEMENT_COMBO_BOX -> noteInteractor.refreshEntitlementComboBox();
+            case COPY_LOGGED_CALL -> noteInteractor.copyLoggedCall();
         };
     }
 

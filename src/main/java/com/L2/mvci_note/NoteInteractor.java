@@ -36,10 +36,10 @@ public class NoteInteractor {
     }
 
     public void loadEntitlements() {
-            // Load the entitlements
-            ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList(entitlementsRepo.getAllEntitlements());
-            noteModel.setEntitlements(entitlements);
-            logger.info("Loaded entitlements: {}", entitlements.size());
+        // Load the entitlements
+        ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList(entitlementsRepo.getAllEntitlements());
+        noteModel.setEntitlements(entitlements);
+        logger.info("Loaded entitlements: {}", entitlements.size());
     }
 
     // loads notes on start-up
@@ -52,9 +52,9 @@ public class NoteInteractor {
         // set notes to the direction we like
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         // if starting up for first time create first empty note
-        if(noteModel.getNotes().isEmpty()) {
-            NoteDTO noteDTO = new NoteDTO(1,false);
-            noteModel.getNotes().add(new NoteDTO(1,false));
+        if (noteModel.getNotes().isEmpty()) {
+            NoteDTO noteDTO = new NoteDTO(1, false);
+            noteModel.getNotes().add(new NoteDTO(1, false));
             noteRepo.insertNote(noteDTO);
         }
         // set bound note to copy information from latest note
@@ -95,14 +95,19 @@ public class NoteInteractor {
         ClipboardUtils.copyHtmlToClipboard(basicInformationToHTML(), basicInformationToPlainText());
     }
 
-    public void copyCorrectiveAction() {
+    public void copyAnswerToCustomer() {
         logger.info("Copying corrective action, flashing group B (FinalBox, Related, Part Orders, Name/Date");
-        ClipboardUtils.copyHtmlToClipboard(correctiveActionToHTML(), correctiveActionToPlainText());
+        ClipboardUtils.copyHtmlToClipboard(answerToCustomerToHTML(), answerToCustomerToPlainText());
     }
 
     public void copyCustomerRequest() {
         logger.info("Copying customer request, flashing Group A (Name/Date, Basic Information, Issue, Part Orders and Shipping Information.");
         ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), customerRequestToPlainText());
+    }
+
+    public void copyLoggedCall() {
+        System.out.println("NoteInteractor::copyLoggedCall");
+        ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), loggedCallToPlainText());
     }
 
     public String copyAllPartOrdersToPlainText() {
@@ -140,14 +145,14 @@ public class NoteInteractor {
         // Start the table and add headers
         logger.info("Copying Part Order");
         if (!noteModel.getSelectedPartOrder().getParts().isEmpty()) {
-            if(includePOHeader) {
+            if (includePOHeader) {
                 stringBuilder.append("<b>Parts Ordered</b><br>");
             } else {
                 stringBuilder.append("<b>Parts Needed</b><br>");
             }
             stringBuilder.append("<table border=\"1\">");
             logger.info("Adding order: {}", noteModel.getSelectedPartOrder().getOrderNumber());
-            if(includePOHeader) {
+            if (includePOHeader) {
                 if (!noteModel.getSelectedPartOrder().getOrderNumber().isEmpty()) {
                     stringBuilder.append("<tr><th colspan=\"3\" style=\"background-color: lightgrey;\">")
                             .append("Part Order: ")
@@ -255,17 +260,17 @@ public class NoteInteractor {
             }
         }
         stringBuilder.append(noteModel.getBoundNote().getWorkOrder()).append("\r\n")
-        .append("Model: ").append(noteModel.getBoundNote().getModelNumber()).append("\r\n")
-        .append("S/N: ").append(noteModel.getBoundNote().getSerialNumber()).append("\r\n").append("\r\n")
-        .append("--- Call-in person ---").append("\r\n")
-        .append("Name: ").append(noteModel.getBoundNote().getCallInPerson()).append("\r\n")
-        .append("Phone: ").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("\r\n")
-        .append("Email: ").append(noteModel.getBoundNote().getCallInEmail()).append("\r\n").append("\r\n")
-        .append("Entitlement: ").append(noteModel.getBoundNote().getActiveServiceContract()).append("\r\n")
-        .append("Scheduling Terms: ").append(noteModel.getBoundNote().getSchedulingTerms()).append("\r\n")
-        .append("Service Level: ").append(noteModel.getBoundNote().getServiceLevel()).append("\r\n")
-        .append("Status of the UPS: ").append(noteModel.getBoundNote().getUpsStatus()).append("\r\n")
-        .append("Load Supported: ").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("\r\n");
+                .append("Model: ").append(noteModel.getBoundNote().getModelNumber()).append("\r\n")
+                .append("S/N: ").append(noteModel.getBoundNote().getSerialNumber()).append("\r\n").append("\r\n")
+                .append("--- Call-in person ---").append("\r\n")
+                .append("Name: ").append(noteModel.getBoundNote().getCallInPerson()).append("\r\n")
+                .append("Phone: ").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("\r\n")
+                .append("Email: ").append(noteModel.getBoundNote().getCallInEmail()).append("\r\n").append("\r\n")
+                .append("Entitlement: ").append(noteModel.getBoundNote().getActiveServiceContract()).append("\r\n")
+                .append("Scheduling Terms: ").append(noteModel.getBoundNote().getSchedulingTerms()).append("\r\n")
+                .append("Service Level: ").append(noteModel.getBoundNote().getServiceLevel()).append("\r\n")
+                .append("Status of the UPS: ").append(noteModel.getBoundNote().getUpsStatus()).append("\r\n")
+                .append("Load Supported: ").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("\r\n");
         return stringBuilder.toString();
     }
 
@@ -299,12 +304,37 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
-        private String customerRequestToPlainText() {
+    private String loggedCallToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
         stringBuilder.append(basicInformationToPlainText()).append("\r\n");
         stringBuilder.append(issueToPlainText()).append("\r\n");
-        if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
+        if (!noteModel.getBoundNote().getPartOrders().isEmpty()) {
+            stringBuilder.append("\r\n").append("--- Parts Needed ---").append("\r\n");
+        }
+        stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
+        stringBuilder.append(shippingInformationToPlainText()).append("\r\n");
+        if (!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
+            stringBuilder.append("Created ")
+                    .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("\r\n").append("\r\n");
+        }
+        if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
+            stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("\r\n").append("\r\n");
+        }
+        stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
+        if (!noteModel.getBoundNote().getTex().isEmpty()) {
+            stringBuilder.append("Created ")
+                    .append(noteModel.getBoundNote().getTex()).append("\r\n");
+        }
+        return stringBuilder.toString();
+    }
+
+    private String customerRequestToPlainText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
+        stringBuilder.append(basicInformationToPlainText()).append("\r\n");
+        stringBuilder.append(issueToPlainText()).append("\r\n");
+        if (!noteModel.getBoundNote().getPartOrders().isEmpty()) {
             stringBuilder.append("\r\n").append("--- Parts Needed ---").append("\r\n");
         }
         stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
@@ -317,7 +347,7 @@ public class NoteInteractor {
         stringBuilder.append(buildNameDateToHTML()).append("<br>").append("\r\n");
         stringBuilder.append(basicInformationToHTML()).append("<br>").append("\r\n");
         stringBuilder.append(issueToHTML()).append("<br>").append("\r\n");
-        if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
+        if (!noteModel.getBoundNote().getPartOrders().isEmpty()) {
             stringBuilder.append(copyAllPartOrdersToHTML(false)).append("<br>").append("\r\n");
         }
         stringBuilder.append(shippingInformationToHTML()).append("<br>").append("\r\n");
@@ -341,12 +371,12 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
-    private String correctiveActionToPlainText() {
+    private String answerToCustomerToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
         if (!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
             stringBuilder.append("Created ")
-            .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("\r\n").append("\r\n");
+                    .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("\r\n").append("\r\n");
         }
         if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("\r\n").append("\r\n");
@@ -354,17 +384,17 @@ public class NoteInteractor {
         stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
         if (!noteModel.getBoundNote().getTex().isEmpty()) {
             stringBuilder.append("Created ")
-            .append(noteModel.getBoundNote().getTex()).append("\r\n");
+                    .append(noteModel.getBoundNote().getTex()).append("\r\n");
         }
         return stringBuilder.toString();
     }
 
-    private String correctiveActionToHTML() {
+    private String answerToCustomerToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToHTML()).append("<br>");
         if (!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
             stringBuilder.append("Created ")
-            .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("<br><br>");
+                    .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("<br><br>");
         }
         if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
 //            stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("<br>").append("<br>");
@@ -373,20 +403,20 @@ public class NoteInteractor {
         stringBuilder.append(copyAllPartOrdersToHTML(true)).append("<br>");
         if (!noteModel.getBoundNote().getTex().isEmpty()) {
             stringBuilder.append("Created ")
-            .append(noteModel.getBoundNote().getTex()).append("<br>");
+                    .append(noteModel.getBoundNote().getTex()).append("<br>");
         }
         return stringBuilder.toString();
     }
 
     private String getCorrectiveActionText() {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText().replaceAll("\\r\\n|\\n|\\r", "<br>"));
-            stringBuilder.append("<br>");
-            return stringBuilder.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText().replaceAll("\\r\\n|\\n|\\r", "<br>"));
+        stringBuilder.append("<br>");
+        return stringBuilder.toString();
     }
 
     public void setComplete() {
-        logger.info("Note {} has been set to completed", noteModel.getBoundNote().getId() );
+        logger.info("Note {} has been set to completed", noteModel.getBoundNote().getId());
         noteModel.getBoundNote().setCompleted(true);
     }
 
@@ -441,7 +471,7 @@ public class NoteInteractor {
     }
 
     public void refreshPartOrders() {
-        logger.debug("Refreshing bound note, and UI, setting to: {}", noteModel.getBoundNote().getId() );
+        logger.debug("Refreshing bound note, and UI, setting to: {}", noteModel.getBoundNote().getId());
         checkAndLoadPartOrdersIfNeeded();
         setStatusLabelWithNoteInformation();
     }
@@ -452,22 +482,21 @@ public class NoteInteractor {
 
     private void checkAndLoadPartOrdersIfNeeded() {
         NoteDTO noteDTO = noteModel.getBoundNote();
-        if(noteDTO.getPartOrders().isEmpty()) {
+        if (noteDTO.getPartOrders().isEmpty()) {
             logger.debug("No Part orders found in memory, checking database..");
             noteDTO.setPartOrders(FXCollections.observableArrayList(partOrderRepo.findAllPartOrdersByNoteId(noteDTO.getId())));
-            if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
+            if (!noteModel.getBoundNote().getPartOrders().isEmpty()) {
                 logger.debug("{} part orders loaded into memory", noteDTO.getPartOrders().size());
                 noteModel.setSelectedPartOrder(noteDTO.getPartOrders().getFirst());
                 getAllPartsForEachPartOrder();
-            }
-            else logger.debug("There are no part orders for this note");
+            } else logger.debug("There are no part orders for this note");
         } else
             logger.debug("There are {} part orders already in memory", noteDTO.getPartOrders().size());
         noteModel.refreshBoundNote();
     }
 
     private void getAllPartsForEachPartOrder() {
-        for(PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
+        for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
             partOrderDTO.setParts(FXCollections.observableArrayList(partOrderRepo.getPartsByPartOrder(partOrderDTO)));
         }
     }
@@ -488,7 +517,7 @@ public class NoteInteractor {
             // let's find the correct note in the list
             if (noteDTO.getId() == noteModel.getBoundNote().getId()) {
                 // compares bound note to matching list note, if there is a change it logs it and copies it.
-                if(!NoteTools.notesAreTheSameAndSync(noteDTO, noteModel.getBoundNote())) {
+                if (!NoteTools.notesAreTheSameAndSync(noteDTO, noteModel.getBoundNote())) {
                     // copies bound note to the note in the list with matching id
                     if (noteRepo.noteExists(noteDTO)) {
                         logger.debug("Updated note: {}", noteDTO.getId());
@@ -504,7 +533,7 @@ public class NoteInteractor {
 
     public void insertPartOrder() {
         int noteId = noteModel.getBoundNote().getId();
-        PartOrderDTO partOrderDTO = new PartOrderDTO(0, noteId,"");
+        PartOrderDTO partOrderDTO = new PartOrderDTO(0, noteId, "");
         partOrderDTO.setId(partOrderRepo.insertPartOrder(partOrderDTO));
         noteModel.getBoundNote().getPartOrders().add(partOrderDTO);
         noteModel.setSelectedPartOrder(noteModel.getBoundNote().getPartOrders().getLast());
@@ -550,16 +579,16 @@ public class NoteInteractor {
 
     public void deleteNote() {
 
-        int id  = noteModel.getBoundNote().getId();
+        int id = noteModel.getBoundNote().getId();
         System.out.println("deleting note: " + id);
         // deletedNoteDTO will be the reference to the correct NoteDTO in the list
         NoteDTO deletedNoteDTO = null;
-        for(NoteDTO noteDTO : noteModel.getNotes()) {
+        for (NoteDTO noteDTO : noteModel.getNotes()) {
             if (noteDTO.idProperty().get() == id) {
                 deletedNoteDTO = noteDTO;
             }
         }
-        if(!noteModel.getBoundNote().getPartOrders().isEmpty()) {
+        if (!noteModel.getBoundNote().getPartOrders().isEmpty()) {
             noteModel.getBoundNote().getPartOrders().forEach(partOrder -> deletePartOrder(partOrder));
         }
         noteRepo.deleteNote(deletedNoteDTO);
@@ -571,7 +600,7 @@ public class NoteInteractor {
     }
 
     public void deletePartOrder(PartOrderDTO partOrderDTO) {
-        if(!partOrderDTO.getParts().isEmpty()) {
+        if (!partOrderDTO.getParts().isEmpty()) {
             Iterator<PartDTO> iterator = partOrderDTO.getParts().iterator();
             while (iterator.hasNext()) {
                 PartDTO partDTO = iterator.next();
@@ -589,4 +618,6 @@ public class NoteInteractor {
     public void refreshEntitlementComboBox() {
         noteModel.refreshEntitlements();
     }
+
+
 }
