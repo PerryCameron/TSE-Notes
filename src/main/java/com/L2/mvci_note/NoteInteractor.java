@@ -456,24 +456,24 @@ public class NoteInteractor {
         logger.info("Current entitlement set to: {}", noteModel.getCurrentEntitlement());
     }
 
-    public boolean displayPreviousNote() {
+    public NoteMessage displayPreviousNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index < noteModel.getNotes().size() - 1) {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
-            if(index == 0)
-            return true;
+            if (index == 0)
+                return NoteMessage.ENABLE_NEXT_BUTTON;
         }
-        return false;
+        return NoteMessage.DO_NOTHING;
     }
 
-    public boolean displayNextNote() {
+    public NoteMessage displayNextNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index > 0) {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
         } else {
-            return false; // you have reached the newest element on the list
+            return NoteMessage.DISABLE_NEXT_BUTTON;
         }
-        return true;
+        return NoteMessage.DO_NOTHING;
     }
 
     public void refreshPartOrders() {
@@ -618,6 +618,14 @@ public class NoteInteractor {
 
     public void refreshEntitlementComboBox() {
         noteModel.refreshEntitlements();
+    }
+
+    public NoteMessage checkButtonEnable() {
+        if (noteModel.getBoundNote().getId() == noteModel.getNotes().getFirst().getId()) {
+            return NoteMessage.DISABLE_NEXT_BUTTON;
+        } else {
+            return NoteMessage.ENABLE_NEXT_BUTTON;
+        }
     }
 
 

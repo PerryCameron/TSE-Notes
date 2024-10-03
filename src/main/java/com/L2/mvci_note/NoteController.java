@@ -68,17 +68,26 @@ public class NoteController extends Controller<NoteMessage> {
             case SORT_NOTE_TABLEVIEW -> mainController.action(MainMessage.SORT_NOTE_TABLEVIEW);
             case REFRESH_ENTITLEMENT_COMBO_BOX -> noteInteractor.refreshEntitlementComboBox();
             case COPY_LOGGED_CALL -> noteInteractor.copyLoggedCall();
+            case CHECK_BUTTON_ENABLE -> checkButtonEnable();
         };
     }
 
+    private void checkButtonEnable() {
+        if(noteInteractor.checkButtonEnable() == NoteMessage.DISABLE_NEXT_BUTTON) {
+            mainController.action(MainMessage.DISABLE_NEXT_BUTTON);
+        } else {
+            mainController.action(MainMessage.ENABLE_NEXT_BUTTON);
+        }
+    }
+
     private void displayPreviousNote() {
-        if(noteInteractor.displayPreviousNote()) {
+        if(noteInteractor.displayPreviousNote() == NoteMessage.ENABLE_NEXT_BUTTON) {
             mainController.action(MainMessage.ENABLE_NEXT_BUTTON); // this is being sent from here
         }
     }
 
     private void displayNextNote() {
-        if(!noteInteractor.displayNextNote()) {
+        if(noteInteractor.displayNextNote() == NoteMessage.DISABLE_NEXT_BUTTON) {
             mainController.action(MainMessage.DISABLE_NEXT_BUTTON); // this is being sent from here
         }
     }

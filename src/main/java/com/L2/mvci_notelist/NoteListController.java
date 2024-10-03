@@ -40,6 +40,7 @@ public class NoteListController extends Controller<NoteListMessage> {
             case SORT_NOTE_TABLEVIEW -> noteListInteractor.sortTableView();
             case SELECT_NOTE_TAB -> mainController.action(MainMessage.SELECT_NOTE_TAB);
             case REFRESH_NOTE_TABLEVIEW -> noteListInteractor.refreshTableView();
+            case CHECK_BUTTON_ENABLE -> mainController.action(MainMessage.CHECK_BUTTON_ENABLE);
         }
     }
 }

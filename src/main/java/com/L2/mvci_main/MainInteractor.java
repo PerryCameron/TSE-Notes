@@ -50,13 +50,11 @@ public class MainInteractor implements ApplicationPaths {
             }
     }
 
-    public void enableNextButton() {
-        System.out.println("NextButton.setDisable(false)");
-        mainModel.nextButtonDisabledProperty().set(false);
-    }
+//    public void enableNextButton() {
+//        mainModel.nextButtonDisabledProperty().set(false);
+//    }
 
-    public void disableNextButton() {
-        System.out.println("NextButton.setDisable(true)");
-        mainModel.nextButtonDisabledProperty().set(true);
+    public void disableNextButton(boolean disable) {
+        mainModel.nextButtonDisabledProperty().set(disable);
     }
 }
