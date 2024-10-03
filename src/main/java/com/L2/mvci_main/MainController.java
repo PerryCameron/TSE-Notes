@@ -61,6 +61,8 @@ public class MainController extends Controller<MainMessage> {
             case CREATE_DATABASE -> mainInteractor.createDataBase();
             case CHECK_FOR_DATABASE -> mainInteractor.checkForDataBase();
             case SHOW_LOG -> mainInteractor.showLog();
+            case ENABLE_NEXT_BUTTON -> mainInteractor.enableNextButton();
+            case DISABLE_NEXT_BUTTON -> mainInteractor.disableNextButton();
         }
     }
 

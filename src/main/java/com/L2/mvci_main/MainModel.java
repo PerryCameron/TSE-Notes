@@ -1,9 +1,6 @@
 package com.L2.mvci_main;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
@@ -12,7 +9,11 @@ public class MainModel {
     private StringProperty dataBaseLocation = new SimpleStringProperty("");
     private ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
     private ObjectProperty<Tab> noteTab = new SimpleObjectProperty<>();
+    private final BooleanProperty nextButtonDisabled = new SimpleBooleanProperty(true);
 
+    public BooleanProperty nextButtonDisabledProperty() {
+        return nextButtonDisabled;
+    }
 
     public String getDataBaseLocation() {
         return dataBaseLocation.get();

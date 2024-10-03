@@ -3,7 +3,6 @@ package com.L2.mvci_main;
 import com.L2.dto.NoteDTO;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ApplicationPaths;
-import com.L2.static_tools.SQLiteDatabaseCreator;
 import javafx.beans.property.ObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,5 +48,15 @@ public class MainInteractor implements ApplicationPaths {
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }
+    }
+
+    public void enableNextButton() {
+        System.out.println("NextButton.setDisable(false)");
+        mainModel.nextButtonDisabledProperty().set(false);
+    }
+
+    public void disableNextButton() {
+        System.out.println("NextButton.setDisable(true)");
+        mainModel.nextButtonDisabledProperty().set(true);
     }
 }

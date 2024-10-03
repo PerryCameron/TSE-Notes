@@ -456,18 +456,24 @@ public class NoteInteractor {
         logger.info("Current entitlement set to: {}", noteModel.getCurrentEntitlement());
     }
 
-    public void displayPreviousNote() {
+    public boolean displayPreviousNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index < noteModel.getNotes().size() - 1) {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
-        } else logger.debug("You have reached the last element on the list");
+            if(index == 0)
+            return true;
+        }
+        return false;
     }
 
-    public void displayNextNote() {
+    public boolean displayNextNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index > 0) {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
-        } else logger.debug("You have reached the first element on the list");
+        } else {
+            return false; // you have reached the newest element on the list
+        }
+        return true;
     }
 
     public void refreshPartOrders() {
@@ -562,11 +568,6 @@ public class NoteInteractor {
         PartDTO partDTO = noteModel.getSelectedPart();
         partOrderRepo.updatePart(partDTO);
         logger.debug("Updated part order: {} part # {}", partDTO.getId(), partDTO.getPartNumber());
-    }
-
-    public void test() {
-        System.out.println("NoteDTO: " + noteModel.getBoundNote().getId() + " date: " + noteModel.getBoundNote().formattedDate());
-        System.out.println("Title: " + noteModel.getBoundNote().getTitle());
     }
 
     public ObservableList<NoteDTO> getNotes() {

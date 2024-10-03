@@ -48,8 +48,8 @@ public class NoteController extends Controller<NoteMessage> {
             case SET_COMPLETE -> noteInteractor.setComplete();
             case NEW_NOTE -> noteInteractor.createNewNote();
             case LOG_CURRENT_ENTITLEMENT -> noteInteractor.logCurrentEntitlement();
-            case NEXT_NOTE -> noteInteractor.displayNextNote();
-            case PREVIOUS_NOTE -> noteInteractor.displayPreviousNote();
+            case NEXT_NOTE -> displayNextNote();
+            case PREVIOUS_NOTE -> displayPreviousNote();
             case SAVE_OR_UPDATE_NOTE -> noteInteractor.saveOrUpdateNote();
             case INSERT_PART_ORDER -> noteInteractor.insertPartOrder();
             case UPDATE_PART_ORDER -> noteInteractor.updatePartOrder();
@@ -57,7 +57,6 @@ public class NoteController extends Controller<NoteMessage> {
             case DELETE_PART -> noteInteractor.deletePart();
             case INSERT_PART -> noteInteractor.insertPart();
             case UPDATE_PART -> noteInteractor.updatePart();
-            case TEST -> noteInteractor.test();
             case REFRESH_PART_ORDERS -> noteInteractor.refreshPartOrders();
             case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT -> mainController.action(MainMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
             case UPDATE_NOTE_TAB_NAME -> mainController.action(MainMessage.UPDATE_NOTE_TAB_NAME);
@@ -70,6 +69,18 @@ public class NoteController extends Controller<NoteMessage> {
             case REFRESH_ENTITLEMENT_COMBO_BOX -> noteInteractor.refreshEntitlementComboBox();
             case COPY_LOGGED_CALL -> noteInteractor.copyLoggedCall();
         };
+    }
+
+    private void displayPreviousNote() {
+        if(noteInteractor.displayPreviousNote()) {
+            mainController.action(MainMessage.ENABLE_NEXT_BUTTON); // this is being sent from here
+        }
+    }
+
+    private void displayNextNote() {
+        if(!noteInteractor.displayNextNote()) {
+            mainController.action(MainMessage.DISABLE_NEXT_BUTTON); // this is being sent from here
+        }
     }
 
     public UserDTO getUser() { return noteInteractor.getUser(); }

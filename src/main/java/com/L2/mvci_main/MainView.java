@@ -68,16 +68,16 @@ public class MainView implements Builder<Region> {
     private Node setUpBottomPane() {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.BASELINE_LEFT);
-        Button prevNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.PREVIOUS_NOTE), "Previous", "/images/back-16.png");
-        Button nextNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEXT_NOTE), "Next", "/images/forward-16.png");
-        Button newNoteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/create-16.png");
-        Button cloneButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.CLONE_NOTE), "Clone Note", "/images/clone-16.png");
-        Button deleteButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.DELETE_NOTE), "Delete Note", "/images/delete-16.png");
+        Button prevNoteButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.PREVIOUS_NOTE), "Previous", "/images/back-16.png");
+        Button nextNoteButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.NEXT_NOTE), "Next", "/images/forward-16.png");
+        nextNoteButton.disableProperty().bind(mainModel.nextButtonDisabledProperty());
+        Button newNoteButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/create-16.png");
+        Button cloneButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.CLONE_NOTE), "Clone Note", "/images/clone-16.png");
+        Button deleteButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.DELETE_NOTE), "Delete Note", "/images/delete-16.png");
 //        Button refreshButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.REFRESH_NOTE_TABLEVIEW), "Refresh", "/images/thumbs-16.png");
 //        Button sortButton = ButtonFx.utilityButton( () -> action.accept(MainMessage.SORT_NOTE_TABLEVIEW), "sort", "/images/thumbs-16.png");
 //        Button createDataBaseButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.CREATE_DATABASE), "Create Database", "/images/thumbs-16.png");
-
-        hBox.getChildren().addAll(statusLabel(),prevNoteButton, nextNoteButton, newNoteButton, cloneButton, deleteButton);
+        hBox.getChildren().addAll(statusLabel(), prevNoteButton, nextNoteButton, newNoteButton, cloneButton, deleteButton);
         hBox.getStyleClass().add("bottom-pane");
         return hBox;
     }
@@ -94,7 +94,7 @@ public class MainView implements Builder<Region> {
 
     private Node setUpCenterPane() {
         VBox vBox = new VBox();
-        vBox.setPadding(new Insets(4,0,0,0));
+        vBox.setPadding(new Insets(4, 0, 0, 0));
         vBox.getStyleClass().add("center-pane");
         TabPane tabPane = new TabPane();
         tabPane.setStyle("-fx-background-color: white");
@@ -111,8 +111,8 @@ public class MainView implements Builder<Region> {
         action.accept(MainMessage.UPDATE_STATUSBAR_WITH_STRING);
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-            if(newTab != null) {
-                if(newTab.getText().equals("Manage Notes")) action.accept(MainMessage.SORT_NOTE_TABLEVIEW);
+            if (newTab != null) {
+                if (newTab.getText().equals("Manage Notes")) action.accept(MainMessage.SORT_NOTE_TABLEVIEW);
             }
         });
         vBox.getChildren().add(tabPane);
@@ -121,12 +121,12 @@ public class MainView implements Builder<Region> {
 
     protected void addNewTab(String name, Region region, boolean closeable, String image) {
         Tab newTab = new Tab(name, region);
-        if(!image.isEmpty()) {
+        if (!image.isEmpty()) {
             Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(image)));
             ImageView imageViewCopy = new ImageView(copyIcon);
             newTab.setGraphic(imageViewCopy);
         }
-        if(name.equals("Note")) mainModel.setNoteTab(newTab);
+        if (name.equals("Note")) mainModel.setNoteTab(newTab);
         newTab.setClosable(closeable);
         mainModel.getMainTabPane().getTabs().add(newTab);
         mainModel.getMainTabPane().getSelectionModel().select(newTab);
