@@ -14,8 +14,6 @@ public class DatabaseConnector {
 
     public static SQLiteDataSource getDataSource() {
         String DATABASE_URL = "jdbc:sqlite:" + BaseApplication.dataBaseLocation;
-        if(BaseApplication.testMode)
-            DATABASE_URL = "jdbc:sqlite:" + ApplicationPaths.settingsDir.resolve("testnotes.db");
         SQLiteDataSource dataSource = new SQLiteDataSource();
         dataSource.setUrl(DATABASE_URL);
 
@@ -26,7 +24,6 @@ public class DatabaseConnector {
         } catch (SQLException e) {
             logger.error("Failed to establish SQLite connection.", e);
         }
-
         return dataSource;
     }
 }

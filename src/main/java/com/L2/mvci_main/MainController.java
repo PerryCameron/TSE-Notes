@@ -29,6 +29,7 @@ public class MainController extends Controller<MainMessage> {
         mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::action);
+        logger.info("Main controller loaded");
     }
 
     @Override
@@ -59,15 +60,13 @@ public class MainController extends Controller<MainMessage> {
             case CLONE_NOTE -> noteController.action(NoteMessage.CLONE_NOTE);
             case REFRESH_ENTITLEMENT_COMBO_BOX -> noteController.action(NoteMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
             case CREATE_DATABASE -> mainInteractor.createDataBase();
-            case CHECK_FOR_DATABASE -> mainInteractor.checkForDataBase();
+//            case CHECK_FOR_DATABASE -> mainInteractor.checkForDataBase();
             case SHOW_LOG -> mainInteractor.showLog();
             case ENABLE_NEXT_BUTTON -> mainInteractor.disableNextButton(false);
             case DISABLE_NEXT_BUTTON -> mainInteractor.disableNextButton(true);
             case CHECK_BUTTON_ENABLE -> noteController.action(NoteMessage.CHECK_BUTTON_ENABLE);
         }
     }
-
-
 
     public UserDTO getUser() {
         return noteController.getUser();

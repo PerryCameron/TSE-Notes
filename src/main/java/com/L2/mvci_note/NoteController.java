@@ -8,19 +8,23 @@ import com.L2.mvci_main.MainMessage;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NoteController extends Controller<NoteMessage> {
 
     MainController mainController;
     NoteInteractor noteInteractor;
     NoteView noteView;
+    private static final Logger logger = LoggerFactory.getLogger(NoteController.class);
+
 
     public NoteController(MainController mc) {
         this.mainController = mc;
         NoteModel noteModel = new NoteModel();
         this.noteInteractor = new NoteInteractor(noteModel);
         this.noteView = new NoteView(noteModel, this::action);
-//        action(NoteMessage.LOAD_USER);
+        logger.info("NoteController loaded");
     }
 
     @Override

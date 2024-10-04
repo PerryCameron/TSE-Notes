@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class StartUpManager {
@@ -12,11 +11,11 @@ public class StartUpManager {
 
 
     // Helper method to create directories if they don't exist
-    public static String validateDatabase() {
+    public static String validateDatabase(String database) {
         logger.info("Validating database location...");
         // this is our preferred place to store the database
-        String preferredLocation = ApplicationPaths.homeDir + "\\OneDrive - Schneider Electric\\TSENotes\\notes.db";
-        String secondLocation = ApplicationPaths.homeDir + "\\TSENotes\\notes.db";
+        String preferredLocation = ApplicationPaths.homeDir + "\\OneDrive - Schneider Electric\\TSENotes\\" + database;
+        String secondLocation = ApplicationPaths.homeDir + "\\TSENotes\\" + database;
         // If we can get to the one drive lets make our path: onedrive + TSENotes
         if (Files.exists(Paths.get(preferredLocation))) {
             logger.info("Database location: {}", preferredLocation);

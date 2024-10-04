@@ -36,9 +36,9 @@ public class MainInteractor implements ApplicationPaths {
 //        SQLiteDatabaseCreator.createDataBase();
     }
 
-    public void checkForDataBase() {
-
-    }
+//    public void checkForDataBase() {
+//
+//    }
 
     public void showLog() {
             Desktop desktop = Desktop.getDesktop(); // Gui_Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()

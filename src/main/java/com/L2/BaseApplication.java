@@ -5,6 +5,7 @@ import com.L2.mvci_main.MainController;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ApplicationPaths;
 import com.L2.static_tools.StartUpManager;
+import com.L2.static_tools.VersionUtil;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -24,6 +25,7 @@ public class BaseApplication extends Application {
 
     public static Stage primaryStage;
     public static boolean testMode = false;
+    public static String dataBase = "notes.db";
     public static String dataBaseLocation = "";
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
     private double xOffset = 0.0;
@@ -31,30 +33,27 @@ public class BaseApplication extends Application {
     private boolean isResizing = false; // Flag to indicate whether resizing is active
 
     public static void main(String[] args) {
-        AppFileTools.createFileIfNotExists(ApplicationPaths.settingsDir);
-//        AppFileTools.startFileLogger();
-        logger.info("TSENotes version 1.0 Starting...");
         for (String arg : args) {
             if ("test".equalsIgnoreCase(arg)) {
                 testMode = true;
-                logger.info("Running in test mode.");
-            } else {
-                logger.info("Running in normal mode.");
+                dataBase = "test-notes.db";
             }
         }
-        // below is where we switch to JavaFX thead and problems begin
+        AppFileTools.createFileIfNotExists(ApplicationPaths.settingsDir);
+        if(!testMode)
+        AppFileTools.startFileLogger();
+        logger.info("TSENotes version {} Starting...", VersionUtil.getVersion());
         launch(args);
     }
 
     @Override
     public void init() {
-        dataBaseLocation = StartUpManager.validateDatabase();
+        // checks for the existence of the database we are going to use
+        dataBaseLocation = StartUpManager.validateDatabase(dataBase);
     }
 
     @Override
     public void start(Stage stage) {
-//        logAppVersion();
-        try {
             primaryStage = stage;
             primaryStage.setWidth(1028);
             primaryStage.setHeight(840);
@@ -82,7 +81,6 @@ public class BaseApplication extends Application {
             primaryStage.initStyle(StageStyle.UNDECORATED);
             addResizeListeners(primaryStage, primaryStage.getScene());
             primaryStage.show();
-        } catch (Exception ex) { ex.printStackTrace(); }
     }
 
     private void addResizeListeners(Stage stage, Scene scene) {
@@ -107,21 +105,5 @@ public class BaseApplication extends Application {
                 stage.setHeight(event.getY());
             }
         });
-    }
-
-    private static String logAppVersion() {
-        Properties properties = new Properties();
-        try (InputStream input = BaseApplication.class.getClassLoader().getResourceAsStream("app.properties")) {
-            if (input == null) {
-                logger.error("Sorry, unable to find app.properties");
-                return "unknown" ;
-            }
-            properties.load(input);
-            String appVersion = properties.getProperty("app.version");
-            logger.info("Starting GlobalSpares Application version: " + appVersion);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return properties.getProperty("app.version");
     }
 }
