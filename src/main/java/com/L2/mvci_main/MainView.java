@@ -1,7 +1,9 @@
 package com.L2.mvci_main;
 
 import com.L2.mvci_main.components.TitleBar;
+import com.L2.static_tools.VersionUtil;
 import com.L2.widgetFx.ButtonFx;
+import com.L2.widgetFx.DialogueFx;
 import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class MainView implements Builder<Region> {
@@ -47,7 +50,7 @@ public class MainView implements Builder<Region> {
 
     private Node setUpMenuBar() {
         MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(createFileMenu(), createDebugMenu());
+        menuBar.getMenus().addAll(createFileMenu(), createDebugMenu(), createHelpMenu());
         return menuBar;
     }
 
@@ -62,6 +65,19 @@ public class MainView implements Builder<Region> {
         Menu menu = new Menu("Debug");
         MenuItem showDebugLog = MenuFx.menuItemOf("Show Log", x -> action.accept(MainMessage.SHOW_LOG), null);
         menu.getItems().add(showDebugLog);
+        return menu;
+    }
+
+    private Menu createHelpMenu() {
+        Menu menu = new Menu("Help");
+        String message = "Version: " + VersionUtil.getVersion()
+                + "\nBuilt: " + VersionUtil.getBuildTimestamp()
+                + "\nBundled JDK: " + VersionUtil.getJavaVersion();
+        MenuItem showAboutDialogue = MenuFx.menuItemOf("About", x -> {
+            Alert alert = DialogueFx.customAlert("TSE Notes", message, Alert.AlertType.INFORMATION);
+            alert.showAndWait();
+        }, null);
+        menu.getItems().add(showAboutDialogue);
         return menu;
     }
 

@@ -15,12 +15,6 @@ import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.Properties;
-import java.util.concurrent.CountDownLatch;
-
 public class BaseApplication extends Application {
 
     public static Stage primaryStage;
@@ -61,7 +55,7 @@ public class BaseApplication extends Application {
             primaryStage.setResizable(true);
             primaryStage.setScene(new Scene(new MainController().getView()));
             Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-            primaryStage.getScene().getStylesheets().add("css/dark/light.css");
+            primaryStage.getScene().getStylesheets().add("css/light.css");
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/TSELogo-64.png")));
             // Mouse pressed for dragging the window
             primaryStage.getScene().setOnMousePressed(event -> {

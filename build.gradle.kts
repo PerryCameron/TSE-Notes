@@ -1,4 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.text.SimpleDateFormat
+import java.util.*
 
 // I am using Gradle 8.8
 // I am also using bellsoft-jdk21.0.4+9-windows-amd64-full - This is an SDK with JavaFX included, I am using it to simplify this instillation
@@ -12,8 +14,8 @@ plugins {
 group = "com.schneider"
 
 // Retrieve the Git version directly from the project object
-val gitVersion: groovy.lang.Closure<Any> by project
-version = gitVersion() as String
+val gitVersion: groovy.lang.Closure<String> by extra
+version = gitVersion()
 
 application {
     // Define the main class for the application
@@ -48,7 +50,7 @@ dependencies {
     // https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform
     implementation("net.java.dev.jna:jna-platform:5.14.0")
     // theme
-    implementation ("io.github.mkpaz:atlantafx-base:2.0.1")
+    implementation("io.github.mkpaz:atlantafx-base:2.0.1")
     // logging api
     implementation("org.slf4j:slf4j-api:2.0.16")
     // implementation of the SLF4J API for Logback, a reliable, generic, fast and flexible logging framework.
@@ -60,13 +62,16 @@ dependencies {
     // API for SLF4J (The Simple Logging Facade for Java) which serves as a simple facade or
     // abstraction for various logging frameworks, allowing the end user to plug in the desired
     // logging framework at deployment time.
-    implementation("org.apache.poi:poi:5.3.0")
+//    implementation("org.apache.poi:poi:5.3.0")
     // Apache POI - Java API To Access Microsoft Format Files
-    implementation("org.apache.poi:poi-ooxml:5.3.0")
+//    implementation("org.apache.poi:poi-ooxml:5.3.0")
     testImplementation("ch.qos.logback:logback-classic:1.5.6")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
+
+
+
 
 tasks.withType<JavaCompile> {
     options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:unchecked"))
@@ -103,14 +108,22 @@ tasks.register<Exec>("packageApp") {
     // Directly point to the jpackage tool in your Java 21 SDK
     commandLine(
         "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin/jpackage",  // Path to your jpackage
-        "--input", "build/libs",  // Path to the JAR file directory
-        "--main-jar", "TSENotes-all.jar",  // Replace with your actual JAR name
-        "--main-class", "com.L2.BaseApplication",  // Replace with your actual main class
-        "--name", "TSENotes",  // Name of the app
-        "--type", "app-image",  // You can also use pkg, dmg, exe, etc.
-        "--runtime-image", "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full",  // Path to Java 21 runtime image
-        "--dest", "build/jpackage",  // Output destination
-        "--icon", "src/main/resources/images/TSELogo.ico"  // Optional: Path to your app's icon
+        "--input",
+        "build/libs",  // Path to the JAR file directory
+        "--main-jar",
+        "TSENotes-all.jar",  // Replace with your actual JAR name
+        "--main-class",
+        "com.L2.BaseApplication",  // Replace with your actual main class
+        "--name",
+        "TSENotes",  // Name of the app
+        "--type",
+        "app-image",  // You can also use pkg, dmg, exe, etc.
+        "--runtime-image",
+        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full",  // Path to Java 21 runtime image
+        "--dest",
+        "build/jpackage",  // Output destination
+        "--icon",
+        "src/main/resources/images/TSELogo.ico"  // Optional: Path to your app's icon
     )
 }
 
@@ -139,17 +152,54 @@ tasks.register<Exec>("packageAppInstallerWindows") {
     )
 }
 
-tasks.register("generateVersionProperties") {
+//tasks.register("generateVersionProperties") {
+//    doLast {
+//        val propertiesFile = file("src/main/resources/version.properties")
+//        propertiesFile.parentFile.mkdirs()
+//        propertiesFile.writeText("version=${project.version}\n")
+//    }
+//}
+//
+//tasks.register("generateBuildProperties") {
+//    doLast {
+//        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+//        val buildTimestamp = dateFormat.format(Date())
+//        val propertiesFile = file("src/main/resources/build.properties")
+//        propertiesFile.parentFile.mkdirs()
+//        propertiesFile.writeText("build.timestamp=$buildTimestamp\n")
+//    }
+//}
+//
+//tasks.processResources {
+//    dependsOn("generateBuildProperties")
+//}
+//
+//tasks.processResources {
+//    dependsOn("generateVersionProperties")
+//}
+
+tasks.register("generateBuildInfoProperties") {
     doLast {
+        // Create timestamp
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val buildTimestamp = dateFormat.format(Date())
+        val javaVersion = System.getProperty("java.version") ?: "Unknown"
+        // Generate a combined properties file
         val propertiesFile = file("src/main/resources/version.properties")
         propertiesFile.parentFile.mkdirs()
-        propertiesFile.writeText("version=${project.version}\n")
+        propertiesFile.writeText("""
+            version=${project.version}
+            build.timestamp=$buildTimestamp
+            java.version=$javaVersion
+        """.trimIndent())
     }
 }
 
+// Ensure the combined properties file is generated during the build
 tasks.processResources {
-    dependsOn("generateVersionProperties")
+    dependsOn("generateBuildInfoProperties")
 }
+
 
 tasks.test {
     useJUnitPlatform()
