@@ -41,7 +41,6 @@ public class NotesTable implements Component<Region> {
                 if (newSelection != null) {
                     noteListView.getNoteListModel().setSelectedNote(newSelection);
                     noteListView.getAction().accept(NoteListMessage.UPDATE_BOUND_NOTE);
-                    noteListView.getAction().accept(NoteListMessage.CHECK_BUTTON_ENABLE);
             }
         });
 

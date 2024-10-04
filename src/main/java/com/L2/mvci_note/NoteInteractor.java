@@ -456,24 +456,18 @@ public class NoteInteractor {
         logger.info("Current entitlement set to: {}", noteModel.getCurrentEntitlement());
     }
 
-    public NoteMessage displayPreviousNote() {
+    public void displayPreviousNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index < noteModel.getNotes().size() - 1) {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
-            if (index == 0)
-                return NoteMessage.ENABLE_NEXT_BUTTON;
         }
-        return NoteMessage.DO_NOTHING;
     }
 
-    public NoteMessage displayNextNote() {
+    public void displayNextNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
         if (index > 0) {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
-        } else {
-            return NoteMessage.DISABLE_NEXT_BUTTON;
         }
-        return NoteMessage.DO_NOTHING;
     }
 
     public void refreshPartOrders() {

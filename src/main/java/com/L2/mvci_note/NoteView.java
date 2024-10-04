@@ -75,6 +75,8 @@ public class NoteView implements Builder<Region> {
             action.accept(NoteMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
             // sends signal to mainInteractor to change note tab name
             action.accept(NoteMessage.UPDATE_NOTE_TAB_NAME);
+            // Enables / Disables next button
+            action.accept(NoteMessage.CHECK_BUTTON_ENABLE);
         });
     }
 

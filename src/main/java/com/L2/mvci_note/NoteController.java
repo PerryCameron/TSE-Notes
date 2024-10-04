@@ -81,15 +81,11 @@ public class NoteController extends Controller<NoteMessage> {
     }
 
     private void displayPreviousNote() {
-        if(noteInteractor.displayPreviousNote() == NoteMessage.ENABLE_NEXT_BUTTON) {
-            mainController.action(MainMessage.ENABLE_NEXT_BUTTON); // this is being sent from here
-        }
+        noteInteractor.displayPreviousNote();
     }
 
     private void displayNextNote() {
-        if(noteInteractor.displayNextNote() == NoteMessage.DISABLE_NEXT_BUTTON) {
-            mainController.action(MainMessage.DISABLE_NEXT_BUTTON); // this is being sent from here
-        }
+        noteInteractor.displayNextNote();
     }
 
     public UserDTO getUser() { return noteInteractor.getUser(); }
