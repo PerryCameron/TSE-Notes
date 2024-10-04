@@ -13,7 +13,7 @@ public class TableViewFx {
         tableView.setPrefHeight(prefHeight);
         tableView.setFixedCellSize(30);
         tableView.setEditable(true);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         return tableView;
     }
 
@@ -23,7 +23,7 @@ public class TableViewFx {
         HBox.setHgrow(tableView, Priority.ALWAYS);
         tableView.setFixedCellSize(30);
         tableView.setEditable(true);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         return tableView;
     }
 }
