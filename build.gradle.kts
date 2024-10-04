@@ -1,5 +1,5 @@
-import org.apache.tools.ant.filters.ReplaceTokens
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 // I am using Gradle 8.8
 // I am also using bellsoft-jdk21.0.4+9-windows-amd64-full - This is an SDK with JavaFX included, I am using it to simplify this instillation
 plugins {
@@ -26,7 +26,6 @@ tasks.jar {
     }
 }
 
-
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
@@ -38,21 +37,6 @@ repositories {
 }
 
 val appVersion: String by project
-
-// Process and copy app.properties with version replacement
-// this doesn't work yet, but will be for versioning my app
-tasks.register<Copy>("processAppProperties") {
-    from("src/main/resources")
-    into(layout.buildDirectory.dir("resources/"))
-    filter<ReplaceTokens>("tokens" to mapOf("version" to "test"))
-    into(layout.buildDirectory.dir("processedResources"))
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    doLast {
-        println("Processed app.properties:")
-        println(file(layout.buildDirectory.dir("processedResources").get().asFile).resolve("app.properties").readText())
-    }
-}
 
 dependencies {
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
@@ -93,7 +77,6 @@ tasks.named<ShadowJar>("shadowJar") {
         attributes["Main-Class"] = "com.L2.BaseApplication"  // Ensure the manifest has the correct main class
     }
 }
-
 
 tasks.jar {
     manifest {
@@ -152,6 +135,17 @@ tasks.register<Exec>("packageAppInstallerWindows") {
     )
 }
 
+tasks.register("generateVersionProperties") {
+    doLast {
+        val propertiesFile = file("src/main/resources/version.properties")
+        propertiesFile.parentFile.mkdirs()
+        propertiesFile.writeText("version=${project.version}\n")
+    }
+}
+
+tasks.processResources {
+    dependsOn("generateVersionProperties")
+}
 
 tasks.test {
     useJUnitPlatform()
