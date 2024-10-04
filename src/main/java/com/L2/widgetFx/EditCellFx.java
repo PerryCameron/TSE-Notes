@@ -84,6 +84,7 @@ public class EditCellFx<S, T> extends TableCell<S, T> {
         if (table != null) {
             TableColumn<S, T> column = getTableColumn();
             int editingRow = getIndex();  // Get the current row being edited
+            @SuppressWarnings("unchecked")
             TablePosition<S, T> currentPosition = table.getFocusModel().getFocusedCell();  // Get the current row with focus
 
             // Ensure the edit is committed to the correct row

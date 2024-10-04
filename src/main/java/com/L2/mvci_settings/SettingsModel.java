@@ -14,7 +14,7 @@ public class SettingsModel {
     // The one we wish to change
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
     private ObjectProperty<Region> currentMenu = new SimpleObjectProperty<>();
-    private ObjectProperty<TableView> entitlementsTableView = new SimpleObjectProperty<>();
+    private ObjectProperty<TableView<EntitlementDTO>> entitlementsTableView = new SimpleObjectProperty<>();
     private ObjectProperty<TextField> entitlementTextField = new SimpleObjectProperty<>();
     private ObjectProperty<TextArea> includeTextArea = new SimpleObjectProperty<>();
     private ObjectProperty<TextArea> includeNotTextArea = new SimpleObjectProperty<>();
@@ -73,11 +73,11 @@ public class SettingsModel {
         return entitlementsTableView.get();
     }
 
-    public ObjectProperty<TableView> entitlementsTableViewProperty() {
+    public ObjectProperty<TableView<EntitlementDTO>> entitlementsTableViewProperty() {
         return entitlementsTableView;
     }
 
-    public void setEntitlementsTableView(TableView entitlementsTableView) {
+    public void setEntitlementsTableView(TableView<EntitlementDTO> entitlementsTableView) {
         this.entitlementsTableView.set(entitlementsTableView);
     }
 

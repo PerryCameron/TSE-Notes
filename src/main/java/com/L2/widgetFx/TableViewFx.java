@@ -26,13 +26,4 @@ public class TableViewFx {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         return tableView;
     }
-
-    public static void requestFocusOnTable(TableView<?> tableView) {
-        TableColumn firstColumn = tableView.getColumns().get(0);
-        tableView.layout();
-        tableView.requestFocus();
-        tableView.getSelectionModel().select(0);
-        tableView.getFocusModel().focus(0);
-        tableView.edit(0, firstColumn);
-    }
 }

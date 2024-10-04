@@ -68,6 +68,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
+tasks.withType<JavaCompile> {
+    options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:unchecked"))
+}
+
 // Create the fat JAR using shadowJar
 tasks.named<ShadowJar>("shadowJar") {
     archiveBaseName.set("TSENotes")  // Set the base name for the fat JAR

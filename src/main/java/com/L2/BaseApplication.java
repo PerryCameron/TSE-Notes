@@ -33,15 +33,14 @@ public class BaseApplication extends Application {
     private boolean isResizing = false; // Flag to indicate whether resizing is active
 
     public static void main(String[] args) {
+        AppFileTools.createFileIfNotExists(ApplicationPaths.settingsDir);
         for (String arg : args) {
             if ("test".equalsIgnoreCase(arg)) {
                 testMode = true;
                 dataBase = "test-notes.db";
-            }
+            } else
+                AppFileTools.startFileLogger(); // log to file in regular mode
         }
-        AppFileTools.createFileIfNotExists(ApplicationPaths.settingsDir);
-        if(!testMode)
-        AppFileTools.startFileLogger();
         logger.info("TSENotes version {} Starting...", VersionUtil.getVersion());
         launch(args);
     }

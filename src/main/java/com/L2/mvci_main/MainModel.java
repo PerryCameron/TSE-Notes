@@ -7,7 +7,7 @@ import javafx.scene.control.TabPane;
 public class MainModel {
     private StringProperty statusLabelStringProperty = new SimpleStringProperty(""); // keeper here
     private StringProperty dataBaseLocation = new SimpleStringProperty("");
-    private ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
+    private ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty<>();
     private ObjectProperty<Tab> noteTab = new SimpleObjectProperty<>();
     private final BooleanProperty nextButtonDisabled = new SimpleBooleanProperty(true);
 

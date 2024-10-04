@@ -38,11 +38,24 @@ public class NoteRepositoryImpl implements NoteRepository {
         String sql = "SELECT COUNT(*) FROM Notes WHERE id = ?";
         // Extract the id from the NoteDTO object
         int id = note.getId();
-        // Use queryForObject to get the count of rows matching the id
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
+        // Use the new varargs version of queryForObject
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
         // Return true if count is greater than 0, meaning the note exists
         return count != null && count > 0;
     }
+
+
+ ///// Old deprecated version.
+//    @Override
+//    public boolean noteExists(NoteDTO note) {
+//        String sql = "SELECT COUNT(*) FROM Notes WHERE id = ?";
+//        // Extract the id from the NoteDTO object
+//        int id = note.getId();
+//        // Use queryForObject to get the count of rows matching the id
+//        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
+//        // Return true if count is greater than 0, meaning the note exists
+//        return count != null && count > 0;
+//    }
 
     @Override
     public int insertNote(NoteDTO note) {
