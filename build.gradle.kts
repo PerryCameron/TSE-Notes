@@ -6,10 +6,26 @@ plugins {
     application
     java
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.palantir.git-version") version "3.1.0"  // latest release on Jun 5, 2024
 }
 
 group = "com.schneider"
-version = "1.0-SNAPSHOT"
+
+// Retrieve the Git version directly from the project object
+val gitVersion: groovy.lang.Closure<Any> by project
+version = gitVersion() as String
+
+application {
+    // Define the main class for the application
+    mainClass.set("com.L2.BaseApplication")  // Replace with your actual main class
+}
+
+tasks.jar {
+    manifest {
+        attributes["Implementation-Version"] = project.version
+    }
+}
+
 
 java {
     toolchain {
@@ -63,16 +79,9 @@ dependencies {
     implementation("org.apache.poi:poi:5.3.0")
     // Apache POI - Java API To Access Microsoft Format Files
     implementation("org.apache.poi:poi-ooxml:5.3.0")
-
-
     testImplementation("ch.qos.logback:logback-classic:1.5.6")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-}
-
-application {
-    // Define the main class for the application
-    mainClass.set("com.L2.BaseApplication")  // Replace with your actual main class
 }
 
 // Create the fat JAR using shadowJar
@@ -122,11 +131,9 @@ tasks.register<Exec>("packageAppInstallerWindows") {
     group = "build"
     description = "Packages the application with a bundled JRE using jpackage for Windows"
 
-
     doFirst {
         delete(file("build/jpackage/TSENotesInstaller"))
     }
-
 
     commandLine(
         "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin/jpackage",
