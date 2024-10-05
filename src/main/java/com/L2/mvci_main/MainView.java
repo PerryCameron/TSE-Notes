@@ -18,7 +18,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class MainView implements Builder<Region> {
@@ -74,7 +73,7 @@ public class MainView implements Builder<Region> {
                 + "\nBuilt: " + VersionUtil.getBuildTimestamp()
                 + "\nBundled JDK: " + VersionUtil.getJavaVersion();
         MenuItem showAboutDialogue = MenuFx.menuItemOf("About", x -> {
-            Alert alert = DialogueFx.customAlert("TSE Notes", message, Alert.AlertType.INFORMATION);
+            Alert alert = DialogueFx.aboutDialogue("TSE Notes", message, Alert.AlertType.INFORMATION);
             alert.showAndWait();
         }, null);
         menu.getItems().add(showAboutDialogue);

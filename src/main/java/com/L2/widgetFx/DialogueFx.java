@@ -14,7 +14,7 @@ import javafx.scene.image.Image;
 import java.util.Optional;
 
 public class DialogueFx {
-    public static Alert customAlert(String header, String message, Alert.AlertType type) {
+    public static Alert aboutDialogue(String header, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setHeaderText(header); // I would like the header to be a larger font
         alert.setContentText(message);
@@ -73,11 +73,11 @@ public class DialogueFx {
 
     public static boolean verifyAction(String[] string, Object o) {
         if(o != null) {
-            Alert alert = DialogueFx.customAlert(string[0], string[1], Alert.AlertType.CONFIRMATION);
+            Alert alert = DialogueFx.aboutDialogue(string[0], string[1], Alert.AlertType.CONFIRMATION);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) return true;
         } else {
-            Alert alert = DialogueFx.customAlert(string[2],string[3], Alert.AlertType.INFORMATION);
+            Alert alert = DialogueFx.aboutDialogue(string[2],string[3], Alert.AlertType.INFORMATION);
             alert.showAndWait();
         }
         return false;

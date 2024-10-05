@@ -152,32 +152,6 @@ tasks.register<Exec>("packageAppInstallerWindows") {
     )
 }
 
-//tasks.register("generateVersionProperties") {
-//    doLast {
-//        val propertiesFile = file("src/main/resources/version.properties")
-//        propertiesFile.parentFile.mkdirs()
-//        propertiesFile.writeText("version=${project.version}\n")
-//    }
-//}
-//
-//tasks.register("generateBuildProperties") {
-//    doLast {
-//        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-//        val buildTimestamp = dateFormat.format(Date())
-//        val propertiesFile = file("src/main/resources/build.properties")
-//        propertiesFile.parentFile.mkdirs()
-//        propertiesFile.writeText("build.timestamp=$buildTimestamp\n")
-//    }
-//}
-//
-//tasks.processResources {
-//    dependsOn("generateBuildProperties")
-//}
-//
-//tasks.processResources {
-//    dependsOn("generateVersionProperties")
-//}
-
 tasks.register("generateBuildInfoProperties") {
     doLast {
         // Create timestamp
@@ -199,7 +173,6 @@ tasks.register("generateBuildInfoProperties") {
 tasks.processResources {
     dependsOn("generateBuildInfoProperties")
 }
-
 
 tasks.test {
     useJUnitPlatform()
