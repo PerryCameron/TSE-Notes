@@ -31,7 +31,9 @@ public class NoteListInteractor implements ApplicationPaths {
 
     public void updateBoundNote() {
         System.out.println("NoteListInteractor::updateBoundNote -> bound note copies selected note");
-        noteListModel.getBoundNote().copyFrom(noteListModel.getSelectedNote());
+        if(noteListModel.getSelectedNote() != null) {
+            noteListModel.getBoundNote().copyFrom(noteListModel.getSelectedNote());
+        }
     }
 
     // when bound note changes information this is a message that gets sent to select a row in the table

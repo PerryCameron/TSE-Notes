@@ -37,6 +37,7 @@ public class BaseApplication extends Application {
     public void init() {
         // checks for the existence of the database we are going to use
         dataBaseLocation = StartUpManager.validateDatabase(dataBase);
+        // if no db found check MainView::setUpCenterPane()
     }
 
     @Override

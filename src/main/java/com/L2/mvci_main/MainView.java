@@ -1,5 +1,6 @@
 package com.L2.mvci_main;
 
+import com.L2.BaseApplication;
 import com.L2.mvci_main.components.TitleBar;
 import com.L2.static_tools.VersionUtil;
 import com.L2.widgetFx.ButtonFx;
@@ -114,16 +115,12 @@ public class MainView implements Builder<Region> {
         TabPane tabPane = new TabPane();
         tabPane.setStyle("-fx-background-color: white");
         mainModel.setMainTabPane(tabPane);
-        // Open our initial tabs
-//        action.accept(MainMessage.CHECK_FOR_DATABASE);
-        action.accept(MainMessage.OPEN_NOTE_TAB);
-        action.accept(MainMessage.OPEN_NOTESLIST_TAB);
-        action.accept(MainMessage.SELECT_NOTE_TAB);
-        // this is a message for the tableView to select the correct row to match selected NoteDTO
-        action.accept(MainMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
-        // obviously to put the correct number on the tab
-        action.accept(MainMessage.UPDATE_NOTE_TAB_NAME);
-        action.accept(MainMessage.UPDATE_STATUSBAR_WITH_STRING);
+
+        if(BaseApplication.dataBaseLocation.equals("no-database")) {
+            System.out.println("We need to create a new database");
+        } else {
+            launchNormal();
+        }
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if (newTab != null) {
@@ -132,6 +129,17 @@ public class MainView implements Builder<Region> {
         });
         vBox.getChildren().add(tabPane);
         return vBox;
+    }
+
+    private void launchNormal() {
+        action.accept(MainMessage.OPEN_NOTE_TAB);
+        action.accept(MainMessage.OPEN_NOTESLIST_TAB);
+        action.accept(MainMessage.SELECT_NOTE_TAB);
+        // this is a message for the tableView to select the correct row to match selected NoteDTO
+        action.accept(MainMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
+        // obviously to put the correct number on the tab
+        action.accept(MainMessage.UPDATE_NOTE_TAB_NAME);
+        action.accept(MainMessage.UPDATE_STATUSBAR_WITH_STRING);
     }
 
     protected void addNewTab(String name, Region region, boolean closeable, String image) {

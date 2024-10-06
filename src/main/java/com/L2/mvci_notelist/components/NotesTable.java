@@ -119,7 +119,6 @@ public class NotesTable implements Component<Region> {
         return emailCol;
     }
 
-
     @Override
     public void flash() {
 

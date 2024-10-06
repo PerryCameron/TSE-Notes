@@ -18,7 +18,7 @@ public class SQLiteDatabaseCreator {
     public static void createDataBase(Path path) {
         logger.info("Creating database...");
         String dirPath = createDirectoryIfNotExists(path);
-        String url = "jdbc:sqlite:" + dirPath +"/notes.db";
+        String url = "jdbc:sqlite:" + dirPath +"/test-notes.db";
 
         // SQL commands for creating tables
         String createTables = """
@@ -118,8 +118,48 @@ public class SQLiteDatabaseCreator {
 
         String insertBlankUser = """
                 INSERT INTO user (id, first_name, last_name, email, sesa_number, url) VALUES
-                (1,'first','last','email','sesa','BFO URL');
+                (1,'','','','','');
                 """;
+
+        String insertBlankNote = """
+       INSERT INTO Notes (
+          timestamp,
+          workOrder,
+          caseNumber,
+          serialNumber,
+          modelNumber,
+          callInPerson,
+          callInPhoneNumber,
+          callInEmail,
+          underWarranty,
+          activeServiceContract,
+          serviceLevel,
+          schedulingTerms,
+          upsStatus,
+          loadSupported,
+          issue,
+          contactName,
+          contactPhoneNumber,
+          contactEmail,
+          street,
+          installedAt,
+          city,
+          state,
+          zip,
+          country,
+          createdWorkOrder,
+          tex,
+          partsOrder,
+          completed,
+          isEmail,
+          additionalCorrectiveActionText,
+          relatedCaseNumber,
+          title
+       ) VALUES (
+          '', '', '', '', '', '', '', '', 0, '', '', '', '', 0, '',
+          '', '', '', '', '', '', '', '', '', '', 0, 0, '', '', ''
+       );
+       """;
 
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement()) {

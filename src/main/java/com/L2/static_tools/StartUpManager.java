@@ -25,8 +25,7 @@ public class StartUpManager {
             return secondLocation;
         } else { // database does not exist we need to create.
             logger.info("No Database could be found at preferred or secondary location");
-            System.exit(0);
+            return "no-database";
         }
-        return null;
     }
 }

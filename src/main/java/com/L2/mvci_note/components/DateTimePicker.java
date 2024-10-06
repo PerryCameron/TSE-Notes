@@ -37,7 +37,6 @@ public class DateTimePicker implements Component<Region> {
         // Bind the datePicker, hourSpinner, and minuteSpinner to the timestamp in NoteDTO
     }
 
-
     public void setDateTime(LocalDateTime dateTime) {
         if (dateTime != null) {
             datePicker.setValue(dateTime.toLocalDate());
