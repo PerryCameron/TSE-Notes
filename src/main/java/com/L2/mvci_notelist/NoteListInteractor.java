@@ -30,6 +30,7 @@ public class NoteListInteractor implements ApplicationPaths {
     }
 
     public void updateBoundNote() {
+        System.out.println("NoteListInteractor::updateBoundNote -> bound note copies selected note");
         noteListModel.getBoundNote().copyFrom(noteListModel.getSelectedNote());
     }
 

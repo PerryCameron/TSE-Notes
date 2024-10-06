@@ -94,9 +94,21 @@ public class DateTimePicker implements Component<Region> {
         hBox.setAlignment(Pos.CENTER);
         refreshFields();
         // Bind the dateTimeProperty to the current selection
-        datePicker.setOnAction(event -> updateDateTime());
-        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
-        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> updateDateTime());
+
+        datePicker.setOnAction(event -> {
+            System.out.println("DateTimePicker:dateTimePicker -> datePicker.setOnAction -> DateTimePicker::updateDateTime");
+            updateDateTime();
+        });
+
+        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
+            updateDateTime();
+        });
+
+        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
+            updateDateTime();
+        });
         return hBox;
     }
 

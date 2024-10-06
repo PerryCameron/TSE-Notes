@@ -24,7 +24,6 @@ public class NotesTable implements Component<Region> {
         this.noteListView = noteListView;
     }
 
-    // if NoteDTO::isEmail is true I want the background color of that row to be orange
     @Override
     public TableView<NoteDTO> build() {
         this.tableView = TableViewFx.of(NoteDTO.class);
@@ -34,27 +33,18 @@ public class NotesTable implements Component<Region> {
         tableView.getColumns().addAll(Arrays.asList(col0(), mail(), col1(), col3(), col2()));
         tableView.setPlaceholder(new Label(""));
 
-        // auto selector
-        TableView.TableViewSelectionModel<NoteDTO> selectionModel = tableView.getSelectionModel();
-
-        selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-                if (newSelection != null) {
-                    noteListView.getNoteListModel().setSelectedNote(newSelection);
-                    noteListView.getAction().accept(NoteListMessage.UPDATE_BOUND_NOTE);
-            }
-        });
-
         tableView.setRowFactory(tv -> {
             TableRow<NoteDTO> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
+                System.out.println("NoteListModel::setSelectedNote(<note clicked>)");
+                noteListView.getNoteListModel().setSelectedNote(row.getItem());
+                noteListView.getAction().accept(NoteListMessage.UPDATE_BOUND_NOTE);
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                //  NoteDTO noteDTO = row.getItem();
                     noteListView.getAction().accept(NoteListMessage.SELECT_NOTE_TAB);
                 }
             });
             return row;
         });
-
         return tableView;
     }
 

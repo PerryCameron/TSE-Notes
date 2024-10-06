@@ -458,15 +458,19 @@ public class NoteInteractor {
 
     public void displayPreviousNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
+        System.out.println("NoteInteractor::displayPreviousNote - > Get index of note in list that matches the bound note: " + index);
         if (index < noteModel.getNotes().size() - 1) {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
+            System.out.println("NoteInteractor::displayPreviousNote - > copy the previous note to the bound note ");
         }
     }
 
     public void displayNextNote() {
         int index = getIndexById(noteModel.getBoundNote().getId());
+        System.out.println("NoteInteractor::displayNextNote - > Get index of note in list that matches the bound note: " + index);
         if (index > 0) {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
+            System.out.println("NoteInteractor::displayNextNote - > copy the next note to the bound note");
         }
     }
 

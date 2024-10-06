@@ -26,9 +26,9 @@ public class BaseApplication extends Application {
             if ("test".equalsIgnoreCase(arg)) {
                 testMode = true;
                 dataBase = "test-notes.db";
-            } else
-                AppFileTools.startFileLogger(); // log to file in regular mode
+            }
         }
+        if(!testMode) AppFileTools.startFileLogger();
         logger.info("TSENotes version {} Starting...", VersionUtil.getVersion());
         launch(args);
     }
