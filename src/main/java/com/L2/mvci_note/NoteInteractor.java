@@ -127,6 +127,7 @@ public class NoteInteractor {
     }
 
     public String copyAllPartOrdersToHTML(boolean includePOHeader) {
+        System.out.println("copyAllPartOrdersToHTML()");
         if (noteModel.getBoundNote().getPartOrders().size() > 1) {
             StringBuilder builder = new StringBuilder();
             for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {

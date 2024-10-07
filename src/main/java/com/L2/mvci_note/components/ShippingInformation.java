@@ -56,11 +56,6 @@ public class ShippingInformation implements Component<Region> {
         cTextFields[0] = TextFieldFx.createValidatedTextField(200, "Contact Name", StringChecker::formatName, noteView);
         cTextFields[1] = TextFieldFx.createValidatedTextField(200,"Contact Phone", StringChecker::formatPhoneNumber, noteView);
         cTextFields[2] = TextFieldFx.createValidatedTextField(200,"Contact Email", StringChecker::formatEmail, noteView);
-//        Button clearButton = ButtonFx.utilityButton(() -> {
-//            noteModel.getBoundNote().clearContact();
-//            for(TextField textField : cTextFields) textField.setText("");
-//        }, "Clear", "/images/clear-16.png");
-//        clearButton.setTooltip(ToolTipFx.of("Clear Shipping Contact"));
 
         Button pasteButton = ButtonFx.utilityButton(() -> {
             String[] contactInfo = CopyPastaParser.extractContactInfo();
@@ -82,18 +77,10 @@ public class ShippingInformation implements Component<Region> {
         aTextFields[0] = TextFieldFx.standardTextField(200, "Related Account / Installed at", noteView);
         streetTextArea.setPrefWidth(400);
         streetTextArea.setPromptText("Street");
-        aTextFields[1] = TextFieldFx.standardTextField(250, "City", noteView);
-        aTextFields[2] = TextFieldFx.standardTextField(50, "State/Province", noteView);
+        aTextFields[1] = TextFieldFx.standardTextField(200, "City", noteView);
+        aTextFields[2] = TextFieldFx.standardTextField(100, "State/Province", noteView);
         aTextFields[3] = TextFieldFx.standardTextField(100, "zip Code", noteView);
         aTextFields[4] = TextFieldFx.standardTextField(200, "Country", noteView);
-//        Button clearButton = ButtonFx.utilityButton(() -> {
-//            noteModel.getBoundNote().clearAddress();
-//            for (TextField textField : aTextFields)
-//                textField.clear();
-//            streetTextArea.textProperty().set("");
-//
-//        }, "Clear", "/images/clear-16.png");
-//        clearButton.setTooltip(ToolTipFx.of("Clear Shipping Address"));
 
         Button pasteButton = ButtonFx.utilityButton(() -> {
             String[] addressInfo = CopyPastaParser.parseAddress();
