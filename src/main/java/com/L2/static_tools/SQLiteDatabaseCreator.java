@@ -1,7 +1,6 @@
 package com.L2.static_tools;
 
-import com.L2.repository.implementations.NoteRepositoryImpl;
-import com.L2.repository.interfaces.NoteRepository;
+import com.L2.BaseApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,18 +16,13 @@ public class SQLiteDatabaseCreator {
     private static final Logger logger = LoggerFactory.getLogger(SQLiteDatabaseCreator.class);
 
     public static void main(String[] args) {
-        createDataBase(Path.of(ApplicationPaths.homeDir + "/TSENotes"), "test-notes.db");
+        createDataBase("test-notes.db");
     }
 
-    public static void createDataBase(Path path, String databaseName) {
-        NoteRepository noteRepository = new NoteRepositoryImpl();
-
+    public static void createDataBase(String databaseName) {
+    Path path = AppFileTools.getDbPath();
         logger.info("Creating database..." + path.toString());
-
-        Path dirPath = createDirectoryIfNotExists(path);
-        System.out.println("dirPath: " + dirPath);
-
-        String url = "jdbc:sqlite:" + dirPath.resolve(databaseName);
+        String url = "jdbc:sqlite:" + BaseApplication.dataBaseLocation.resolve(databaseName);
         System.out.println("url: " + url);
 
         // SQL commands for creating tables
@@ -133,7 +127,7 @@ public class SQLiteDatabaseCreator {
                 """;
 
         String timeStamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("""
                                         INSERT INTO Notes (
@@ -222,26 +216,9 @@ public class SQLiteDatabaseCreator {
             stmt.executeUpdate(stringBuilder.toString());
             logger.info("Created a blank note.");
 
-            System.exit(0);
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    // Helper method to create directories if they don't exist
-    private static Path createDirectoryIfNotExists(Path path) {
-        if (!Files.exists(path)) {
-            logger.info("Database directory does not exist: {}", path);
-            try {
-                Files.createDirectories(path);
-                logger.info("Directory created: {}", path);
-            } catch (Exception e) {
-                logger.error("Failed to create directory: {}", e.getMessage());
-            }
-        } else {
-            logger.info("Directory already exists: {}", path);
-        }
-        return path;
     }
 }
 

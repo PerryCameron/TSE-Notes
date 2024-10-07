@@ -11,12 +11,14 @@ import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
+
 public class BaseApplication extends Application {
 
     public static Stage primaryStage;
     public static boolean testMode = false;
     public static String dataBase = "notes.db";
-    public static String dataBaseLocation = "";
+    public static Path dataBaseLocation;
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
 
     public static void main(String[] args) {
@@ -38,13 +40,11 @@ public class BaseApplication extends Application {
 
     @Override
     public void init() {
-        // checks for the existence of the database we are going to use
-        dataBaseLocation = StartUpManager.validateDatabase(dataBase);
-            if (dataBaseLocation.equals("no-database")) {
-                dataBaseLocation = ApplicationPaths.secondaryDbDirectory.toString();
-                logger.info("setting dataBaseLocation: " + ApplicationPaths.secondaryDbDirectory.toString());
-                SQLiteDatabaseCreator.createDataBase(ApplicationPaths.secondaryDbDirectory, dataBase);
-            }
+        // get directory we will use
+        dataBaseLocation = AppFileTools.getDbPath();
+        if(!StartUpManager.dataBaseExists(dataBase)) {
+            SQLiteDatabaseCreator.createDataBase(dataBase);
+        }
     }
 
     @Override

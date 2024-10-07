@@ -1,14 +1,18 @@
 package com.L2.static_tools;
 
+import com.L2.BaseApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class StartUpManager {
     private static final Logger logger = LoggerFactory.getLogger(StartUpManager.class);
+
+    public static boolean dataBaseExists(String database) {
+        return BaseApplication.dataBaseLocation.resolve(database).toFile().exists();
+    }
 
 
     // Helper method to create directories if they don't exist

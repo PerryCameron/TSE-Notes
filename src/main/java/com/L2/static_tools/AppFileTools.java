@@ -34,4 +34,40 @@ public class AppFileTools {
             e.printStackTrace();
         }
     }
+
+    public static Path getDbPath() {
+        if(Files.exists(ApplicationPaths.oneDrive)) {
+            logger.info("One-drive found: {}", ApplicationPaths.oneDrive);
+            if(!Files.exists(ApplicationPaths.preferredDbDirectory)) {
+                createFileIfNotExists(ApplicationPaths.preferredDbDirectory);
+            }
+            return ApplicationPaths.preferredDbDirectory;
+        }
+        else {
+            logger.info("Preferred path not found using fallback: {}", ApplicationPaths.secondaryDbDirectory);
+            if(!Files.exists(ApplicationPaths.homeDir)) {
+                logger.error("No path found for database: {}", ApplicationPaths.homeDir);
+                System.exit(0);
+            } else {
+                createFileIfNotExists(ApplicationPaths.secondaryDbDirectory);
+            }
+            return ApplicationPaths.secondaryDbDirectory;
+        }
+    }
+
+    // Helper method to create directories if they don't exist
+    private static Path createDirectoryIfNotExists(Path path) {
+        if (!Files.exists(path)) {
+            logger.info("Database directory does not exist: {}", path);
+            try {
+                Files.createDirectories(path);
+                logger.info("Directory created: {}", path);
+            } catch (Exception e) {
+                logger.error("Failed to create directory: {}", e.getMessage());
+            }
+        } else {
+            logger.info("Directory already exists: {}", path);
+        }
+        return path;
+    }
 }
