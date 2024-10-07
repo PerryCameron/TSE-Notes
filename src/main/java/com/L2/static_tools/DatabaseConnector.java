@@ -13,7 +13,7 @@ public class DatabaseConnector {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConnector.class);
 
     public static SQLiteDataSource getDataSource() {
-        String DATABASE_URL = "jdbc:sqlite:" + BaseApplication.dataBaseLocation;
+        String DATABASE_URL = "jdbc:sqlite:" + BaseApplication.dataBaseLocation + "/" + BaseApplication.dataBase;
         SQLiteDataSource dataSource = new SQLiteDataSource();
         dataSource.setUrl(DATABASE_URL);
 

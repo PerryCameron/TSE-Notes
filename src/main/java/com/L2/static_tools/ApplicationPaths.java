@@ -4,9 +4,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public interface ApplicationPaths {
-//    String LOGFILEDIR = System.getProperty("user.home") + "/.gspares/logs";
 
     Path homeDir = Paths.get(System.getProperty("user.home"));
-    Path settingsDir = homeDir.resolve("tsenotes");
-    Path entitlementsFile = settingsDir.resolve("entitlements.settings");
+    Path secondaryDbDirectory = homeDir.resolve("TSENotes");
+    Path preferredDbDirectory = homeDir.resolve("OneDrive - Schneider Electric\\TSENotes");
 }

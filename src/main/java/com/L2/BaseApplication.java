@@ -6,7 +6,6 @@ import com.L2.static_tools.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
@@ -21,23 +20,31 @@ public class BaseApplication extends Application {
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
 
     public static void main(String[] args) {
-        AppFileTools.createFileIfNotExists(ApplicationPaths.settingsDir);
-        for (String arg : args) {
-            if ("test".equalsIgnoreCase(arg)) {
-                testMode = true;
-                dataBase = "test-notes.db";
+        try {
+            AppFileTools.createFileIfNotExists(ApplicationPaths.secondaryDbDirectory);
+            for (String arg : args) {
+                if ("test".equalsIgnoreCase(arg)) {
+                    testMode = true;
+                    dataBase = "test-notes.db";
+                }
             }
+            if (!testMode) AppFileTools.startFileLogger();
+            logger.info("TSENotes version {} Starting...", VersionUtil.getVersion());
+            launch(args);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if(!testMode) AppFileTools.startFileLogger();
-        logger.info("TSENotes version {} Starting...", VersionUtil.getVersion());
-        launch(args);
     }
 
     @Override
     public void init() {
         // checks for the existence of the database we are going to use
         dataBaseLocation = StartUpManager.validateDatabase(dataBase);
-        // if no db found check MainView::setUpCenterPane()
+            if (dataBaseLocation.equals("no-database")) {
+                dataBaseLocation = ApplicationPaths.secondaryDbDirectory.toString();
+                logger.info("setting dataBaseLocation: " + ApplicationPaths.secondaryDbDirectory.toString());
+                SQLiteDatabaseCreator.createDataBase(ApplicationPaths.secondaryDbDirectory, dataBase);
+            }
     }
 
     @Override

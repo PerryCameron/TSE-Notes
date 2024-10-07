@@ -17,6 +17,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -24,6 +26,7 @@ import java.util.function.Consumer;
 public class MainView implements Builder<Region> {
     private final MainModel mainModel;
     Consumer<MainMessage> action;
+    private static final Logger logger = LoggerFactory.getLogger(MainView.class);
 
     public MainView(MainModel mainModel, Consumer<MainMessage> m) {
         this.mainModel = mainModel;
@@ -116,11 +119,9 @@ public class MainView implements Builder<Region> {
         tabPane.setStyle("-fx-background-color: white");
         mainModel.setMainTabPane(tabPane);
 
-        if(BaseApplication.dataBaseLocation.equals("no-database")) {
-            System.out.println("We need to create a new database");
-        } else {
-            launchNormal();
-        }
+
+        launchNormal();
+
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if (newTab != null) {

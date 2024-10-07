@@ -11,7 +11,7 @@ public class DatabaseConfig {
     public DataSource getDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.sqlite.JDBC");
-        String url = "jdbc:sqlite:" + ApplicationPaths.settingsDir.resolve("notes.db");  // Path to the SQLite database file
+        String url = "jdbc:sqlite:" + ApplicationPaths.secondaryDbDirectory.resolve("notes.db");  // Path to the SQLite database file
         // Specify the SQLite database file location
         dataSource.setUrl(url);
         return dataSource;
