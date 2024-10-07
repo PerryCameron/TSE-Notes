@@ -11,11 +11,11 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="TSETest" uuid="c244df15-c8c3-43f6-b77a-7f640dd38899">
+    <data-source source="LOCAL" name="Test" uuid="8a13a43d-4efb-46f8-b3cc-673fcf751f7b">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\sesa91827\tsenotes\test-notes.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\sesa91827\OneDrive - Schneider Electric\TSENotes\test-notes.db</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
       </jdbc-additional-properties>

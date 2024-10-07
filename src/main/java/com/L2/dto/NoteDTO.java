@@ -224,7 +224,7 @@ public class NoteDTO {
     /////////////////////////////////////////////////////////////
 
     public StringProperty formattedTimestampProperty() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return new SimpleStringProperty(timestamp.get().format(formatter));
     }
 

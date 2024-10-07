@@ -22,46 +22,46 @@ public class BaseApplication extends Application {
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
 
     public static void main(String[] args) {
-        try {
-            AppFileTools.createFileIfNotExists(ApplicationPaths.secondaryDbDirectory);
-            for (String arg : args) {
-                if ("test".equalsIgnoreCase(arg)) {
-                    testMode = true;
-                    dataBase = "test-notes.db";
-                }
+        for (String arg : args) {
+            if ("test".equalsIgnoreCase(arg)) {
+                testMode = true;
+                dataBase = "test-notes.db";
             }
-            if (!testMode) AppFileTools.startFileLogger();
-            logger.info("TSENotes version {} Starting...", VersionUtil.getVersion());
-            launch(args);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        // I prefer logs in the console in test mode
+        if (!testMode) AppFileTools.startFileLogger();
+        logger.info("TSENotes version {} Starting...", VersionUtil.getVersion());
+        launch(args);
     }
 
     @Override
     public void init() {
-        // get directory we will use
+        // create /TSCNotes in user home if not already there (first time launch)
+        AppFileTools.createFileIfNotExists(ApplicationPaths.secondaryDbDirectory);
+        // checks for one drive path, if no one-drive path, default to user home
         dataBaseLocation = AppFileTools.getDbPath();
-        if(!StartUpManager.dataBaseExists(dataBase)) {
+        // if a database can not be found at preferred path or back-up (first time launch) , then create one.
+        if (!StartUpManager.dataBaseExists(dataBase)) {
+            // this will create the schema, but also will populate a few rows needed for application.
             SQLiteDatabaseCreator.createDataBase(dataBase);
         }
     }
 
     @Override
     public void start(Stage stage) {
-            primaryStage = stage;
-            primaryStage.setWidth(1028);
-            primaryStage.setHeight(840);
-            primaryStage.setMinHeight(600);
-            primaryStage.setMinWidth(800);
-            primaryStage.setResizable(true);
-            primaryStage.setScene(new Scene(new MainController().getView()));
-            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-            primaryStage.getScene().getStylesheets().add("css/light.css");
-            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/TSELogo-64.png")));
-            // Mouse pressed for dragging the window
-            primaryStage.initStyle(StageStyle.UNDECORATED);
-            WindowUtils.addResizeListeners(primaryStage);
-            primaryStage.show();
+        primaryStage = stage;
+        primaryStage.setWidth(1028);
+        primaryStage.setHeight(840);
+        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(800);
+        primaryStage.setResizable(true);
+        primaryStage.setScene(new Scene(new MainController().getView()));
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        primaryStage.getScene().getStylesheets().add("css/light.css");
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/TSELogo-64.png")));
+        // Mouse pressed for dragging the window
+        primaryStage.initStyle(StageStyle.UNDECORATED);
+        WindowUtils.addResizeListeners(primaryStage);
+        primaryStage.show();
     }
 }
