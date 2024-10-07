@@ -51,9 +51,9 @@ public class NotesTable implements Component<Region> {
     private TableColumn<NoteDTO, String> col0() {
         TableColumn<NoteDTO, String> col = TableColumnFx.stringTableColumn(NoteDTO::formattedTimestampProperty, "Date/Time");
         col.setStyle("-fx-alignment: center-left");
-        col.setPrefWidth(142);
-        col.setMinWidth(142);
-        col.setMaxWidth(142);
+        col.setPrefWidth(125);
+        col.setMinWidth(125);
+        col.setMaxWidth(125);
         return col;
     }
 
@@ -90,8 +90,8 @@ public class NotesTable implements Component<Region> {
 
     private TableColumn<NoteDTO, Boolean> mail() {
         TableColumn<NoteDTO, Boolean> emailCol = new TableColumn<>("");
-        emailCol.setPrefWidth(28);
-        emailCol.setMaxWidth(28);
+        emailCol.setPrefWidth(30);
+        emailCol.setMaxWidth(30);
         // Define the cell factory
         emailCol.setCellFactory(new Callback<>() {
             @Override

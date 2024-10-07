@@ -222,9 +222,9 @@ public class NoteDTO {
     }
 
     /////////////////////////////////////////////////////////////
-
+    // this is how it is displayed in noteListTableView
     public StringProperty formattedTimestampProperty() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm[:ss]");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
         return new SimpleStringProperty(timestamp.get().format(formatter));
     }
 
