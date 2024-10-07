@@ -13,7 +13,6 @@ import java.util.List;
 
 
 public class NoteDTO {
-
     private IntegerProperty id = new SimpleIntegerProperty();
     private ObjectProperty<LocalDateTime> timestamp = new SimpleObjectProperty<>(); // this is the field not updating
     private StringProperty workOrder = new SimpleStringProperty();
@@ -88,6 +87,7 @@ public class NoteDTO {
         this.isEmail.set(isEmail);
         this.additionalCorrectiveActionText.set("");
         this.relatedCaseNumber.set("");
+        System.out.println("NoteDTO created (2 params), timeStamp: " + this.timestamp.get() );
     }
 
     public NoteDTO(Integer id, LocalDateTime timestamp, String workOrder, String caseNumber, String serialNumber,
@@ -99,39 +99,40 @@ public class NoteDTO {
                    String createdWorkOrder, String tex, Integer partsOrder,
                    Boolean completed, Boolean isEmail, String additionalCorrectiveActionText,
                    String relatedCaseNumber) {
-        this.id = new SimpleIntegerProperty(id);
-        this.timestamp = new SimpleObjectProperty<>(timestamp);
-        this.workOrder = new SimpleStringProperty(workOrder);
-        this.caseNumber = new SimpleStringProperty(caseNumber);
-        this.serialNumber = new SimpleStringProperty(serialNumber);
-        this.modelNumber = new SimpleStringProperty(modelNumber);
-        this.callInPerson = new SimpleStringProperty(callInPerson);
-        this.callInPhoneNumber = new SimpleStringProperty(callInPhoneNumber);
-        this.callInEmail = new SimpleStringProperty(callInEmail);
-        this.underWarranty = new SimpleBooleanProperty(underWarranty);
-        this.activeServiceContract = new SimpleStringProperty(activeServiceContract);
-        this.serviceLevel = new SimpleStringProperty(serviceLevel);
-        this.schedulingTerms = new SimpleStringProperty(schedulingTerms);
-        this.upsStatus = new SimpleStringProperty(upsStatus);
-        this.loadSupported = new SimpleBooleanProperty(loadSupported);
-        this.issue = new SimpleStringProperty(issue);
-        this.title = new SimpleStringProperty(title);
-        this.contactName = new SimpleStringProperty(contactName);
-        this.contactPhoneNumber = new SimpleStringProperty(contactPhoneNumber);
-        this.contactEmail = new SimpleStringProperty(contactEmail);
-        this.street = new SimpleStringProperty(street);
-        this.installedAt = new SimpleStringProperty(installedAt);
-        this.city = new SimpleStringProperty(city);
-        this.state = new SimpleStringProperty(state);
-        this.zip = new SimpleStringProperty(zip);
-        this.country = new SimpleStringProperty(country);
-        this.createdWorkOrder = new SimpleStringProperty(createdWorkOrder);
-        this.tex = new SimpleStringProperty(tex);
-        this.partsOrder = new SimpleIntegerProperty(partsOrder);
-        this.completed = new SimpleBooleanProperty(completed);
-        this.isEmail = new SimpleBooleanProperty(isEmail);
-        this.additionalCorrectiveActionText = new SimpleStringProperty(additionalCorrectiveActionText);
-        this.relatedCaseNumber = new SimpleStringProperty(relatedCaseNumber);
+        this.id.set(id);
+        this.timestamp.set(timestamp);
+        this.workOrder.set(workOrder);
+        this.caseNumber.set(caseNumber);
+        this.serialNumber.set(serialNumber);
+        this.modelNumber.set(modelNumber);
+        this.callInPerson.set(callInPerson);
+        this.callInPhoneNumber.set(callInPhoneNumber);
+        this.callInEmail.set(callInEmail);
+        this.underWarranty.set(underWarranty);
+        this.activeServiceContract.set(activeServiceContract);
+        this.serviceLevel.set(serviceLevel);
+        this.schedulingTerms.set(schedulingTerms);
+        this.upsStatus.set(upsStatus);
+        this.loadSupported.set(loadSupported);
+        this.issue.set(issue);
+        this.title.set(title);
+        this.contactName.set(contactName);
+        this.contactPhoneNumber.set(contactPhoneNumber);
+        this.contactEmail.set(contactEmail);
+        this.street.set(street);
+        this.installedAt.set(installedAt);
+        this.city.set(city);
+        this.state.set(state);
+        this.zip.set(zip);
+        this.country.set(country);
+        this.createdWorkOrder.set(createdWorkOrder);
+        this.tex.set(tex);
+        this.partsOrder.set(partsOrder);
+        this.completed.set(completed);
+        this.isEmail.set(isEmail);
+        this.additionalCorrectiveActionText.set(additionalCorrectiveActionText);
+        this.relatedCaseNumber.set(relatedCaseNumber);
+        System.out.println("NoteDTO created from database, timeStamp: " + this.timestamp.get() );
     }
 
     public void copyFrom(NoteDTO noteDTO) {
@@ -169,6 +170,7 @@ public class NoteDTO {
         additionalCorrectiveActionText.set(noteDTO.getAdditionalCorrectiveActionText());
         relatedCaseNumber.set(noteDTO.getRelatedCaseNumber());
         id.set(noteDTO.getId()); // since this is listened to, it must copy last
+        System.out.println("NoteDTO copied, timeStamp: " + this.timestamp.get() );
     }
 
     public void clear() {
@@ -207,6 +209,11 @@ public class NoteDTO {
         this.relatedCaseNumber.set("");
     }
 
+    /**
+     * This provides a nice formatted date found on things that are copied, and also the status bar at the bottom of
+     * the application
+     * @return formatted date
+     */
     public String formattedDate() {
         LocalDateTime dateTime = timestampProperty().get();
         if (dateTime == null) {
