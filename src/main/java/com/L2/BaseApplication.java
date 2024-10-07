@@ -41,7 +41,7 @@ public class BaseApplication extends Application {
         // checks for one drive path, if no one-drive path, default to user home
         dataBaseLocation = AppFileTools.getDbPath();
         // if a database can not be found at preferred path or back-up (first time launch) , then create one.
-        if (!StartUpManager.dataBaseExists(dataBase)) {
+        if (!BaseApplication.dataBaseLocation.resolve(dataBase).toFile().exists()) {
             // this will create the schema, but also will populate a few rows needed for application.
             SQLiteDatabaseCreator.createDataBase(dataBase);
         }
