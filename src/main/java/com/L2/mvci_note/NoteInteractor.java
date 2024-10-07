@@ -426,6 +426,7 @@ public class NoteInteractor {
         saveOrUpdateNote(); // I feel like this can go
         NoteDTO noteDTO = new NoteDTO(0, false);
         noteDTO.setId(noteRepo.insertNote(noteDTO));
+        System.out.println(noteDTO.getId());
         noteModel.getNotes().add(noteDTO);
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         noteModel.getBoundNote().setId(noteDTO.getId());

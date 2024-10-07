@@ -87,7 +87,7 @@ public class NoteDTO {
         this.isEmail.set(isEmail);
         this.additionalCorrectiveActionText.set("");
         this.relatedCaseNumber.set("");
-        System.out.println("NoteDTO created (2 params), timeStamp: " + this.timestamp.get() );
+        System.out.print("NoteDTO created (2 params), timeStamp: " + this.timestamp.get() + " Id: " );
     }
 
     public NoteDTO(Integer id, LocalDateTime timestamp, String workOrder, String caseNumber, String serialNumber,

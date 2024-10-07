@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -99,15 +100,23 @@ public class DateTimePicker implements Component<Region> {
             updateDateTime();
         });
 
-        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
+//        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
+//            updateDateTime();
+//        });
+//
+//        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
+//            updateDateTime();
+//        });
+        hourSpinner.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             updateDateTime();
         });
 
-        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
+        minuteSpinner.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             updateDateTime();
         });
+
         return hBox;
     }
 

@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class NoteRepositoryImpl implements NoteRepository {
@@ -44,19 +45,6 @@ public class NoteRepositoryImpl implements NoteRepository {
         return count != null && count > 0;
     }
 
-
- ///// Old deprecated version.
-//    @Override
-//    public boolean noteExists(NoteDTO note) {
-//        String sql = "SELECT COUNT(*) FROM Notes WHERE id = ?";
-//        // Extract the id from the NoteDTO object
-//        int id = note.getId();
-//        // Use queryForObject to get the count of rows matching the id
-//        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
-//        // Return true if count is greater than 0, meaning the note exists
-//        return count != null && count > 0;
-//    }
-
     @Override
     public int insertNote(NoteDTO note) {
         String sql = "INSERT INTO Notes (timestamp, workOrder, caseNumber, serialNumber, modelNumber, callInPerson, " +
@@ -69,7 +57,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, note.getTimestamp().toString());  // Assuming timestamp is a LocalDateTime
+            ps.setString(1, note.getTimestamp().toString());
             ps.setString(2, note.getWorkOrder());
             ps.setString(3, note.getCaseNumber());
             ps.setString(4, note.getSerialNumber());
