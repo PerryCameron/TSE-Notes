@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 public class NotesRowMapper implements RowMapper<NoteDTO> {
 
     // Formatter to parse the timestamp from the ResultSet (stored as TEXT)
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm[:ss]");
     @Override
     public NoteDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new NoteDTO(

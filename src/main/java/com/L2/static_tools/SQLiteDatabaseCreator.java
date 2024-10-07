@@ -4,7 +4,6 @@ import com.L2.BaseApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -126,8 +125,7 @@ public class SQLiteDatabaseCreator {
                 ('','','','','');
                 """;
 
-        String timeStamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        String timeStamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("""
                                         INSERT INTO Notes (
