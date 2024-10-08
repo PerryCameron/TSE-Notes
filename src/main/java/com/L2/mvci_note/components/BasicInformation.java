@@ -57,11 +57,11 @@ public class BasicInformation implements Component<Region> {
 //        }, "Clear", "/images/clear-16.png");
 //        clearButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
 
-        Button pasteButton = ButtonFx.utilityButton(() -> {
-        }, "Pasta", "/images/paste-16.png");
-        pasteButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
+//        Button pasteButton = ButtonFx.utilityButton(() -> {
+//        }, "Pasta", "/images/paste-16.png");
+//        pasteButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
 
-        Button[] buttons = new Button[]{pasteButton};
+        Button[] buttons = new Button[]{};
         root.getChildren().addAll(TitleBarFx.of("Basic Information", buttons), hBox);
         return root;
     }

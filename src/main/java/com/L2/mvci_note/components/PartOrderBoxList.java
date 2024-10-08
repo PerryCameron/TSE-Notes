@@ -57,7 +57,8 @@ public class PartOrderBoxList implements Component<Region> {
         box.getStyleClass().add("decorative-hbox");
         box.setPadding(new Insets(5, 5, 10, 5));
         HBox hBox = new HBox(5);
-        hBox.getChildren().addAll(tableView, menu(tableView, partOrderDTO));
+        hBox.setPadding(new Insets(0, 5, 0, 0));
+        hBox.getChildren().addAll(menu(tableView, partOrderDTO), tableView);
         box.setSpacing(5);
         box.getChildren().addAll(toolbar(partOrderDTO), hBox);
         return box;
@@ -65,8 +66,8 @@ public class PartOrderBoxList implements Component<Region> {
 
     private Node menu(TableView<PartDTO> tableView, PartOrderDTO partOrderDTO) {
         VBox vBox = new VBox(5);
-        vBox.setPadding(new Insets(5, 5, 5, 5));
-        vBox.setPrefWidth(300);
+        vBox.setPadding(new Insets(5, 0, 5, 5));
+        vBox.setPrefWidth(100);
         Button addPartButton = ButtonFx.utilityButton(() -> {
 //            noteModel.setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.INSERT_PART);
@@ -90,8 +91,9 @@ public class PartOrderBoxList implements Component<Region> {
         Button deleteButton = ButtonFx.utilityButton( () -> {
             noteView.getAction().accept(NoteMessage.DELETE_PART);
         }, "Delete", "/images/delete-16.png");
-        TextField textField = TextFieldFx.of(250, "Search");
-        vBox.getChildren().addAll(textField, addPartButton, deleteButton);
+//        Separator separator = new Separator();
+//        TextField textField = TextFieldFx.of(250, "Search");
+        vBox.getChildren().addAll(addPartButton, deleteButton);
         return vBox;
     }
 
@@ -183,8 +185,8 @@ public class PartOrderBoxList implements Component<Region> {
             noteModel.getSelectedPart().setPartNumber(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
-        col.setMaxWidth(150);
-        col.setPrefWidth(150);
+        col.setMaxWidth(200);
+        col.setPrefWidth(200);
         return col;
     }
 

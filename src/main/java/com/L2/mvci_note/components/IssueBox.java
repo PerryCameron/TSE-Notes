@@ -37,12 +37,12 @@ public class IssueBox implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         textAreaIssue.setPrefWidth(900);
         textAreaIssue.textProperty().bindBidirectional(noteModel.getBoundNote().issueProperty());
-        Button copyButton = ButtonFx.utilityButton(() -> {
-            flash();
-            noteView.getAction().accept(NoteMessage.COPY_ISSUE);
-        }, "Copy", "/images/copy-16.png");
-        copyButton.setTooltip(ToolTipFx.of("Copy Issue"));
-        Button[] buttons = new Button[]{copyButton};
+//        Button copyButton = ButtonFx.utilityButton(() -> {
+//            flash();
+//            noteView.getAction().accept(NoteMessage.COPY_ISSUE);
+//        }, "Copy", "/images/copy-16.png");
+//        copyButton.setTooltip(ToolTipFx.of("Copy Issue"));
+        Button[] buttons = new Button[]{};
         root.getChildren().addAll(TitleBarFx.of("Issue", buttons), textAreaIssue);
         refreshFields();
         textAreaIssue.focusedProperty().addListener((obs, oldValue, newValue) -> {
