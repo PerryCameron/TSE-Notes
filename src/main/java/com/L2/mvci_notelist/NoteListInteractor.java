@@ -46,6 +46,37 @@ public class NoteListInteractor implements ApplicationPaths {
         }
     }
 
+    public void selectTableRow(NoteDTO note) {
+        noteListModel.getNoteTable().getSelectionModel().select(note);
+    }
+
+    public void displayPreviousNote() {
+        int index = getIndexById(noteListModel.getBoundNote().getId());
+        if (index < noteListModel.getNotes().size() - 1) {
+            NoteDTO noteDTO = noteListModel.getNotes().get(index + 1);
+            selectTableRow(noteDTO);
+        }
+        System.out.println();
+    }
+
+    public void displayNextNote() {
+        int index = getIndexById(noteListModel.getBoundNote().getId());
+        if (index > 0) {
+            NoteDTO noteDTO = noteListModel.getNotes().get(index - 1);
+            selectTableRow(noteDTO);
+        }
+        System.out.println();
+    }
+
+    public int getIndexById(int id) {
+        for (NoteDTO note : noteListModel.getNotes()) {
+            if (note.getId() == id) {
+                return noteListModel.getNotes().indexOf(note);
+            }
+        }
+        return -1;
+    }
+
     public void sortTableView() {
         logger.info("Sorting table view");
         noteListModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());

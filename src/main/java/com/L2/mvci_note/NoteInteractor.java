@@ -458,26 +458,6 @@ public class NoteInteractor {
         logger.info("Current entitlement set to: {}", noteModel.getCurrentEntitlement());
     }
 
-    public void displayPreviousNote() {
-        int index = getIndexById(noteModel.getBoundNote().getId());
-        System.out.println("NoteInteractor::displayPreviousNote - > Get index of note in list that matches the bound note: " + index);
-        if (index < noteModel.getNotes().size() - 1) {
-            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
-            System.out.println("NoteInteractor::displayPreviousNote - > copy the previous note to the bound note ");
-        }
-        System.out.println();
-    }
-
-    public void displayNextNote() {
-        int index = getIndexById(noteModel.getBoundNote().getId());
-        System.out.println("NoteInteractor::displayNextNote - > Get index of note in list that matches the bound note: " + index);
-        if (index > 0) {
-            noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
-            System.out.println("NoteInteractor::displayNextNote - > copy the next note to the bound note");
-        }
-        System.out.println();
-    }
-
     public void refreshPartOrders() {
         logger.debug("Refreshing bound note, and UI, setting to: {}", noteModel.getBoundNote().getId());
         checkAndLoadPartOrdersIfNeeded();
@@ -509,17 +489,9 @@ public class NoteInteractor {
         }
     }
 
-    public int getIndexById(int id) {
-        for (NoteDTO note : noteModel.getNotes()) {
-            if (note.getId() == id) {
-                return noteModel.getNotes().indexOf(note);
-            }
-        }
-        return -1;
-    }
-
     // this synchronizes the bound object to the correct object in the list
     public void saveOrUpdateNote() {
+        logger.info("Saving note");
         // iterate through list of notes
         for (NoteDTO noteDTO : noteModel.getNotes()) {
             // let's find the correct note in the list

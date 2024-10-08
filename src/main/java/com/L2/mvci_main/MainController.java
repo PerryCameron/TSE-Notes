@@ -43,8 +43,8 @@ public class MainController extends Controller<MainMessage> {
             case OPEN_NOTE_TAB -> openNoteTab();
             case OPEN_SETTINGS -> openSettingsTab();
             case OPEN_NOTESLIST_TAB -> openNoteListTab();
-            case PREVIOUS_NOTE -> noteController.action(NoteMessage.PREVIOUS_NOTE);
-            case NEXT_NOTE -> noteController.action(NoteMessage.NEXT_NOTE);
+            case PREVIOUS_NOTE -> noteListController.action(NoteListMessage.PREVIOUS_NOTE);
+            case NEXT_NOTE -> noteListController.action(NoteListMessage.NEXT_NOTE);
             case SAVE_OR_UPDATE_NOTE -> noteController.action(NoteMessage.SAVE_OR_UPDATE_NOTE);
             case SET_COMPLETE -> noteController.action(NoteMessage.SET_COMPLETE);
             case NEW_NOTE -> noteController.action(NoteMessage.NEW_NOTE);

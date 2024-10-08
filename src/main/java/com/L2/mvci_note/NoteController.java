@@ -52,8 +52,6 @@ public class NoteController extends Controller<NoteMessage> {
             case SET_COMPLETE -> noteInteractor.setComplete();
             case NEW_NOTE -> noteInteractor.createNewNote();
             case LOG_CURRENT_ENTITLEMENT -> noteInteractor.logCurrentEntitlement();
-            case NEXT_NOTE -> noteInteractor.displayNextNote();
-            case PREVIOUS_NOTE -> noteInteractor.displayPreviousNote();
             case SAVE_OR_UPDATE_NOTE -> noteInteractor.saveOrUpdateNote();
             case INSERT_PART_ORDER -> noteInteractor.insertPartOrder();
             case UPDATE_PART_ORDER -> noteInteractor.updatePartOrder();

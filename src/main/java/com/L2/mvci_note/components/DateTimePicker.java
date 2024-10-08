@@ -1,6 +1,7 @@
 package com.L2.mvci_note.components;
 
 import com.L2.interfaces.Component;
+import com.L2.mvci_note.NoteController;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.*;
@@ -14,6 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.time.LocalDate;
@@ -28,6 +31,8 @@ public class DateTimePicker implements Component<Region> {
     private final Spinner<Integer> hourSpinner;
     private final Spinner<Integer> minuteSpinner;
     private final VBox root;
+    private static final Logger logger = LoggerFactory.getLogger(DateTimePicker.class);
+
 
     public DateTimePicker(NoteView noteView) {
         this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
@@ -65,7 +70,7 @@ public class DateTimePicker implements Component<Region> {
 
     private Button syncButton() {
         Button syncButton = ButtonFx.utilityButton( () -> {
-            noteView.getNoteModel().setStatusLabel("Refreshing date and time to now.");
+            logger.info("Refreshing date and time to now.");
             setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
 
         }, "Sync", "/images/sync-16.png");
@@ -100,22 +105,26 @@ public class DateTimePicker implements Component<Region> {
             updateDateTime();
         });
 
-//        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
-//            updateDateTime();
-//        });
-//
-//        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
-//            updateDateTime();
-//        });
-        hourSpinner.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+
+        // these cause an extra time update when something programmatically changes them
+        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
             updateDateTime();
         });
 
-        minuteSpinner.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
             updateDateTime();
         });
+
+        // these cause strange behaviour so I am not going to use
+//        hourSpinner.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+//            updateDateTime();
+//        });
+//
+//        minuteSpinner.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+//            updateDateTime();
+//        });
 
         return hBox;
     }

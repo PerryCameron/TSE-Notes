@@ -41,6 +41,8 @@ public class NoteListController extends Controller<NoteListMessage> {
             case SELECT_NOTE_TAB -> mainController.action(MainMessage.SELECT_NOTE_TAB);
             case REFRESH_NOTE_TABLEVIEW -> noteListInteractor.refreshTableView();
             case CHECK_BUTTON_ENABLE -> mainController.action(MainMessage.CHECK_BUTTON_ENABLE);
+            case NEXT_NOTE -> noteListInteractor.displayNextNote();
+            case PREVIOUS_NOTE -> noteListInteractor.displayPreviousNote();
         }
     }
 }
