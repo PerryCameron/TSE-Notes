@@ -48,8 +48,6 @@ public class MainController extends Controller<MainMessage> {
             case SAVE_OR_UPDATE_NOTE -> noteController.action(NoteMessage.SAVE_OR_UPDATE_NOTE);
             case SET_COMPLETE -> noteController.action(NoteMessage.SET_COMPLETE);
             case NEW_NOTE -> noteController.action(NoteMessage.NEW_NOTE);
-            case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT ->
-                    noteListController.action(NoteListMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
             case SORT_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.SORT_NOTE_TABLEVIEW);
             case REFRESH_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.REFRESH_NOTE_TABLEVIEW);
             case UPDATE_NOTE_TAB_NAME -> mainInteractor.updateNoteTabName(getBoundNote());
