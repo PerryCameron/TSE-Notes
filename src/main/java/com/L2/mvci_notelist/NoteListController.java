@@ -42,6 +42,7 @@ public class NoteListController extends Controller<NoteListMessage> {
             case CHECK_BUTTON_ENABLE -> mainController.action(MainMessage.CHECK_BUTTON_ENABLE);
             case NEXT_NOTE -> noteListInteractor.displayNextNote();
             case PREVIOUS_NOTE -> noteListInteractor.displayPreviousNote();
+            case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT -> noteListInteractor.selectNote();
         }
     }
 }

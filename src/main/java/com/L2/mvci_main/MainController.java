@@ -63,6 +63,7 @@ public class MainController extends Controller<MainMessage> {
             case ENABLE_NEXT_BUTTON -> mainInteractor.disableNextButton(false);
             case DISABLE_NEXT_BUTTON -> mainInteractor.disableNextButton(true);
             case CHECK_BUTTON_ENABLE -> noteController.action(NoteMessage.CHECK_BUTTON_ENABLE);
+            case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT -> noteListController.action(NoteListMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
         }
     }
 

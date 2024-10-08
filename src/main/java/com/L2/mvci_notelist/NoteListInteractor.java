@@ -30,14 +30,26 @@ public class NoteListInteractor implements ApplicationPaths {
     }
 
     public void updateBoundNote() {
-        System.out.println("NoteListInteractor::updateBoundNote -> bound note copies selected note");
         if(noteListModel.getSelectedNote() != null) {
             noteListModel.getBoundNote().copyFrom(noteListModel.getSelectedNote());
         }
     }
 
-    public void selectTableRow(NoteDTO note) {
+    private void selectTableRow(NoteDTO note) {
         noteListModel.getNoteTable().getSelectionModel().select(note);
+    }
+
+    private NoteDTO findNoteFromListMatchingBoundNote() {
+        for(NoteDTO noteDTO: noteListModel.getNotes()) {
+            if(noteListModel.getBoundNote().getId() == noteDTO.getId()) {
+                return noteDTO;
+            }
+        }
+        return null;
+    }
+
+    public void selectNote() {
+        selectTableRow(findNoteFromListMatchingBoundNote());
     }
 
     public void displayPreviousNote() {

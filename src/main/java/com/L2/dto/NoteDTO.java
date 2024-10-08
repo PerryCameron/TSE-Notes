@@ -132,7 +132,6 @@ public class NoteDTO {
         this.isEmail.set(isEmail);
         this.additionalCorrectiveActionText.set(additionalCorrectiveActionText);
         this.relatedCaseNumber.set(relatedCaseNumber);
-        System.out.println("NoteDTO created from database, timeStamp: " + this.timestamp.get() );
     }
 
     public void copyFrom(NoteDTO noteDTO) {
