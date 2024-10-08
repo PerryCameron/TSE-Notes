@@ -170,7 +170,7 @@ public class NoteDTO {
         additionalCorrectiveActionText.set(noteDTO.getAdditionalCorrectiveActionText());
         relatedCaseNumber.set(noteDTO.getRelatedCaseNumber());
         id.set(noteDTO.getId()); // since this is listened to, it must copy last
-        System.out.println("NoteDTO copied, timeStamp: " + this.timestamp.get() );
+        System.out.println("NoteDTO copied, timeStamp: " + this.timestamp.get() + " id: " + this.id.get());
     }
 
     public void clear() {

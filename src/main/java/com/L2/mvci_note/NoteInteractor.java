@@ -465,6 +465,7 @@ public class NoteInteractor {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index + 1));
             System.out.println("NoteInteractor::displayPreviousNote - > copy the previous note to the bound note ");
         }
+        System.out.println();
     }
 
     public void displayNextNote() {
@@ -474,6 +475,7 @@ public class NoteInteractor {
             noteModel.getBoundNote().copyFrom(noteModel.getNotes().get(index - 1));
             System.out.println("NoteInteractor::displayNextNote - > copy the next note to the bound note");
         }
+        System.out.println();
     }
 
     public void refreshPartOrders() {
