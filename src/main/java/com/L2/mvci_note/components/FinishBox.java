@@ -41,6 +41,9 @@ public class FinishBox implements Component<Region> {
         hBox.getChildren().addAll(correctiveText(), buttonBox());
         root.getChildren().addAll(TitleBarFx.of("Final", buttons), hBox);
         refreshFields();
+        root.setOnMouseExited(event -> {
+            noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+        });
         return root;
     }
 
@@ -48,11 +51,6 @@ public class FinishBox implements Component<Region> {
         this.textArea = TextAreaFx.of(true, 100, 16, 4);
         textArea.setPromptText("Additional corrective action text");
         textArea.textProperty().bindBidirectional(noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
-        textArea.focusedProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue) {
-                noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
-            }
-        });
         HBox.setHgrow(textArea, Priority.ALWAYS);
         return textArea;
     }

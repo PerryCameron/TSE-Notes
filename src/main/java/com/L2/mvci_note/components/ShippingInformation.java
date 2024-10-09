@@ -47,6 +47,9 @@ public class ShippingInformation implements Component<Region> {
         Button[] buttons = new Button[]{copyButton};
         root.getChildren().addAll(TitleBarFx.of("Shipping Information", buttons), hBox);
         bindTextFields();
+        root.setOnMouseExited(event -> {
+            noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+        });
         return root;
     }
 

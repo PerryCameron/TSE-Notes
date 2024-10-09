@@ -17,7 +17,7 @@ public class NoteView implements Builder<Region> {
     private final ServicePlanDetails servicePlanDetails;
     private final DateTimePicker dateTimePicker;
     private final ShippingInformation shippingInformation;
-    private final WorkOrderBox workOrderBox;
+    private final RelatedBox relatedBox;
     private final IssueBox issueBox;
     private final PartOrderHeader partOrderHeader;
     private final FinishBox finishBox;
@@ -30,7 +30,7 @@ public class NoteView implements Builder<Region> {
         this.servicePlanDetails = new ServicePlanDetails(this);
         this.dateTimePicker = new DateTimePicker(this);
         this.shippingInformation = new ShippingInformation(this);
-        this.workOrderBox = new WorkOrderBox(this);
+        this.relatedBox = new RelatedBox(this);
         this.issueBox = new IssueBox(this);
         this.partOrderHeader = new PartOrderHeader(this);
         this.partOrderBoxList = new PartOrderBoxList(this);
@@ -114,7 +114,7 @@ public class NoteView implements Builder<Region> {
     }
 
     public void flashGroupB() {
-        workOrderBox.flash();
+        relatedBox.flash();
         partOrderBoxList.flash();
         finishBox.flash();
     }
@@ -125,7 +125,7 @@ public class NoteView implements Builder<Region> {
         issueBox.flash();
         partOrderBoxList.flash();
         shippingInformation.flash();
-        workOrderBox.flash();
+        relatedBox.flash();
         partOrderBoxList.flash();
         finishBox.flash();
     }
@@ -139,7 +139,7 @@ public class NoteView implements Builder<Region> {
 
     private Node rowThreeBox() {
         HBox hBox = new HBox(10);
-        hBox.getChildren().addAll(shippingInformation.build(), workOrderBox.build());
+        hBox.getChildren().addAll(shippingInformation.build(), relatedBox.build());
         return hBox;
     }
 

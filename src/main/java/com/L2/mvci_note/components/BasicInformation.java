@@ -58,6 +58,9 @@ public class BasicInformation implements Component<Region> {
 
         Button[] buttons = new Button[]{};
         root.getChildren().addAll(TitleBarFx.of("Basic Information", buttons), hBox);
+        root.setOnMouseExited(event -> {
+            noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+        });
         return root;
     }
 

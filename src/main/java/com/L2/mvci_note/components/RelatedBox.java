@@ -1,6 +1,7 @@
 package com.L2.mvci_note.components;
 
 import com.L2.interfaces.Component;
+import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.static_tools.StringChecker;
@@ -18,7 +19,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-public class WorkOrderBox implements Component<Region> {
+public class RelatedBox implements Component<Region> {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox root;
@@ -27,7 +28,7 @@ public class WorkOrderBox implements Component<Region> {
     TextField createdWorkOrderTextField;
 
 
-    public WorkOrderBox(NoteView noteView) {
+    public RelatedBox(NoteView noteView) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
         this.root = new VBox();
@@ -47,6 +48,9 @@ public class WorkOrderBox implements Component<Region> {
         root.getChildren().add(relatedCase());
         root.getChildren().add(tex());
         refreshFields();
+        root.setOnMouseExited(event -> {
+            noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+        });
         return root;
     }
 
