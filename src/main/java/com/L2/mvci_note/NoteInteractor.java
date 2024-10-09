@@ -491,8 +491,6 @@ public class NoteInteractor {
 
     // this synchronizes the bound object to the correct object in the list
     public void saveOrUpdateNote() {
-        logger.info("Saving note");
-        // iterate through list of notes
         for (NoteDTO noteDTO : noteModel.getNotes()) {
             // let's find the correct note in the list
             if (noteDTO.getId() == noteModel.getBoundNote().getId()) {

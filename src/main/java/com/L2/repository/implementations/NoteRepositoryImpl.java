@@ -12,7 +12,6 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class NoteRepositoryImpl implements NoteRepository {
@@ -47,6 +46,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     @Override
     public int insertNote(NoteDTO note) {
+        logger.info("Creating note {} with timestamp: ", note.getId(), note.getTimestamp().toString());
         String sql = "INSERT INTO Notes (timestamp, workOrder, caseNumber, serialNumber, modelNumber, callInPerson, " +
                 "callInPhoneNumber, callInEmail, underWarranty, activeServiceContract, serviceLevel, schedulingTerms, upsStatus, " +
                 "loadSupported, issue, contactName, contactPhoneNumber, contactEmail, street, installedAt, city, state, zip, country, " +
@@ -57,6 +57,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            System.out.println("TimeStamp: " + note.getTimestamp().toString());
             ps.setString(1, note.getTimestamp().toString());
             ps.setString(2, note.getWorkOrder());
             ps.setString(3, note.getCaseNumber());
@@ -97,7 +98,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     @Override
     public void updateNote(NoteDTO note) {
-        logger.debug("Updating note {} title is: ", note.getId(), note.getTitle());
+        logger.info("Saving note {} with timestamp: {}", note.getId(), note.getTimestamp().toString());
         String sql = "UPDATE Notes SET " +
                 "timestamp = ?, workOrder = ?, caseNumber = ?, serialNumber = ?, modelNumber = ?, " +
                 "callInPerson = ?, callInPhoneNumber = ?, callInEmail = ?, underWarranty = ?, " +
@@ -107,7 +108,6 @@ public class NoteRepositoryImpl implements NoteRepository {
                 "country = ?, createdWorkOrder = ?, tex = ?, partsOrder = ?, " +
                 "completed = ?, isEmail = ?, additionalCorrectiveActionText = ?, relatedCaseNumber = ?, title = ? " +
                 "WHERE id = ?";
-
         jdbcTemplate.update(sql,
                 note.getTimestamp().toString(),  // Assuming timestamp is a LocalDateTime
                 note.getWorkOrder(),
@@ -150,10 +150,5 @@ public class NoteRepositoryImpl implements NoteRepository {
         logger.info("Deleting Note: {}", noteDTO.getId());
         String sql = "DELETE FROM Notes WHERE id = ?";
         return jdbcTemplate.update(sql, noteDTO.getId());
-    }
-
-    public int testDeleteNote(NoteDTO noteDTO) {
-        System.out.println("NoteRepository: Deleted Note: " + noteDTO.getId());
-        return 1;
     }
 }

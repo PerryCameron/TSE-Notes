@@ -52,11 +52,6 @@ public class BasicInformation implements Component<Region> {
 //        }, "Copy", "/images/copy-16.png");
 //        copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
 
-//        Button clearButton = ButtonFx.utilityButton(() -> {
-//            clear();
-//        }, "Clear", "/images/clear-16.png");
-//        clearButton.setTooltip(ToolTipFx.of("Clear Basic Information"));
-
 //        Button pasteButton = ButtonFx.utilityButton(() -> {
 //        }, "Pasta", "/images/paste-16.png");
 //        pasteButton.setTooltip(ToolTipFx.of("Clear Basic Information"));

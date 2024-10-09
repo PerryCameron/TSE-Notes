@@ -54,8 +54,8 @@ public class DateTimePicker implements Component<Region> {
     @Override
     public Region build() {
         root.getStyleClass().add("decorative-hbox");
-        Button[] buttons = new Button[] { syncButton(), copyButton() };
-        root.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons) ,dateTimePicker());
+        Button[] buttons = new Button[]{syncButton(), copyButton()};
+        root.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons), dateTimePicker());
         root.setOnMouseExited(event -> {
             updateDateTime();
         });
@@ -63,7 +63,7 @@ public class DateTimePicker implements Component<Region> {
     }
 
     private Button copyButton() {
-        Button copyButton = ButtonFx.utilityButton( () -> {
+        Button copyButton = ButtonFx.utilityButton(() -> {
             flash();
             noteView.getAction().accept(NoteMessage.COPY_NAME_DATE);
         }, "Copy", "/images/copy-16.png");
@@ -72,14 +72,17 @@ public class DateTimePicker implements Component<Region> {
     }
 
     private Button syncButton() {
-        Button syncButton = ButtonFx.utilityButton( () -> {
+        Button syncButton = ButtonFx.utilityButton(() -> {
             logger.info("Refreshing date and time to now.");
-            setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-
+            LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);  // Include seconds when syncing
+            setDateTime(now);
+            // Explicitly update the note model with the seconds-precision time
+            noteView.getNoteModel().getBoundNote().timestampProperty().set(now);
         }, "Sync", "/images/sync-16.png");
         syncButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
         return syncButton;
     }
+
 
     private Node dateTimePicker() {
         HBox hBox = new HBox(10);
@@ -94,7 +97,6 @@ public class DateTimePicker implements Component<Region> {
 
         // Label for separating hours and minutes
         Label colonLabel = new Label(":");
-//        colonLabel.getStyleClass().add("colon-label");
         colonLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16");
 
         // Add components to the HBox
@@ -103,42 +105,26 @@ public class DateTimePicker implements Component<Region> {
         refreshFields();
         // Bind the dateTimeProperty to the current selection
 
-//        datePicker.setOnAction(event -> {
-//            System.out.println("DateTimePicker:dateTimePicker -> datePicker.setOnAction -> DateTimePicker::updateDateTime");
-//            updateDateTime();
-//        });
-//
-//
-//        // these cause an extra time update when something programmatically changes them I don't like that
-//        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
-//            updateDateTime();
-//        });
-//
-//        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
-//            updateDateTime();
-//        });
-
-        // these cause strange behaviour so I am not going to use
-//        hourSpinner.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-//            updateDateTime();
-//        });
-//
-//        minuteSpinner.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-//            updateDateTime();
-//        });
         return hBox;
     }
 
-    private void updateDateTime() {
-        LocalDate date = datePicker.getValue();
-        LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
-        noteView.getNoteModel().getBoundNote().timestampProperty().set(LocalDateTime.of(date, time));
-        noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
-        noteView.getAction().accept(NoteMessage.REFRESH_NOTE_TABLEVIEW);
-        noteView.getAction().accept(NoteMessage.SORT_NOTE_TABLEVIEW);
-    }
+private void updateDateTime() {
+    LocalDate date = datePicker.getValue();
+    int hour = hourSpinner.getValue();
+    int minute = minuteSpinner.getValue();
+    // Get the current timestamp from the note
+    LocalDateTime currentTimestamp = noteView.getNoteModel().getBoundNote().getTimestamp();
+    // Preserve the seconds if they are present in the current timestamp; otherwise, default to 00
+    int seconds = (currentTimestamp != null && currentTimestamp.getSecond() != 0) ? currentTimestamp.getSecond() : 0;
+    // Create a new LocalTime using the provided hour, minute, and determined seconds value
+    LocalTime time = LocalTime.of(hour, minute, seconds);
+    // Update the timestamp with the new time values
+    LocalDateTime dateTime = LocalDateTime.of(date, time);
+    noteView.getNoteModel().getBoundNote().timestampProperty().set(dateTime);
+    noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+    noteView.getAction().accept(NoteMessage.REFRESH_NOTE_TABLEVIEW);
+    noteView.getAction().accept(NoteMessage.SORT_NOTE_TABLEVIEW);
+}
 
     @Override
     public void flash() {
@@ -159,9 +145,22 @@ public class DateTimePicker implements Component<Region> {
 }
 
 
-
-
-
+//        datePicker.setOnAction(event -> {
+//            System.out.println("DateTimePicker:dateTimePicker -> datePicker.setOnAction -> DateTimePicker::updateDateTime");
+//            updateDateTime();
+//        });
+//
+//
+//        // these cause an extra time update when something programmatically changes them I don't like that
+//        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
+//            updateDateTime();
+//        });
+//
+//        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
+//            updateDateTime();
+//        });
 
 
 
