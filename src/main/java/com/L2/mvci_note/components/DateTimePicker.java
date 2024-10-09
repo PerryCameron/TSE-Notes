@@ -1,7 +1,6 @@
 package com.L2.mvci_note.components;
 
 import com.L2.interfaces.Component;
-import com.L2.mvci_note.NoteController;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteView;
 import com.L2.widgetFx.*;
@@ -10,7 +9,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -56,9 +54,7 @@ public class DateTimePicker implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         Button[] buttons = new Button[]{syncButton(), copyButton()};
         root.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons), dateTimePicker());
-        root.setOnMouseExited(event -> {
-            updateDateTime();
-        });
+        root.setOnMouseExited(event -> updateDateTime());
         return root;
     }
 
@@ -161,6 +157,27 @@ private void updateDateTime() {
 //            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
 //            updateDateTime();
 //        });
+
+
+//Original method
+//private void updateDateTime() {
+//    LocalDate date = datePicker.getValue();
+//    LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
+//    noteView.getNoteModel().getBoundNote().timestampProperty().set(LocalDateTime.of(date, time));
+//    noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+//    noteView.getAction().accept(NoteMessage.REFRESH_NOTE_TABLEVIEW);
+//    noteView.getAction().accept(NoteMessage.SORT_NOTE_TABLEVIEW);
+//}
+
+//Original Sync Button
+//private Button syncButton() {
+//    Button syncButton = ButtonFx.utilityButton( () -> {
+//        logger.info("Refreshing date and time to now.");
+//        setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+//    }, "Sync", "/images/sync-16.png");
+//    syncButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
+//    return syncButton;
+//}
 
 
 

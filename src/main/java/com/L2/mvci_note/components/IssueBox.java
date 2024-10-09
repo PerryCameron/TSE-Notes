@@ -55,6 +55,7 @@ public class IssueBox implements Component<Region> {
                         NoteDTO noteDTO = NoteDTOProcessor.processEmail(textAreaIssue.getText(), noteModel.getBoundNote().getId());
                         noteModel.getBoundNote().copyFrom(noteDTO);
                         logger.info("Processing an email...");
+                        textAreaIssue.setEditable(false);
                     }
                     noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
                 }
@@ -73,6 +74,7 @@ public class IssueBox implements Component<Region> {
 
     @Override
     public void refreshFields() {
-        textAreaIssue.setText(noteModel.getBoundNote().issueProperty().get());
+        if(noteModel.getBoundNote().isEmail()) textAreaIssue.setEditable(false);
+        else textAreaIssue.setEditable(true);
     }
 }
