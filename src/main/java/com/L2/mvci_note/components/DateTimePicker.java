@@ -56,6 +56,9 @@ public class DateTimePicker implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         Button[] buttons = new Button[] { syncButton(), copyButton() };
         root.getChildren().addAll(TitleBarFx.of("Call Date/Time", buttons) ,dateTimePicker());
+        root.setOnMouseExited(event -> {
+            updateDateTime();
+        });
         return root;
     }
 
@@ -100,22 +103,22 @@ public class DateTimePicker implements Component<Region> {
         refreshFields();
         // Bind the dateTimeProperty to the current selection
 
-        datePicker.setOnAction(event -> {
-            System.out.println("DateTimePicker:dateTimePicker -> datePicker.setOnAction -> DateTimePicker::updateDateTime");
-            updateDateTime();
-        });
-
-
-        // these cause an extra time update when something programmatically changes them
-        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
-            updateDateTime();
-        });
-
-        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
-            updateDateTime();
-        });
+//        datePicker.setOnAction(event -> {
+//            System.out.println("DateTimePicker:dateTimePicker -> datePicker.setOnAction -> DateTimePicker::updateDateTime");
+//            updateDateTime();
+//        });
+//
+//
+//        // these cause an extra time update when something programmatically changes them I don't like that
+//        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
+//            updateDateTime();
+//        });
+//
+//        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
+//            updateDateTime();
+//        });
 
         // these cause strange behaviour so I am not going to use
 //        hourSpinner.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
@@ -125,7 +128,6 @@ public class DateTimePicker implements Component<Region> {
 //        minuteSpinner.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
 //            updateDateTime();
 //        });
-
         return hBox;
     }
 
