@@ -182,3 +182,29 @@
 /*    -fx-font-size: 16;*/
 /*}*/
 
+.custom-close-button {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+.custom-close-button:hover {
+    -fx-background-color: red; /* Highlight color on hover */
+}
+
+.title-bar {
+    -fx-background-color: #3a6684;
+}
+
+.maximizeButton {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.maximizeButton:hover {
+    -fx-background-color: #516d87;
+}

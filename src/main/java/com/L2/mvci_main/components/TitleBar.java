@@ -20,6 +20,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
 import javafx.util.Duration;
 
@@ -31,7 +35,6 @@ public class TitleBar implements Builder<Region> {
     private double xOffset = 0;
     private double yOffset = 0;
 
-
     public TitleBar(MainView view) {
         this.mainView = view;
     }
@@ -39,19 +42,17 @@ public class TitleBar implements Builder<Region> {
     @Override
     public Region build() {
         HBox hbox = new HBox();
-        hbox.setStyle("-fx-background-color: #3a6684;"); // Set the background color
+        hbox.getStyleClass().add("title-bar");
         hbox.setPadding(new Insets(0, 0, 0, 5));
         hbox.setSpacing(5);
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.setPrefHeight(40);
         hbox.setMinHeight(40);
 
-
         // Load the image
         ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/TSELogo-24.png")));
         imageView.setFitHeight(24);
         imageView.setFitWidth(24);
-
 
         Label titleLabel = null;
         // Create the title label
@@ -66,10 +67,6 @@ public class TitleBar implements Builder<Region> {
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Create the close button
-        Button closeButton = new Button("X");
-        closeButton.setOnAction(e -> primaryStage.close());
-
         // Handle dragging of the stage
         hbox.setOnMousePressed(event -> {
             xOffset = event.getScreenX() - primaryStage.getX();
@@ -82,46 +79,87 @@ public class TitleBar implements Builder<Region> {
         });
 
         // Add the image, title, spacer, and close button to the title bar
-        hbox.getChildren().addAll(imageView, titleLabel, spacer, createCloseButton());
+        hbox.getChildren().addAll(imageView, titleLabel, spacer, createMinimizeButton(),
+                createMaximizeButton(), createCloseButton());
         return hbox;
     }
 
-    // the point of this is to hide a MenuBar until you click on the button.  I then want to be able to click on the menus and menu items.  I want the menu to go away and the button comes back if your mouse exists the menu or sub menus, or menu items
-//    private Node menu() {
-//        HBox hbox = new HBox();
-//        hbox.setAlignment(Pos.CENTER);
-//        Button button = ButtonFx.utilityButton("/images/menu-24.png");
-//        MenuBar menuBar = setUpMenuBar(hbox, button);
-//        button.setOnAction(e -> { // this works great to show the menu
-//            hbox.getChildren().remove(button);
-//            hbox.getChildren().add(menuBar);
-//        });
-//        hbox.getChildren().addAll(button);
-//        return hbox;
-//    }
+    public Node createMinimizeButton() {
+        // Create a single horizontal line for the minimize button
+        Line line = new Line(0, 0, 10, 0); // Adjust the length as needed
+        line.setStroke(Color.WHITE); // Set the color of the line
+        line.setStrokeWidth(1); // Set the line thickness
+        // Use a StackPane to center the line in the button
+        StackPane linePane = new StackPane(line);
+        linePane.setPrefSize(20, 20); // Adjust the size as needed
+        // Create the button and set the StackPane as its graphic
+        Button minimizeButton = new Button();
+        minimizeButton.setGraphic(linePane);
+        // Add hover effect
+        minimizeButton.setOnAction(e -> primaryStage.setIconified(true));
+        minimizeButton.getStyleClass().add("maximizeButton");
+        // Return the button as a Node
+        return minimizeButton;
+    }
 
-    private Node createCloseButton() {
-        // Create an HBox to contain the 'X'
-        HBox closeButton = new HBox();
-        closeButton.setPrefWidth(45);
-        closeButton.setAlignment(Pos.CENTER); // Center the 'X' inside the HBox
-        closeButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
 
-        // Create the label for 'X'
-        Label closeLabel = new Label("X");
-        closeLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
+    public Node createMaximizeButton() {
+        // Create a rectangle to represent the maximize button
+        Rectangle square = new Rectangle(10, 10); // Adjust size as needed
+        square.setStroke(Color.WHITE); // Outline color
+        square.setFill(Color.TRANSPARENT); // Transparent fill
+        square.setStrokeWidth(1); // Line width for the outline
 
-        // Add the label to the HBox
-        closeButton.getChildren().add(closeLabel);
 
-        // Add hover effect to change background color to red
-        closeButton.setOnMouseEntered(event -> closeButton.setStyle("-fx-background-color: red; -fx-cursor: hand;"));
-        closeButton.setOnMouseExited(event -> closeButton.setStyle("-fx-background-color: transparent;"));
+        // Use a StackPane to center the rectangle in the button
+        StackPane squarePane = new StackPane(square);
+        squarePane.setPrefSize(20, 20); // Adjust size as needed
 
-        // Set the action to close the stage when clicked
-        closeButton.setOnMouseClicked(event -> primaryStage.close());
+
+        // Create a button and set the StackPane as its graphic
+        Button maximizeButton = new Button();
+        maximizeButton.setGraphic(squarePane);
+        maximizeButton.getStyleClass().add("maximizeButton");
+        maximizeButton.setOnAction(e -> {
+            if (primaryStage.isMaximized()) {
+                primaryStage.setMaximized(false); // Restore to windowed mode
+            } else {
+                primaryStage.setMaximized(true); // Maximize the window
+            }
+        });
+
+
+        // Return the button as a Node
+        return maximizeButton;
+    }
+
+
+
+    public Node createCloseButton() {
+        // Create lines for the "X"
+        Line line1 = new Line(0, 0, 10, 10);
+        Line line2 = new Line(0, 10, 10, 0);
+
+        // Style the lines
+        line1.setStroke(Color.WHITE); // Change color as needed
+        line1.setStrokeWidth(1);
+        line2.setStroke(Color.WHITE); // Change color as needed
+        line2.setStrokeWidth(1);
+
+        // Use StackPane to hold the lines and create the "X" shape
+        StackPane crossPane = new StackPane(line1, line2);
+        crossPane.setPrefSize(20, 20); // Adjust the size as needed
+
+        // Create the button and set the StackPane as its graphic
+        Button closeButton = new Button();
+        closeButton.setGraphic(crossPane);
+        closeButton.getStyleClass().add("custom-close-button");
+
+        // Set button action
+        closeButton.setOnAction(e -> primaryStage.close());
 
         return closeButton;
     }
+
 
 }
