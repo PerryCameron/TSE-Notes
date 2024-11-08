@@ -19,6 +19,7 @@ public class BaseApplication extends Application {
     public static boolean testMode = false;
     public static String dataBase = "notes.db";
     public static Path dataBaseLocation;
+    public static boolean isResizing = false;
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
 
     public static void main(String[] args) {

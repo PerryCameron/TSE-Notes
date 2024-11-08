@@ -69,14 +69,20 @@ public class TitleBar implements Builder<Region> {
 
         // Handle dragging of the stage
         hbox.setOnMousePressed(event -> {
-            xOffset = event.getScreenX() - primaryStage.getX();
-            yOffset = event.getScreenY() - primaryStage.getY();
+            if (!BaseApplication.isResizing) { // Only allow dragging if not resizing
+                xOffset = event.getScreenX() - primaryStage.getX();
+                yOffset = event.getScreenY() - primaryStage.getY();
+            }
         });
 
+
         hbox.setOnMouseDragged(event -> {
-            primaryStage.setX(event.getScreenX() - xOffset);
-            primaryStage.setY(event.getScreenY() - yOffset);
+            if (!BaseApplication.isResizing) { // Only allow dragging if not resizing
+                primaryStage.setX(event.getScreenX() - xOffset);
+                primaryStage.setY(event.getScreenY() - yOffset);
+            }
         });
+
 
         // Add the image, title, spacer, and close button to the title bar
         hbox.getChildren().addAll(imageView, titleLabel, spacer, createMinimizeButton(),

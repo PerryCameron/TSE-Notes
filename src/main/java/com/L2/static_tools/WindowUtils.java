@@ -1,15 +1,16 @@
 package com.L2.static_tools;
 
+import com.L2.BaseApplication;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class WindowUtils {
-    private static boolean isResizing = false;
+
     private static double xOffset = 0.0;
     private static double yOffset = 0.0;
     public static void addResizeListeners(Stage stage) {
         stage.getScene().setOnMousePressed(event -> {
-            if (!isResizing) {
+            if (!BaseApplication.isResizing) {
                 xOffset = event.getSceneX();
                 yOffset = event.getSceneY();
             }
@@ -17,7 +18,7 @@ public class WindowUtils {
 
 
         stage.getScene().setOnMouseDragged(event -> {
-            if (!isResizing) {
+            if (!BaseApplication.isResizing) {
                 stage.setX(event.getScreenX() - xOffset);
                 stage.setY(event.getScreenY() - yOffset);
             }
@@ -35,31 +36,31 @@ public class WindowUtils {
             // Detect cursor position for resizing
             if (mouseX < border && mouseY < border) {
                 stage.getScene().setCursor(javafx.scene.Cursor.NW_RESIZE); // Top-left corner
-                isResizing = true;
+                BaseApplication.isResizing = true;
             } else if (mouseX > stageWidth - border && mouseY < border) {
                 stage.getScene().setCursor(javafx.scene.Cursor.NE_RESIZE); // Top-right corner
-                isResizing = true;
+                BaseApplication.isResizing = true;
             } else if (mouseX < border && mouseY > stageHeight - border) {
                 stage.getScene().setCursor(javafx.scene.Cursor.SW_RESIZE); // Bottom-left corner
-                isResizing = true;
+                BaseApplication.isResizing = true;
             } else if (mouseX > stageWidth - border && mouseY > stageHeight - border) {
                 stage.getScene().setCursor(javafx.scene.Cursor.SE_RESIZE); // Bottom-right corner
-                isResizing = true;
+                BaseApplication.isResizing = true;
             } else if (mouseX < border) {
                 stage.getScene().setCursor(javafx.scene.Cursor.W_RESIZE); // Left edge
-                isResizing = true;
+                BaseApplication.isResizing = true;
             } else if (mouseX > stageWidth - border) {
                 stage.getScene().setCursor(javafx.scene.Cursor.E_RESIZE); // Right edge
-                isResizing = true;
+                BaseApplication.isResizing = true;
             } else if (mouseY < border) {
                 stage.getScene().setCursor(javafx.scene.Cursor.N_RESIZE); // Top edge
-                isResizing = true;
+                BaseApplication.isResizing = true;
             } else if (mouseY > stageHeight - border) {
                 stage.getScene().setCursor(javafx.scene.Cursor.S_RESIZE); // Bottom edge
-                isResizing = true;
+                BaseApplication.isResizing = true;
             } else {
                 stage.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
-                isResizing = false; // Exit resizing mode
+                BaseApplication.isResizing = false; // Exit resizing mode
             }
         });
 
