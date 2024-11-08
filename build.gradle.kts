@@ -7,6 +7,7 @@ import java.util.*
 plugins {
     application
     java
+//    id ("org.beryx.runtime") version "1.13.1" // this is where it should come from
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("com.palantir.git-version") version "3.1.0"  // latest release on Jun 5, 2024
 }

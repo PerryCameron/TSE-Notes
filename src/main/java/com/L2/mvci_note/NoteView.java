@@ -45,17 +45,18 @@ public class NoteView implements Builder<Region> {
         setUpStatusBarCommunication();
         refreshBoundNoteListener();
         boundNoteListener();
-        noteTabOpenListener();
+//        noteTabOpenListener();
         return scrollPane;
     }
 
-    private void noteTabOpenListener() {
-        noteModel.openNoteTabProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                 action.accept(NoteMessage.SELECT_NOTE_TAB);
-            }
-        });
-    }
+//    private void noteTabOpenListener() {
+//        noteModel.openNoteTabProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue) {
+//                 action.accept(NoteMessage.SELECT_NOTE_TAB);
+//                System.out.println("testing");
+//            }
+//        });
+//    }
 
     private void refreshBoundNoteListener() {
         noteModel.refreshBoundNoteProperty().addListener((observable, oldValue, newValue) -> {
@@ -69,7 +70,7 @@ public class NoteView implements Builder<Region> {
     }
 
     private void boundNoteListener() {
-        noteModel.getBoundNote().idProperty().addListener((observable, oldValue, newValue) -> {
+        noteModel.getBoundNote().idProperty().subscribe(() -> {
             System.out.println("NoteView::boundNoteListener -> refresh part orders, select note in TableView, change tab name, enable/disable next button");
             // sends signal to noteListener to add part orders to currently selected NoteDTO
             action.accept(NoteMessage.REFRESH_PART_ORDERS);

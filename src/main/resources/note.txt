@@ -12,6 +12,9 @@ echo %JAVA_HOME%
 // this is how to do it temporary for a session
 $env:Path = "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin;" + $env:Path
 
+// to use java 11
+$env:Path = "C:/Users/sesa91827/.jdks/jdk-11.0.24-full/bin;" + $env:Path
+
 PS C:\Users\sesa91827\IdeaProjects\GlobalSpares> ./gradlew clean
 PS C:\Users\sesa91827\IdeaProjects\GlobalSpares> ./gradlew build
 PS C:\Users\sesa91827\IdeaProjects\GlobalSpares> ./gradlew shadowJar
