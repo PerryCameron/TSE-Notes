@@ -32,8 +32,8 @@ public class RelatedBox implements Component<Region> {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
         this.root = new VBox();
-        this.texTextField = TextFieldFx.standardTextField(200,  "TEX-", noteView);
-        this.relatedCaseTextField = TextFieldFx.standardTextField(200,  "Created Case", noteView);
+        this.texTextField = TextFieldFx.standardTextField(200,  "TEX-");
+        this.relatedCaseTextField = TextFieldFx.standardTextField(200,  "Created Case");
         this.createdWorkOrderTextField = TextFieldFx.createValidatedTextField(200,  "WO-", StringChecker::formatWorkOrder, noteView);
     }
 

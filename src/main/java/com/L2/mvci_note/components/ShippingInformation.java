@@ -77,13 +77,13 @@ public class ShippingInformation implements Component<Region> {
         VBox vBox = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         vBox.getStyleClass().add("inner-decorative-hbox");
         HBox hBox = new HBox(5);
-        aTextFields[0] = TextFieldFx.standardTextField(200, "Related Account / Installed at", noteView);
+        aTextFields[0] = TextFieldFx.standardTextField(200, "Related Account / Installed at");
         streetTextArea.setPrefWidth(400);
         streetTextArea.setPromptText("Street");
-        aTextFields[1] = TextFieldFx.standardTextField(200, "City", noteView);
-        aTextFields[2] = TextFieldFx.standardTextField(100, "State/Province", noteView);
-        aTextFields[3] = TextFieldFx.standardTextField(100, "zip Code", noteView);
-        aTextFields[4] = TextFieldFx.standardTextField(200, "Country", noteView);
+        aTextFields[1] = TextFieldFx.standardTextField(200, "City");
+        aTextFields[2] = TextFieldFx.standardTextField(100, "State/Province");
+        aTextFields[3] = TextFieldFx.standardTextField(100, "zip Code");
+        aTextFields[4] = TextFieldFx.standardTextField(200, "Country");
 
         Button pasteButton = ButtonFx.utilityButton(() -> {
             String[] addressInfo = CopyPastaParser.parseAddress();

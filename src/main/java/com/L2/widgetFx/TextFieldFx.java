@@ -49,7 +49,7 @@ public class TextFieldFx {
         return passwordField;
     }
 
-    public static TextField standardTextField(double width, String prompt, NoteView noteView) {
+    public static TextField standardTextField(double width, String prompt) { // used to have a noteView parameter
         TextField textField = TextFieldFx.of(width, prompt);
         textField.focusedProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue)
