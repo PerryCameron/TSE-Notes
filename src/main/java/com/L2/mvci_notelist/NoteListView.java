@@ -4,6 +4,8 @@ import com.L2.mvci_notelist.components.NotesTable;
 import com.L2.widgetFx.TextFieldFx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -36,8 +38,14 @@ public class NoteListView implements Builder<Region> {
     }
 
     private Node searchBox() {
-        HBox hBox = new HBox();
-        TextFieldFx.standardTextField(200, "Model");
+        HBox hBox = new HBox(10);
+        hBox.setPadding(new Insets(10, 0, 10, 0));
+        TextField textField = TextFieldFx.of(200, "Search");
+        ComboBox<Integer> comboBox = new ComboBox<>();
+        comboBox.getItems().addAll(25, 50, 100, 150, 200);
+        comboBox.getSelectionModel().select(1);
+
+        hBox.getChildren().addAll(textField,comboBox);
         return hBox;
     }
 
