@@ -18,6 +18,11 @@ public class NoteModel {
     private final ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
     private final ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
 
+    // allow this many records to be displayed
+    private final IntegerProperty pageSize = new SimpleIntegerProperty(50);
+    // skip the first N records
+    private final IntegerProperty offset = new SimpleIntegerProperty(50);
+
     // shouldn't this be under main controller???????
     private final StringProperty statusLabel = new SimpleStringProperty();
     private final ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
@@ -37,6 +42,22 @@ public class NoteModel {
     public void refreshBoundNote() {  // to refresh fields without bindings
         setRefreshBoundNote(true);
         setRefreshBoundNote(false);
+    }
+
+    public int getPageSize() {
+        return pageSize.get();
+    }
+
+    public IntegerProperty pageSizeProperty() {
+        return pageSize;
+    }
+
+    public int getOffset() {
+        return offset.get();
+    }
+
+    public IntegerProperty offsetProperty() {
+        return offset;
     }
 
     public PartOrderDTO getSelectedPartOrder() {

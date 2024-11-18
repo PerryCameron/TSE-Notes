@@ -21,6 +21,8 @@ public class NoteListController extends Controller<NoteListMessage> {
         noteListView = new NoteListView(noteListModel, this::action);
         action(NoteListMessage.REFERENCE_NOTES);
         action(NoteListMessage.REFERENCE_BOUND_NOTE_PROPERTY);
+        action(NoteListMessage.REFERENCE_PAGE_SIZE);
+        action(NoteListMessage.REFERENCE_OFFSET);
     }
 
     @Override
@@ -33,7 +35,9 @@ public class NoteListController extends Controller<NoteListMessage> {
     public void action(NoteListMessage action) {
         switch (action) {
             case REFERENCE_NOTES -> noteListInteractor.setNotes(mainController.getNotes());
-            case REFERENCE_BOUND_NOTE_PROPERTY -> noteListInteractor.setBoundNote(mainController.getBoundNote());
+            case REFERENCE_BOUND_NOTE_PROPERTY -> noteListInteractor.setBoundNoteProperty(mainController.getBoundNoteProperty());
+            case REFERENCE_OFFSET -> noteListInteractor.setOffsetProperty(mainController.getOffsetProperty());
+            case REFERENCE_PAGE_SIZE -> noteListInteractor.setPageSizeProperty(mainController.getPageSizeProperty());
             case UPDATE_BOUND_NOTE -> noteListInteractor.updateBoundNote();
             case SAVE_OR_UPDATE_NOTE -> mainController.getNoteController().action(NoteMessage.SAVE_OR_UPDATE_NOTE);
             case SORT_NOTE_TABLEVIEW -> noteListInteractor.sortTableView();

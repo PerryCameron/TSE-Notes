@@ -5,6 +5,7 @@ import com.L2.dto.UserDTO;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_main.MainMessage;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
@@ -88,8 +89,16 @@ public class NoteController extends Controller<NoteMessage> {
         return noteInteractor.getNotes();
     }
 
-    public ObjectProperty<NoteDTO> getBoundNote() {
+    public ObjectProperty<NoteDTO> getBoundNoteProperty() {
         return noteInteractor.getBoundNoteProperty();
+    }
+
+    public IntegerProperty getPageSizeProperty() {
+        return noteInteractor.getPageSizeProperty();
+    }
+
+    public IntegerProperty getOffsetProperty() {
+        return noteInteractor.getOffsetProperty();
     }
 
     public NoteView getCaseView() {

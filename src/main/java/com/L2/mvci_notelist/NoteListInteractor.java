@@ -3,6 +3,7 @@ package com.L2.mvci_notelist;
 import com.L2.dto.NoteDTO;
 import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.static_tools.ApplicationPaths;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
@@ -25,8 +26,16 @@ public class NoteListInteractor implements ApplicationPaths {
         noteListModel.setNotes(notes);
     }
 
-    public void setBoundNote(ObjectProperty<NoteDTO> boundNote) {
+    public void setBoundNoteProperty(ObjectProperty<NoteDTO> boundNote) {
         noteListModel.boundNote = boundNote;
+    }
+
+    public void setOffsetProperty(IntegerProperty offsetProperty) {
+        noteListModel.setOffsetProperty(offsetProperty);
+    }
+
+    public void setPageSizeProperty(IntegerProperty pageSizeProperty) {
+        noteListModel.setPageSizeProperty(pageSizeProperty);
     }
 
     public void updateBoundNote() {
@@ -88,4 +97,6 @@ public class NoteListInteractor implements ApplicationPaths {
         logger.info("Refreshing table view");
         noteListModel.refreshTable();
     }
+
+
 }

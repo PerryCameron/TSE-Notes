@@ -8,6 +8,7 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_notelist.NoteListController;
 import com.L2.mvci_notelist.NoteListMessage;
 import com.L2.mvci_settings.SettingsController;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
@@ -50,7 +51,7 @@ public class MainController extends Controller<MainMessage> {
             case NEW_NOTE -> noteController.action(NoteMessage.NEW_NOTE);
             case SORT_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.SORT_NOTE_TABLEVIEW);
             case REFRESH_NOTE_TABLEVIEW -> noteListController.action(NoteListMessage.REFRESH_NOTE_TABLEVIEW);
-            case UPDATE_NOTE_TAB_NAME -> mainInteractor.updateNoteTabName(getBoundNote());
+            case UPDATE_NOTE_TAB_NAME -> mainInteractor.updateNoteTabName(getBoundNoteProperty());
             case DELETE_NOTE -> noteController.action(NoteMessage.DELETE_NOTE);
             case SELECT_NOTE_TAB -> mainInteractor.selectNoteTab();
             case UPDATE_STATUSBAR_WITH_STRING -> noteController.action(NoteMessage.UPDATE_STATUSBAR_WITH_STRING);
@@ -75,8 +76,16 @@ public class MainController extends Controller<MainMessage> {
         return noteController.getNotes();
     }
 
-    public ObjectProperty<NoteDTO> getBoundNote() {
-        return noteController.getBoundNote();
+    public ObjectProperty<NoteDTO> getBoundNoteProperty() {
+        return noteController.getBoundNoteProperty();
+    }
+
+    public IntegerProperty getOffsetProperty() {
+        return noteController.getOffsetProperty();
+    }
+
+    public IntegerProperty getPageSizeProperty() {
+        return noteController.getPageSizeProperty();
     }
 
     public void setStatusBar(String status) {
@@ -113,4 +122,6 @@ public class MainController extends Controller<MainMessage> {
     public MainModel getMainModel() {
         return mainModel;
     }
+
+
 }

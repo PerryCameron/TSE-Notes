@@ -6,6 +6,7 @@ import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.repository.implementations.PartOrderRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
 import com.L2.static_tools.*;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,7 +49,7 @@ public class NoteInteractor {
         NoteDTO boundNote = new NoteDTO();
         noteModel.setBoundNote(boundNote);
         // get all the notes and load them to memory
-        noteModel.getNotes().addAll(noteRepo.getAllNotes());
+        noteModel.getNotes().addAll(noteRepo.getPaginatedNotes(noteModel.getPageSize(), noteModel.getOffset()));
         // set notes to the direction we like
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         // if starting up for first time create first empty note
@@ -550,6 +551,14 @@ public class NoteInteractor {
         return noteModel.boundNoteProperty();
     }
 
+    public IntegerProperty getOffsetProperty() {
+        return noteModel.offsetProperty();
+    }
+
+    public IntegerProperty getPageSizeProperty() {
+        return noteModel.pageSizeProperty();
+    }
+
     public void deleteNote() {
 
         int id = noteModel.getBoundNote().getId();
@@ -599,6 +608,7 @@ public class NoteInteractor {
             return NoteMessage.ENABLE_NEXT_BUTTON;
         }
     }
+
 
 
 }

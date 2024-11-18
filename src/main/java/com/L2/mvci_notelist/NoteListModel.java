@@ -13,9 +13,37 @@ public class NoteListModel {
     private ObjectProperty<NoteDTO> selectedNote = new SimpleObjectProperty<>();
     // reference to mainModel boundNote;
     protected ObjectProperty<NoteDTO> boundNote;
+    // reference to noteModel --- allow this many records to be displayed
+    private IntegerProperty pageSize = null;
+    // reference to noteModel --- skip the first N records
+    private IntegerProperty offset = null;
     private ObjectProperty<TableView<NoteDTO>> noteTable = new SimpleObjectProperty<>();
     private BooleanProperty refreshTable = new SimpleBooleanProperty(false);
 
+
+    public int getPageSize() {
+        return pageSize.get();
+    }
+
+    public IntegerProperty pageSizeProperty() {
+        return pageSize;
+    }
+
+    public int getOffset() {
+        return offset.get();
+    }
+
+    public void setOffsetProperty(IntegerProperty offset) {
+        this.offset = offset;
+    }
+
+    public void setPageSizeProperty(IntegerProperty pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public IntegerProperty offsetProperty() {
+        return offset;
+    }
 
     public NoteDTO getBoundNote() {
         return boundNote.get();

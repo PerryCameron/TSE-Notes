@@ -51,8 +51,32 @@ public class NotesTable implements Component<Region> {
             });
             return row;
         });
+
+        addScrollListener(tableView);
         return tableView;
     }
+
+    private void addScrollListener(TableView<?> tableView) {
+        tableView.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+            if (newSkin != null) {
+                // Access the ScrollBar
+                ScrollBar verticalScrollBar = (ScrollBar) tableView.lookup(".scroll-bar:vertical");
+                if (verticalScrollBar != null) {
+                    // Add listener to the scroll bar's value property
+                    verticalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue.doubleValue() == 0.0) {
+                            System.out.println("Scrolled to the top!");
+                            System.out.println("pageSize: " + noteListView.getNoteListModel().getPageSize());
+                            System.out.println("offset: " + noteListView.getNoteListModel().getOffset());
+                        } else if (newValue.doubleValue() == 1.0) {
+                            System.out.println("Scrolled to the bottom!");
+                        }
+                    });
+                }
+            }
+        });
+    }
+
 
     private TableColumn<NoteDTO, String> col0() {
         TableColumn<NoteDTO, String> col = TableColumnFx.stringTableColumn(NoteDTO::formattedTimestampProperty, "Date/Time");
