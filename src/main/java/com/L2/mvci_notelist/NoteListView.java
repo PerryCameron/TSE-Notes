@@ -44,7 +44,11 @@ public class NoteListView implements Builder<Region> {
         ComboBox<Integer> comboBox = new ComboBox<>();
         comboBox.getItems().addAll(25, 50, 100, 150, 200);
         comboBox.getSelectionModel().select(1);
-
+        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                noteListModel.setPageSize(newValue.intValue());
+            }
+        });
         hBox.getChildren().addAll(textField,comboBox);
         return hBox;
     }

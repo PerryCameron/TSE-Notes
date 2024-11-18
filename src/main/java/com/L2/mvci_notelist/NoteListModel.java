@@ -13,6 +13,7 @@ public class NoteListModel {
     private ObjectProperty<NoteDTO> selectedNote = new SimpleObjectProperty<>();
     // reference to mainModel boundNote;
     protected ObjectProperty<NoteDTO> boundNote;
+
     // reference to noteModel --- allow this many records to be displayed
     private IntegerProperty pageSize = null;
     // reference to noteModel --- skip the first N records
@@ -23,6 +24,10 @@ public class NoteListModel {
 
     public int getPageSize() {
         return pageSize.get();
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize.set(pageSize);
     }
 
     public IntegerProperty pageSizeProperty() {
