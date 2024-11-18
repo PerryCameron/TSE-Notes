@@ -34,6 +34,12 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     @Override
+    public List<NoteDTO> getPaginatedNotes(int pageSize, int offset) {
+        String sql = "SELECT * FROM Notes LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, new NotesRowMapper(), pageSize, offset);
+    }
+
+    @Override
     public boolean noteExists(NoteDTO note) {
         String sql = "SELECT COUNT(*) FROM Notes WHERE id = ?";
         // Extract the id from the NoteDTO object

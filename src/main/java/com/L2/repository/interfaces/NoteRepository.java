@@ -7,6 +7,8 @@ import java.util.List;
 public interface NoteRepository {
     List<NoteDTO> getAllNotes();
 
+    List<NoteDTO> getPaginatedNotes(int pageSize, int offset);
+
     boolean noteExists(NoteDTO note);
 
     int insertNote(NoteDTO note);
