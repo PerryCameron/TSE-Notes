@@ -1,0 +1,12 @@
+Change Log
+
+0.9.8-17
+First beta release
+
+0.9.8-20
+Added minimize and restore buttons
+Redrew close button to be a symetracal X
+Fixed manual sizing to work on all borders including corners
+
+0.9.8-17
+Fixed issue where a title would somehow be saved as a null value in the database and the user could no longer change the title.

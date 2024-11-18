@@ -98,6 +98,7 @@ public class NotesTable implements Component<Region> {
         TableColumn<NoteDTO, Boolean> emailCol = new TableColumn<>("");
         emailCol.setPrefWidth(30);
         emailCol.setMaxWidth(30);
+        emailCol.setMinWidth(30);
         // Define the cell factory
         emailCol.setCellFactory(new Callback<>() {
             @Override
