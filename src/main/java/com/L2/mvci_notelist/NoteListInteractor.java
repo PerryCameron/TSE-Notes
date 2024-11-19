@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class NoteListInteractor implements ApplicationPaths {
 
@@ -98,5 +99,32 @@ public class NoteListInteractor implements ApplicationPaths {
         noteListModel.refreshTable();
     }
 
+    public void addToBottomOfList() {
+        int newOffset = noteListModel.getOffset() + noteListModel.getNotes().size();
+        noteListModel.offsetProperty().set(newOffset);
+        List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(),noteListModel.getOffset());
+        // don't bother to add an empty list
+        if(!notes.isEmpty()) {
+            System.out.println("Adding " + notes.size() + " notes to the list");
+            noteListModel.getNotes().addAll(notes);
+        }
+        if (noteListModel.getNotes().size() > 100) {
+            noteListModel.getNotes().remove(0, noteListModel.getNotes().size() - 100); // Remove the oldest records from the top
+        }
+        System.out.println("Displaying notes " + noteListModel.getNotes().getFirst().getId() + " to " + noteListModel.getNotes().getLast().getId());
+    }
+
+    public void addToTopOfList() {
+        int newOffset = Math.max(0, noteListModel.getOffset() - noteListModel.getPageSize());
+        noteListModel.offsetProperty().set(newOffset);
+        List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), newOffset);
+        // Don't bother to add an empty list
+        if (!notes.isEmpty()) {
+            noteListModel.getNotes().addAll(0, notes); // Add the new records at the top
+        }
+        if (noteListModel.getNotes().size() > 100) {
+            noteListModel.getNotes().remove(100, noteListModel.getNotes().size()); // Remove excess records from the bottom
+        }
+    }
 
 }

@@ -47,6 +47,8 @@ public class NoteListController extends Controller<NoteListMessage> {
             case NEXT_NOTE -> noteListInteractor.displayNextNote();
             case PREVIOUS_NOTE -> noteListInteractor.displayPreviousNote();
             case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT -> noteListInteractor.selectNote();
+            case ADD_TO_BOTTOM_OF_LIST -> noteListInteractor.addToBottomOfList();
+            case ADD_TO_TOP_OF_LIST -> noteListInteractor.addToTopOfList();
         }
     }
 }

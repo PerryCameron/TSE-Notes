@@ -65,11 +65,9 @@ public class NotesTable implements Component<Region> {
                     // Add listener to the scroll bar's value property
                     verticalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
                         if (newValue.doubleValue() == 0.0) {
-                            System.out.println("Scrolled to the top!");
-                            System.out.println("pageSize: " + noteListView.getNoteListModel().getPageSize());
-                            System.out.println("offset: " + noteListView.getNoteListModel().getOffset());
+                            noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
                         } else if (newValue.doubleValue() == 1.0) {
-                            System.out.println("Scrolled to the bottom!");
+                            noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
                         }
                     });
                 }

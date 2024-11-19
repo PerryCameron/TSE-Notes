@@ -35,7 +35,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     @Override
     public List<NoteDTO> getPaginatedNotes(int pageSize, int offset) {
-        String sql = "SELECT * FROM Notes LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM Notes ORDER BY timestamp DESC LIMIT ? OFFSET ?";
         return jdbcTemplate.query(sql, new NotesRowMapper(), pageSize, offset);
     }
 

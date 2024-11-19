@@ -21,7 +21,7 @@ public class NoteModel {
     // allow this many records to be displayed
     private final IntegerProperty pageSize = new SimpleIntegerProperty(50);
     // skip the first N records
-    private final IntegerProperty offset = new SimpleIntegerProperty(50);
+    private final IntegerProperty offset = new SimpleIntegerProperty(0);
 
     // shouldn't this be under main controller???????
     private final StringProperty statusLabel = new SimpleStringProperty();
