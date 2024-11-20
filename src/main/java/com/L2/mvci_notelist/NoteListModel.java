@@ -19,7 +19,45 @@ public class NoteListModel {
     private IntegerProperty offset = null;
     private ObjectProperty<TableView<NoteDTO>> noteTable = new SimpleObjectProperty<>();
     private BooleanProperty refreshTable = new SimpleBooleanProperty(false);
+    private StringProperty recordNumbers = new SimpleStringProperty();
+    private StringProperty searchParameters = new SimpleStringProperty();
 
+
+    public String getSearchParameters() {
+        return searchParameters.get();
+    }
+
+    public StringProperty searchParametersProperty() {
+        return searchParameters;
+    }
+
+    public void setSearchParameters(String searchParameters) {
+        this.searchParameters.set(searchParameters);
+    }
+
+    public void setOffset(int offset) {
+        this.offset.set(offset);
+    }
+
+    public boolean isRefreshTable() {
+        return refreshTable.get();
+    }
+
+    public void setRefreshTable(boolean refreshTable) {
+        this.refreshTable.set(refreshTable);
+    }
+
+    public String getRecordNumbers() {
+        return recordNumbers.get();
+    }
+
+    public StringProperty recordNumbersProperty() {
+        return recordNumbers;
+    }
+
+    public void setRecordNumbers(String recordNumbers) {
+        this.recordNumbers.set(recordNumbers);
+    }
 
     public int getPageSize() {
         return pageSize.get();

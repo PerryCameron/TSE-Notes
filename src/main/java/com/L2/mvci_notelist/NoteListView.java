@@ -2,14 +2,17 @@ package com.L2.mvci_notelist;
 
 import com.L2.mvci_notelist.components.NotesTable;
 import com.L2.widgetFx.TextFieldFx;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import javafx.util.Duration;
 
 import java.util.function.Consumer;
 
@@ -41,15 +44,18 @@ public class NoteListView implements Builder<Region> {
         HBox hBox = new HBox(10);
         hBox.setPadding(new Insets(10, 0, 10, 0));
         TextField textField = TextFieldFx.of(200, "Search");
-        ComboBox<Integer> comboBox = new ComboBox<>();
-        comboBox.getItems().addAll(25, 50, 100, 150, 200);
-        comboBox.getSelectionModel().select(1);
-        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                noteListModel.setPageSize(newValue.intValue());
-            }
-        });
-        hBox.getChildren().addAll(textField,comboBox);
+        textField.textProperty().bindBidirectional(noteListModel.searchParametersProperty());
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        // this is awesome, stole from stackoverflow.com
+        textField.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    pause.setOnFinished(event -> action.accept(NoteListMessage.SEARCH));
+                    pause.playFromStart();
+                }
+        );
+        Label recordLabel = new Label("New Label");
+        recordLabel.textProperty().bind(noteListModel.recordNumbersProperty());
+        hBox.getChildren().addAll(textField, recordLabel);
         return hBox;
     }
 

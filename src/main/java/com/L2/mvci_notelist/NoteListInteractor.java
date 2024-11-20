@@ -68,7 +68,6 @@ public class NoteListInteractor implements ApplicationPaths {
             NoteDTO noteDTO = noteListModel.getNotes().get(index + 1);
             selectTableRow(noteDTO);
         }
-        System.out.println();
     }
 
     public void displayNextNote() {
@@ -77,7 +76,6 @@ public class NoteListInteractor implements ApplicationPaths {
             NoteDTO noteDTO = noteListModel.getNotes().get(index - 1);
             selectTableRow(noteDTO);
         }
-        System.out.println();
     }
 
     public int getIndexById(int id) {
@@ -100,18 +98,20 @@ public class NoteListInteractor implements ApplicationPaths {
     }
 
     public void addToBottomOfList() {
+        int originalOffset = noteListModel.getOffset();
         int newOffset = noteListModel.getOffset() + noteListModel.getNotes().size();
         noteListModel.offsetProperty().set(newOffset);
         List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(),noteListModel.getOffset());
         // don't bother to add an empty list
         if(!notes.isEmpty()) {
-            System.out.println("Adding " + notes.size() + " notes to the list");
             noteListModel.getNotes().addAll(notes);
+        } else {
+            noteListModel.offsetProperty().set(originalOffset);
         }
         if (noteListModel.getNotes().size() > 100) {
             noteListModel.getNotes().remove(0, noteListModel.getNotes().size() - 100); // Remove the oldest records from the top
         }
-        System.out.println("Displaying notes " + noteListModel.getNotes().getFirst().getId() + " to " + noteListModel.getNotes().getLast().getId());
+        noteListModel.setRecordNumbers("Displaying notes " + noteListModel.getNotes().getFirst().getId() + " to " + noteListModel.getNotes().getLast().getId());
     }
 
     public void addToTopOfList() {
@@ -125,6 +125,18 @@ public class NoteListInteractor implements ApplicationPaths {
         if (noteListModel.getNotes().size() > 100) {
             noteListModel.getNotes().remove(100, noteListModel.getNotes().size()); // Remove excess records from the bottom
         }
+        noteListModel.setRecordNumbers("Displaying notes " + noteListModel.getNotes().getFirst().getId() + " to " + noteListModel.getNotes().getLast().getId());
     }
 
+    public void searchParameters() {
+        noteListModel.getNotes().clear();
+        if(noteListModel.getSearchParameters().isEmpty()) {
+            System.out.println("search bar is empty");
+            List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
+            noteListModel.getNotes().addAll(notes);
+        } else {
+            System.out.println("searching " + noteListModel.getSearchParameters());
+            noteRepo.searchNotesWithScoring(noteListModel.getSearchParameters());
+        }
+    }
 }

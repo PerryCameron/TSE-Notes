@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoteRepositoryImpl implements NoteRepository {
@@ -156,5 +157,58 @@ public class NoteRepositoryImpl implements NoteRepository {
         logger.info("Deleting Note: {}", noteDTO.getId());
         String sql = "DELETE FROM Notes WHERE id = ?";
         return jdbcTemplate.update(sql, noteDTO.getId());
+    }
+
+    public List<NoteDTO> searchNotesWithScoring(String inputKeywords) {
+        // Split the input into keywords
+        String[] keywords = inputKeywords.split("\\s+");
+
+        // Build dynamic SQL for scoring
+        StringBuilder scoreBuilder = new StringBuilder("(");
+        StringBuilder whereBuilder = new StringBuilder("WHERE ");
+
+        for (int i = 0; i < keywords.length; i++) {
+            if (i > 0) {
+                scoreBuilder.append(" + ");
+                whereBuilder.append(" OR ");
+            }
+
+            String likeClause = """
+            (workOrder LIKE '%' || ? || '%') +
+            (caseNumber LIKE '%' || ? || '%') +
+            (serialNumber LIKE '%' || ? || '%') +
+            (modelNumber LIKE '%' || ? || '%') +
+            (callInPerson LIKE '%' || ? || '%') +
+            (callInEmail LIKE '%' || ? || '%') +
+            (issue LIKE '%' || ? || '%') +
+            (contactName LIKE '%' || ? || '%') +
+            (contactEmail LIKE '%' || ? || '%') +
+            (street LIKE '%' || ? || '%') +
+            (city LIKE '%' || ? || '%') +
+            (state LIKE '%' || ? || '%') +
+            (country LIKE '%' || ? || '%') +
+            (additionalCorrectiveActionText LIKE '%' || ? || '%') +
+            (relatedCaseNumber LIKE '%' || ? || '%') +
+            (title LIKE '%' || ? || '%')
+        """;
+            scoreBuilder.append(likeClause);
+            whereBuilder.append(likeClause.replaceAll("\\+\\s*", "OR").replaceAll("\\(.*\\)", ""));
+        }
+        String sql = """
+        SELECT *, %s AS match_score 
+        FROM Notes 
+        %s 
+        ORDER BY match_score DESC;
+    """.formatted(scoreBuilder.toString(), whereBuilder.toString());
+        // Prepare parameters
+        List<String> params = new ArrayList<>();
+        for (String keyword : keywords) {
+            String likeKeyword = "%" + keyword + "%";
+            for (int j = 0; j < 16; j++) { // 16 columns to search per keyword
+                params.add(likeKeyword);
+            }
+        }
+        // Execute query
+        return jdbcTemplate.query(sql, params.toArray(), new NotesRowMapper());
     }
 }
