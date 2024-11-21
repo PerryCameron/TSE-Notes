@@ -71,7 +71,7 @@ public class NoteView implements Builder<Region> {
 
     private void boundNoteListener() {
         noteModel.getBoundNote().idProperty().subscribe(() -> {
-            System.out.println("NoteView::boundNoteListener -> refresh part orders, select note in TableView, change tab name, enable/disable next button");
+//            System.out.println("NoteView::boundNoteListener -> refresh part orders, select note in TableView, change tab name, enable/disable next button");
             // sends signal to noteListener to add part orders to currently selected NoteDTO
             action.accept(NoteMessage.REFRESH_PART_ORDERS);
             // sends signal to noteListInteractor to select current NoteDTO

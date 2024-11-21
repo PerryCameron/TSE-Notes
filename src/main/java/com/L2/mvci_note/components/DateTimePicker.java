@@ -31,7 +31,6 @@ public class DateTimePicker implements Component<Region> {
     private final VBox root;
     private static final Logger logger = LoggerFactory.getLogger(DateTimePicker.class);
 
-
     public DateTimePicker(NoteView noteView) {
         this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
         this.datePicker = new DatePicker(LocalDate.now());
@@ -79,28 +78,22 @@ public class DateTimePicker implements Component<Region> {
         return syncButton;
     }
 
-
     private Node dateTimePicker() {
         HBox hBox = new HBox(10);
-
         // Configure the spinners
         hourSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23));
         minuteSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59));
-
         hourSpinner.setPrefWidth(80);
         minuteSpinner.setPrefWidth(80);
         datePicker.setPrefWidth(150);
-
         // Label for separating hours and minutes
         Label colonLabel = new Label(":");
         colonLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16");
-
         // Add components to the HBox
         hBox.getChildren().addAll(datePicker, hourSpinner, colonLabel, minuteSpinner);
         hBox.setAlignment(Pos.CENTER);
         refreshFields();
         // Bind the dateTimeProperty to the current selection
-
         return hBox;
     }
 
@@ -139,48 +132,3 @@ private void updateDateTime() {
         setDateTime(noteView.getNoteModel().getBoundNote().getTimestamp());
     }
 }
-
-
-//        datePicker.setOnAction(event -> {
-//            System.out.println("DateTimePicker:dateTimePicker -> datePicker.setOnAction -> DateTimePicker::updateDateTime");
-//            updateDateTime();
-//        });
-//
-//
-//        // these cause an extra time update when something programmatically changes them I don't like that
-//        hourSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
-//            updateDateTime();
-//        });
-//
-//        minuteSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-//            System.out.println("DateTimePicker:dateTimePicker -> hourSpinner.setOnAction -> DateTimePicker::updateDateTime");
-//            updateDateTime();
-//        });
-
-
-//Original method
-//private void updateDateTime() {
-//    LocalDate date = datePicker.getValue();
-//    LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
-//    noteView.getNoteModel().getBoundNote().timestampProperty().set(LocalDateTime.of(date, time));
-//    noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
-//    noteView.getAction().accept(NoteMessage.REFRESH_NOTE_TABLEVIEW);
-//    noteView.getAction().accept(NoteMessage.SORT_NOTE_TABLEVIEW);
-//}
-
-//Original Sync Button
-//private Button syncButton() {
-//    Button syncButton = ButtonFx.utilityButton( () -> {
-//        logger.info("Refreshing date and time to now.");
-//        setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-//    }, "Sync", "/images/sync-16.png");
-//    syncButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
-//    return syncButton;
-//}
-
-
-
-
-
-

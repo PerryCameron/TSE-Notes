@@ -229,9 +229,11 @@ public class NoteRepositoryImpl implements NoteRepository {
         }
 //        System.out.println("SQL: " + sql);
 //        System.out.println("Parameters: " + params);
-        return jdbcTemplate.query(sql, params.toArray(), new NotesRowMapper());
+//        return jdbcTemplate.query(sql, params.toArray(), new NotesRowMapper());
+        return jdbcTemplate.query(sql, ps -> {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i)); // JDBC indices are 1-based
+            }
+        }, new NotesRowMapper());
     }
-
-
-
 }
