@@ -136,7 +136,8 @@ public class NoteListInteractor implements ApplicationPaths {
             noteListModel.getNotes().addAll(notes);
         } else {
             System.out.println("searching " + noteListModel.getSearchParameters());
-            noteRepo.searchNotesWithScoring(noteListModel.getSearchParameters());
+            List<NoteDTO> notes = noteRepo.searchNotesWithScoring(noteListModel.getSearchParameters());
+            noteListModel.getNotes().addAll(notes);
         }
     }
 }

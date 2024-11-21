@@ -4,6 +4,7 @@ import com.L2.dto.NoteDTO;
 import com.L2.repository.interfaces.NoteRepository;
 import com.L2.repository.rowmappers.NotesRowMapper;
 import com.L2.static_tools.DatabaseConnector;
+import com.L2.static_tools.NoteTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -159,56 +160,78 @@ public class NoteRepositoryImpl implements NoteRepository {
         return jdbcTemplate.update(sql, noteDTO.getId());
     }
 
+    @Override
     public List<NoteDTO> searchNotesWithScoring(String inputKeywords) {
-        // Split the input into keywords
         String[] keywords = inputKeywords.split("\\s+");
-
-        // Build dynamic SQL for scoring
-        StringBuilder scoreBuilder = new StringBuilder("(");
-        StringBuilder whereBuilder = new StringBuilder("WHERE ");
-
-        for (int i = 0; i < keywords.length; i++) {
-            if (i > 0) {
+        StringBuilder scoreBuilder = new StringBuilder();
+        StringBuilder whereBuilder = new StringBuilder();
+        for (int k = 0; k < keywords.length; k++) {
+            if (k > 0) {
                 scoreBuilder.append(" + ");
                 whereBuilder.append(" OR ");
             }
-
-            String likeClause = """
-            (workOrder LIKE '%' || ? || '%') +
-            (caseNumber LIKE '%' || ? || '%') +
-            (serialNumber LIKE '%' || ? || '%') +
-            (modelNumber LIKE '%' || ? || '%') +
-            (callInPerson LIKE '%' || ? || '%') +
-            (callInEmail LIKE '%' || ? || '%') +
-            (issue LIKE '%' || ? || '%') +
-            (contactName LIKE '%' || ? || '%') +
-            (contactEmail LIKE '%' || ? || '%') +
-            (street LIKE '%' || ? || '%') +
-            (city LIKE '%' || ? || '%') +
-            (state LIKE '%' || ? || '%') +
-            (country LIKE '%' || ? || '%') +
-            (additionalCorrectiveActionText LIKE '%' || ? || '%') +
-            (relatedCaseNumber LIKE '%' || ? || '%') +
-            (title LIKE '%' || ? || '%')
-        """;
-            scoreBuilder.append(likeClause);
-            whereBuilder.append(likeClause.replaceAll("\\+\\s*", "OR").replaceAll("\\(.*\\)", ""));
+            scoreBuilder.append("""
+            (CASE WHEN workOrder LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN caseNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN serialNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN modelNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN callInPerson LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN callInEmail LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN issue LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN contactName LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN contactEmail LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN street LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN city LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN state LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN country LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN additionalCorrectiveActionText LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN relatedCaseNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN title LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN timestamp LIKE '%' || ? || '%' THEN 1 ELSE 0 END)
+        """);
+            whereBuilder.append("""
+            workOrder LIKE '%' || ? || '%' COLLATE NOCASE
+            OR caseNumber LIKE '%' || ? || '%' COLLATE NOCASE
+            OR serialNumber LIKE '%' || ? || '%' COLLATE NOCASE
+            OR modelNumber LIKE '%' || ? || '%' COLLATE NOCASE
+            OR callInPerson LIKE '%' || ? || '%' COLLATE NOCASE
+            OR callInEmail LIKE '%' || ? || '%' COLLATE NOCASE
+            OR issue LIKE '%' || ? || '%' COLLATE NOCASE
+            OR contactName LIKE '%' || ? || '%' COLLATE NOCASE
+            OR contactEmail LIKE '%' || ? || '%' COLLATE NOCASE
+            OR street LIKE '%' || ? || '%' COLLATE NOCASE
+            OR city LIKE '%' || ? || '%' COLLATE NOCASE
+            OR state LIKE '%' || ? || '%' COLLATE NOCASE
+            OR country LIKE '%' || ? || '%' COLLATE NOCASE
+            OR additionalCorrectiveActionText LIKE '%' || ? || '%' COLLATE NOCASE
+            OR relatedCaseNumber LIKE '%' || ? || '%' COLLATE NOCASE
+            OR title LIKE '%' || ? || '%' COLLATE NOCASE
+            OR timestamp LIKE '%' || ? || '%'
+        """);
         }
-        String sql = """
-        SELECT *, %s AS match_score 
-        FROM Notes 
-        %s 
-        ORDER BY match_score DESC;
-    """.formatted(scoreBuilder.toString(), whereBuilder.toString());
-        // Prepare parameters
-        List<String> params = new ArrayList<>();
+        String sql = String.format("""
+        SELECT *, (%s) AS match_score
+        FROM Notes
+        WHERE %s
+        ORDER BY match_score DESC
+    """, scoreBuilder.toString(), whereBuilder.toString());
+        // Normalize keywords
+        List<Object> params = new ArrayList<>();
         for (String keyword : keywords) {
-            String likeKeyword = "%" + keyword + "%";
-            for (int j = 0; j < 16; j++) { // 16 columns to search per keyword
+            String normalizedKeyword = NoteTools.normalizeDate(keyword);
+            String likeKeyword = "%" + normalizedKeyword + "%";
+            for (int i = 0; i < 17; i++) { // 17 columns now include `timestamp`
+                params.add(likeKeyword);
+            }
+            for (int i = 0; i < 17; i++) { // 17 columns for WHERE clause
                 params.add(likeKeyword);
             }
         }
-        // Execute query
+//        System.out.println("SQL: " + sql);
+//        System.out.println("Parameters: " + params);
         return jdbcTemplate.query(sql, params.toArray(), new NotesRowMapper());
     }
+
+
+
 }

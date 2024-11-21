@@ -16,4 +16,6 @@ public interface NoteRepository {
     void updateNote(NoteDTO note);
 
     int deleteNote(NoteDTO noteDTO);
+
+    List<NoteDTO> searchNotesWithScoring(String inputKeywords);
 }
