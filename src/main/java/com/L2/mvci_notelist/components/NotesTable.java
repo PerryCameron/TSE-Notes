@@ -144,7 +144,6 @@ public class NotesTable implements Component<Region> {
         });
         // Bind the isEmail property to the column's value
         emailCol.setCellValueFactory(cellData -> cellData.getValue().isEmailProperty());
-
         return emailCol;
     }
 

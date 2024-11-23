@@ -14,7 +14,7 @@ public class TitleBarFx {
         HBox hBox = new HBox(5);
         Label label = LabelFx.of(boxInfo[0]);
         label.setPadding(new Insets(0, 0, 0, 5));
-        HBox iconBox = HBoxFx.iconBox();
+        HBox iconBox = HBoxFx.iconBox(10);
         Image copyIcon = new Image(Objects.requireNonNull(TitleBarFx.class.getResourceAsStream("/images/copy-16.png")));
         ImageView imageViewCopy = new ImageView(copyIcon);
         Button copyButton = ButtonFx.of(imageViewCopy, "invisible-button");
@@ -31,7 +31,7 @@ public class TitleBarFx {
         HBox hBox = new HBox(5);
         Label label = LabelFx.of(boxInfo);
         label.setPadding(new Insets(0, 0, 0, 5));
-        HBox iconBox = HBoxFx.iconBox();
+        HBox iconBox = HBoxFx.iconBox(10);
         for (Button button : buttons) {
             iconBox.getChildren().add(button);
         }

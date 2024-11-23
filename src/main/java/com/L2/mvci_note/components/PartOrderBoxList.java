@@ -141,7 +141,7 @@ public class PartOrderBoxList implements Component<Region> {
     }
 
     private Node createButtons(PartOrderDTO partOrderDTO) {
-        HBox iconBox = HBoxFx.iconBox();
+        HBox iconBox = HBoxFx.iconBox(10);
         Button deleteButton = ButtonFx.utilityButton( () -> {
             noteView.getAction().accept(NoteMessage.DELETE_PART_ORDER);
             noteModel.getBoundNote().getPartOrders().remove(partOrderDTO);

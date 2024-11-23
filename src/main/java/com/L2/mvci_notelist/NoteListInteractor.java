@@ -40,7 +40,7 @@ public class NoteListInteractor implements ApplicationPaths {
     }
 
     public void updateBoundNote() {
-        if(noteListModel.getSelectedNote() != null) {
+        if (noteListModel.getSelectedNote() != null) {
             noteListModel.getBoundNote().copyFrom(noteListModel.getSelectedNote());
         }
     }
@@ -50,8 +50,8 @@ public class NoteListInteractor implements ApplicationPaths {
     }
 
     private NoteDTO findNoteFromListMatchingBoundNote() {
-        for(NoteDTO noteDTO: noteListModel.getNotes()) {
-            if(noteListModel.getBoundNote().getId() == noteDTO.getId()) {
+        for (NoteDTO noteDTO : noteListModel.getNotes()) {
+            if (noteListModel.getBoundNote().getId() == noteDTO.getId()) {
                 return noteDTO;
             }
         }
@@ -101,31 +101,34 @@ public class NoteListInteractor implements ApplicationPaths {
         int originalOffset = noteListModel.getOffset();
         int newOffset = noteListModel.getOffset() + noteListModel.getNotes().size();
         noteListModel.offsetProperty().set(newOffset);
-        List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(),noteListModel.getOffset());
-        // don't bother to add an empty list
-        if(!notes.isEmpty()) {
-            noteListModel.getNotes().addAll(notes);
-        } else {
-            noteListModel.offsetProperty().set(originalOffset);
+        try {
+            List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
+            if (!notes.isEmpty()) noteListModel.getNotes().addAll(notes);
+            else noteListModel.offsetProperty().set(originalOffset); // Restore offset
+            if (noteListModel.getNotes().size() > 100) {
+                noteListModel.getNotes().remove(0, noteListModel.getNotes().size() - 100); // Trim from top
+            }
+            updateRange();
+        } catch (Exception e) {
+            logger.error("Error fetching bottom notes: {}", e.getMessage());
+            noteListModel.offsetProperty().set(originalOffset); // Restore offset on failure
         }
-        if (noteListModel.getNotes().size() > 100) {
-            noteListModel.getNotes().remove(0, noteListModel.getNotes().size() - 100); // Remove the oldest records from the top
-        }
-        updateRange();
     }
 
     public void addToTopOfList() {
         int newOffset = Math.max(0, noteListModel.getOffset() - noteListModel.getPageSize());
         noteListModel.offsetProperty().set(newOffset);
+        try {
         List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), newOffset);
         // Don't bother to add an empty list
-        if (!notes.isEmpty()) {
+        if (!notes.isEmpty())
             noteListModel.getNotes().addAll(0, notes); // Add the new records at the top
-        }
-        if (noteListModel.getNotes().size() > 100) {
+        if (noteListModel.getNotes().size() > 100)
             noteListModel.getNotes().remove(100, noteListModel.getNotes().size()); // Remove excess records from the bottom
-        }
         updateRange();
+        } catch (Exception e) {
+            logger.error("Error fetching top notes: {}", e.getMessage());
+        }
     }
 
     public void updateRange() {
@@ -134,7 +137,7 @@ public class NoteListInteractor implements ApplicationPaths {
 
     public void searchParameters() {
         noteListModel.getNotes().clear();
-        if(noteListModel.getSearchParameters().isEmpty()) {
+        if (noteListModel.getSearchParameters().isEmpty()) {
             System.out.println("search bar is empty");
             List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
             noteListModel.getNotes().addAll(notes);

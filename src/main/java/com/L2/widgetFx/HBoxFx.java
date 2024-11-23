@@ -119,8 +119,8 @@ public class HBoxFx {
         return hBox;
     }
 
-    public static HBox iconBox() {
-        HBox hBox = new HBox(10);
+    public static HBox iconBox(double spacing) {
+        HBox hBox = new HBox(spacing);
         hBox.setAlignment(Pos.CENTER_RIGHT);
         hBox.setPadding(new Insets(0, 10, 0, 0));
         HBox.setHgrow(hBox, Priority.ALWAYS);

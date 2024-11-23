@@ -2,6 +2,7 @@ package com.L2.mvci_notelist;
 
 import com.L2.dto.NoteDTO;
 import com.L2.mvci_notelist.components.NotesTable;
+import com.L2.widgetFx.HBoxFx;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.TitleBarFx;
 import javafx.animation.PauseTransition;
@@ -64,8 +65,14 @@ public class NoteListView implements Builder<Region> {
                 }
         );
 
-        hBox.getChildren().addAll(textField, rangeLabel(), range(), numberOfRecordsLabel(), numberOfRecords());
+        hBox.getChildren().addAll(textField, rangeLabel(), range(), recordBox());
         return vBox;
+    }
+
+    private Node recordBox() {
+        HBox hBox = HBoxFx.iconBox(5);
+        hBox.getChildren().addAll(numberOfRecordsLabel(), numberOfRecords());
+        return hBox;
     }
 
     private Node numberOfRecordsLabel() {
