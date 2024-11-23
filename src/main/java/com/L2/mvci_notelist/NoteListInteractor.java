@@ -3,9 +3,11 @@ package com.L2.mvci_notelist;
 import com.L2.dto.NoteDTO;
 import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.static_tools.ApplicationPaths;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,8 +105,16 @@ public class NoteListInteractor implements ApplicationPaths {
         noteListModel.offsetProperty().set(newOffset);
         try {
             if (!noteRepo.isOldest(noteListModel.getNotes().getLast())) {
+                System.out.println("page size: " + noteListModel.getPageSize() + " offset: " + noteListModel.getOffset());
                 List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
-                if (!notes.isEmpty()) noteListModel.getNotes().addAll(notes);
+                if (!notes.isEmpty()) {
+                    noteListModel.getNotes().addAll(notes);
+                    // this helped a lot by moving the scroll bar to the middle
+                    ScrollBar verticalScrollBar = (ScrollBar) noteListModel.getNoteTable().lookup(".scroll-bar");
+                    if (verticalScrollBar != null) {
+                        Platform.runLater(() -> verticalScrollBar.setValue(0.5));
+                    }
+                }
                 else noteListModel.offsetProperty().set(originalOffset); // Restore offset
                 if (noteListModel.getNotes().size() > 100) {
                     noteListModel.getNotes().remove(0, noteListModel.getNotes().size() - 100); // Trim from top
@@ -126,8 +136,14 @@ public class NoteListInteractor implements ApplicationPaths {
             if (!noteRepo.isNewest(noteListModel.getNotes().getFirst())) {
                 List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), newOffset);
                 // Don't bother to add an empty list
-                if (!notes.isEmpty())
+                if (!notes.isEmpty()) {
                     noteListModel.getNotes().addAll(0, notes); // Add the new records at the top
+                    // this helped a lot by moving the scroll bar to the middle
+                    ScrollBar verticalScrollBar = (ScrollBar) noteListModel.getNoteTable().lookup(".scroll-bar");
+                    if (verticalScrollBar != null) {
+                        Platform.runLater(() -> verticalScrollBar.setValue(0.5));
+                    }
+                }
                 if (noteListModel.getNotes().size() > 100)
                     noteListModel.getNotes().remove(100, noteListModel.getNotes().size()); // Remove excess records from the bottom
                 updateRange();

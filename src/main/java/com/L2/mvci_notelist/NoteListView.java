@@ -39,7 +39,7 @@ public class NoteListView implements Builder<Region> {
         root.getChildren().addAll(navigation(), notesTable.build());
         noteListModel.refreshTableProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                getNotesTable().refreshFields();
+                notesTable.refreshFields();
             }
         }) ;
         action.accept(NoteListMessage.UPDATE_RANGE_LABEL);
@@ -113,9 +113,5 @@ public class NoteListView implements Builder<Region> {
 
     public Consumer<NoteListMessage> getAction() {
         return action;
-    }
-
-    public NotesTable getNotesTable() {
-        return notesTable;
     }
 }

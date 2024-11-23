@@ -6,6 +6,7 @@ import com.L2.mvci_notelist.NoteListMessage;
 import com.L2.mvci_notelist.NoteListView;
 import com.L2.widgetFx.TableColumnFx;
 import com.L2.widgetFx.TableViewFx;
+import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -56,25 +57,67 @@ public class NotesTable implements Component<Region> {
         return tableView;
     }
 
+
     private void addScrollListener(TableView<?> tableView) {
         tableView.skinProperty().addListener((obs, oldSkin, newSkin) -> {
             if (newSkin != null) {
-                // Access the ScrollBar
-                ScrollBar verticalScrollBar = (ScrollBar) tableView.lookup(".scroll-bar:vertical");
-                if (verticalScrollBar != null) {
-                    // Add listener to the scroll bar's value property
-                    verticalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue.doubleValue() == 0.0) {
+                // Delay the lookup slightly to ensure the ScrollBar is available
+                Platform.runLater(() -> {
+                    ScrollBar verticalScrollBar = (ScrollBar) tableView.lookup(".scroll-bar:vertical");
+                    if (verticalScrollBar != null) {
+                        setupListeners(tableView, verticalScrollBar);
+                    }
+                });
+            }
+        });
+    }
+
+    private boolean actionInProgress = false;
+
+    private void setupListeners(TableView<?> tableView, ScrollBar verticalScrollBar) {
+        tableView.setOnScroll(event -> {
+            if (!actionInProgress) {
+                if (event.getDeltaY() > 0 && verticalScrollBar.getValue() == 0.0) {
+                    actionInProgress = true;
+                    noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
+                    resetActionFlag();
+                } else if (event.getDeltaY() < 0 && verticalScrollBar.getValue() == 1.0) {
+                    actionInProgress = true;
+                    noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
+                    resetActionFlag();
+                }
+            }
+        });
+
+
+        tableView.setOnKeyPressed(event -> {
+            if (!actionInProgress) {
+                switch (event.getCode()) {
+                    case UP:
+                        if (verticalScrollBar.getValue() == 0.0) {
+                            actionInProgress = true;
                             noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
-                        } else if (newValue.doubleValue() == 1.0) {
-                            noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
+                            resetActionFlag();
                         }
-                    });
+                        break;
+                    case DOWN:
+                        if (verticalScrollBar.getValue() == 1.0) {
+                            actionInProgress = true;
+                            noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
+                            resetActionFlag();
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         });
     }
 
+
+    private void resetActionFlag() {
+        Platform.runLater(() -> actionInProgress = false);
+    }
 
     private TableColumn<NoteDTO, String> col0() {
         TableColumn<NoteDTO, String> col = TableColumnFx.stringTableColumn(NoteDTO::formattedTimestampProperty, "Date/Time");
@@ -108,7 +151,7 @@ public class NotesTable implements Component<Region> {
         col.setStyle("-fx-alignment: center-left");
         col.setSortable(false);
         col.setOnEditCommit(event -> {
-            if(event.getNewValue() != null) {
+            if (event.getNewValue() != null) {
                 noteListView.getNoteListModel().getBoundNote().setTitle(event.getNewValue());
                 noteListView.getAction().accept(NoteListMessage.SAVE_OR_UPDATE_NOTE);
             }
