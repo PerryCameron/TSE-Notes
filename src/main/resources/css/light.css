@@ -222,3 +222,7 @@
     -fx-opacity: 1.0;          /* Ensures text is fully visible */
     -fx-label-padding: 0;      /* Avoids padding issues */
 }
+
+.range-answer {
+    -fx-font-size: 16 !important;
+}

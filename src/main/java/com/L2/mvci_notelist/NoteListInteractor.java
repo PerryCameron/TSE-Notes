@@ -102,13 +102,17 @@ public class NoteListInteractor implements ApplicationPaths {
         int newOffset = noteListModel.getOffset() + noteListModel.getNotes().size();
         noteListModel.offsetProperty().set(newOffset);
         try {
-            List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
-            if (!notes.isEmpty()) noteListModel.getNotes().addAll(notes);
-            else noteListModel.offsetProperty().set(originalOffset); // Restore offset
-            if (noteListModel.getNotes().size() > 100) {
-                noteListModel.getNotes().remove(0, noteListModel.getNotes().size() - 100); // Trim from top
+            if (!noteRepo.isOldest(noteListModel.getNotes().getLast())) {
+                List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
+                if (!notes.isEmpty()) noteListModel.getNotes().addAll(notes);
+                else noteListModel.offsetProperty().set(originalOffset); // Restore offset
+                if (noteListModel.getNotes().size() > 100) {
+                    noteListModel.getNotes().remove(0, noteListModel.getNotes().size() - 100); // Trim from top
+                }
+                updateRange();
+            } else {
+                System.out.println("no older notes");
             }
-            updateRange();
         } catch (Exception e) {
             logger.error("Error fetching bottom notes: {}", e.getMessage());
             noteListModel.offsetProperty().set(originalOffset); // Restore offset on failure
@@ -119,13 +123,17 @@ public class NoteListInteractor implements ApplicationPaths {
         int newOffset = Math.max(0, noteListModel.getOffset() - noteListModel.getPageSize());
         noteListModel.offsetProperty().set(newOffset);
         try {
-        List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), newOffset);
-        // Don't bother to add an empty list
-        if (!notes.isEmpty())
-            noteListModel.getNotes().addAll(0, notes); // Add the new records at the top
-        if (noteListModel.getNotes().size() > 100)
-            noteListModel.getNotes().remove(100, noteListModel.getNotes().size()); // Remove excess records from the bottom
-        updateRange();
+            if (!noteRepo.isNewest(noteListModel.getNotes().getFirst())) {
+                List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), newOffset);
+                // Don't bother to add an empty list
+                if (!notes.isEmpty())
+                    noteListModel.getNotes().addAll(0, notes); // Add the new records at the top
+                if (noteListModel.getNotes().size() > 100)
+                    noteListModel.getNotes().remove(100, noteListModel.getNotes().size()); // Remove excess records from the bottom
+                updateRange();
+            } else {
+                System.out.println("No newer notes");
+            }
         } catch (Exception e) {
             logger.error("Error fetching top notes: {}", e.getMessage());
         }
@@ -138,11 +146,9 @@ public class NoteListInteractor implements ApplicationPaths {
     public void searchParameters() {
         noteListModel.getNotes().clear();
         if (noteListModel.getSearchParameters().isEmpty()) {
-            System.out.println("search bar is empty");
             List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
             noteListModel.getNotes().addAll(notes);
         } else {
-            System.out.println("searching " + noteListModel.getSearchParameters());
             List<NoteDTO> notes = noteRepo.searchNotesWithScoring(noteListModel.getSearchParameters());
             noteListModel.getNotes().addAll(notes);
         }
@@ -151,5 +157,6 @@ public class NoteListInteractor implements ApplicationPaths {
     // shouldn't need this but unfortunately we do
     public void updateTable() {
         noteListModel.getNoteTable().refresh();
+        System.out.println("TableView refresh");
     }
 }

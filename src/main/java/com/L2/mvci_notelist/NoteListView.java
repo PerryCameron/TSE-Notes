@@ -36,7 +36,7 @@ public class NoteListView implements Builder<Region> {
     public Region build() {
         VBox root = new VBox(10);
         root.setPadding(new Insets(10, 10, 0, 10));
-        root.getChildren().addAll(searchBox(), notesTable.build());
+        root.getChildren().addAll(navigation(), notesTable.build());
         noteListModel.refreshTableProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 getNotesTable().refreshFields();
@@ -46,7 +46,7 @@ public class NoteListView implements Builder<Region> {
         return root;
     }
 
-    private Node searchBox() {
+    private Node navigation() {
         VBox vBox = new VBox();
         HBox hBox = new HBox(10);
         vBox.getStyleClass().add("decorative-hbox");
@@ -54,19 +54,21 @@ public class NoteListView implements Builder<Region> {
         vBox.getChildren().addAll(TitleBarFx.of("Find and Navigate", buttons), hBox);
         hBox.setPadding(new Insets(5, 0, 5, 5));
         hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.getChildren().addAll(searchBox(), rangeLabel(), range(), recordBox());
+        return vBox;
+    }
+
+    private Node searchBox() {
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
         TextField textField = TextFieldFx.of(200, "Search");
         textField.textProperty().bindBidirectional(noteListModel.searchParametersProperty());
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        // this is awesome, stole from stackoverflow.com
         textField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     pause.setOnFinished(event -> action.accept(NoteListMessage.SEARCH));
                     pause.playFromStart();
                 }
         );
-
-        hBox.getChildren().addAll(textField, rangeLabel(), range(), recordBox());
-        return vBox;
+        return textField;
     }
 
     private Node recordBox() {
@@ -92,6 +94,7 @@ public class NoteListView implements Builder<Region> {
     private Node range() {
         Label label = new Label("New Label");
         label.textProperty().bind(noteListModel.recordNumbersProperty());
+        label.getStyleClass().add("range-answer");
         return label;
     }
 
