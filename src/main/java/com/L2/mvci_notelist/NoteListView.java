@@ -11,7 +11,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -19,13 +18,18 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;
 
 public class NoteListView implements Builder<Region> {
+
     private final NoteListModel noteListModel;
     private final NotesTable notesTable;
     Consumer<NoteListMessage> action;
+    private static final Logger logger = LoggerFactory.getLogger(NoteListView.class);
+
     public NoteListView(NoteListModel noteListModel, Consumer<NoteListMessage> m) {
         this.noteListModel = noteListModel;
         this.notesTable = new NotesTable(this);
@@ -64,6 +68,7 @@ public class NoteListView implements Builder<Region> {
         textField.textProperty().bindBidirectional(noteListModel.searchParametersProperty());
         textField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
+                    logger.info("Search Made: {}", newValue);
                     pause.setOnFinished(event -> action.accept(NoteListMessage.SEARCH));
                     pause.playFromStart();
                 }

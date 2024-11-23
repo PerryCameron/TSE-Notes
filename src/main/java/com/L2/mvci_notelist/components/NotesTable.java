@@ -76,22 +76,25 @@ public class NotesTable implements Component<Region> {
 
     private void setupListeners(TableView<?> tableView, ScrollBar verticalScrollBar) {
         tableView.setOnScroll(event -> {
-            if (!actionInProgress) {
-                if (event.getDeltaY() > 0 && verticalScrollBar.getValue() == 0.0) {
-                    actionInProgress = true;
-                    noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
-                    resetActionFlag();
-                } else if (event.getDeltaY() < 0 && verticalScrollBar.getValue() == 1.0) {
-                    actionInProgress = true;
-                    noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
-                    resetActionFlag();
-                }
-            }
+            // don't do anything if there is an active search
+            if (!actionInProgress && !noteListView.getNoteListModel().isActiveSearch()) {
+                // if we have an active search do not do this
+                    if (event.getDeltaY() > 0 && verticalScrollBar.getValue() == 0.0) {
+                        actionInProgress = true;
+                        noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
+                        resetActionFlag();
+                    } else if (event.getDeltaY() < 0 && verticalScrollBar.getValue() == 1.0) {
+                        actionInProgress = true;
+                        noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
+                        resetActionFlag();
+                    }
+            } else System.out.println("No action taken");
         });
 
 
         tableView.setOnKeyPressed(event -> {
-            if (!actionInProgress) {
+            // don't do anything if there is an active search
+            if (!actionInProgress && !noteListView.getNoteListModel().isActiveSearch()) {
                 switch (event.getCode()) {
                     case UP:
                         if (verticalScrollBar.getValue() == 0.0) {
@@ -110,7 +113,7 @@ public class NotesTable implements Component<Region> {
                     default:
                         break;
                 }
-            }
+            } else System.out.println("No action taken");
         });
     }
 

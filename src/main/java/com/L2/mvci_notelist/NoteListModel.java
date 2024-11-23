@@ -3,25 +3,37 @@ package com.L2.mvci_notelist;
 import com.L2.dto.NoteDTO;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 
 public class NoteListModel {
     // reference to mainModel notes
     private ObservableList<NoteDTO> notes;
     // this is the note that is selected in the TableView
-    private ObjectProperty<NoteDTO> selectedNote = new SimpleObjectProperty<>();
+    private final ObjectProperty<NoteDTO> selectedNote = new SimpleObjectProperty<>();
     // reference to mainModel boundNote;
     protected ObjectProperty<NoteDTO> boundNote;
     // reference to noteModel --- allow this many records to be displayed
     private IntegerProperty pageSize = null;
     // reference to noteModel --- skip the first N records
     private IntegerProperty offset = null;
-    private ObjectProperty<TableView<NoteDTO>> noteTable = new SimpleObjectProperty<>();
-    private BooleanProperty refreshTable = new SimpleBooleanProperty(false);
-    private StringProperty recordNumbers = new SimpleStringProperty();
-    private StringProperty searchParameters = new SimpleStringProperty();
+    private final ObjectProperty<TableView<NoteDTO>> noteTable = new SimpleObjectProperty<>();
+    private final BooleanProperty refreshTable = new SimpleBooleanProperty(false);
+    private final StringProperty recordNumbers = new SimpleStringProperty();
+    private final StringProperty searchParameters = new SimpleStringProperty();
+    private final BooleanProperty activeSearch = new SimpleBooleanProperty(false);
 
+
+    public boolean isActiveSearch() {
+        return activeSearch.get();
+    }
+
+    public BooleanProperty activeSearchProperty() {
+        return activeSearch;
+    }
+
+    public void setActiveSearch(boolean activeSearch) {
+        this.activeSearch.set(activeSearch);
+    }
 
     public String getSearchParameters() {
         return searchParameters.get();
