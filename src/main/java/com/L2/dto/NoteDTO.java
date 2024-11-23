@@ -87,7 +87,7 @@ public class NoteDTO {
         this.isEmail.set(isEmail);
         this.additionalCorrectiveActionText.set("");
         this.relatedCaseNumber.set("");
-        System.out.print("NoteDTO created (2 params), timeStamp: " + this.timestamp.get() + " Id: " );
+//        System.out.print("NoteDTO created (2 params), timeStamp: " + this.timestamp.get() + " Id: " );
     }
 
     public NoteDTO(Integer id, LocalDateTime timestamp, String workOrder, String caseNumber, String serialNumber,
@@ -169,8 +169,8 @@ public class NoteDTO {
         additionalCorrectiveActionText.set(noteDTO.getAdditionalCorrectiveActionText());
         relatedCaseNumber.set(noteDTO.getRelatedCaseNumber());
         id.set(noteDTO.getId()); // since this is listened to, it must copy last
-        System.out.println("NoteDTO copied, timeStamp: " + this.timestamp.get() + " id: " + this.id.get());
-        System.out.println();
+//        System.out.println("NoteDTO copied, timeStamp: " + this.timestamp.get() + " id: " + this.id.get());
+//        System.out.println();
     }
 
     public void clear() {

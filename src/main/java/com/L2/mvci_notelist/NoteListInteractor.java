@@ -105,7 +105,7 @@ public class NoteListInteractor implements ApplicationPaths {
         noteListModel.offsetProperty().set(newOffset);
         try {
             if (!noteRepo.isOldest(noteListModel.getNotes().getLast())) {
-                System.out.println("page size: " + noteListModel.getPageSize() + " offset: " + noteListModel.getOffset());
+//                System.out.println("page size: " + noteListModel.getPageSize() + " offset: " + noteListModel.getOffset());
                 List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
                 if (!notes.isEmpty()) {
                     noteListModel.getNotes().addAll(notes);
@@ -120,9 +120,10 @@ public class NoteListInteractor implements ApplicationPaths {
                     noteListModel.getNotes().remove(0, noteListModel.getNotes().size() - 100); // Trim from top
                 }
                 updateRange();
-            } else {
-                System.out.println("no older notes");
             }
+//            else {
+//                System.out.println("no older notes");
+//            }
         } catch (Exception e) {
             logger.error("Error fetching bottom notes: {}", e.getMessage());
             noteListModel.offsetProperty().set(originalOffset); // Restore offset on failure
@@ -147,9 +148,10 @@ public class NoteListInteractor implements ApplicationPaths {
                 if (noteListModel.getNotes().size() > 100)
                     noteListModel.getNotes().remove(100, noteListModel.getNotes().size()); // Remove excess records from the bottom
                 updateRange();
-            } else {
-                System.out.println("No newer notes");
             }
+//            else {
+//                System.out.println("No newer notes");
+//            }
         } catch (Exception e) {
             logger.error("Error fetching top notes: {}", e.getMessage());
         }
@@ -173,6 +175,5 @@ public class NoteListInteractor implements ApplicationPaths {
     // shouldn't need this but unfortunately we do
     public void updateTable() {
         noteListModel.getNoteTable().refresh();
-        System.out.println("TableView refresh");
     }
 }

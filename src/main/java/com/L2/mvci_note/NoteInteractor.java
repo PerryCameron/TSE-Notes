@@ -107,13 +107,13 @@ public class NoteInteractor {
     }
 
     public void copyLoggedCall() {
-        System.out.println("NoteInteractor::copyLoggedCall");
+//        System.out.println("NoteInteractor::copyLoggedCall");
         ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), loggedCallToPlainText());
     }
 
     public String copyAllPartOrdersToPlainText() {
         if (noteModel.getBoundNote().getPartOrders().size() > 1) {
-            System.out.println("there is more than one part order");
+//            System.out.println("there is more than one part order");
             StringBuilder builder = new StringBuilder();
             for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
                 noteModel.setSelectedPartOrder(partOrderDTO);
@@ -121,14 +121,15 @@ public class NoteInteractor {
             }
             return builder.toString();
         } else if (noteModel.getBoundNote().getPartOrders().size() == 1) {
-            System.out.println("there is single part order");
+//            System.out.println("there is single part order");
             return buildPartOrderToPlainText();
-        } else System.out.println("There are no part orders");
+        }
+//        else System.out.println("There are no part orders");
         return "";
     }
 
     public String copyAllPartOrdersToHTML(boolean includePOHeader) {
-        System.out.println("copyAllPartOrdersToHTML()");
+//        System.out.println("copyAllPartOrdersToHTML()");
         if (noteModel.getBoundNote().getPartOrders().size() > 1) {
             StringBuilder builder = new StringBuilder();
             for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
@@ -427,7 +428,7 @@ public class NoteInteractor {
         saveOrUpdateNote(); // I feel like this can go
         NoteDTO noteDTO = new NoteDTO(0, false);
         noteDTO.setId(noteRepo.insertNote(noteDTO));
-        System.out.println(noteDTO.getId());
+//        System.out.println(noteDTO.getId());
         noteModel.getNotes().add(noteDTO);
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         noteModel.getBoundNote().setId(noteDTO.getId());
@@ -450,7 +451,7 @@ public class NoteInteractor {
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         // let's make the bound note copy our new note
         noteModel.getBoundNote().copyFrom(noteDTO);
-        System.out.println("Part Orders " + noteModel.getBoundNote().getPartOrders().size());
+//        System.out.println("Part Orders " + noteModel.getBoundNote().getPartOrders().size());
         noteModel.getBoundNote().getPartOrders().clear();
         noteModel.refreshBoundNote();
     }
@@ -525,7 +526,7 @@ public class NoteInteractor {
     public void deletePart() {
         PartDTO partDTO = noteModel.getSelectedPart();
         PartOrderDTO partOrderDTO = noteModel.getSelectedPartOrder();
-        System.out.println("Part to be deleted: " + partDTO.getId());
+//        System.out.println("Part to be deleted: " + partDTO.getId());
         partOrderRepo.deletePart(partDTO);
         noteModel.setSelectedPart(null);
         partOrderDTO.getParts().remove(partDTO);
@@ -561,7 +562,7 @@ public class NoteInteractor {
 
     public void deleteNote() {
         int id = noteModel.getBoundNote().getId();
-        System.out.println("deleting note: " + id);
+//        System.out.println("deleting note: " + id);
         // deletedNoteDTO will be the reference to the correct NoteDTO in the list
         NoteDTO deletedNoteDTO = null;
         for (NoteDTO noteDTO : noteModel.getNotes()) {

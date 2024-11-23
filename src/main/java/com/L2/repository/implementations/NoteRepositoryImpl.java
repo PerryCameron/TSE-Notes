@@ -65,7 +65,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            System.out.println("TimeStamp: " + note.getTimestamp().toString());
+//            System.out.println("TimeStamp: " + note.getTimestamp().toString());
             ps.setString(1, note.getTimestamp().toString());
             ps.setString(2, note.getWorkOrder());
             ps.setString(3, note.getCaseNumber());

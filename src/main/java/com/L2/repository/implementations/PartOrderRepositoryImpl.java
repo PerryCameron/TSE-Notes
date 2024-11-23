@@ -119,11 +119,11 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
         return jdbcTemplate.query(sql, new PartRowMapper(), partOrderDTO.getId());
     }
 
-    public void testDeletePart(PartDTO partDTO) {
-        System.out.println("PartOrderRepo: deleting part: " + partDTO.getId());
-    }
-
-    public void testDeletePartOrder(PartOrderDTO partOrderDTO) {
-        System.out.println("PartOrderRepo: deleting part order: " + partOrderDTO.getId());
-    }
+//    public void testDeletePart(PartDTO partDTO) {
+//        System.out.println("PartOrderRepo: deleting part: " + partDTO.getId());
+//    }
+//
+//    public void testDeletePartOrder(PartOrderDTO partOrderDTO) {
+//        System.out.println("PartOrderRepo: deleting part order: " + partOrderDTO.getId());
+//    }
 }
