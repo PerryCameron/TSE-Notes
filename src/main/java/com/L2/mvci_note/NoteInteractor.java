@@ -560,7 +560,6 @@ public class NoteInteractor {
     }
 
     public void deleteNote() {
-
         int id = noteModel.getBoundNote().getId();
         System.out.println("deleting note: " + id);
         // deletedNoteDTO will be the reference to the correct NoteDTO in the list

@@ -63,7 +63,10 @@ public class NoteController extends Controller<NoteMessage> {
             case REFRESH_PART_ORDERS -> noteInteractor.refreshPartOrders();
             case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT -> mainController.action(MainMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
             case UPDATE_NOTE_TAB_NAME -> mainController.action(MainMessage.UPDATE_NOTE_TAB_NAME);
-            case DELETE_NOTE -> noteInteractor.deleteNote();
+            case DELETE_NOTE -> {
+                noteInteractor.deleteNote();
+                mainController.action(MainMessage.UPDATE_TABLE);
+            }
             case UPDATE_STATUSBAR_WITH_STRING ->  noteInteractor.setStatusLabelWithNoteInformation();
             case CLONE_NOTE -> noteInteractor.cloneNote();
             case SELECT_NOTE_TAB -> mainController.action(MainMessage.SELECT_NOTE_TAB);

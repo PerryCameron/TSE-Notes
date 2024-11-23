@@ -147,4 +147,9 @@ public class NoteListInteractor implements ApplicationPaths {
             noteListModel.getNotes().addAll(notes);
         }
     }
+
+    // shouldn't need this but unfortunately we do
+    public void updateTable() {
+        noteListModel.getNoteTable().refresh();
+    }
 }
