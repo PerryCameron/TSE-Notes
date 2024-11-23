@@ -228,6 +228,20 @@ public class NoteDTO {
         return zonedDateTime.format(formatter);
     }
 
+    public String prettyDate() {
+        LocalDateTime dateTime = timestampProperty().get();
+        if (dateTime == null) {
+            return "";
+        }
+        // Use a formatter that formats the date in a pretty style
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+        // Assuming you want to format it with the system's default time zone
+        ZoneId zone = ZoneId.systemDefault();
+        ZonedDateTime zonedDateTime = dateTime.atZone(zone);
+        // Format the date and time
+        return zonedDateTime.format(formatter);
+    }
+
     /////////////////////////////////////////////////////////////
     // this is how it is displayed in noteListTableView
     public StringProperty formattedTimestampProperty() {

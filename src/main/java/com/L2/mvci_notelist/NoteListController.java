@@ -50,6 +50,7 @@ public class NoteListController extends Controller<NoteListMessage> {
             case ADD_TO_BOTTOM_OF_LIST -> noteListInteractor.addToBottomOfList();
             case ADD_TO_TOP_OF_LIST -> noteListInteractor.addToTopOfList();
             case SEARCH -> noteListInteractor.searchParameters();
+            case UPDATE_RANGE_LABEL -> noteListInteractor.updateRange();
         }
     }
 }

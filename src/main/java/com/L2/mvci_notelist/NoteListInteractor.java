@@ -111,7 +111,7 @@ public class NoteListInteractor implements ApplicationPaths {
         if (noteListModel.getNotes().size() > 100) {
             noteListModel.getNotes().remove(0, noteListModel.getNotes().size() - 100); // Remove the oldest records from the top
         }
-        noteListModel.setRecordNumbers("Displaying notes " + noteListModel.getNotes().getFirst().getId() + " to " + noteListModel.getNotes().getLast().getId());
+        updateRange();
     }
 
     public void addToTopOfList() {
@@ -125,7 +125,11 @@ public class NoteListInteractor implements ApplicationPaths {
         if (noteListModel.getNotes().size() > 100) {
             noteListModel.getNotes().remove(100, noteListModel.getNotes().size()); // Remove excess records from the bottom
         }
-        noteListModel.setRecordNumbers("Displaying notes " + noteListModel.getNotes().getFirst().getId() + " to " + noteListModel.getNotes().getLast().getId());
+        updateRange();
+    }
+
+    public void updateRange() {
+        noteListModel.setRecordNumbers(noteListModel.getNotes().getLast().prettyDate() + " - " + noteListModel.getNotes().getFirst().prettyDate());
     }
 
     public void searchParameters() {

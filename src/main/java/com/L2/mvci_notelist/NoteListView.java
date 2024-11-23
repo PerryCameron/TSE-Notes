@@ -41,6 +41,7 @@ public class NoteListView implements Builder<Region> {
                 getNotesTable().refreshFields();
             }
         }) ;
+        action.accept(NoteListMessage.UPDATE_RANGE_LABEL);
         return root;
     }
 
@@ -62,19 +63,38 @@ public class NoteListView implements Builder<Region> {
                     pause.playFromStart();
                 }
         );
-        Label recordLabel = new Label("New Label");
-        recordLabel.textProperty().bind(noteListModel.recordNumbersProperty());
-        Label numberOfRecordsLabel = new Label("Displayed Records:");
-        hBox.getChildren().addAll(textField, numberOfRecordsLabel, numberOfRecords(), recordLabel);
+
+        hBox.getChildren().addAll(textField, rangeLabel(), range(), numberOfRecordsLabel(), numberOfRecords());
         return vBox;
     }
 
+    private Node numberOfRecordsLabel() {
+        Label label = new Label("Records:");
+        label.setPadding(new Insets(0, 0, 0, 10));
+        label.getStyleClass().add("prominent-label");
+        return label;
+    }
+
+    private Node rangeLabel() {
+        Label label = new Label("Range:");
+        label.setPadding(new Insets(0, 0, 0, 10));
+        label.getStyleClass().add("prominent-label");
+        return label;
+    }
+
+    private Node range() {
+        Label label = new Label("New Label");
+        label.textProperty().bind(noteListModel.recordNumbersProperty());
+        return label;
+    }
+
     private Node numberOfRecords() {
-        Label numberOfRecords = new Label(String.valueOf(noteListModel.getNotes().size()));
+        Label label = new Label(String.valueOf(noteListModel.getNotes().size()));
+        label.getStyleClass().add("prominent-answer");
         noteListModel.getNotes().addListener((ListChangeListener<NoteDTO>) change -> {
-            numberOfRecords.setText(String.valueOf(noteListModel.getNotes().size()));
+            label.setText(String.valueOf(noteListModel.getNotes().size()));
         });
-        return numberOfRecords;
+        return label;
     }
 
     public NoteListModel getNoteListModel() {
