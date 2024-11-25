@@ -39,7 +39,7 @@ public class FinishBox implements Component<Region> {
         hBox.setPadding(new Insets(0, 5, 5, 5));
         Button[] buttons = new Button[]{};
         hBox.getChildren().addAll(correctiveText(), buttonBox());
-        root.getChildren().addAll(TitleBarFx.of("Final", buttons), hBox);
+        root.getChildren().addAll(TitleBarFx.of("Answer To Customer Notes", buttons), hBox);
         refreshFields();
         root.setOnMouseExited(event -> {
             noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
