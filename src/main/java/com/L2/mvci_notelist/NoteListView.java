@@ -5,7 +5,9 @@ import com.L2.mvci_notelist.components.NotesTable;
 import com.L2.widgetFx.HBoxFx;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.TitleBarFx;
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -63,16 +65,18 @@ public class NoteListView implements Builder<Region> {
     }
 
     private Node searchBox() {
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        Timeline debounce = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            action.accept(NoteListMessage.SEARCH);
+        }));
+        debounce.setCycleCount(1); // Ensures it only runs once after inactivity
         TextField textField = TextFieldFx.of(200, "Search");
         textField.textProperty().bindBidirectional(noteListModel.searchParametersProperty());
-        textField.textProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    logger.info("Search Made: {}", newValue);
-                    pause.setOnFinished(event -> action.accept(NoteListMessage.SEARCH));
-                    pause.playFromStart();
-                }
-        );
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            logger.info("Search Made: {}", newValue);
+            debounce.stop(); // Reset the timer
+            debounce.playFromStart(); // Start the timer
+        });
+
         return textField;
     }
 
