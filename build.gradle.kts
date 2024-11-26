@@ -71,9 +71,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-
-
-
 tasks.withType<JavaCompile> {
     options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:unchecked"))
 }
@@ -96,6 +93,43 @@ tasks.jar {
         attributes["Main-Class"] = "com.L2.BaseApplication"
     }
 }
+
+//tasks.register<Exec>("generateRuntime") {
+//    group = "build"
+//    description = "Generates a custom Java runtime image using jlink"
+//    // Run the jlink command
+//    commandLine(
+//        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/bin/jlink",
+//        "--module-path", "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jmods",
+//        "--add-modules", "java.base,java.desktop,java.prefs,java.sql.rowset,javafx.controls,jdk.unsupported",
+//        "--output", "build/runtime",
+//        "--strip-debug",
+//        "--compress", "2",
+//        "--no-header-files",
+//        "--no-man-pages"
+//    )
+//}
+
+tasks.register<Exec>("generateRuntime") {
+    group = "build"
+    description = "Generates a custom Java runtime image using jlink"
+
+    doFirst {
+        delete(file("build/runtime"))
+    }
+
+    commandLine(
+        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin/jlink.exe",  // Updated path
+        "--module-path", "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/jmods",
+        "--add-modules", "java.base,java.desktop,java.prefs,java.sql.rowset,javafx.controls,jdk.unsupported",
+        "--output", "build/runtime",
+        "--strip-debug",
+        "--compress", "2",
+        "--no-header-files",
+        "--no-man-pages"
+    )
+}
+
 
 // jpackage task to create a self-contained application with a bundled JRE
 tasks.register<Exec>("packageApp") {
@@ -177,6 +211,11 @@ tasks.processResources {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+// Ensure generateRuntime runs before packageApp
+tasks.named("packageApp") {
+    dependsOn("generateRuntime")
 }
 
 // so after running
