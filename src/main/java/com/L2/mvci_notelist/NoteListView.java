@@ -6,7 +6,6 @@ import com.L2.widgetFx.HBoxFx;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.TitleBarFx;
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
@@ -65,9 +64,7 @@ public class NoteListView implements Builder<Region> {
     }
 
     private Node searchBox() {
-        Timeline debounce = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            action.accept(NoteListMessage.SEARCH);
-        }));
+        Timeline debounce = new Timeline(new KeyFrame(Duration.seconds(1), event -> action.accept(NoteListMessage.SEARCH)));
         debounce.setCycleCount(1); // Ensures it only runs once after inactivity
         TextField textField = TextFieldFx.of(200, "Search");
         textField.textProperty().bindBidirectional(noteListModel.searchParametersProperty());
@@ -110,9 +107,7 @@ public class NoteListView implements Builder<Region> {
     private Node numberOfRecords() {
         Label label = new Label(String.valueOf(noteListModel.getNotes().size()));
         label.getStyleClass().add("prominent-answer");
-        noteListModel.getNotes().addListener((ListChangeListener<NoteDTO>) change -> {
-            label.setText(String.valueOf(noteListModel.getNotes().size()));
-        });
+        noteListModel.getNotes().addListener((ListChangeListener<NoteDTO>) change -> label.setText(String.valueOf(noteListModel.getNotes().size())));
         return label;
     }
 

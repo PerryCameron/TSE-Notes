@@ -18,4 +18,5 @@ $env:Path = "C:/Users/sesa91827/.jdks/jdk-11.0.24-full/bin;" + $env:Path
 PS C:\Users\sesa91827\IdeaProjects\GlobalSpares> ./gradlew clean
 PS C:\Users\sesa91827\IdeaProjects\GlobalSpares> ./gradlew build
 PS C:\Users\sesa91827\IdeaProjects\GlobalSpares> ./gradlew shadowJar
+PS C:\Users\sesa91827\IdeaProjects\GlobalSpares> ./gradlew generateRuntime
 PS C:\Users\sesa91827\IdeaProjects\GlobalSpares> ./gradlew packageApp
