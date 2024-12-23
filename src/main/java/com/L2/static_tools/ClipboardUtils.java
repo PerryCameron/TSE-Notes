@@ -39,8 +39,76 @@ public class ClipboardUtils {
         int RegisterClipboardFormat(String format);
     }
 
+    // this is original
+//    public static void copyHtmlToClipboard(String html, String plainText) {
+//        // HTML clipboard format with correct lengths
+//        String htmlHeader = "Version:0.9\r\n" +
+//                "StartHTML:%1$010d\r\n" +
+//                "EndHTML:%2$010d\r\n" +
+//                "StartFragment:%3$010d\r\n" +
+//                "EndFragment:%4$010d\r\n";
+//        String startFragment = "<!--StartFragment-->";
+//        String endFragment = "<!--EndFragment-->";
+//        String htmlContent = "<html><body>" + startFragment + html + endFragment + "</body></html>";
+//        int startHTML = htmlHeader.length() - 40; // 40 is the length of the placeholders
+//        int startFragmentIndex = startHTML + htmlContent.indexOf(startFragment);
+//        int endFragmentIndex = startHTML + htmlContent.indexOf(endFragment) + endFragment.length();
+//        int endHTML = startHTML + htmlContent.length();
+//        String formattedHtml = String.format(htmlHeader, startHTML, endHTML, startFragmentIndex, endFragmentIndex) + htmlContent;
+//        // Plain text version (strip out HTML tags)
+//        // plainText = html.replaceAll("<[^>]+>", "");
+//        // Set the clipboard data
+//        User32.INSTANCE.OpenClipboard(null);
+//        User32.INSTANCE.EmptyClipboard();
+//        try {
+//            // Set HTML format
+//            int CF_HTML = User32.INSTANCE.RegisterClipboardFormat("HTML Format");
+//            setClipboardData(CF_HTML, formattedHtml);
+//            // Set Plain Text format
+//            int CF_TEXT = 1; // 1 is CF_TEXT, which is the standard text format
+//            setClipboardData(CF_TEXT, plainText);
+//        } finally {
+//            User32.INSTANCE.CloseClipboard();
+//        }
+//    }
+
+// this is new below 2nd attempt
+//    public static void copyHtmlToClipboard(String html, String plainText) {
+//        // HTML clipboard format with correct lengths
+//        String htmlHeader = "Version:0.9\r\n" +
+//                "StartHTML:%1$010d\r\n" +
+//                "EndHTML:%2$010d\r\n" +
+//                "StartFragment:%3$010d\r\n" +
+//                "EndFragment:%4$010d\r\n";
+//        String startFragment = "<!--StartFragment-->";
+//        String endFragment = "<!--EndFragment-->";
+//        // Replace non-breaking spaces and ensure proper encoding
+//        html = html.replace("\u00A0", " ").replace("&nbsp;", " ");
+//        String htmlContent = "<html><body>" + startFragment + html + endFragment + "</body></html>";
+//        int startHTML = htmlHeader.length() - 40; // 40 is the length of the placeholders
+//        int startFragmentIndex = startHTML + htmlContent.indexOf(startFragment);
+//        int endFragmentIndex = startHTML + htmlContent.indexOf(endFragment) + endFragment.length();
+//        int endHTML = startHTML + htmlContent.length();
+//        String formattedHtml = String.format(htmlHeader, startHTML, endHTML, startFragmentIndex, endFragmentIndex) + htmlContent;
+//        // Set the clipboard data
+//        User32.INSTANCE.OpenClipboard(null);
+//        User32.INSTANCE.EmptyClipboard();
+//        try {
+//            // Set HTML format
+//            int CF_HTML = User32.INSTANCE.RegisterClipboardFormat("HTML Format");
+//            setClipboardData(CF_HTML, formattedHtml);
+//            // Set Plain Text format
+//            int CF_TEXT = 1; // 1 is CF_TEXT, which is the standard text format
+//            setClipboardData(CF_TEXT, plainText);
+//        } finally {
+//            User32.INSTANCE.CloseClipboard();
+//        }
+//    }
+
     public static void copyHtmlToClipboard(String html, String plainText) {
         // HTML clipboard format with correct lengths
+        System.out.println(html);
+        System.out.println(plainText);
         String htmlHeader = "Version:0.9\r\n" +
                 "StartHTML:%1$010d\r\n" +
                 "EndHTML:%2$010d\r\n" +
@@ -48,28 +116,48 @@ public class ClipboardUtils {
                 "EndFragment:%4$010d\r\n";
         String startFragment = "<!--StartFragment-->";
         String endFragment = "<!--EndFragment-->";
+
+
+        // Replace non-breaking spaces and ensure proper encoding
+        html = html.replace("\u00A0", " ").replace("&nbsp;", " ");
         String htmlContent = "<html><body>" + startFragment + html + endFragment + "</body></html>";
-        int startHTML = htmlHeader.length() - 40; // 40 is the length of the placeholders
+        int startHTML = htmlHeader.length(); // Updated for clarity
         int startFragmentIndex = startHTML + htmlContent.indexOf(startFragment);
         int endFragmentIndex = startHTML + htmlContent.indexOf(endFragment) + endFragment.length();
         int endHTML = startHTML + htmlContent.length();
         String formattedHtml = String.format(htmlHeader, startHTML, endHTML, startFragmentIndex, endFragmentIndex) + htmlContent;
-        // Plain text version (strip out HTML tags)
-        // plainText = html.replaceAll("<[^>]+>", "");
+
+
         // Set the clipboard data
-        User32.INSTANCE.OpenClipboard(null);
-        User32.INSTANCE.EmptyClipboard();
         try {
+            if (!User32.INSTANCE.OpenClipboard(null)) {
+                throw new IllegalStateException("Could not open clipboard");
+            }
+            User32.INSTANCE.EmptyClipboard();
+
+
             // Set HTML format
             int CF_HTML = User32.INSTANCE.RegisterClipboardFormat("HTML Format");
+            if (CF_HTML == 0) {
+                throw new IllegalStateException("Failed to register HTML Format");
+            }
             setClipboardData(CF_HTML, formattedHtml);
+
+
             // Set Plain Text format
-            int CF_TEXT = 1; // 1 is CF_TEXT, which is the standard text format
+            int CF_TEXT = 1; // 1 is CF_TEXT, the standard text format
             setClipboardData(CF_TEXT, plainText);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             User32.INSTANCE.CloseClipboard();
         }
     }
+
+
+
+
+
 
     private static void setClipboardData(int format, String data) {
         int dataSize = data.length() + 1; // +1 for null terminator

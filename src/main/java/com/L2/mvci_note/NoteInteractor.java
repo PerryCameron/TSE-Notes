@@ -400,7 +400,6 @@ public class NoteInteractor {
                     .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("<br><br>");
         }
         if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
-//            stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("<br>").append("<br>");
             stringBuilder.append(getCorrectiveActionText());
         }
         stringBuilder.append(copyAllPartOrdersToHTML(true)).append("<br>");

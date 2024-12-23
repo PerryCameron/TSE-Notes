@@ -10,6 +10,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Locale;
 
 
 public class NoteDTO {
@@ -214,19 +215,23 @@ public class NoteDTO {
      * the application
      * @return formatted date
      */
+
     public String formattedDate() {
         LocalDateTime dateTime = timestampProperty().get();
         if (dateTime == null) {
             return "";
         }
-        // Use a formatter that includes the short time zone name
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy h:mm a z");
+        // Use a formatter with a fixed locale (e.g., US) for consistent AM/PM formatting
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy h:mm a z", Locale.US);
+
         // Assuming you want to format it with the system's default time zone
         ZoneId zone = ZoneId.systemDefault();
         ZonedDateTime zonedDateTime = dateTime.atZone(zone);
+
         // Format the date and time with the short time zone name
         return zonedDateTime.format(formatter);
     }
+
 
     public String prettyDate() {
         LocalDateTime dateTime = timestampProperty().get();

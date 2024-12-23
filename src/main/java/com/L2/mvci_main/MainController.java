@@ -15,6 +15,8 @@ import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+
 public class MainController extends Controller<MainMessage> {
 
     private final MainInteractor mainInteractor;
@@ -31,6 +33,7 @@ public class MainController extends Controller<MainMessage> {
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::action);
         logger.info("Main controller loaded");
+        logger.info("Default Locale: {}", Locale.getDefault());
     }
 
     @Override
