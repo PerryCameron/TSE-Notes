@@ -22,7 +22,6 @@ public class SQLiteDatabaseCreator {
     Path path = AppFileTools.getDbPath();
         logger.info("Creating database..." + path.toString());
         String url = "jdbc:sqlite:" + BaseApplication.dataBaseLocation.resolve(databaseName);
-//        System.out.println("url: " + url);
 
         // SQL commands for creating tables
         String createTables = """

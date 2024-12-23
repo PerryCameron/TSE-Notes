@@ -13,8 +13,10 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -129,7 +131,6 @@ public class NoteInteractor {
     }
 
     public String copyAllPartOrdersToHTML(boolean includePOHeader) {
-//        System.out.println("copyAllPartOrdersToHTML()");
         if (noteModel.getBoundNote().getPartOrders().size() > 1) {
             StringBuilder builder = new StringBuilder();
             for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
@@ -146,7 +147,6 @@ public class NoteInteractor {
     private String buildPartOrderToHTML(boolean includePOHeader) {
         StringBuilder stringBuilder = new StringBuilder();
         // Start the table and add headers
-        logger.info("Copying Part Order");
         if (!noteModel.getSelectedPartOrder().getParts().isEmpty()) {
             if (includePOHeader) {
                 stringBuilder.append("<b>Parts Ordered</b><br>");
@@ -410,12 +410,33 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
+//    private String getCorrectiveActionText() {
+//        String correctiveActionText = noteModel.getBoundNote().getAdditionalCorrectiveActionText();
+//        System.out.println("Text: " + correctiveActionText);
+//        System.out.println("Bytes: " + Arrays.toString(correctiveActionText.getBytes(StandardCharsets.UTF_8)));
+//
+//        StringBuilder stringBuilder = new StringBuilder();
+//        stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText().replaceAll("\\r\\n|\\n|\\r", "<br>"));
+//        stringBuilder.append("<br>");
+//        return stringBuilder.toString();
+//    }
+
     private String getCorrectiveActionText() {
+        // Retrieve the corrective action text
+        String correctiveActionText = noteModel.getBoundNote().getAdditionalCorrectiveActionText();
+//        System.out.println("Text: " + correctiveActionText);
+//        System.out.println("Bytes: " + Arrays.toString(correctiveActionText.getBytes(StandardCharsets.UTF_8)));
+        // Preprocess the text to escape special characters
+        String escapedText = ClipboardUtils.escapeHtmlContent(correctiveActionText);
+        // Replace line breaks with <br> for HTML formatting
+        escapedText = escapedText.replaceAll("\\r\\n|\\n|\\r", "<br>");
+        // Append the escaped text to the StringBuilder and return
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText().replaceAll("\\r\\n|\\n|\\r", "<br>"));
+        stringBuilder.append(escapedText);
         stringBuilder.append("<br>");
         return stringBuilder.toString();
     }
+
 
     public void setComplete() {
         logger.info("Note {} has been set to completed", noteModel.getBoundNote().getId());
@@ -607,7 +628,6 @@ public class NoteInteractor {
             return NoteMessage.ENABLE_NEXT_BUTTON;
         }
     }
-
 
 
 }
