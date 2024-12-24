@@ -5,8 +5,14 @@ First beta release
 
 0.9.8-20
 Added minimize and restore buttons
-Redrew close button to be a symetracal X
+Redrew close button to be a symmetrical X
 Fixed manual sizing to work on all borders including corners
 
 0.9.8-17
 Fixed issue where a title would somehow be saved as a null value in the database and the user could no longer change the title.
+
+0.9.9-4
+Added ability to search notes, and added paginate feature.
+
+0.9.9-8
+Added ability to process spanish characters, and dates

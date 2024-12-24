@@ -109,13 +109,11 @@ public class NoteInteractor {
     }
 
     public void copyLoggedCall() {
-//        System.out.println("NoteInteractor::copyLoggedCall");
         ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), loggedCallToPlainText());
     }
 
     public String copyAllPartOrdersToPlainText() {
         if (noteModel.getBoundNote().getPartOrders().size() > 1) {
-//            System.out.println("there is more than one part order");
             StringBuilder builder = new StringBuilder();
             for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
                 noteModel.setSelectedPartOrder(partOrderDTO);
@@ -123,10 +121,8 @@ public class NoteInteractor {
             }
             return builder.toString();
         } else if (noteModel.getBoundNote().getPartOrders().size() == 1) {
-//            System.out.println("there is single part order");
             return buildPartOrderToPlainText();
         }
-//        else System.out.println("There are no part orders");
         return "";
     }
 
@@ -239,17 +235,17 @@ public class NoteInteractor {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append("<b>Shipping Contact</b><br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(noteModel.getBoundNote().getContactName()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getContactName())).append("<br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getContactEmail()).append("<br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getContactPhoneNumber()).append("<br><br>")
                 .append("<b>Shipping Address</b>").append("<br>");
         if (!noteModel.getBoundNote().getInstalledAt().isEmpty())
-            stringBuilder.append(noteModel.getBoundNote().getInstalledAt()).append("<br>")
-                    .append(noteModel.getBoundNote().getStreet()).append("<br>")
-                    .append(noteModel.getBoundNote().getCity()).append(" ")
-                    .append(noteModel.getBoundNote().getState()).append(" ")
+            stringBuilder.append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getInstalledAt())).append("<br>")
+                    .append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getStreet())).append("<br>")
+                    .append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getCity())).append(" ")
+                    .append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getState())).append(" ")
                     .append(noteModel.getBoundNote().getZip()).append("<br>")
-                    .append(noteModel.getBoundNote().getCountry());
+                    .append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getCountry()));
         return stringBuilder.toString();
     }
 
@@ -295,7 +291,7 @@ public class NoteInteractor {
                 .append("<span style=\"color: rgb(0, 101, 105);\">Model: </span>").append(noteModel.getBoundNote().getModelNumber()).append("<br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">S/N: </span>").append(noteModel.getBoundNote().getSerialNumber()).append("<br><br>")
                 .append("<b>Call-in person</b><br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(noteModel.getBoundNote().getCallInPerson()).append("<br>")
+                .append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getCallInPerson())).append("<br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("<br>")
                 .append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getCallInEmail()).append("<br>")
                 .append("<br>")
@@ -306,6 +302,20 @@ public class NoteInteractor {
                 .append("<span style=\"color: rgb(0, 101, 105);\">Load Supported: </span>").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("<br>");
         return stringBuilder.toString();
     }
+
+//    private String getCorrectiveActionText() {
+//        // Retrieve the corrective action text
+//        String correctiveActionText = noteModel.getBoundNote().getAdditionalCorrectiveActionText();
+//        // Preprocess the text to escape special characters
+//        String escapedText = ClipboardUtils.escapeHtmlContent(correctiveActionText);
+//        // Replace line breaks with <br> for HTML formatting
+//        escapedText = escapedText.replaceAll("\\r\\n|\\n|\\r", "<br>");
+//        // Append the escaped text to the StringBuilder and return
+//        StringBuilder stringBuilder = new StringBuilder();
+//        stringBuilder.append(escapedText);
+//        stringBuilder.append("<br>");
+//        return stringBuilder.toString();
+//    }
 
     private String loggedCallToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -369,7 +379,13 @@ public class NoteInteractor {
     private String issueToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<strong>Issue</strong><br>");
-        stringBuilder.append(noteModel.getBoundNote().getIssue().replaceAll("\\r\\n|\\n|\\r", "<br>"));
+        // Retrieve the issue text
+        String issueText = noteModel.getBoundNote().getIssue();
+        // Preprocess the text to escape special characters
+        String escapedText = ClipboardUtils.escapeHtmlContent(issueText);
+        // Replace line breaks with <br> for HTML formatting
+        escapedText = escapedText.replaceAll("\\r\\n|\\n|\\r", "<br>");
+        stringBuilder.append(escapedText);
         stringBuilder.append("<br>");
         return stringBuilder.toString();
     }
@@ -410,22 +426,9 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
-//    private String getCorrectiveActionText() {
-//        String correctiveActionText = noteModel.getBoundNote().getAdditionalCorrectiveActionText();
-//        System.out.println("Text: " + correctiveActionText);
-//        System.out.println("Bytes: " + Arrays.toString(correctiveActionText.getBytes(StandardCharsets.UTF_8)));
-//
-//        StringBuilder stringBuilder = new StringBuilder();
-//        stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText().replaceAll("\\r\\n|\\n|\\r", "<br>"));
-//        stringBuilder.append("<br>");
-//        return stringBuilder.toString();
-//    }
-
     private String getCorrectiveActionText() {
         // Retrieve the corrective action text
         String correctiveActionText = noteModel.getBoundNote().getAdditionalCorrectiveActionText();
-//        System.out.println("Text: " + correctiveActionText);
-//        System.out.println("Bytes: " + Arrays.toString(correctiveActionText.getBytes(StandardCharsets.UTF_8)));
         // Preprocess the text to escape special characters
         String escapedText = ClipboardUtils.escapeHtmlContent(correctiveActionText);
         // Replace line breaks with <br> for HTML formatting
