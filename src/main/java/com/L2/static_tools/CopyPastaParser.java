@@ -20,12 +20,18 @@ public class CopyPastaParser {
                 name = line;
             }
             // Work phone
-            if (line.contains("Work Phone") && i + 1 < lines.length) {
-                workPhone = lines[i + 1].replace("Click to dial", "").trim();
+            if (line.contains("Work Phone")) {
+                // Check if the next line contains "Click to dial" with a phone number
+                if (i + 1 < lines.length && lines[i + 1].contains("Click to dial")) {
+                    workPhone = lines[i + 1].replace("Click to dial", "").trim();
+                }
             }
             // Mobile phone
-            if (line.contains("Mobile") && i + 1 < lines.length) {
-                mobilePhone = lines[i + 1].replace("Click to dial", "").trim();
+            if (line.contains("Mobile")) {
+                // Check if the next line contains "Click to dial" with a phone number
+                if (i + 1 < lines.length && lines[i + 1].contains("Click to dial")) {
+                    mobilePhone = lines[i + 1].replace("Click to dial", "").trim();
+                }
             }
             // Email
             if (line.contains("@")) {
