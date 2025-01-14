@@ -11,8 +11,11 @@ Fixed manual sizing to work on all borders including corners
 0.9.8-17
 Fixed issue where a title would somehow be saved as a null value in the database and the user could no longer change the title.
 
-0.9.9-4
-Added ability to search notes, and added paginate feature.
+0.9.8-23
+Added basic search functionality
 
-0.9.9-8
+0.9.9-4
+added paginate feature to list.
+
+0.9.9-9
 Added ability to process spanish characters, and dates
