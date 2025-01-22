@@ -6,6 +6,16 @@ import java.util.Map;
 public class StateCodes {
     public static final Map<String, String> STATE_ABBREVIATIONS = new HashMap<>();
     public static final Map<String, String> PROVINCE_ABBREVIATIONS = new HashMap<>();
+
+    public static <K, V> K getKeyByValue(Map<K, V> map, V value) {
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (value.equals(entry.getValue())) {
+                return entry.getKey(); // Return the key when a matching value is found
+            }
+        }
+        return null; // Return null if the value is not found
+    }
+
     static {
         // USA State abbreviations
         STATE_ABBREVIATIONS.put("Alabama", "AL");

@@ -12,7 +12,6 @@ public class AddressParser {
             "Apt", "Apt.", "Suite", "Ste", "Unit", "Fl", "Floor", "Rm", "Room", "Bldg", "Building"
     );
 
-
     // Regex for postal codes
     private static final Pattern US_ZIP_PATTERN = Pattern.compile("\\d{5}(-\\d{4})?");
     private static final Pattern CANADA_POSTAL_PATTERN = Pattern.compile("[A-Z]\\d[A-Z] \\d[A-Z]\\d");
@@ -53,9 +52,22 @@ public class AddressParser {
                 MatchedRange streetType = getLastStreetTypeRange(addressBlock);
                 if(streetType != null) {
                     componentLocations.put("streetType", streetType);
+                    addressComponents.put("Street", addressBlock.substring(0, streetType.getEnd()));
+                } else {
+                    System.out.println("Street type is null");
                 }
-                addressComponents.put("Street", addressBlock.substring(0, streetType.getEnd()));
+            } else {
+                if(numberOfCommas > 1) { // possibly a french address seperated by commas?
+                    String[] getCommaSeperatedAddressComponents = addressBlock.split(",");
+                    if (getCommaSeperatedAddressComponents[0] != null)
+                        addressComponents.put("Street", getCommaSeperatedAddressComponents[0].trim());
+                    if (getCommaSeperatedAddressComponents[1] != null)
+                        addressComponents.put("city", getCommaSeperatedAddressComponents[1].trim());
+                }
+                System.out.println("Number of StreetTypes is 0");
             }
+        } else {
+            System.out.println("First word is not an integer");
         }
         // get the state/province and determine country
         MatchedRange stateOrProvence = parseAddressForLocation(addressBlock);
@@ -101,8 +113,20 @@ public class AddressParser {
         addressComponents.put("Postal Code", addressBlock.substring(componentLocations.get("postalCode").getStart(), componentLocations.get("postalCode").getEnd()));
         addressComponents.put("State/Province", addressBlock.substring(componentLocations.get("state").getStart(), componentLocations.get("state").getEnd()));
         addressComponents.put("Country", componentLocations.get("state").getType());
+//        cleanComponents(addressComponents);
         return addressComponents;
     }
+
+//    private static void cleanComponents(Map<String, String> addressComponents) {
+//        addressComponents.put("StreetType", cleanStateOrProvence(addressComponents.get("StreetType")));
+//    }
+//
+//    private static String cleanStateOrProvence(String streetType) {
+//        if(streetType.length() == 2) {
+//
+//        }
+//    }
+
 
     private static MatchedRange findCanadaZipCode(String input) {
         if (input == null || input.isEmpty()) {
@@ -149,16 +173,13 @@ public class AddressParser {
         MatchedRange lastMatchedRange = null;
         for (String word : words) {
             for (String streetType : STREET_TYPES) {
-                if (word.equals(streetType)) {
+                if (word.equalsIgnoreCase(streetType)) {
                     // Calculate the range of the matched word
                     int start = currentIndex;
                     int end = start + word.length();
                     lastMatchedRange = new MatchedRange(start, end, streetType);
-                    // Log the match
-//                    System.out.println("Matched Street Type: " + streetType + " at range (" + start + ", " + end + ")");
                 }
             }
-            // Update the index to account for the word length and the separator
             currentIndex += word.length() + 1; // +1 for the space or comma
         }
         if (lastMatchedRange == null) {
@@ -228,7 +249,7 @@ public class AddressParser {
         int numberOfStreetTypes = 0;
         for (String word : words) {
             for (String streetType : STREET_TYPES) {
-                if (word.equals(streetType)) {
+                if (word.equalsIgnoreCase(streetType)) {
                     numberOfStreetTypes++; // Found a match
                 }
             }
@@ -303,8 +324,6 @@ public class AddressParser {
         String rest = words.length > 2 ? words[2] : "";
         return new String[]{firstWord, secondWord, rest};
     }
-
-
 }
 
 

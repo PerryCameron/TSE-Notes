@@ -24,7 +24,7 @@ public class AddressParseTest {
     }
 
     public static String[] setUpTests() {
-        String[] test = new String[10];
+        String[] test = new String[11];
 
         test[0] = """
             FSR Request
@@ -400,6 +400,43 @@ public class AddressParseTest {
                 During PM cycle PSU2 failed in PC1 during re-energization. Removed and replaced with customer spare. Replacement part needed to replenish spare used.
                 ------------------------------------------------------------
                 Request submitted Jan 21 2025 6:11pm by NAM:SESA696766
+                """;
+        test[10] = """
+                FSR Request
+                
+                Team Name: 3Phase Power - Parts Request
+                
+                FSR Details
+                -------------------------------------------------------------
+                First Name: WILSON
+                Last Name: ABALOS
+                Phone: 4038891301
+                Email: Wilson.Abalos@se.com
+                WO: WO-11558232
+                
+                Customer Details
+                ------------------------------------------------------------
+                Name: Mike Pinder
+                Site Name: University of Lethbridge
+                Phone Number: 5873946561
+                Email: mike.pinder@uleth.ca
+                Address:
+                4401 University Dr. Lethbridge AB
+                T1K 3M4 Canada
+                
+                Order Details
+                ------------------------------------------------------------
+                Equipment Status: online
+                Affected Part Serial: C11736190001
+                Follow Up: Yes
+                
+                Part, Serial , Qty
+                NMC 66074, 34003640SE - 1 piece
+                
+                Reason Part Needed:
+                defective, no communication to serial and network monitoring
+                ------------------------------------------------------------
+                Request submitted Jan 15 2025 8:38pm by NAM:SESA197884
                 """;
 
         return test;
