@@ -19,3 +19,7 @@ added paginate feature to list.
 
 0.9.9-9
 Added ability to process spanish characters, and dates
+
+x.x.x.x
+Fixed copy parser to handle mobile numbers to contacts
+Added assembly as a status option

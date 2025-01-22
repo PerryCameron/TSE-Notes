@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class StateCodes {
     public static final Map<String, String> STATE_ABBREVIATIONS = new HashMap<>();
+    public static final Map<String, String> PROVINCE_ABBREVIATIONS = new HashMap<>();
     static {
         // USA State abbreviations
         STATE_ABBREVIATIONS.put("Alabama", "AL");
@@ -59,19 +60,19 @@ public class StateCodes {
         STATE_ABBREVIATIONS.put("Wyoming", "WY");
 
         // Canada Province abbreviations
-        STATE_ABBREVIATIONS.put("Alberta", "AB");
-        STATE_ABBREVIATIONS.put("British Columbia", "BC");
-        STATE_ABBREVIATIONS.put("Manitoba", "MB");
-        STATE_ABBREVIATIONS.put("New Brunswick", "NB");
-        STATE_ABBREVIATIONS.put("Newfoundland and Labrador", "NL");
-        STATE_ABBREVIATIONS.put("Nova Scotia", "NS");
-        STATE_ABBREVIATIONS.put("Ontario", "ON");
-        STATE_ABBREVIATIONS.put("Prince Edward Island", "PE");
-        STATE_ABBREVIATIONS.put("Quebec", "QC");
-        STATE_ABBREVIATIONS.put("Saskatchewan", "SK");
-        STATE_ABBREVIATIONS.put("Northwest Territories", "NT");
-        STATE_ABBREVIATIONS.put("Nunavut", "NU");
-        STATE_ABBREVIATIONS.put("Yukon", "YT");
+        PROVINCE_ABBREVIATIONS.put("Alberta", "AB");
+        PROVINCE_ABBREVIATIONS.put("British Columbia", "BC");
+        PROVINCE_ABBREVIATIONS.put("Manitoba", "MB");
+        PROVINCE_ABBREVIATIONS.put("New Brunswick", "NB");
+        PROVINCE_ABBREVIATIONS.put("Newfoundland and Labrador", "NL");
+        PROVINCE_ABBREVIATIONS.put("Nova Scotia", "NS");
+        PROVINCE_ABBREVIATIONS.put("Ontario", "ON");
+        PROVINCE_ABBREVIATIONS.put("Prince Edward Island", "PE");
+        PROVINCE_ABBREVIATIONS.put("Quebec", "QC");
+        PROVINCE_ABBREVIATIONS.put("Saskatchewan", "SK");
+        PROVINCE_ABBREVIATIONS.put("Northwest Territories", "NT");
+        PROVINCE_ABBREVIATIONS.put("Nunavut", "NU");
+        PROVINCE_ABBREVIATIONS.put("Yukon", "YT");
     }
 
 }
