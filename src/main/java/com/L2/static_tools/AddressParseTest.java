@@ -24,7 +24,7 @@ public class AddressParseTest {
     }
 
     public static String[] setUpTests() {
-        String[] test = new String[11];
+        String[] test = new String[12];
 
         test[0] = """
             FSR Request
@@ -437,6 +437,45 @@ public class AddressParseTest {
                 defective, no communication to serial and network monitoring
                 ------------------------------------------------------------
                 Request submitted Jan 15 2025 8:38pm by NAM:SESA197884
+                """;
+        test[11] = """
+                FSR Request
+                
+                Team Name: 3Phase Power - Parts Request
+                
+                FSR Details
+                -------------------------------------------------------------
+                First Name: JONATHAN
+                Last Name: HO
+                Phone: 416-561-8211
+                Email: Jonathan.Ho@se.com
+                WO: WO-12345656
+                
+                Customer Details
+                ------------------------------------------------------------
+                Name: Ralph Ignacio
+                Site Name: Employment and Social Development Canada - ESDC
+                Phone Number: 416-275-1055
+                Email: ralph.ignacio@servicecanada.gc.ca
+                Address:
+                2599 Speakman Drive. Suite 100
+                Mississauga, Ontario
+                L5K 1B1
+                Canada
+                
+                Order Details
+                ------------------------------------------------------------
+                Equipment Status: Online
+                Affected Part Serial: BD2115005008
+                Follow Up: Yes
+                
+                Part, Serial , Qty
+                Quantity 1 of Enersys Datasafe 12HX540 battery.
+                
+                Reason Part Needed:
+                Performed BM and tested battery #30 bad with 11Vdc 44,000 mOhm. Battery date code July 2021.
+                ------------------------------------------------------------
+                Request submitted Nov 20 2024 10:56am by NAM:SESA45493
                 """;
 
         return test;

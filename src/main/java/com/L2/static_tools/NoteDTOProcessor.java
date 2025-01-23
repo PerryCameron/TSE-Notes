@@ -79,8 +79,8 @@ public class NoteDTOProcessor {
         Map<String, String> address = AddressParser.extractAddress(email);
         noteDTO.streetProperty().set(address.get("Street"));
         noteDTO.cityProperty().set(address.get("City"));
-        noteDTO.stateProperty().set(address.get("State/Province"));
-        noteDTO.zipProperty().set(address.get("Postal Code"));
+        noteDTO.stateProperty().set(address.get("State"));
+        noteDTO.zipProperty().set(address.get("Zip"));
         noteDTO.countryProperty().set(address.get("Country"));
     return noteDTO;
     }

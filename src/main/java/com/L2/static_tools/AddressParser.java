@@ -12,7 +12,7 @@ public class AddressParser {
             "Apt", "Apt.", "Suite", "Ste", "Unit", "Fl", "Floor", "Rm", "Room", "Bldg", "Building"
     );
 
-    // Regex for postal codes
+    // Regex for Zips
     private static final Pattern US_ZIP_PATTERN = Pattern.compile("\\d{5}(-\\d{4})?");
     private static final Pattern CANADA_POSTAL_PATTERN = Pattern.compile("[A-Z]\\d[A-Z] \\d[A-Z]\\d");
 
@@ -105,13 +105,13 @@ public class AddressParser {
                     }
                 }
             } else {
-                // we don't have a postal code
-                System.out.println("We have no postal code");
+                // we don't have a Zip
+                System.out.println("We have no Zip");
             }
         }
 
-        addressComponents.put("Postal Code", addressBlock.substring(componentLocations.get("postalCode").getStart(), componentLocations.get("postalCode").getEnd()));
-        addressComponents.put("State/Province", addressBlock.substring(componentLocations.get("state").getStart(), componentLocations.get("state").getEnd()));
+        addressComponents.put("Zip", addressBlock.substring(componentLocations.get("postalCode").getStart(), componentLocations.get("postalCode").getEnd()));
+        addressComponents.put("State", addressBlock.substring(componentLocations.get("state").getStart(), componentLocations.get("state").getEnd()));
         addressComponents.put("Country", componentLocations.get("state").getType());
 //        cleanComponents(addressComponents);
         return addressComponents;
