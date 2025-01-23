@@ -725,7 +725,7 @@ public class AddressParseTest {
                 Email: joe.durfee@se.com
                 Address:
                 313 Caren Dr
-                Virginia Beach, VA 23452
+                virginia Beach, VA 23452
                 
                 Order Details
                 ------------------------------------------------------------

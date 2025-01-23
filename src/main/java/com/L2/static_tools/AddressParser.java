@@ -28,7 +28,7 @@ public class AddressParser {
         if (addressBlock == null || addressBlock.isEmpty()) {
             throw new IllegalArgumentException("No address block found");
         }
-        return parseAddress(addressBlock);
+        return parseAddress(addressBlock, null, null);
     }
 
     // Extract text between "Address:" and "Order Details"
@@ -41,16 +41,24 @@ public class AddressParser {
         return email.substring(startIndex + "Address:".length(), endIndex).trim();
     }
 
-    private static Map<String, String> parseAddress(String unFormattedAddress) {
-
+    private static Map<String, String> parseAddress(String unFormattedAddress,
+                                                    Map<String, String> addressComponents,
+                                                    Map<String, MatchedRange> componentLocations) {
         String addressBlock = removeDots(unFormattedAddress);
-        Map<String, String> addressComponents = new HashMap<>();
-        Map<String, MatchedRange> componentLocations = new HashMap<>();
         int numberOfCommas = countCommas(addressBlock);
         int numberOfLines = countLines(addressBlock);
         int numberOfStreetTypes = containsStreetType(addressBlock);
+        logger.info("Number of street types: " + numberOfStreetTypes);
         boolean firstWordIsInteger = isFirstWordInteger(addressBlock);
         boolean containsUnit = containsUnitDesignator(addressBlock);
+        // If maps are null, initialize them
+        if (addressComponents == null) {
+            addressComponents = new HashMap<>();
+        }
+        if (componentLocations == null) {
+            componentLocations = new HashMap<>();
+        }
+
 
         // does this start with street address
         if(firstWordIsInteger) {
@@ -65,16 +73,22 @@ public class AddressParser {
                 }
             } else {
                 if(numberOfCommas > 1) { // possibly a french address seperated by commas?
+                    logger.info("There are lots of commas, possibly a french address");
                     String[] getCommaSeperatedAddressComponents = addressBlock.split(",");
                     if (getCommaSeperatedAddressComponents[0] != null)
                         addressComponents.put("Street", capitalizeWords(getCommaSeperatedAddressComponents[0].trim()));
                     if (getCommaSeperatedAddressComponents[1] != null)
                         addressComponents.put("City", getCommaSeperatedAddressComponents[1].trim());
                 }
-                System.out.println("Number of StreetTypes is 0");
+                // there are 0 street types
             }
-        } else {
-            System.out.println("First word is not an integer");
+        } else { // First word is not an integer
+            if(numberOfLines > 1) {
+                String newAddressBlock = processAndCombineLines(addressBlock);
+                logger.info("Recursion with modified block: {}", newAddressBlock);
+                // recursion with chopped addressBlock is being called here
+                parseAddress(newAddressBlock, addressComponents, componentLocations);
+            }
         }
         // get the state/province and determine country
         MatchedRange stateOrProvence = parseAddressForLocation(addressBlock);
@@ -171,7 +185,7 @@ public class AddressParser {
         if (input == null) {
             return null; // Return null if the input is null
         }
-        return input.replace(",", "").replace(" ", "");
+        return input.replace(",", "").trim(); // Remove only commas, preserve spaces
     }
 
     public static MatchedRange findUSZipCode(String input) {
@@ -209,6 +223,7 @@ public class AddressParser {
         if (lastMatchedRange == null) {
             logger.error("No street type found");
         }
+        System.out.println("street type: " + lastMatchedRange);
         return lastMatchedRange;
     }
 
@@ -384,6 +399,25 @@ public class AddressParser {
             }
         }
         return "???"; // Return default if no match is found
+    }
+
+    public static String processAndCombineLines(String input) {
+        if (input == null || input.isEmpty()) {
+            return ""; // Return empty string if input is null or empty
+        }
+        // Split the input by "\n"
+        String[] lines = input.split("\\n");
+        // Combine the remaining elements with a space
+        StringBuilder result = new StringBuilder();
+        for (int i = 1; i < lines.length; i++) {
+            if (!lines[i].trim().isEmpty()) { // Ignore empty lines
+                if (result.length() > 0) {
+                    result.append(" "); // Add space between lines
+                }
+                result.append(lines[i].trim());
+            }
+        }
+        return result.toString();
     }
 
 }
