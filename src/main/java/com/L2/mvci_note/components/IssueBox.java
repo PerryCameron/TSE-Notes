@@ -22,7 +22,7 @@ public class IssueBox implements Component<Region> {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox root;
-    private TextArea textAreaIssue;
+    private final TextArea textAreaIssue;
     private static final Logger logger = LoggerFactory.getLogger(IssueBox.class);
 
     public IssueBox(NoteView noteView) {
@@ -41,7 +41,7 @@ public class IssueBox implements Component<Region> {
         root.getChildren().addAll(TitleBarFx.of("Issue", buttons), textAreaIssue);
         refreshFields();
         textAreaIssue.focusedProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue) ;
+            if (newValue);
             else {  // focus removed
                 // is this an email?
                 if(!noteModel.getBoundNote().isEmail()) {
@@ -69,7 +69,6 @@ public class IssueBox implements Component<Region> {
 
     @Override
     public void refreshFields() {
-        if(noteModel.getBoundNote().isEmail()) textAreaIssue.setEditable(false);
-        else textAreaIssue.setEditable(true);
+        textAreaIssue.setEditable(!noteModel.getBoundNote().isEmail());
     }
 }

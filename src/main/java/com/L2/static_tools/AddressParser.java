@@ -1,15 +1,21 @@
 package com.L2.static_tools;
+import org.apache.logging.log4j.ThreadContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 import java.util.regex.*;
 
 
 public class AddressParser {
+
+    private static final Logger logger = LoggerFactory.getLogger(AddressParser.class);
     // List of common street types
     private static final List<String> STREET_TYPES = Arrays.asList(
-            "St","St.", "Street", "Ave", "Avenue", "Rd","Rd.", "Road", "Blvd", "Boulevard", "Ln","Ln.", "Lane", "Dr", "Dr.", "Drive", "Ct", "Ct.", "Court", "Pl", "Pl.", "Place", "Terrace", "Way", "Circle", "Cir", "Cir."
+            "St", "Street", "Ave", "Avenue", "Rd", "Road", "Blvd", "Boulevard", "Ln", "Lane", "Dr", "Drive", "Ct", "Court", "Pl", "Place", "Terrace", "Way", "Circle", "Cir"
     );
     private static final List<String> UNIT_DESIGNATORS = Arrays.asList(
-            "Apt", "Apt.", "Suite", "Ste", "Unit", "Fl", "Floor", "Rm", "Room", "Bldg", "Building"
+            "Apt", "Suite", "Ste", "Unit", "Fl", "Floor", "Rm", "Room", "Bldg", "Building"
     );
 
     // Regex for Zips
@@ -35,10 +41,11 @@ public class AddressParser {
         return email.substring(startIndex + "Address:".length(), endIndex).trim();
     }
 
-    private static Map<String, String> parseAddress(String addressBlock) {
+    private static Map<String, String> parseAddress(String unFormattedAddress) {
+
+        String addressBlock = removeDots(unFormattedAddress);
         Map<String, String> addressComponents = new HashMap<>();
         Map<String, MatchedRange> componentLocations = new HashMap<>();
-
         int numberOfCommas = countCommas(addressBlock);
         int numberOfLines = countLines(addressBlock);
         int numberOfStreetTypes = containsStreetType(addressBlock);
@@ -52,17 +59,17 @@ public class AddressParser {
                 MatchedRange streetType = getLastStreetTypeRange(addressBlock);
                 if(streetType != null) {
                     componentLocations.put("streetType", streetType);
-                    addressComponents.put("Street", addressBlock.substring(0, streetType.getEnd()));
+                    addressComponents.put("Street", capitalizeWords(addressBlock.substring(0, streetType.getEnd())));
                 } else {
-                    System.out.println("Street type is null");
+                    logger.error("Street type is null");
                 }
             } else {
                 if(numberOfCommas > 1) { // possibly a french address seperated by commas?
                     String[] getCommaSeperatedAddressComponents = addressBlock.split(",");
                     if (getCommaSeperatedAddressComponents[0] != null)
-                        addressComponents.put("Street", getCommaSeperatedAddressComponents[0].trim());
+                        addressComponents.put("Street", capitalizeWords(getCommaSeperatedAddressComponents[0].trim()));
                     if (getCommaSeperatedAddressComponents[1] != null)
-                        addressComponents.put("city", getCommaSeperatedAddressComponents[1].trim());
+                        addressComponents.put("City", getCommaSeperatedAddressComponents[1].trim());
                 }
                 System.out.println("Number of StreetTypes is 0");
             }
@@ -97,36 +104,54 @@ public class AddressParser {
                         String[] unitAndCity = extractUnitAndRemainingText(city.trim());
                         if(unitAndCity != null) {
                             String newStreet = addressComponents.get("Street") + ", " + unitAndCity[0] + " " + unitAndCity[1];
-                            addressComponents.put("Street", newStreet);
+                            addressComponents.put("Street", capitalizeWords(newStreet));
                             addressComponents.put("City", unitAndCity[2]);
                         }
                     } else {
-                        addressComponents.put("City", removeAllCommasAndSpaces(city));
+                        addressComponents.put("City", capitalizeWords(removeAllCommasAndSpaces(city)));
                     }
                 }
             } else {
                 // we don't have a Zip
-                System.out.println("We have no Zip");
+                logger.error("We have no Zip");
             }
         }
 
-        addressComponents.put("Zip", addressBlock.substring(componentLocations.get("postalCode").getStart(), componentLocations.get("postalCode").getEnd()));
-        addressComponents.put("State", addressBlock.substring(componentLocations.get("state").getStart(), componentLocations.get("state").getEnd()));
-        addressComponents.put("Country", componentLocations.get("state").getType());
-//        cleanComponents(addressComponents);
+        addressComponents.put("Zip", handleSafely("postalCode",componentLocations, addressBlock));
+        addressComponents.put("State", getStateOrProvinceAbbreviation(handleSafely("state",componentLocations, addressBlock)));
+        addressComponents.put("Country", handleTypeSafely("state", componentLocations));
+        // prevents us from returning any nulls
+        validateAddressComponents(addressComponents);
         return addressComponents;
     }
 
-//    private static void cleanComponents(Map<String, String> addressComponents) {
-//        addressComponents.put("StreetType", cleanStateOrProvence(addressComponents.get("StreetType")));
-//    }
-//
-//    private static String cleanStateOrProvence(String streetType) {
-//        if(streetType.length() == 2) {
-//
-//        }
-//    }
+    public static void validateAddressComponents(Map<String, String> addressComponents) {
+        // List of required keys
+        String[] requiredKeys = {"Zip", "State", "Country", "Street", "City"};
+        // Iterate over the required keys and check if they exist in the map
+        for (String key : requiredKeys) {
+            if (!addressComponents.containsKey(key)) {
+                addressComponents.put(key, "???");
+                logger.error("{} not found, creating default with value '???'", key);
+            }
+        }
+    }
 
+    private static String handleSafely(String addressElement, Map<String, MatchedRange> componentLocations, String addressBlock) {
+        if(componentLocations.get(addressElement) != null) {
+            int start = componentLocations.get(addressElement).getStart();
+            int end = componentLocations.get(addressElement).getEnd();
+            return addressBlock.substring(start, end);
+        }
+        return "???";
+    }
+
+    private static String handleTypeSafely(String addressElement, Map<String, MatchedRange> componentLocations) {
+        if(componentLocations.get(addressElement) != null) {
+            return componentLocations.get(addressElement).getType();
+        }
+        return "???";
+    }
 
     private static MatchedRange findCanadaZipCode(String input) {
         if (input == null || input.isEmpty()) {
@@ -165,7 +190,7 @@ public class AddressParser {
 
     public static MatchedRange getLastStreetTypeRange(String input) {
         if (input == null || input.isEmpty()) {
-            System.out.println("Invalid address input");
+            logger.error("Invalid address input");
             return null; // No match found
         }
         String[] words = input.split("[,\\s]+"); // Split by commas or whitespace
@@ -175,15 +200,14 @@ public class AddressParser {
             for (String streetType : STREET_TYPES) {
                 if (word.equalsIgnoreCase(streetType)) {
                     // Calculate the range of the matched word
-                    int start = currentIndex;
-                    int end = start + word.length();
-                    lastMatchedRange = new MatchedRange(start, end, streetType);
+                    int end = currentIndex + word.length();
+                    lastMatchedRange = new MatchedRange(currentIndex, end, streetType);
                 }
             }
             currentIndex += word.length() + 1; // +1 for the space or comma
         }
         if (lastMatchedRange == null) {
-            System.out.println("No street type found");
+            logger.error("No street type found");
         }
         return lastMatchedRange;
     }
@@ -205,7 +229,7 @@ public class AddressParser {
 
     public static MatchedRange parseAddressForLocation(String address) {
         if (address == null || address.isEmpty()) {
-            System.out.println("Invalid address input");
+            logger.error("Invalid address input");
             return null; // No match found
         }
         MatchedRange lastMatch = null; // Keep track of the last match
@@ -242,7 +266,7 @@ public class AddressParser {
 
     public static int containsStreetType(String input) {
         if (input == null || input.isEmpty()) {
-            System.out.println("Invalid address input");
+            logger.error("Invalid address input");
             return 0; // No match found
         }
         String[] words = input.split("[,\\s]+"); // Split by commas or whitespace
@@ -272,15 +296,6 @@ public class AddressParser {
         }
         // Count commas using a stream
         return (int) input.chars().filter(ch -> ch == ',').count();
-    }
-    // Helper to check if a part is a street type
-    private static boolean isStreetType(String part) {
-        for (String streetType : STREET_TYPES) {
-            if (part.equalsIgnoreCase(streetType) || part.endsWith(".")) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static boolean containsUnitDesignator(String input) {
@@ -324,6 +339,53 @@ public class AddressParser {
         String rest = words.length > 2 ? words[2] : "";
         return new String[]{firstWord, secondWord, rest};
     }
+
+    public static String removeDots(String input) {
+        if (input == null) {
+            return null; // Handle null input gracefully
+        }
+        return input.replace(".", ""); // Replace all "." with an empty string
+    }
+
+    public static String capitalizeWords(String input) {
+        if (input == null || input.isEmpty()) {
+            return input; // Return the original input if it's null or empty
+        }
+        // Split the string into words
+        String[] words = input.split("\\s+");
+        // Use a StringBuilder to construct the output
+        StringBuilder capitalized = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                // Capitalize the first letter and make the rest lowercase
+                String capitalizedWord = word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+                capitalized.append(capitalizedWord).append(" ");
+            }
+        }
+        // Remove the trailing space and return the result
+        return capitalized.toString().trim();
+    }
+
+    public static String getStateOrProvinceAbbreviation(String input) {
+        if (input == null || input.isEmpty()) {
+            return "???"; // Return default for null or empty input
+        }
+        input = input.trim(); // Remove leading and trailing spaces
+        if (input.length() == 2) {
+            return input.toUpperCase(); // Ensure two-character input is capitalized
+        } else if (input.length() > 2) {
+            // Check in STATE_ABBREVIATIONS
+            if (StateCodes.STATE_ABBREVIATIONS.containsKey(input)) {
+                return StateCodes.STATE_ABBREVIATIONS.get(input);
+            }
+            // Check in PROVINCE_ABBREVIATIONS
+            if (StateCodes.PROVINCE_ABBREVIATIONS.containsKey(input)) {
+                return StateCodes.PROVINCE_ABBREVIATIONS.get(input);
+            }
+        }
+        return "???"; // Return default if no match is found
+    }
+
 }
 
 

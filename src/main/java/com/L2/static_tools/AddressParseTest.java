@@ -24,7 +24,7 @@ public class AddressParseTest {
     }
 
     public static String[] setUpTests() {
-        String[] test = new String[12];
+        String[] test = new String[20];
 
         test[0] = """
             FSR Request
@@ -477,7 +477,310 @@ public class AddressParseTest {
                 ------------------------------------------------------------
                 Request submitted Nov 20 2024 10:56am by NAM:SESA45493
                 """;
-
+        test[12] = """
+                FSR Request
+                
+                Team Name: 3Phase Power - Parts Request
+                
+                FSR Details
+                -------------------------------------------------------------
+                First Name: MATTHEW
+                Last Name: BONGIOVANNI
+                Phone: 413-768-9730
+                Email: matthew.bongiovanni@se.com
+                WO: WO-12642596
+                
+                Customer Details
+                ------------------------------------------------------------
+                Name: Matthew Bongiovanni
+                Site Name: home
+                Phone Number: 413-768-9730
+                Email: matthew.bongiovanni@se.com
+                Address:
+                481 Glen Rock Rd.
+                West Kingston RI. 02892
+                
+                Order Details
+                ------------------------------------------------------------
+                Equipment Status: UPS on line,
+                Affected Part Serial: PDPM150G6F. Modular PDU s/n: QI2330340335
+                Follow Up: Yes
+                
+                Part, Serial , Qty
+                1 ea. 940-9591 Serial cable for Rack Mount PDU APDU10451SM.
+                
+                Reason Part Needed:
+                APDU10451SM s/n: 8A2431E00514 Tripped circuit breaker # 15 in the Modular PDU on 12/25/2024. Customer called in and Tech Support had them reset the breaker on 1/8/2025. It has been fine since. I tried to get the event log out of the Rack Mount PDU using a USB Key, The config and Data logs downloaded ok but the event log download came up with No Information Available. I would like to log into the RMPDU using the serial cable to enter an IP (none entered) so I can peer-to-peer with my laptop and check the event log that way. There are no cables on site to use.
+                ------------------------------------------------------------
+                Request submitted Jan 22 2025 9:17am by NAM:SESA86596
+        """;
+        test[13] = """
+                FSR Request
+                
+                Team Name: 3Phase Power - Parts Request
+                
+                FSR Details
+                -------------------------------------------------------------
+                First Name: SAMUEL
+                Last Name: LOGA
+                Phone: 715-781-8513
+                Email: Sam.Loga@se.com
+                WO: WO-11641579
+                
+                Customer Details
+                ------------------------------------------------------------
+                Name: Shaun Hare
+                Site Name: KL Discovery
+                Phone Number: (952) 562-2157
+                Email: shaun.hare@kldiscovery.com
+                Address:
+                8725 BROOKLYN BLVD
+                Brooklyn Park, MN 55445-2398
+                
+                Order Details
+                ------------------------------------------------------------
+                Equipment Status: online
+                Affected Part Serial: S09-10067
+                Follow Up: Yes
+                
+                Part, Serial , Qty
+                Qty 1 12HX505-FR battery
+                
+                Reason Part Needed:
+                high internal resistance above threshold.
+                ------------------------------------------------------------
+                Request submitted Jan 9 2025 8:25pm by NAM:SESA92087
+        """;
+        test[14] = """
+                FSR Request
+                
+                Team Name: 3Phase Power - Parts Request
+                
+                FSR Details
+                -------------------------------------------------------------
+                First Name: Taylor
+                Last Name: Winiarski
+                Phone: 4342331617
+                Email: taylor.winiarski@se.com
+                WO: N/A
+                
+                Customer Details
+                ------------------------------------------------------------
+                Name: Taylor Winiarski
+                Site Name: Home
+                Phone Number: 434-233-1617
+                Email: Taylor.Winiarski@se.com
+                Address:
+                612 Goodes Ferry Road. South Hill, VA 23970
+                
+                Order Details
+                ------------------------------------------------------------
+                Equipment Status: N/A
+                Affected Part Serial: N/A
+                Follow Up: No
+                
+                Part, Serial , Qty
+                0J-885-3997 qty 2 please
+                
+                0J-885-4866 qty 1
+                
+                Reason Part Needed:
+                For parts return for large MSFT project.
+                ------------------------------------------------------------
+                Request submitted Dec 29 2024 5:38pm by NAM:SESA696766
+        """;
+        test[15] = """
+                FSR Request
+                
+                Team Name: 3Phase Power - Parts Request
+                
+                FSR Details
+                -------------------------------------------------------------
+                First Name: ANDREW
+                Last Name: LOGA
+                Phone: 6517832855
+                Email: Andrew.Loga@se.com
+                WO: WO-12447232
+                
+                Customer Details
+                ------------------------------------------------------------
+                Name: Andrew Loga
+                Site Name: Andrew
+                Phone Number: 651-783-2855
+                Email: andrew.loga@se.com
+                Address:
+                812 Radcliffe Ave
+                Altoona WI 54720
+                
+                Order Details
+                ------------------------------------------------------------
+                Equipment Status: Online
+                Affected Part Serial: QD2429381058
+                Follow Up: No
+                
+                Part, Serial , Qty
+                0J-0085, X 2
+                
+                Reason Part Needed:
+                Almost out of return labels
+                ------------------------------------------------------------
+                Request submitted Dec 27 2024 4:48pm by NAM:SESA146501
+        """;
+        test[16] = """
+                FSR Request
+                
+                Team Name: 3Phase Power - Parts Request
+                
+                FSR Details
+                -------------------------------------------------------------
+                First Name: Christopher
+                Last Name: Mannion
+                Phone:
+                Email: Christopher.Mannion@se.com
+                WO: WO-12542345
+                
+                Customer Details
+                ------------------------------------------------------------
+                Name: Scott Milsap
+                Site Name: Switch NAP15
+                Phone Number: 702-370-6330
+                Email: smillsap@switch.com
+                Address:
+                Switch NAP 15
+                5660 W Badura Ave
+                89118
+                4712 Las Vegas
+                USA
+                
+                Order Details
+                ------------------------------------------------------------
+                Equipment Status: Online
+                Affected Part Serial: U22110001116
+                Follow Up: Yes
+                
+                Part, Serial , Qty
+                Power Block L1A
+                0J-0N-9850 Qty-(1) 42 KVA Power Block for Galaxy VX 480V
+                
+                Reason Part Needed:
+                IGBT Desaturation Fault on L1A
+                ------------------------------------------------------------
+                Request submitted Dec 22 2024 10:25pm by NAM:SESA474663
+        """;
+        test[17] = """
+                FSR Request
+                
+                Team Name: 3Phase Power - Parts Request
+                
+                FSR Details
+                -------------------------------------------------------------
+                First Name: Justin
+                Last Name: Cain
+                Phone: 817-374-2359
+                Email: justin.cain@se.com
+                WO: WO-12537424
+                
+                Customer Details
+                ------------------------------------------------------------
+                Name: Russell Parker
+                Site Name: DFW 10
+                Phone Number: 469-987-8570
+                Email: rparker@digitalrealty.com
+                Address:
+                2323 Bryan St.
+                Dallas, Texas 75201-2607
+                
+                Order Details
+                ------------------------------------------------------------
+                Equipment Status: Online
+                Affected Part Serial: 50XH15008
+                Follow Up: Yes
+                
+                Part, Serial , Qty
+                29875023HD, top fans for PW, customer requests 4 to have 3 spares.
+                
+                Reason Part Needed:
+                1 bad top fan
+                ------------------------------------------------------------
+                Request submitted Dec 19 2024 1:36pm by NAM:SESA647220
+        """;
+        test[18] = """
+                FSR Request
+                
+                Team Name: 3Phase Power - Parts Request
+                
+                FSR Details
+                -------------------------------------------------------------
+                First Name: Joseph
+                Last Name: Durfee
+                Phone: 7577545931
+                Email: joe.durfee@se.com
+                WO: N/A
+                
+                Customer Details
+                ------------------------------------------------------------
+                Name: Joseph Durfee
+                Site Name: Home
+                Phone Number: 7577545931
+                Email: joe.durfee@se.com
+                Address:
+                313 Caren Dr
+                Virginia Beach, VA 23452
+                
+                Order Details
+                ------------------------------------------------------------
+                Equipment Status: N/A
+                Affected Part Serial: N/A
+                Follow Up: No
+                
+                Part, Serial , Qty
+                0J-HUA41574 QTY 20
+                
+                Reason Part Needed:
+                spare fuses for failures as needed
+                ------------------------------------------------------------
+                Request submitted Dec 19 2024 8:57am by NAM:SESA689801
+        """;
+        test[19] = """
+                FSR Request
+                
+                Team Name: 3Phase Power - Parts Request
+                
+                FSR Details
+                -------------------------------------------------------------
+                First Name: Gregery
+                Last Name: Paton
+                Phone: 306 313 4046
+                Email: darin.paton@se.com
+                WO: WO-12441821
+                
+                Customer Details
+                ------------------------------------------------------------
+                Name: Mason Shaw - CBO
+                Site Name: NFTC 15 Wing Moose Jaw
+                Phone Number: 306 681 3957
+                Email: Mshaw@canadianbaseoperators.com
+                Address:
+                15 Wing Moose Jaw, Sask
+                S0H 0N0
+                Building 115
+                
+                Order Details
+                ------------------------------------------------------------
+                Equipment Status: Online
+                Affected Part Serial: C11643190033
+                Follow Up: No
+                
+                Part, Serial , Qty
+                1 - 451-9033 (NEW COIL)
+                manufacture part LX9FG500
+                FSB - 001108
+                
+                Reason Part Needed:
+                NEW Coil NOT ordered with replacement contactor
+                ------------------------------------------------------------
+                Request submitted Dec 17 2024 3:21pm by NAM:SESA669990
+        """;
         return test;
     }
 }
