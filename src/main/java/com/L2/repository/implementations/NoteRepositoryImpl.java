@@ -171,63 +171,67 @@ public class NoteRepositoryImpl implements NoteRepository {
                 whereBuilder.append(" OR ");
             }
             scoreBuilder.append("""
-                        (CASE WHEN workOrder LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN caseNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN serialNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN modelNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN callInPerson LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN callInEmail LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN issue LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN contactName LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN contactEmail LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN street LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN city LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN state LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN country LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN additionalCorrectiveActionText LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN relatedCaseNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN title LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-                        (CASE WHEN timestamp LIKE '%' || ? || '%' THEN 1 ELSE 0 END)
-                    """);
+                (CASE WHEN workOrder LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN caseNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN serialNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN modelNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN callInPerson LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN callInEmail LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN issue LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN contactName LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN contactEmail LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN street LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN city LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN state LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN country LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN additionalCorrectiveActionText LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN relatedCaseNumber LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN title LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN timestamp LIKE '%' || ? || '%' THEN 1 ELSE 0 END) +
+                (CASE WHEN createdWorkOrder LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                (CASE WHEN tex LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END)
+            """);
             whereBuilder.append("""
-                        workOrder LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR caseNumber LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR serialNumber LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR modelNumber LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR callInPerson LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR callInEmail LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR issue LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR contactName LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR contactEmail LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR street LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR city LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR state LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR country LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR additionalCorrectiveActionText LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR relatedCaseNumber LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR title LIKE '%' || ? || '%' COLLATE NOCASE
-                        OR timestamp LIKE '%' || ? || '%'
-                    """);
+                workOrder LIKE '%' || ? || '%' COLLATE NOCASE
+                OR caseNumber LIKE '%' || ? || '%' COLLATE NOCASE
+                OR serialNumber LIKE '%' || ? || '%' COLLATE NOCASE
+                OR modelNumber LIKE '%' || ? || '%' COLLATE NOCASE
+                OR callInPerson LIKE '%' || ? || '%' COLLATE NOCASE
+                OR callInEmail LIKE '%' || ? || '%' COLLATE NOCASE
+                OR issue LIKE '%' || ? || '%' COLLATE NOCASE
+                OR contactName LIKE '%' || ? || '%' COLLATE NOCASE
+                OR contactEmail LIKE '%' || ? || '%' COLLATE NOCASE
+                OR street LIKE '%' || ? || '%' COLLATE NOCASE
+                OR city LIKE '%' || ? || '%' COLLATE NOCASE
+                OR state LIKE '%' || ? || '%' COLLATE NOCASE
+                OR country LIKE '%' || ? || '%' COLLATE NOCASE
+                OR additionalCorrectiveActionText LIKE '%' || ? || '%' COLLATE NOCASE
+                OR relatedCaseNumber LIKE '%' || ? || '%' COLLATE NOCASE
+                OR title LIKE '%' || ? || '%' COLLATE NOCASE
+                OR timestamp LIKE '%' || ? || '%'
+                OR createdWorkOrder LIKE '%' || ? || '%' COLLATE NOCASE
+                OR tex LIKE '%' || ? || '%' COLLATE NOCASE
+            """);
         }
         String sql = String.format("""
-                    SELECT *, (%s) AS match_score
-                    FROM Notes
-                    WHERE %s
-                    ORDER BY match_score DESC
-                """, scoreBuilder.toString(), whereBuilder.toString());
-        // Normalize keywords
+            SELECT *, (%s) AS match_score
+            FROM Notes
+            WHERE %s
+            ORDER BY match_score DESC
+        """, scoreBuilder.toString(), whereBuilder.toString());
         List<Object> params = new ArrayList<>();
         for (String keyword : keywords) {
             String normalizedKeyword = NoteTools.normalizeDate(keyword);
             String likeKeyword = "%" + normalizedKeyword + "%";
-            for (int i = 0; i < 17; i++) { // 17 columns now include `timestamp`
+            // Add parameters for scoring
+            for (int i = 0; i < 19; i++) { // Adjusted to 19 columns
                 params.add(likeKeyword);
             }
-            for (int i = 0; i < 17; i++) { // 17 columns for WHERE clause
+            // Add parameters for WHERE clause
+            for (int i = 0; i < 19; i++) { // Adjusted to 19 columns
                 params.add(likeKeyword);
             }
         }
-
         return jdbcTemplate.query(sql, ps -> {
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i)); // JDBC indices are 1-based

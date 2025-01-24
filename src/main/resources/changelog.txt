@@ -20,7 +20,11 @@ added paginate feature to list.
 0.9.9-9
 Added ability to process spanish characters, and dates
 
-0.9.9-14
+0.9.9-18
 Fixed copy parser to handle mobile numbers to contacts
 Added assembly as a status option
 Improved address processing for email
+Added copy back to Basic Information
+
+x.x.x-x
+Added columns, "Created Work Order" and "TEX" to search
