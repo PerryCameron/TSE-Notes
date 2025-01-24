@@ -3,7 +3,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
+src/main/java/com/L2/static_tools/AddressParseTest.java
 resources/note.txt
 
 ### IntelliJ IDEA ###

@@ -41,17 +41,22 @@ public class IssueBox implements Component<Region> {
         root.getChildren().addAll(TitleBarFx.of("Issue", buttons), textAreaIssue);
         refreshFields();
         textAreaIssue.focusedProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue);
-            else {  // focus removed
-                // is this an email?
-                if(!noteModel.getBoundNote().isEmail()) {
+            if (!newValue) { // Focus lost
+                if (!noteModel.getBoundNote().isEmail()) {
+                    // Check if the text is an email
                     if (NoteDTOProcessor.isEmail(textAreaIssue.getText())) {
-                        // process that into a note dto
-                        NoteDTO noteDTO = NoteDTOProcessor.processEmail(textAreaIssue.getText(), noteModel.getBoundNote().getId());
+                        // Process the text as an email and convert it into a NoteDTO
+                        NoteDTO noteDTO = NoteDTOProcessor.processEmail(
+                                textAreaIssue.getText(),
+                                noteModel.getBoundNote().getId()
+                        );
+                        // Update the bound note with the processed email
                         noteModel.getBoundNote().copyFrom(noteDTO);
-                        logger.info("Processing an email...");
+                        logger.info("Processed an email and updated the note model.");
+                        // Set the TextArea to read-only
                         textAreaIssue.setEditable(false);
                     }
+                    // Trigger the save or update action for the note
                     noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
                 }
             }
