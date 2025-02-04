@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
+import java.util.List;
 import java.util.Objects;
 
 public class TitleBarFx {
@@ -35,6 +36,14 @@ public class TitleBarFx {
         for (Button button : buttons) {
             iconBox.getChildren().add(button);
         }
+        hBox.getChildren().addAll(label, iconBox);
+        return hBox;
+    }
+
+    public static HBox of(String boxInfo, HBox iconBox) {
+        HBox hBox = new HBox(5);
+        Label label = LabelFx.of(boxInfo);
+        label.setPadding(new Insets(0, 0, 0, 5));
         hBox.getChildren().addAll(label, iconBox);
         return hBox;
     }

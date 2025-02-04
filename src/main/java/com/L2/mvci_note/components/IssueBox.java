@@ -11,11 +11,15 @@ import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IssueBox implements Component<Region> {
 
@@ -37,8 +41,8 @@ public class IssueBox implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         textAreaIssue.setPrefWidth(900);
         textAreaIssue.textProperty().bindBidirectional(noteModel.getBoundNote().issueProperty());
-        Button[] buttons = new Button[]{};
-        root.getChildren().addAll(TitleBarFx.of("Issue", buttons), textAreaIssue);
+        HBox iconBox = HBoxFx.iconBox(10);
+        root.getChildren().addAll(TitleBarFx.of("Issue", iconBox), textAreaIssue);
         refreshFields();
         textAreaIssue.focusedProperty().addListener((obs, oldValue, newValue) -> {
             if (!newValue) { // Focus lost
@@ -54,7 +58,10 @@ public class IssueBox implements Component<Region> {
                         noteModel.getBoundNote().copyFrom(noteDTO);
                         logger.info("Processed an email and updated the note model.");
                         // Set the TextArea to read-only
-                        textAreaIssue.setEditable(false);
+
+                        // textAreaIssue.setEditable(false);
+
+                        // add our lock here
                     }
                     // Trigger the save or update action for the note
                     noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
