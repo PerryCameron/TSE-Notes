@@ -255,6 +255,7 @@ public class NoteInteractor {
 
     private String basicInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Customer Provided Information").append("\r\n");
         stringBuilder.append("Case/WO # ");
         if (!noteModel.getBoundNote().getCaseNumber().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getCaseNumber());
@@ -294,6 +295,7 @@ public class NoteInteractor {
 
     private String basicInformationToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<strong>Customer Provided Information</strong><br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Case/WO # </span>");
         if (!noteModel.getBoundNote().getCaseNumber().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getCaseNumber());

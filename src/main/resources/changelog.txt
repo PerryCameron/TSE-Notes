@@ -30,6 +30,6 @@ x.x.x-x
 Added columns, "Created Work Order" and "TEX" so that search would work with them
 Menubar removed, and will now display in the title bar if the menu button pressed
 Added Subject section, will copy subject with model, ie model - subject if present
-Under Basic information, relabeled WO- to Customer Provided WO- for clarity
-Under Basic information, relabeled Case- to Customer Provided Case- for clarity
+Under Basic information, relabeled placeholder text WO- to Customer Provided WO- for clarity
+Under Basic information, relabeled placeholder text Case- to Customer Provided Case- for clarity
 
