@@ -47,6 +47,7 @@ public class NoteController extends Controller<NoteMessage> {
             case COPY_NAME_DATE -> noteInteractor.copyNameDate();
             case SHIPPING_INFORMATION -> noteInteractor.copyShippingInformation();
             case COPY_BASIC_INFORMATION -> noteInteractor.copyBasicInformation();
+            case COPY_SUBJECT -> noteInteractor.copySubject();
             case COPY_CUSTOMER_REQUEST -> noteInteractor.copyCustomerRequest();
             case COPY_ISSUE -> noteInteractor.copyIssue();
             case COPY_ANSWER_TO_CUSTOMER -> noteInteractor.copyAnswerToCustomer();

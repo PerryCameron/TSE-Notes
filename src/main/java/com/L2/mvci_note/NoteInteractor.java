@@ -98,6 +98,10 @@ public class NoteInteractor {
         ClipboardUtils.copyHtmlToClipboard(basicInformationToHTML(), basicInformationToPlainText());
     }
 
+    public void copySubject() {
+        ClipboardUtils.copyHtmlToClipboard(subjectToPlainText(), subjectToPlainText());
+    }
+
     public void copyAnswerToCustomer() {
         logger.info("Copying corrective action, flashing group B (FinalBox, Related, Part Orders, Name/Date");
         ClipboardUtils.copyHtmlToClipboard(answerToCustomerToHTML(), answerToCustomerToPlainText());
@@ -270,6 +274,16 @@ public class NoteInteractor {
                 .append("Service Level: ").append(noteModel.getBoundNote().getServiceLevel()).append("\r\n")
                 .append("Status of the UPS: ").append(noteModel.getBoundNote().getUpsStatus()).append("\r\n")
                 .append("Load Supported: ").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("\r\n");
+        return stringBuilder.toString();
+    }
+
+    private String subjectToPlainText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        if(noteModel.getBoundNote().getModelNumber().isEmpty()) {
+            stringBuilder.append(noteModel.getBoundNote().getTitle()).append("\r\n");
+        } else {
+            stringBuilder.append(noteModel.getBoundNote().getModelNumber()).append(" - ").append(noteModel.getBoundNote().getTitle()).append("\r\n");
+        }
         return stringBuilder.toString();
     }
 
@@ -631,6 +645,5 @@ public class NoteInteractor {
             return NoteMessage.ENABLE_NEXT_BUTTON;
         }
     }
-
 
 }

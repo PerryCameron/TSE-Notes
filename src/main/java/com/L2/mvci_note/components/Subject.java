@@ -4,7 +4,9 @@ import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
+import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.TitleBarFx;
+import com.L2.widgetFx.ToolTipFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -40,8 +42,13 @@ public class Subject implements Component<Region> {
         this.root = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         root.getStyleClass().add("decorative-hbox");
 
-        Button[] buttons = new Button[]{};
-//        hBox.getChildren().addAll(correctiveText(), buttonBox());
+        Button copyButton = ButtonFx.utilityButton(() -> {
+            flash();
+            noteView.getAction().accept(NoteMessage.COPY_SUBJECT);
+        }, "Copy", "/images/copy-16.png");
+        copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
+
+        Button[] buttons = new Button[]{copyButton};
         root.getChildren().addAll(TitleBarFx.of("Subject", buttons), createSubjectField());
         refreshFields();
         root.setOnMouseExited(event -> {
