@@ -54,6 +54,7 @@ public class Subject implements Component<Region> {
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
         TextField textField = new TextField();
+        textField.textProperty().bindBidirectional(noteModel.getBoundNote().titleProperty());
         HBox.setHgrow(textField, Priority.ALWAYS);
         hBox.getChildren().add(textField);
         return hBox;
