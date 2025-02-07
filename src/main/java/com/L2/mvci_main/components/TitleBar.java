@@ -3,29 +3,19 @@ package com.L2.mvci_main.components;
 
 import atlantafx.base.theme.Styles;
 import com.L2.BaseApplication;
-import com.L2.mvci_main.MainMessage;
 import com.L2.mvci_main.MainView;
-import com.L2.widgetFx.ButtonFx;
-import com.L2.widgetFx.MenuFx;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
-import javafx.util.Duration;
 
 import static com.L2.BaseApplication.primaryStage;
 
@@ -54,12 +44,12 @@ public class TitleBar implements Builder<Region> {
         imageView.setFitHeight(24);
         imageView.setFitWidth(24);
 
-        Label titleLabel = null;
+        Label titleLabel;
         // Create the title label
-        if(BaseApplication.testMode)
-            titleLabel = new Label("TSE Notes (Test Mode)");
-        else
-            titleLabel = new Label("TSE Notes");
+        if(BaseApplication.testMode) {
+            hbox.setStyle("-fx-background-color: #a2361e;");
+        }
+        titleLabel = new Label("TSE Notes");
         titleLabel.getStyleClass().add(Styles.TITLE_4);
         titleLabel.setStyle("-fx-text-fill: white;");
 
@@ -75,7 +65,6 @@ public class TitleBar implements Builder<Region> {
             }
         });
 
-
         hbox.setOnMouseDragged(event -> {
             if (!BaseApplication.isResizing) { // Only allow dragging if not resizing
                 primaryStage.setX(event.getScreenX() - xOffset);
@@ -83,12 +72,58 @@ public class TitleBar implements Builder<Region> {
             }
         });
 
-
         // Add the image, title, spacer, and close button to the title bar
-        hbox.getChildren().addAll(imageView, titleLabel, spacer, createMinimizeButton(),
+        hbox.getChildren().addAll(imageView, titleLabel,createMenuButton(), spacer, createMinimizeButton(),
                 createMaximizeButton(), createCloseButton());
         return hbox;
     }
+
+    public Node createMenuButton() {
+        // Define the properties for the lines
+        double lineWidth = 15;
+        double lineThickness = 1.5;
+        double spacing = 3; // spacing between lines
+        Color lineColor = Color.WHITE;
+
+        // Create four horizontal lines
+        Line line1 = new Line(0, 0, lineWidth, 0);
+        line1.setStroke(lineColor);
+        line1.setStrokeWidth(lineThickness);
+
+        Line line2 = new Line(0, 0, lineWidth, 0);
+        line2.setStroke(lineColor);
+        line2.setStrokeWidth(lineThickness);
+
+        Line line3 = new Line(0, 0, lineWidth, 0);
+        line3.setStroke(lineColor);
+        line3.setStrokeWidth(lineThickness);
+
+        Line line4 = new Line(0, 0, lineWidth, 0);
+        line4.setStroke(lineColor);
+        line4.setStrokeWidth(lineThickness);
+
+        // Arrange the lines vertically in a VBox with spacing
+        VBox linesBox = new VBox(spacing, line1, line2, line3, line4);
+        linesBox.setAlignment(Pos.CENTER);
+
+        // Use a StackPane to center the VBox and set a fixed graphic size
+        StackPane graphicPane = new StackPane(linesBox);
+        graphicPane.setPrefSize(20, 20);
+
+        // Create the button and set the graphic
+        Button menuButton = new Button();
+        menuButton.setGraphic(graphicPane);
+        menuButton.getStyleClass().add("maximizeButton");
+
+        // Optionally, add an action handler for the menu button
+        menuButton.setOnAction(e -> {
+            System.out.println("Menu button clicked");
+            // TODO: Add your menu action here
+        });
+
+        return menuButton;
+    }
+
 
     public Node createMinimizeButton() {
         // Create a single horizontal line for the minimize button
@@ -116,30 +151,21 @@ public class TitleBar implements Builder<Region> {
         square.setFill(Color.TRANSPARENT); // Transparent fill
         square.setStrokeWidth(1); // Line width for the outline
 
-
         // Use a StackPane to center the rectangle in the button
         StackPane squarePane = new StackPane(square);
         squarePane.setPrefSize(20, 20); // Adjust size as needed
-
 
         // Create a button and set the StackPane as its graphic
         Button maximizeButton = new Button();
         maximizeButton.setGraphic(squarePane);
         maximizeButton.getStyleClass().add("maximizeButton");
         maximizeButton.setOnAction(e -> {
-            if (primaryStage.isMaximized()) {
-                primaryStage.setMaximized(false); // Restore to windowed mode
-            } else {
-                primaryStage.setMaximized(true); // Maximize the window
-            }
+            primaryStage.setMaximized(!primaryStage.isMaximized()); // Restore to windowed mode
         });
-
 
         // Return the button as a Node
         return maximizeButton;
     }
-
-
 
     public Node createCloseButton() {
         // Create lines for the "X"
@@ -166,6 +192,4 @@ public class TitleBar implements Builder<Region> {
 
         return closeButton;
     }
-
-
 }
