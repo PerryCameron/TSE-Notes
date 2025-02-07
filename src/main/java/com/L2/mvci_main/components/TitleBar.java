@@ -3,11 +3,17 @@ package com.L2.mvci_main.components;
 
 import atlantafx.base.theme.Styles;
 import com.L2.BaseApplication;
+import com.L2.mvci_main.MainMessage;
 import com.L2.mvci_main.MainView;
+import com.L2.static_tools.VersionUtil;
+import com.L2.widgetFx.DialogueFx;
+import com.L2.widgetFx.MenuFx;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import javafx.scene.image.Image;
@@ -22,11 +28,13 @@ import static com.L2.BaseApplication.primaryStage;
 
 public class TitleBar implements Builder<Region> {
     private final MainView mainView;
+    private final BorderPane borderPane;
     private double xOffset = 0;
     private double yOffset = 0;
 
-    public TitleBar(MainView view) {
+    public TitleBar(MainView view, BorderPane borderPane) {
         this.mainView = view;
+        this.borderPane = borderPane;
     }
 
     @Override
@@ -47,7 +55,7 @@ public class TitleBar implements Builder<Region> {
         Label titleLabel;
         // Create the title label
         if(BaseApplication.testMode) {
-            hbox.setStyle("-fx-background-color: #a2361e;");
+            hbox.setStyle("-fx-background-color: #5c1200;");
         }
         titleLabel = new Label("TSE Notes");
         titleLabel.getStyleClass().add(Styles.TITLE_4);
@@ -72,13 +80,30 @@ public class TitleBar implements Builder<Region> {
             }
         });
 
-        // Add the image, title, spacer, and close button to the title bar
-        hbox.getChildren().addAll(imageView, titleLabel,createMenuButton(), spacer, createMinimizeButton(),
+        MenuBar menuBar = setUpMenuBar();
+        Button menuButton = createMenuButton(menuBar);
+
+        borderPane.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            // Only check if the MenuBar is visible
+            if (menuBar.isVisible()) {
+                // Get the bounds of the MenuBar and the Menu Button in scene coordinates
+                Bounds menuBounds = menuBar.localToScene(menuBar.getBoundsInLocal());
+                Bounds buttonBounds = menuButton.localToScene(menuButton.getBoundsInLocal());
+                double x = event.getSceneX();
+                double y = event.getSceneY();
+
+                if (!menuBounds.contains(x, y) && !buttonBounds.contains(x, y)) {
+                    menuBar.setVisible(false);
+                }
+            }
+        });
+
+        hbox.getChildren().addAll(imageView, titleLabel, menuButton, menuBar, spacer, createMinimizeButton(),
                 createMaximizeButton(), createCloseButton());
         return hbox;
     }
 
-    public Node createMenuButton() {
+    public Button createMenuButton(MenuBar menuBar) {
         // Define the properties for the lines
         double lineWidth = 15;
         double lineThickness = 1.5;
@@ -119,6 +144,10 @@ public class TitleBar implements Builder<Region> {
         menuButton.setOnAction(e -> {
             System.out.println("Menu button clicked");
             // TODO: Add your menu action here
+        });
+        menuButton.setOnAction(e -> {
+            // Toggle the MenuBar to visible when button is clicked
+            menuBar.setVisible(true);
         });
 
         return menuButton;
@@ -191,5 +220,40 @@ public class TitleBar implements Builder<Region> {
         closeButton.setOnAction(e -> primaryStage.close());
 
         return closeButton;
+    }
+
+    private MenuBar setUpMenuBar() {
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().addAll(createFileMenu(), createDebugMenu(), createHelpMenu());
+        menuBar.setVisible(false);
+        return menuBar;
+    }
+
+    private Menu createFileMenu() {
+        Menu menu = new Menu("File");
+
+        MenuItem close = MenuFx.menuItemOf("Settings", x -> mainView.getAction().accept(MainMessage.OPEN_SETTINGS), null);
+        menu.getItems().addAll(close);
+        return menu;
+    }
+
+    private Menu createDebugMenu() {
+        Menu menu = new Menu("Debug");
+        MenuItem showDebugLog = MenuFx.menuItemOf("Show Log", x -> mainView.getAction().accept(MainMessage.SHOW_LOG), null);
+        menu.getItems().add(showDebugLog);
+        return menu;
+    }
+
+    private Menu createHelpMenu() {
+        Menu menu = new Menu("Help");
+        String message = "Version: " + VersionUtil.getVersion()
+                + "\nBuilt: " + VersionUtil.getBuildTimestamp()
+                + "\nBundled JDK: " + VersionUtil.getJavaVersion();
+        MenuItem showAboutDialogue = MenuFx.menuItemOf("About", x -> {
+            Alert alert = DialogueFx.aboutDialogue("TSE Notes", message, Alert.AlertType.INFORMATION);
+            alert.showAndWait();
+        }, null);
+        menu.getItems().add(showAboutDialogue);
+        return menu;
     }
 }

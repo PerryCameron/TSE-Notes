@@ -226,3 +226,16 @@
 .range-answer {
     -fx-font-size: 16 !important;
 }
+
+/* Change the text color of the Menu labels to white */
+.menu-bar .label {
+    -fx-text-fill: white;
+}
+
+/* Override MenuItem label color in the popup context */
+.context-menu .menu-item .label {
+    -fx-text-fill: black;
+}
+
+
+

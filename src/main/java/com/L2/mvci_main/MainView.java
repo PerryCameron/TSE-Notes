@@ -34,53 +34,12 @@ public class MainView implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox root = new VBox();
         BorderPane borderPane = new BorderPane();
-        borderPane.setTop(setUpTopPane());
+        borderPane.setTop(new TitleBar(this, borderPane).build()); // <- here is where I create the Menu, what if we used boarderPane instead of scene?
         borderPane.setCenter(setUpCenterPane());
         borderPane.setBottom(setUpBottomPane());
-        root.getChildren().addAll(new TitleBar(this).build(), borderPane);
-        root.setStyle("-fx-border-color: #878484; -fx-border-width: 1;");
-        return root;
-    }
-
-    private Node setUpTopPane() {
-        VBox topElements = new VBox();
-        topElements.getChildren().add(setUpMenuBar());
-        return topElements;
-    }
-
-    private Node setUpMenuBar() {
-        MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(createFileMenu(), createDebugMenu(), createHelpMenu());
-        return menuBar;
-    }
-
-    private Menu createFileMenu() {
-        Menu menu = new Menu("File");
-        MenuItem close = MenuFx.menuItemOf("Settings", x -> action.accept(MainMessage.OPEN_SETTINGS), null);
-        menu.getItems().addAll(close);
-        return menu;
-    }
-
-    private Menu createDebugMenu() {
-        Menu menu = new Menu("Debug");
-        MenuItem showDebugLog = MenuFx.menuItemOf("Show Log", x -> action.accept(MainMessage.SHOW_LOG), null);
-        menu.getItems().add(showDebugLog);
-        return menu;
-    }
-
-    private Menu createHelpMenu() {
-        Menu menu = new Menu("Help");
-        String message = "Version: " + VersionUtil.getVersion()
-                + "\nBuilt: " + VersionUtil.getBuildTimestamp()
-                + "\nBundled JDK: " + VersionUtil.getJavaVersion();
-        MenuItem showAboutDialogue = MenuFx.menuItemOf("About", x -> {
-            Alert alert = DialogueFx.aboutDialogue("TSE Notes", message, Alert.AlertType.INFORMATION);
-            alert.showAndWait();
-        }, null);
-        menu.getItems().add(showAboutDialogue);
-        return menu;
+        borderPane.setStyle("-fx-border-color: #878484; -fx-border-width: 1;");
+        return borderPane;
     }
 
     private Node setUpBottomPane() {
