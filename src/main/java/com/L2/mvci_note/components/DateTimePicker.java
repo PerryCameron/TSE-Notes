@@ -33,6 +33,7 @@ public class DateTimePicker implements Component<Region> {
 
     public DateTimePicker(NoteView noteView) {
         this.root = VBoxFx.of(5.0, new Insets(5, 5, 5, 5));
+        this.root.setPrefWidth(500);
         this.datePicker = new DatePicker(LocalDate.now());
         this.hourSpinner = new Spinner<>();
         this.minuteSpinner = new Spinner<>();
@@ -91,7 +92,7 @@ public class DateTimePicker implements Component<Region> {
         colonLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16");
         // Add components to the HBox
         hBox.getChildren().addAll(datePicker, hourSpinner, colonLabel, minuteSpinner);
-        hBox.setAlignment(Pos.CENTER);
+        hBox.setAlignment(Pos.CENTER_LEFT);
         refreshFields();
         // Bind the dateTimeProperty to the current selection
         return hBox;
