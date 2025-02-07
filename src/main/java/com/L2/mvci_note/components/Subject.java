@@ -8,6 +8,7 @@ import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.ToolTipFx;
 import com.L2.widgetFx.VBoxFx;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 public class Subject implements Component<Region> {
     private final NoteView noteView;
@@ -29,7 +31,10 @@ public class Subject implements Component<Region> {
 
     @Override
     public void flash() {
-
+        root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        pause.setOnFinished(event -> root.setStyle("")); // Reset the style
+        pause.play();
     }
 
     @Override
