@@ -27,4 +27,5 @@ Improved address processing for email
 Added copy back to Basic Information
 
 x.x.x-x
-Added columns, "Created Work Order" and "TEX" to search
+Added columns, "Created Work Order" and "TEX" so that search would work with them
+Menubar removed, and will now display in the title bar if the menu button pressed

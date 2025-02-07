@@ -1,10 +1,7 @@
 package com.L2.mvci_main;
 
 import com.L2.mvci_main.components.TitleBar;
-import com.L2.static_tools.VersionUtil;
 import com.L2.widgetFx.ButtonFx;
-import com.L2.widgetFx.DialogueFx;
-import com.L2.widgetFx.MenuFx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -16,8 +13,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -25,7 +20,7 @@ import java.util.function.Consumer;
 public class MainView implements Builder<Region> {
     private final MainModel mainModel;
     Consumer<MainMessage> action;
-    private static final Logger logger = LoggerFactory.getLogger(MainView.class);
+//    private static final Logger logger = LoggerFactory.getLogger(MainView.class);
 
     public MainView(MainModel mainModel, Consumer<MainMessage> m) {
         this.mainModel = mainModel;

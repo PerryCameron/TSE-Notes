@@ -22,10 +22,12 @@ public class NoteView implements Builder<Region> {
     private final PartOrderHeader partOrderHeader;
     private final FinishBox finishBox;
     private final PartOrderBoxList partOrderBoxList;
+    private final Subject subject;
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
         this.action = message;
+        this.subject = new Subject(this);
         this.basicInformation = new BasicInformation(this);
         this.servicePlanDetails = new ServicePlanDetails(this);
         this.dateTimePicker = new DateTimePicker(this);
@@ -97,6 +99,7 @@ public class NoteView implements Builder<Region> {
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
         vBox.getChildren().addAll(
+                subject.build(),
                 hBox,
                 issueBox.build(),
                 partOrderHeader.build(),
