@@ -24,146 +24,38 @@ public class ClipboardUtils {
 
     public interface Kernel32 extends StdCallLibrary {
         Kernel32 INSTANCE = Native.load("kernel32", Kernel32.class, W32APIOptions.DEFAULT_OPTIONS);
+
         HANDLE GlobalAlloc(int uFlags, int dwBytes);
+
         Pointer GlobalLock(HANDLE hMem);
+
         boolean GlobalUnlock(HANDLE hMem);
+
         HANDLE GlobalFree(HANDLE hMem);
     }
 
     interface User32 extends Library {
         User32 INSTANCE = Native.load("user32", User32.class, W32APIOptions.DEFAULT_OPTIONS);
+
         boolean OpenClipboard(HWND hWnd);
+
         boolean EmptyClipboard();
+
         boolean CloseClipboard();
+
         HANDLE SetClipboardData(int uFormat, HANDLE hMem);
+
         HWND GetActiveWindow();
+
         int RegisterClipboardFormat(String format);
     }
 
-    // this is original
-//    public static void copyHtmlToClipboard(String html, String plainText) {
-//        String htmlHeader = "Version:0.9\r\n" +
-//                "StartHTML:%1$010d\r\n" +
-//                "EndHTML:%2$010d\r\n" +
-//                "StartFragment:%3$010d\r\n" +
-//                "EndFragment:%4$010d\r\n";
-//        String startFragment = "<!--StartFragment-->";
-//        String endFragment = "<!--EndFragment-->";
-//        String htmlContent = "<html><body>" + startFragment + html + endFragment + "</body></html>";
-//        int startHTML = htmlHeader.length() - 40; // 40 is the length of the placeholders
-//        int startFragmentIndex = startHTML + htmlContent.indexOf(startFragment);
-//        int endFragmentIndex = startHTML + htmlContent.indexOf(endFragment) + endFragment.length();
-//        int endHTML = startHTML + htmlContent.length();
-//        String formattedHtml = String.format(htmlHeader, startHTML, endHTML, startFragmentIndex, endFragmentIndex) + htmlContent;
-//        // Plain text version (strip out HTML tags)
-//        // plainText = html.replaceAll("<[^>]+>", "");
-//        // Set the clipboard data
-//        User32.INSTANCE.OpenClipboard(null);
-//        User32.INSTANCE.EmptyClipboard();
-//        try {
-//            // Set HTML format
-//            int CF_HTML = User32.INSTANCE.RegisterClipboardFormat("HTML Format");
-//            setClipboardData(CF_HTML, formattedHtml);
-//            // Set Plain Text format
-//            int CF_TEXT = 1; // 1 is CF_TEXT, which is the standard text format
-//            setClipboardData(CF_TEXT, plainText);
-//        } finally {
-//            User32.INSTANCE.CloseClipboard();
-//        }
-//    }
 
-// this is new below 2nd attempt
-//    public static void copyHtmlToClipboard(String html, String plainText) {
-//        // HTML clipboard format with correct lengths
-//        String htmlHeader = "Version:0.9\r\n" +
-//                "StartHTML:%1$010d\r\n" +
-//                "EndHTML:%2$010d\r\n" +
-//                "StartFragment:%3$010d\r\n" +
-//                "EndFragment:%4$010d\r\n";
-//        String startFragment = "<!--StartFragment-->";
-//        String endFragment = "<!--EndFragment-->";
-//        // Replace non-breaking spaces and ensure proper encoding
-//        html = html.replace("\u00A0", " ").replace("&nbsp;", " ");
-//        String htmlContent = "<html><body>" + startFragment + html + endFragment + "</body></html>";
-//        int startHTML = htmlHeader.length() - 40; // 40 is the length of the placeholders
-//        int startFragmentIndex = startHTML + htmlContent.indexOf(startFragment);
-//        int endFragmentIndex = startHTML + htmlContent.indexOf(endFragment) + endFragment.length();
-//        int endHTML = startHTML + htmlContent.length();
-//        String formattedHtml = String.format(htmlHeader, startHTML, endHTML, startFragmentIndex, endFragmentIndex) + htmlContent;
-//        // Set the clipboard data
-//        User32.INSTANCE.OpenClipboard(null);
-//        User32.INSTANCE.EmptyClipboard();
-//        try {
-//            // Set HTML format
-//            int CF_HTML = User32.INSTANCE.RegisterClipboardFormat("HTML Format");
-//            setClipboardData(CF_HTML, formattedHtml);
-//            // Set Plain Text format
-//            int CF_TEXT = 1; // 1 is CF_TEXT, which is the standard text format
-//            setClipboardData(CF_TEXT, plainText);
-//        } finally {
-//            User32.INSTANCE.CloseClipboard();
-//        }
-//    }
-
-    // this is the third version that also affects the printing of the table
-//    public static void copyHtmlToClipboard(String html, String plainText) {
-//        // HTML clipboard format with correct lengths
-//        System.out.println(html);
-//        System.out.println(plainText);
-//        String htmlHeader = "Version:0.9\r\n" +
-//                "StartHTML:%1$010d\r\n" +
-//                "EndHTML:%2$010d\r\n" +
-//                "StartFragment:%3$010d\r\n" +
-//                "EndFragment:%4$010d\r\n";
-//        String startFragment = "<!--StartFragment-->";
-//        String endFragment = "<!--EndFragment-->";
-//
-//
-//        // Replace non-breaking spaces and ensure proper encoding
-//        html = html.replace("\u00A0", " ").replace("&nbsp;", " ");
-//        String htmlContent = "<html><body>" + startFragment + html + endFragment + "</body></html>";
-//        int startHTML = htmlHeader.length(); // Updated for clarity
-//        int startFragmentIndex = startHTML + htmlContent.indexOf(startFragment);
-//        int endFragmentIndex = startHTML + htmlContent.indexOf(endFragment) + endFragment.length();
-//        int endHTML = startHTML + htmlContent.length();
-//        String formattedHtml = String.format(htmlHeader, startHTML, endHTML, startFragmentIndex, endFragmentIndex) + htmlContent;
-//
-//
-//        // Set the clipboard data
-//        try {
-//            if (!User32.INSTANCE.OpenClipboard(null)) {
-//                throw new IllegalStateException("Could not open clipboard");
-//            }
-//            User32.INSTANCE.EmptyClipboard();
-//
-//
-//            // Set HTML format
-//            int CF_HTML = User32.INSTANCE.RegisterClipboardFormat("HTML Format");
-//            if (CF_HTML == 0) {
-//                throw new IllegalStateException("Failed to register HTML Format");
-//            }
-//            setClipboardData(CF_HTML, formattedHtml);
-//
-//
-//            // Set Plain Text format
-//            int CF_TEXT = 1; // 1 is CF_TEXT, the standard text format
-//            setClipboardData(CF_TEXT, plainText);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            User32.INSTANCE.CloseClipboard();
-//        }
-//    }
-    // attempt 4
     public static void copyHtmlToClipboard(String html, String plainText) {
         try {
             // Ensure proper encoding for HTML
             byte[] htmlBytes = html.getBytes(StandardCharsets.UTF_8);
             String utf8Html = new String(htmlBytes, StandardCharsets.UTF_8);
-
-
-            // Log bytes for debugging
-//            System.out.println("HTML Bytes: " + Arrays.toString(htmlBytes));
 
             // Ensure proper encoding for plain text
             byte[] plainTextBytes = plainText.getBytes(StandardCharsets.UTF_8);
@@ -212,36 +104,52 @@ public class ClipboardUtils {
 
     public static String escapeHtmlContent(String input) {
         if (input == null) return "";
-        return input.replace("&", "&amp;") // Escape ampersand first
+        return input.replace("&", "&amp;") // Escape ampersand first to avoid double-escaping
                 .replace("\"", "&quot;")
                 .replace("'", "&#39;")
+                // Accented vowels (lowercase)
                 .replace("á", "&aacute;")
                 .replace("é", "&eacute;")
                 .replace("í", "&iacute;")
                 .replace("ó", "&oacute;")
                 .replace("ú", "&uacute;")
+                // Accented vowels (uppercase)
                 .replace("Á", "&Aacute;")
                 .replace("É", "&Eacute;")
                 .replace("Í", "&Iacute;")
                 .replace("Ó", "&Oacute;")
                 .replace("Ú", "&Uacute;")
+                // Spanish ñ
                 .replace("ñ", "&ntilde;")
                 .replace("Ñ", "&Ntilde;")
+                // Punctuation
                 .replace("¡", "&iexcl;")
-                .replace("¿", "&iquest;");
+                .replace("¿", "&iquest;")
+                // Degree symbol
+                .replace("°", "&deg;")
+                // Umlauts and other common characters
+                .replace("ä", "&auml;")
+                .replace("ö", "&ouml;")
+                .replace("ü", "&uuml;")
+                .replace("Ä", "&Auml;")
+                .replace("Ö", "&Ouml;")
+                .replace("Ü", "&Uuml;")
+                .replace("ß", "&szlig;")
+                // Cedilla
+                .replace("ç", "&ccedil;")
+                // Grave and circumflex accents for vowels
+                .replace("è", "&egrave;")
+                .replace("ê", "&ecirc;")
+                .replace("à", "&agrave;")
+                .replace("À", "&Agrave;")
+                // Additional characters often used in European names
+                .replace("î", "&icirc;")
+                .replace("ô", "&ocirc;")
+                .replace("ù", "&ugrave;")
+                // Ligatures
+                .replace("œ", "&oelig;")
+                .replace("Œ", "&OElig;");
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private static void setClipboardData(int format, String data) {

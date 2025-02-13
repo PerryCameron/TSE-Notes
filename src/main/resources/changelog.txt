@@ -26,10 +26,11 @@ Added assembly as a status option
 Improved address processing for email
 Added copy back to Basic Information
 
-x.x.x-x
+0.9.9-29
 Added columns, "Created Work Order" and "TEX" so that search would work with them
 Menubar removed, and will now display in the title bar if the menu button pressed
 Added Subject section, will copy subject with model, ie model - subject if present
 Under Basic information, relabeled placeholder text WO- to Customer Provided WO- for clarity
 Under Basic information, relabeled placeholder text Case- to Customer Provided Case- for clarity
+Stamped Template includes subject "Customer Provided Information"
 
