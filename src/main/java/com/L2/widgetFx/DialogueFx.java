@@ -2,10 +2,7 @@ package com.L2.widgetFx;
 
 import com.L2.BaseApplication;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -33,16 +30,51 @@ public class DialogueFx {
         if (headerLabel != null) {
             headerLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
         }
-
         tieAlertToStage(alert);
         dialogPane.getStylesheets().add("css/light.css");
-
-//        dialogPane.getStyleClass().add("myDialog");
         return alert;
     }
 
+    public static String showYesNoCancelDialog() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Action");
+        alert.setHeaderText("Cloning Options");
+        alert.setContentText("Do you want to also clone the parts?");
+
+        Image image = new Image(DialogueFx.class.getResourceAsStream("/images/TSELogo-64.png"));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(64); // Adjust the height as needed
+        imageView.setFitWidth(64);  // Adjust the width as needed
+        alert.setGraphic(imageView);
+
+        // Create custom ButtonTypes for Yes, No, and Cancel.
+        ButtonType buttonYes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType buttonNo = new ButtonType("No", ButtonBar.ButtonData.NO);
+        ButtonType buttonCancel = new ButtonType("Cancel clone", ButtonBar.ButtonData.CANCEL_CLOSE);
+        DialogPane dialogPane = alert.getDialogPane();
+        Label headerLabel = (Label) dialogPane.lookup(".dialog-pane .header-panel .label");
+        if (headerLabel != null) {
+            headerLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        }
+        tieAlertToStage(alert);
+        dialogPane.getStylesheets().add("css/light.css");
+
+        // Set them as the buttons for this alert.
+        alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent()) {
+            if (result.get() == buttonYes) {
+                return "yes";
+            } else if (result.get() == buttonNo) {
+                return "no";
+            } else if (result.get() == buttonCancel) {
+                return "cancel";
+            }
+        }
+        return "";
+    }
+
     public static Alert errorAlert(String header, String message) {
-//        System.out.println("errorAlert");
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(header);
         alert.setContentText(message);
@@ -75,7 +107,7 @@ public class DialogueFx {
         if(o != null) {
             Alert alert = DialogueFx.aboutDialogue(string[0], string[1], Alert.AlertType.CONFIRMATION);
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) return true;
+            return result.isPresent() && result.get() == ButtonType.OK;
         } else {
             Alert alert = DialogueFx.aboutDialogue(string[2],string[3], Alert.AlertType.INFORMATION);
             alert.showAndWait();

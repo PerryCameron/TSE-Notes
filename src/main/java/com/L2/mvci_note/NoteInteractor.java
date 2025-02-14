@@ -6,6 +6,7 @@ import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.repository.implementations.PartOrderRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
 import com.L2.static_tools.*;
+import com.L2.widgetFx.DialogueFx;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -13,10 +14,8 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -450,12 +449,8 @@ public class NoteInteractor {
         // Replace line breaks with <br> for HTML formatting
         escapedText = escapedText.replaceAll("\\r\\n|\\n|\\r", "<br>");
         // Append the escaped text to the StringBuilder and return
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(escapedText);
-        stringBuilder.append("<br>");
-        return stringBuilder.toString();
+        return escapedText + "<br>";
     }
-
 
     public void setComplete() {
         logger.info("Note {} has been set to completed", noteModel.getBoundNote().getId());
@@ -467,7 +462,6 @@ public class NoteInteractor {
         saveOrUpdateNote(); // I feel like this can go
         NoteDTO noteDTO = new NoteDTO(0, false);
         noteDTO.setId(noteRepo.insertNote(noteDTO));
-//        System.out.println(noteDTO.getId());
         noteModel.getNotes().add(noteDTO);
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         noteModel.getBoundNote().setId(noteDTO.getId());
@@ -476,23 +470,50 @@ public class NoteInteractor {
     }
 
     public void cloneNote() {
-        // create a new note
-        NoteDTO noteDTO = new NoteDTO(0, false);
-        // copy fields from bound note to our new note
-        noteDTO.copyFrom(noteModel.getBoundNote());
-        // set the timestamp on our new note
-        noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-        // let's insert the note and get the id from the database
-        noteDTO.setId(noteRepo.insertNote(noteDTO));
-        // let's add the note to our list of notes
-        noteModel.getNotes().add(noteDTO);
-        // let's sort our list so our new note sits on top
-        noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
-        // let's make the bound note copy our new note
-        noteModel.getBoundNote().copyFrom(noteDTO);
-//        System.out.println("Part Orders " + noteModel.getBoundNote().getPartOrders().size());
-        noteModel.getBoundNote().getPartOrders().clear();
-        noteModel.refreshBoundNote();
+        String answer = DialogueFx.showYesNoCancelDialog();
+        if(!answer.equals("cancel")) {
+            // create a new note
+            NoteDTO noteDTO = new NoteDTO(0, false);
+            // copy fields from bound note to our new note
+            noteDTO.copyFrom(noteModel.getBoundNote());
+            // set the timestamp on our new note
+            noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+            // insert the note and get the id from the database
+            noteDTO.setId(noteRepo.insertNote(noteDTO));
+            // add cloned to the title
+            noteDTO.setTitle("(cloned) " + noteDTO.getTitle());
+            // update our note this is not redundant because title doesn't get inserted on creation
+            noteRepo.updateNote(noteDTO);
+            // add the note to our list of notes
+            noteModel.getNotes().add(noteDTO);
+            // sort our list so our new note floats to the top
+            noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
+            // let's make the bound note copy our new note
+            noteModel.getBoundNote().copyFrom(noteDTO);
+            // time to add part orders / parts if selected
+            if(answer.equals("yes")) {
+                cloneParts(noteDTO);
+            }
+            noteModel.getBoundNote().getPartOrders().clear();
+            noteModel.refreshBoundNote();
+        } else {
+            logger.info("Note {} cloning has been cancelled", noteModel.getBoundNote().getId());
+        }
+    }
+
+    private void cloneParts(NoteDTO noteDTO) {
+        int partOrderId;
+        for(PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
+            // create new part order object
+            PartOrderDTO newPartOrderDTO = new PartOrderDTO(noteDTO.getId());
+            // insert new part order and get id from it.
+            partOrderId = partOrderRepo.insertPartOrder(newPartOrderDTO);
+            // cycle through parts that were in the original part order
+            for(PartDTO partDTO : partOrderDTO.getParts()) {
+                PartDTO newPartDTO = new PartDTO(partOrderId, partDTO);
+                partOrderRepo.insertPart(newPartDTO);
+            }
+        }
     }
 
     public void logCurrentEntitlement() {
@@ -610,9 +631,10 @@ public class NoteInteractor {
             }
         }
         if (!noteModel.getBoundNote().getPartOrders().isEmpty()) {
-            noteModel.getBoundNote().getPartOrders().forEach(partOrder -> deletePartOrder(partOrder));
+            noteModel.getBoundNote().getPartOrders().forEach(this::deletePartOrder);
         }
-        noteRepo.deleteNote(deletedNoteDTO);
+        if(deletedNoteDTO != null)
+            noteRepo.deleteNote(deletedNoteDTO);
         noteModel.getNotes().remove(deletedNoteDTO);
     }
 

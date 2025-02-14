@@ -33,6 +33,16 @@ public class PartDTO {
         this.partEditable.set(false);
     }
 
+    public PartDTO(int partOrderId, PartDTO partDTO) {
+        this.id.set(0);
+        this.partOrderId.set(partOrderId);
+        this.partNumber.set(partDTO.getPartNumber());
+        this.partDescription.set(partDTO.getPartDescription());
+        this.partQuantity.set(partDTO.getPartQuantity());
+        this.serialReplaced.set(partDTO.getSerialReplaced());
+        this.partEditable.set(partDTO.isPartEditable());
+    }
+
     public int getPartOrderId() {
         return partOrderId.get();
     }
