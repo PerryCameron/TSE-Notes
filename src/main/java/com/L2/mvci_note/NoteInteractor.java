@@ -496,6 +496,7 @@ public class NoteInteractor {
             }
             noteModel.getBoundNote().getPartOrders().clear();
             noteModel.refreshBoundNote();
+            if(answer.equals("yes")) refreshPartOrders();
         } else {
             logger.info("Note {} cloning has been cancelled", noteModel.getBoundNote().getId());
         }

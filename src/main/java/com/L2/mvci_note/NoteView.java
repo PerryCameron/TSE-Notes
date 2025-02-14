@@ -51,15 +51,6 @@ public class NoteView implements Builder<Region> {
         return scrollPane;
     }
 
-//    private void noteTabOpenListener() {
-//        noteModel.openNoteTabProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue) {
-//                 action.accept(NoteMessage.SELECT_NOTE_TAB);
-//                System.out.println("testing");
-//            }
-//        });
-//    }
-
     private void refreshBoundNoteListener() {
         noteModel.refreshBoundNoteProperty().addListener((observable, oldValue, newValue) -> {
            if (newValue != true) {
