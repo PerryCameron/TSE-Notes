@@ -46,7 +46,6 @@ public class NotesTable implements Component<Region> {
         return tableView;
     }
 
-
     private void addScrollListener(TableView<?> tableView) {
         tableView.skinProperty().addListener((obs, oldSkin, newSkin) -> {
             if (newSkin != null) {
@@ -71,15 +70,16 @@ public class NotesTable implements Component<Region> {
                     if (event.getDeltaY() > 0 && verticalScrollBar.getValue() == 0.0) {
                         actionInProgress = true;
                         noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
-                        resetActionFlag();
+//                        resetActionFlag();
+                        actionInProgress = false;
                     } else if (event.getDeltaY() < 0 && verticalScrollBar.getValue() == 1.0) {
                         actionInProgress = true;
                         noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
-                        resetActionFlag();
+//                        resetActionFlag();
+                        actionInProgress = false;
                     }
-            } else System.out.println("No action taken");
+            } else noteListView.getAction().accept(NoteListMessage.NO_ACTION_TAKEN_FOR_SCROLL);
         });
-
 
         tableView.setOnKeyPressed(event -> {
             // don't do anything if there is an active search
@@ -89,27 +89,28 @@ public class NotesTable implements Component<Region> {
                         if (verticalScrollBar.getValue() == 0.0) {
                             actionInProgress = true;
                             noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
-                            resetActionFlag();
+//                            resetActionFlag();
+                            actionInProgress = false;
                         }
                         break;
                     case DOWN:
                         if (verticalScrollBar.getValue() == 1.0) {
                             actionInProgress = true;
                             noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
-                            resetActionFlag();
+//                            resetActionFlag();
+                            actionInProgress = false;
                         }
                         break;
                     default:
                         break;
                 }
-            } else System.out.println("No action taken");
+            } else noteListView.getAction().accept(NoteListMessage.NO_ACTION_TAKEN_FOR_KEY_PRESS);
         });
     }
 
-
-    private void resetActionFlag() {
-        Platform.runLater(() -> actionInProgress = false);
-    }
+//    private void resetActionFlag() {
+//        Platform.runLater(() -> actionInProgress = false);
+//    }
 
     private TableColumn<NoteDTO, String> col0() {
         TableColumn<NoteDTO, String> col = TableColumnFx.stringTableColumn(NoteDTO::formattedTimestampProperty, "Date/Time");

@@ -52,6 +52,9 @@ public class NoteListController extends Controller<NoteListMessage> {
             case SEARCH -> noteListInteractor.searchParameters();
             case UPDATE_RANGE_LABEL -> noteListInteractor.updateRange();
             case UPDATE_TABLE -> noteListInteractor.updateTable();
+            case NO_ACTION_TAKEN_FOR_SCROLL -> noteListInteractor.logNoActionForScroll();
+            case NO_ACTION_TAKEN_FOR_SEARCH -> noteListInteractor.logNoActionForSearch();
+            case NO_ACTION_TAKEN_FOR_KEY_PRESS -> noteListInteractor.logNoActionForKeyPress();
         }
     }
 }
