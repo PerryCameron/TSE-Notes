@@ -1,3 +1,9 @@
+ALTER TABLE table_name ADD COLUMN new_column_name TEXT;
+ALTER TABLE table_name ADD COLUMN new_column_name INTEGER;
+ALTER TABLE my_table ADD COLUMN new_column INTEGER NOT NULL DEFAULT 0;
+
+
+
 setx JAVA_HOME "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full"
 
 

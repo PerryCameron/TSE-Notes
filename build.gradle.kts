@@ -94,22 +94,6 @@ tasks.jar {
     }
 }
 
-//tasks.register<Exec>("generateRuntime") {
-//    group = "build"
-//    description = "Generates a custom Java runtime image using jlink"
-//    // Run the jlink command
-//    commandLine(
-//        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/bin/jlink",
-//        "--module-path", "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jmods",
-//        "--add-modules", "java.base,java.desktop,java.prefs,java.sql.rowset,javafx.controls,jdk.unsupported",
-//        "--output", "build/runtime",
-//        "--strip-debug",
-//        "--compress", "2",
-//        "--no-header-files",
-//        "--no-man-pages"
-//    )
-//}
-
 tasks.register<Exec>("generateRuntime") {
     group = "build"
     description = "Generates a custom Java runtime image using jlink"
