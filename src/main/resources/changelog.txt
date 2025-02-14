@@ -34,3 +34,9 @@ Under Basic information, relabeled placeholder text WO- to Customer Provided WO-
 Under Basic information, relabeled placeholder text Case- to Customer Provided Case- for clarity
 Stamped Template includes subject "Customer Provided Information"
 
+1.0.0-2
+Changed pagenator to go back to the 50 latest when you scroll back to the top.
+Added dialogue which gives choice to add parts or not when cloning a note.
+Updated the JDK from 21.0.4 to 21.0.6
+
+

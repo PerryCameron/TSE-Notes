@@ -1,169 +1,234 @@
-.root{
-    -fx-base:#25292D;
-    -fx-font-size: 9pt;
-    -fx-font-family: "Verdana";
-}
-
-.button {
-    -fx-text-fill:white;
-    -fx-wrap-text: true;
-    -fx-effect: dropshadow( three-pass-box, #1658e7, 2.0, 0.0, 0.0, 0.0);
-    -fx-cursor:hand;
-}
-
-.button:hover {
-    -fx-background-color: #1658e7;
-    -fx-text-fill:white;
-}
-
-.toggle-button {
-    -fx-text-fill: white;
-    -fx-wrap-text: true;
-    -fx-effect: dropshadow( three-pass-box, #1658e7, 2.0, 0.0, 0.0, 0.0);
-    -fx-cursor: hand;
-}
-
-.toggle-button:hover {
-    -fx-background-color: #1658e7;
-    -fx-text-fill: white;
-}
-
-.toggle-button:selected {
-    -fx-background-color: #1658e7;
-    -fx-text-fill: white;
-}
-
-.scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-
-.scroll-pane {
-    -fx-background-color: transparent;
-}
-
-.table-view .virtual-flow .scroll-bar:vertical .thumb{
-    -fx-background-color:  #1658e7;
-}
-.table-view .virtual-flow .scroll-bar:horizontal .thumb {
-    -fx-background-color:  #1658e7;
-}
 
 
-.combo-box-base:hover
-{
-    -fx-color: #1658e7;
+/* Set a fixed width for all tabs */
+.tab {
+    -fx-pref-width: 150px; /* Set the preferred width for each tab */
 }
 
-.check-box .box {
-    -fx-background-color: white;
-    -fx-border-color:grey;
-    -fx-border-radius:3px;
+/* Style for unselected tabs */
+.tab {
+    -fx-background-color: #737171; /* Unselected tab background color */
+    -fx-text-fill: black;           /* Unselected tab text color */
+
 }
 
-.check-box:selected .mark {
-    -fx-background-color: #1658e7;
+/* Style for the selected tab */
+.tab:selected {
+    -fx-background-color: #504f4f; /* Selected tab background color */     /* Selected tab text color */
 }
 
-.radio-button:selected .radio .dot {
-    -fx-background-color: #1658e7;
-    -fx-background-insets: 0;
-}
-.radio-button .radio {
-    -fx-border-width: 1px;
-    -fx-border-color: grey;
-    -fx-background-color: white;
-    -fx-background-image: null;
-    -fx-border-radius: 15px;
-    -fx-padding: 3px;
+.tab .tab-label {
+    -fx-font-weight: bold;
+    -fx-padding: 2px;
 }
 
-#big-button {
-    -fx-font-size: 22px;
-    -fx-background-radius: 12px;
-}
-
-/*box-grey*/
-#box-frame-light {
-    -fx-background-color: #6c7179; /* #dfdada*/
-}
-
-#box-background-light {
-    -fx-background-color: #6c7179; /* #dfdada*/
-}
-/*black box*/
-#box-frame-dark {
-    -fx-background-color: #383f45;
-}
-
-#box-background-dark {
-    -fx-background-color: #25292D;
-}
-
-#sub-box-background-light {
-    -fx-background-color: #ececec;
-}
-
-.separator *.line {
-    -fx-border-style: solid;
-    -fx-border-width: 0 0 2 0; /* its make really one-pixel-border */
-    -fx-border-color: black;
-}
-
-#labels {
+.tab:selected .tab-label {
+    -fx-text-fill: black;
     -fx-font-weight: bold;
 }
 
-#slip-fonts {
-    -fx-font-size: 11px;
+/*This is the space to the right of the tabs at the top*/
+.tab-header-background {
+    -fx-background-color: #e2e1e1;
 }
 
-/*#committee-title {*/
-/*    -fx-text-fill: #ffffff;*/
+/*This controls the background of the entire center pane*/
+.center-pane {
+    -fx-background-color: #e2e1e1;
+}
+
+
+.bottom-pane {
+    -fx-background-color: grey;
+}
+
+
+
+/* Optional: Remove focus border from tabs */
+.tab-pane:focused > .tab-header-area > .tab:selected {
+    -fx-background-color: #2980b9; /* Match this to selected tab color to remove focus border */
+}
+
+/*This is where all the buttons are located at the bottom of the page.*/
+.bottom-pane {
+    -fx-background-color: #7a7777;
+}
+
+.title-pane .title {
+    -fx-font-size: 12px;
+}
+
+.titledPane > .title {
+    -fx-font-size: 10px;
+    -fx-background-color: #F5F6F6FF;
+    -fx-padding: 0px;
+    -fx-padding: 1 0 0 10px; /* top right bottom left */
+}
+
+.titledPane > .content {
+    -fx-padding: 1;
+    -fx-background-color: #F5F6F6FF;
+}
+
+.main-vbox {
+    -fx-background-color: #504f4f;
+}
+
+.decorative-hbox {
+    -fx-background-color: #686868;
+    -fx-background-radius: 5;
+}
+
+.decorative-hbox .label {
+    -fx-font-size: 12px;
+    -fx-text-fill: black;
+}
+
+.decorative-hbox .label:hover {
+    -fx-text-fill: red;
+}
+
+.decorative-header-box {
+    -fx-background-color: #d6dada;
+    -fx-background-radius: 5;
+}
+
+.decorative-header-box .label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #000000;
+}
+
+.decorative-header-box .label:hover {
+    -fx-text-fill: red;
+}
+/* styles.css */
+.inner-decorative-hbox {
+    -fx-background-color: #efeded;
+    -fx-background-radius: 5;
+}
+
+/* Make the button transparent */
+.invisible-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0 4 0 4; /* Remove padding */
+}
+
+/* Keep the image fully visible */
+.invisible-button .image-view {
+    -fx-opacity: 1;
+}
+
+/* On hover, show a selection effect */
+.invisible-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.1); /* Light transparent background on hover */
+    -fx-border-radius: 5; /* Optional: rounded corners on hover */
+    -fx-cursor: hand; /* Change cursor to pointer */
+}
+
+.text-field-error {
+    -fx-border-color: red;
+    -fx-border-radius: 5px;
+}
+
+/*.table-cell:focused, .table-cell:selected {*/
+/*    -fx-background-color: lightblue; !* Or any color you prefer *!*/
+/*    -fx-text-fill: black; !* Adjust the text color if necessary *!*/
 /*}*/
-.progress-indicator-style .progress-indicator {
-    -fx-progress-color: #1658e7;
+
+
+/*.table-row-cell:selected {*/
+/*    -fx-background-color: lightblue; !* Background color of selected row *!*/
+/*}*/
+
+.table-cell:selected {
+    -fx-background-color: #d2efea; /* Background color of selected cell */
+    -fx-text-fill: black; /* Text color in the selected cell */
 }
 
-#datepicker-tableview .text-field {
-    -fx-background-color: white;
+
+.menu-bar {
+    -fx-background-color: transparent; /* Make the background transparent */
+    -fx-border-color: transparent;     /* Remove any borders */
 }
 
-.standard-bordered-box {
-    -fx-background-color: #6c7179;
-    -fx-border-color: #807f7f;
-    -fx-border-width: 2px;
-    -fx-border-style: solid;
+.menu-bar .menu {
+    -fx-text-fill: white;              /* Set menu text color to white */
+    -fx-background-color: transparent; /* Make menu background transparent */
 }
 
-.standard-box {
-    -fx-background-color: #6c7179;
+.menu-bar .menu-item {
+    -fx-text-fill: white;
 }
 
-.standard-black-label {
-    -fx-text-fill: black;
+.menu-bar .menu:hover {
+    -fx-background-color: transparent; /* Prevent hover background color */
+
 }
 
-.standard-red-label {
-    -fx-text-fill: #921111;
+.menu-bar .menu-button {
+    -fx-background-color: transparent; /* Make the menu button transparent */
 }
 
-.standard-bold-label {
-    -fx-text-fill: black;
-    -fx-font-size: 12pt;
+.menu-bar .menu-item:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1); /* Slight hover effect for items */
+}
+
+.menu-bar .label {
+    -fx-fill: white;
+}
+
+.custom-close-button {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+.custom-close-button:hover {
+    -fx-background-color: red; /* Highlight color on hover */
+}
+
+.title-bar {
+    -fx-background-color: #3a6684;
+}
+
+.maximizeButton {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.maximizeButton:hover {
+    -fx-background-color: #516d87;
+}
+
+.prominent-label {
+    -fx-font-size: 16 !important;
     -fx-font-weight: bold;
 }
 
-.scroll-pane-border {
-    -fx-background-color: #6c7179;
-    -fx-border-color: #807f7f;
-    -fx-border-width: 2px;
-    -fx-border-style: solid;
+.prominent-answer {
+    -fx-font-size: 16 !important;         /* Ensures font size is 16 */
+    -fx-font-weight: bold;     /* Ensures bold font */
+    -fx-text-fill: red 16 !important;        /* Sets text color to red */
+    -fx-effect: null;          /* Removes any overriding effects */
+    -fx-opacity: 1.0;          /* Ensures text is fully visible */
+    -fx-label-padding: 0;      /* Avoids padding issues */
 }
 
-.scroll-pane-border .thumb {
-    -fx-background-color: #ececec;
+.range-answer {
+    -fx-font-size: 16 !important;
 }
 
-#box-test {
-    -fx-background-color: blue;
+/* Change the text color of the Menu labels to white */
+.menu-bar .label {
+    -fx-text-fill: white;
+}
+
+/* Override MenuItem label color in the popup context */
+.context-menu .menu-item .label {
+    -fx-text-fill: black;
 }

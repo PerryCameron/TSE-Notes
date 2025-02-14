@@ -40,6 +40,7 @@ public class NoteListView implements Builder<Region> {
     @Override
     public Region build() {
         VBox root = new VBox(10);
+        root.getStyleClass().add("main-vbox");
         root.setPadding(new Insets(10, 10, 0, 10));
         root.getChildren().addAll(navigation(), notesTable.build());
         noteListModel.refreshTableProperty().addListener((observable, oldValue, newValue) -> {

@@ -41,6 +41,7 @@ public class NoteView implements Builder<Region> {
 
     @Override
     public Region build() {
+        VBox vBox = VBoxFx.of(true, 10, new Insets(10, 0, 0, 0));
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(setMainVBox());
@@ -48,7 +49,8 @@ public class NoteView implements Builder<Region> {
         refreshBoundNoteListener();
         boundNoteListener();
 //        noteTabOpenListener();
-        return scrollPane;
+        vBox.getChildren().add(scrollPane);
+        return vBox;
     }
 
     private void refreshBoundNoteListener() {
@@ -87,6 +89,7 @@ public class NoteView implements Builder<Region> {
 
     private Node setMainVBox() {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
+        vBox.getStyleClass().add("main-vbox");
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
         vBox.getChildren().addAll(
