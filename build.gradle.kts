@@ -103,8 +103,8 @@ tasks.register<Exec>("generateRuntime") {
     }
 
     commandLine(
-        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin/jlink.exe",  // Updated path
-        "--module-path", "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/jmods",
+        "C:/Users/sesa91827/.jdks/jdk-21.0.6-full/bin/jlink.exe",  // Updated path
+        "--module-path", "C:/Users/sesa91827/.jdks/jdk-21.0.6-full/jmods",
         "--add-modules", "java.base,java.desktop,java.prefs,java.sql.rowset,javafx.controls,jdk.unsupported",
         "--output", "build/runtime",
         "--strip-debug",
@@ -126,7 +126,7 @@ tasks.register<Exec>("packageApp") {
 
     // Directly point to the jpackage tool in your Java 21 SDK
     commandLine(
-        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin/jpackage",  // Path to your jpackage
+        "C:/Users/sesa91827/.jdks/jdk-21.0.6-full/bin/jpackage",  // Path to your jpackage
         "--input",
         "build/libs",  // Path to the JAR file directory
         "--main-jar",
@@ -138,7 +138,7 @@ tasks.register<Exec>("packageApp") {
         "--type",
         "app-image",  // You can also use pkg, dmg, exe, etc.
         "--runtime-image",
-        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full",  // Path to Java 21 runtime image
+        "C:/Users/sesa91827/.jdks/jdk-21.0.6-full",  // Path to Java 21 runtime image
         "--dest",
         "build/jpackage",  // Output destination
         "--icon",
@@ -155,13 +155,13 @@ tasks.register<Exec>("packageAppInstallerWindows") {
     }
 
     commandLine(
-        "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full/jdk-21.0.4-full/bin/jpackage",
+        "C:/Users/sesa91827/.jdks/jdk-21.0.6-full/bin/jpackage",
         "--input", "build/libs",
         "--main-jar", "TSENotes-all.jar",
         "--main-class", "com.L2.BaseApplication",
         "--name", "TSENotes",
         "--type", "exe",  // You can also use "msi" for a Windows installer
-        "--runtime-image", "C:/Users/sesa91827/.jdks/bellsoft-jdk21.0.4+9-windows-amd64-full",
+        "--runtime-image", "C:/Users/sesa91827/.jdks/jdk-21.0.6-full",
         "--dest", "build/jpackage/TSENotesInstaller",
         "--install-dir", System.getenv("UserProfile") + "/TSENotes",  // Install in user's home directory
         "--icon", "src/main/resources/images/TSELogo.ico",  // Path to your ICO file for Windows

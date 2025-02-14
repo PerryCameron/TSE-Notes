@@ -6,6 +6,8 @@ build/
 src/main/java/com/L2/static_tools/AddressParseTest.java
 resources/note.txt
 
+src/main/resources/note.txt
+
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
