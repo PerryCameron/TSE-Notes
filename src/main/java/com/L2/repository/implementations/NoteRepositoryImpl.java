@@ -23,7 +23,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     // Constructor to pass in the manually created JdbcTemplate
     public NoteRepositoryImpl() {
-        this.jdbcTemplate = new JdbcTemplate(DatabaseConnector.getDataSource());
+        this.jdbcTemplate = new JdbcTemplate(DatabaseConnector.getDataSource("Note Repo"));
     }
 
     @Override

@@ -15,7 +15,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     // Constructor to pass in the manually created JdbcTemplate
     public UserRepositoryImpl() {
-        this.jdbcTemplate = new JdbcTemplate(DatabaseConnector.getDataSource());
+        this.jdbcTemplate = new JdbcTemplate(DatabaseConnector.getDataSource("User Repo"));
     }
 
     @Override

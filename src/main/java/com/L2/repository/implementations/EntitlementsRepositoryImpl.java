@@ -21,7 +21,7 @@ public class EntitlementsRepositoryImpl implements EntitlementsRepository {
 
     // Constructor to pass in the manually created JdbcTemplate
     public EntitlementsRepositoryImpl() {
-        this.jdbcTemplate = new JdbcTemplate(DatabaseConnector.getDataSource());
+        this.jdbcTemplate = new JdbcTemplate(DatabaseConnector.getDataSource("Entitlements Repo"));
     }
 
     @Override

@@ -24,7 +24,7 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
 
 
     public PartOrderRepositoryImpl() {
-        this.jdbcTemplate = new JdbcTemplate(DatabaseConnector.getDataSource());
+        this.jdbcTemplate = new JdbcTemplate(DatabaseConnector.getDataSource("Part Order Repo"));
     }
 
     @Override
