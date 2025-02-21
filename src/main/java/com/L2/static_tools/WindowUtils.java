@@ -30,7 +30,7 @@ public class WindowUtils {
             double mouseY = event.getY();
             double stageWidth = stage.getWidth();
             double stageHeight = stage.getHeight();
-            double border = 10; // Distance from the edge to trigger resizing
+            double border = 5; // Distance from the edge to trigger resizing
 
 
             // Detect cursor position for resizing

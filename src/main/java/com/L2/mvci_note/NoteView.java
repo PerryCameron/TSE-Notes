@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 public class NoteView implements Builder<Region> {
     private final NoteModel noteModel;
     private final Consumer<NoteMessage> action;
+    private final Subject subject;
     private final BasicInformation basicInformation;
     private final ServicePlanDetails servicePlanDetails;
     private final DateTimePicker dateTimePicker;
@@ -22,7 +23,7 @@ public class NoteView implements Builder<Region> {
     private final PartOrderHeader partOrderHeader;
     private final FinishBox finishBox;
     private final PartOrderBoxList partOrderBoxList;
-    private final Subject subject;
+
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -41,7 +42,7 @@ public class NoteView implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox vBox = VBoxFx.of(true, 10, new Insets(10, 0, 0, 0));
+        VBox vBox = VBoxFx.of(true, 10, new Insets(10, 5, 0, 0));
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(setMainVBox());
@@ -66,7 +67,6 @@ public class NoteView implements Builder<Region> {
 
     private void boundNoteListener() {
         noteModel.getBoundNote().idProperty().subscribe(() -> {
-//            System.out.println("NoteView::boundNoteListener -> refresh part orders, select note in TableView, change tab name, enable/disable next button");
             // sends signal to noteListener to add part orders to currently selected NoteDTO
             action.accept(NoteMessage.REFRESH_PART_ORDERS);
             // sends signal to noteListInteractor to select current NoteDTO
