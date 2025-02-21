@@ -1,7 +1,6 @@
 package com.L2;
 
 import atlantafx.base.theme.PrimerLight;
-import atlantafx.base.theme.PrimerDark;
 import com.L2.mvci_main.MainController;
 import com.L2.static_tools.*;
 import javafx.application.Application;
@@ -33,7 +32,13 @@ public class BaseApplication extends Application {
         }
         // I prefer logs in the console in test mode
         if (!testMode) AppFileTools.startFileLogger();
-        logger.info("TSENotes version {} Starting...", VersionUtil.getVersion());
+        logger.info("  _______  _____    ______ ");
+        logger.info(" |__   __ |  ___|  |  ____|");
+        logger.info("    | |   | (___   | |__ ");
+        logger.info("    | |    \\___ \\  |  __| ");
+        logger.info("    | |    ____) ) | |____");
+        logger.info("    |_|   |_____/  |______|");
+        logger.info("    Notes version {} Starting...", VersionUtil.getVersion());
         launch(args);
     }
 
