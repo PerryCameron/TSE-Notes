@@ -12,6 +12,7 @@ import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class BaseApplication extends Application {
@@ -37,7 +38,7 @@ public class BaseApplication extends Application {
     }
 
     @Override
-    public void init() {
+    public void init() throws IOException {
         // create /TSCNotes in user home if not already there (first time launch)
         AppFileTools.createFileIfNotExists(ApplicationPaths.secondaryDbDirectory);
         // checks for one drive path, if no one-drive path, default to user home
@@ -46,6 +47,10 @@ public class BaseApplication extends Application {
         if (!BaseApplication.dataBaseLocation.resolve(dataBase).toFile().exists()) {
             // this will create the schema, but also will populate a few rows needed for application.
             SQLiteDatabaseCreator.createDataBase(dataBase);
+        } else {
+            // the database already exits, lets check that it is up to date
+            DatabaseTools.backupDatabase();
+            DatabaseTools.checkForDatabaseChanges();
         }
     }
 
