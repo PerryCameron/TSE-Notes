@@ -8,6 +8,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.text.Text;
 
 import java.util.List;
 import java.util.function.Function;
@@ -40,35 +41,42 @@ public class TableColumnFx {
             List<String> options,
             String defaultValue) {
 
+
         TableColumn<T, String> col = new TableColumn<>(label);
 
-        // Set the cell value factory to display the property value
+
+        // Set the cell value factory to bind to the property with default fallback
         col.setCellValueFactory(cellData -> {
             StringProperty prop = property.apply(cellData.getValue());
             return Bindings.createStringBinding(() ->
                     prop.get() != null && !prop.get().isEmpty() ? prop.get() : defaultValue, prop);
         });
 
-        // Set the cell factory to use a ComboBox for editing
+
+        // Set the cell factory
         col.setCellFactory(column -> new TableCell<T, String>() {
             private final ComboBox<String> comboBox = new ComboBox<>();
+            private final Text text = new Text();
+
 
             {
                 comboBox.getItems().addAll(options);
-                comboBox.setValue(defaultValue); // Set initial value
+                comboBox.setValue(defaultValue);
 
-                // Update model only when editing
-                comboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+
+                // Commit edit when ComboBox value changes
+                comboBox.setOnAction(event -> { // Use setOnAction instead of listener
                     if (isEditing() && getTableRow() != null && getTableRow().getItem() != null) {
-                        T item = getTableRow().getItem();
-                        property.apply(item).set(newValue != null ? newValue : defaultValue);
+                        String newValue = comboBox.getValue() != null ? comboBox.getValue() : defaultValue;
+                        commitEdit(newValue);
                     }
                 });
 
-                setGraphic(comboBox);
+
+                setGraphic(text);
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                comboBox.setVisible(false); // Hidden until editing
             }
+
 
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -76,27 +84,51 @@ public class TableColumnFx {
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
                     setGraphic(null);
                 } else {
-                    comboBox.setValue(item != null && !item.isEmpty() ? item : defaultValue);
-                    setGraphic(comboBox);
-                    comboBox.setVisible(isEditing());
+                    String displayValue = item != null && !item.isEmpty() ? item : defaultValue;
+                    if (isEditing()) {
+                        comboBox.setValue(displayValue);
+                        setGraphic(comboBox);
+                    } else {
+                        text.setText(displayValue);
+                        setGraphic(text);
+                    }
                 }
             }
 
             @Override
             public void startEdit() {
                 super.startEdit();
-                comboBox.setVisible(true);
+                String currentValue = text.getText();
+                comboBox.setValue(currentValue);
+                setGraphic(comboBox);
+                comboBox.show(); // Show dropdown immediately
                 comboBox.requestFocus();
+            }
+
+            @Override
+            public void commitEdit(String newValue) {
+                super.commitEdit(newValue); // Pass the new value to the TableColumn
+                T item = getTableRow().getItem();
+                if (item != null) {
+                    property.apply(item).set(newValue); // Update the model
+                }
+                text.setText(newValue); // Update display
+                setGraphic(text); // Switch back to text
             }
 
             @Override
             public void cancelEdit() {
                 super.cancelEdit();
-                comboBox.setVisible(false);
+                text.setText(getItem()); // Revert to original value
+                setGraphic(text);
             }
         });
 
         col.setEditable(true);
         return col;
     }
+
+
+
+
 }

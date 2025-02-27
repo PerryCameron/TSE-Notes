@@ -94,7 +94,7 @@ public class PartOrderBoxList implements Component<Region> {
         VBox lineTypeBox = lineTypeToggle();
 
         // Set a top margin (e.g., 10 pixels) on lineTypeBox
-        VBox.setMargin(lineTypeBox, new Insets(10, 0, 0, 0));
+        VBox.setMargin(lineTypeBox, new Insets(20, 0, 0, 0));
 
         // Now add all nodes to the parent vBox
         vBox.getChildren().addAll(addPartButton, deleteButton, lineTypeBox);
@@ -221,6 +221,7 @@ public class PartOrderBoxList implements Component<Region> {
         col.setOnEditCommit(event -> {
             noteModel.getSelectedPart().setLineType(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
+            System.out.println("Updating part to " + event.getNewValue());
         });
         col.setMaxWidth(175);
         col.setPrefWidth(150);
