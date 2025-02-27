@@ -12,7 +12,8 @@ public class PartOrderRowMapper implements RowMapper<PartOrderDTO> {
         return new PartOrderDTO(
                 rs.getInt("id"),
                 rs.getInt("noteId"),
-                rs.getString("orderNumber")
+                rs.getString("orderNumber"),
+                rs.getBoolean("showType")
         );
     }
 }

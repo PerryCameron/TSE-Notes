@@ -574,7 +574,7 @@ public class NoteInteractor {
 
     public void insertPartOrder() {
         int noteId = noteModel.getBoundNote().getId();
-        PartOrderDTO partOrderDTO = new PartOrderDTO(0, noteId, "");
+        PartOrderDTO partOrderDTO = new PartOrderDTO(0, noteId, "", false);
         partOrderDTO.setId(partOrderRepo.insertPartOrder(partOrderDTO));
         noteModel.getBoundNote().getPartOrders().add(partOrderDTO);
         noteModel.setSelectedPartOrder(noteModel.getBoundNote().getPartOrders().getLast());

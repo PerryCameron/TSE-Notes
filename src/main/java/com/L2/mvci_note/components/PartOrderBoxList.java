@@ -65,7 +65,6 @@ public class PartOrderBoxList implements Component<Region> {
     private Node menu(TableView<PartDTO> tableView, PartOrderDTO partOrderDTO) {
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(5, 0, 5, 5));
-//        vBox.setPrefWidth(100);
         Button addPartButton = ButtonFx.utilityButton(() -> {
 //            noteModel.setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.INSERT_PART);
@@ -91,21 +90,20 @@ public class PartOrderBoxList implements Component<Region> {
         }, "Delete", "/images/delete-16.png");
 
         // Create the VBox from your method
-        VBox lineTypeBox = lineTypeToggle();
+        HBox lineTypeBox = lineTypeToggle();
 
         // Set a top margin (e.g., 10 pixels) on lineTypeBox
         VBox.setMargin(lineTypeBox, new Insets(20, 0, 0, 0));
-
+        vBox.getStyleClass().add("inner-decorative-hbox");
         // Now add all nodes to the parent vBox
         vBox.getChildren().addAll(addPartButton, deleteButton, lineTypeBox);
         return vBox;
     }
 
-    private VBox lineTypeToggle() {
-        VBox vBox = new VBox(5);
-        vBox.getStyleClass().add("inner-decorative-hbox");
+    private HBox lineTypeToggle() {
+        HBox vBox = new HBox(5);
         vBox.setPadding(new Insets(15, 5, 15, 5));
-        Label label = new Label("Show Line-type");
+        Label label = new Label("Show Type");
         ToggleSwitch toggleSwitch = new ToggleSwitch();
         vBox.getChildren().addAll(label, toggleSwitch);
         return vBox;
