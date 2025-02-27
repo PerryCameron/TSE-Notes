@@ -155,8 +155,8 @@ public class BasicInformation implements Component<Region> {
 
     private Node callInInfo() {
         VBox vBox = VBoxFx.of(5.5, new Insets(0, 40, 0, 0));
-        textFields[0] = TextFieldFx.createValidatedTextField(200,"Customer Provided WO-", StringChecker::formatWorkOrder, noteView);
-        textFields[1] = TextFieldFx.createValidatedTextField(200,"Customer Provided Case-", StringChecker::formatCaseNumber, noteView);
+        textFields[0] = TextFieldFx.createValidatedTextField(200,"Provided WO", StringChecker::formatWorkOrder, noteView);
+        textFields[1] = TextFieldFx.createValidatedTextField(200,"Provided Case", StringChecker::formatCaseNumber, noteView);
         textFields[2] = TextFieldFx.standardTextField(200, "Model");
         textFields[3] = TextFieldFx.standardTextField(200, "Serial");
         textFields[4] = TextFieldFx.createValidatedTextField(200, "Call-in Contact", StringChecker::formatName, noteView);
