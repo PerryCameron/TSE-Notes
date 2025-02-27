@@ -72,8 +72,8 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
 
     @Override
     public int insertPart(PartDTO partDTO) {
-        String sql = "INSERT INTO Parts (partOrderId, partNumber, partDescription, partQuantity, serialReplaced, partEditable) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Parts (partOrderId, partNumber, partDescription, partQuantity, serialReplaced, partEditable, lineType) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -85,6 +85,7 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
             ps.setString(4, partDTO.getPartQuantity());
             ps.setString(5, partDTO.getSerialReplaced());
             ps.setInt(6, partDTO.isPartEditable() ? 1 : 0);
+            ps.setString(7, partDTO.getLineType());
             return ps;
         }, keyHolder);
 
@@ -94,7 +95,7 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
 
     @Override
     public int updatePart(PartDTO partDTO) {
-        String sql = "UPDATE Parts SET partOrderId = ?, partNumber = ?, partDescription = ?, partQuantity = ?, serialReplaced = ?, partEditable = ? WHERE id = ?";
+        String sql = "UPDATE Parts SET partOrderId = ?, partNumber = ?, partDescription = ?, partQuantity = ?, serialReplaced = ?, partEditable = ?, lineType= ?  WHERE id = ?";
         return jdbcTemplate.update(sql,
                 partDTO.getPartOrderId(),
                 partDTO.getPartNumber(),
@@ -102,6 +103,7 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
                 partDTO.getPartQuantity(),
                 partDTO.getSerialReplaced(),
                 partDTO.isPartEditable() ? 1 : 0,
+                partDTO.getLineType(),
                 partDTO.getId());
     }
 

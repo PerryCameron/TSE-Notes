@@ -32,8 +32,8 @@ public class DatabaseTools {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
             // Check and add order_type column if it doesn't exist
-            if (!columnExists(dataSource, "PartOrders", "order_type")) {
-                addOrderTypeColumn(jdbcTemplate);
+            if (!columnExists(dataSource, "Parts", "lineType")) {
+                addLineTypeColumn(jdbcTemplate);
             }
 
         } catch (Exception e) {
@@ -56,10 +56,10 @@ public class DatabaseTools {
         }
     }
 
-    private static void addOrderTypeColumn(JdbcTemplate jdbcTemplate) {
-        String sql = "ALTER TABLE PartOrders ADD COLUMN order_type INTEGER DEFAULT 0 NOT NULL";
+    private static void addLineTypeColumn(JdbcTemplate jdbcTemplate) {
+        String sql = "ALTER TABLE Parts ADD COLUMN lineType TEXT DEFAULT 'Advanced Exchange' NOT NULL";
         jdbcTemplate.execute(sql);
-        logger.info("Added order_type column to PartOrders table");
+        logger.info("Added lineType column to Parts table");
     }
 
     public static void backupDatabase() throws IOException {

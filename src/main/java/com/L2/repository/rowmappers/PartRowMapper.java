@@ -16,7 +16,8 @@ public class PartRowMapper implements RowMapper<PartDTO> {
                 rs.getString("partDescription"),
                 rs.getString("partQuantity"),
                 rs.getString("serialReplaced"),
-                rs.getInt("partEditable") == 1
+                rs.getInt("partEditable") == 1,
+                rs.getString("lineType")
         );
     }
 }

@@ -1,5 +1,6 @@
 package com.L2.mvci_note.components;
 
+import atlantafx.base.controls.ToggleSwitch;
 import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
 import com.L2.interfaces.Component;
@@ -17,10 +18,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class PartOrderBoxList implements Component<Region> {
 
@@ -67,7 +65,7 @@ public class PartOrderBoxList implements Component<Region> {
     private Node menu(TableView<PartDTO> tableView, PartOrderDTO partOrderDTO) {
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(5, 0, 5, 5));
-        vBox.setPrefWidth(100);
+//        vBox.setPrefWidth(100);
         Button addPartButton = ButtonFx.utilityButton(() -> {
 //            noteModel.setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.INSERT_PART);
@@ -91,9 +89,25 @@ public class PartOrderBoxList implements Component<Region> {
         Button deleteButton = ButtonFx.utilityButton( () -> {
             noteView.getAction().accept(NoteMessage.DELETE_PART);
         }, "Delete", "/images/delete-16.png");
-//        Separator separator = new Separator();
-//        TextField textField = TextFieldFx.of(250, "Search");
-        vBox.getChildren().addAll(addPartButton, deleteButton);
+
+        // Create the VBox from your method
+        VBox lineTypeBox = lineTypeToggle();
+
+        // Set a top margin (e.g., 10 pixels) on lineTypeBox
+        VBox.setMargin(lineTypeBox, new Insets(10, 0, 0, 0));
+
+        // Now add all nodes to the parent vBox
+        vBox.getChildren().addAll(addPartButton, deleteButton, lineTypeBox);
+        return vBox;
+    }
+
+    private VBox lineTypeToggle() {
+        VBox vBox = new VBox(5);
+        vBox.getStyleClass().add("inner-decorative-hbox");
+        vBox.setPadding(new Insets(15, 5, 15, 5));
+        Label label = new Label("Show Line-type");
+        ToggleSwitch toggleSwitch = new ToggleSwitch();
+        vBox.getChildren().addAll(label, toggleSwitch);
         return vBox;
     }
 
@@ -164,7 +178,7 @@ public class PartOrderBoxList implements Component<Region> {
         TableView<PartDTO> tableView = TableViewFx.of(PartDTO.class);
         tableView.setItems(partOrderDTO.getParts()); // Set the ObservableList here
         tableView.setEditable(true);
-        tableView.getColumns().addAll(Arrays.asList(col1(),col2(),col3()));
+        tableView.getColumns().addAll(Arrays.asList(col1(),col2(),col3(),col4()));
         tableView.setPlaceholder(new Label(""));
         tableView.setPrefHeight(160);
 
@@ -185,12 +199,36 @@ public class PartOrderBoxList implements Component<Region> {
             noteModel.getSelectedPart().setPartNumber(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
-        col.setMaxWidth(200);
-        col.setPrefWidth(200);
+        col.setMaxWidth(150);
+        col.setPrefWidth(150);
         return col;
     }
 
     private TableColumn<PartDTO, String> col2() {
+        // Define options and default value
+        List<String> lineTypeOptions = Arrays.asList("Advanced Exchange", "Ship Only", "Return Only");
+        String defaultLineType = "Advanced Exchange";
+
+
+        TableColumn<PartDTO, String> col = TableColumnFx.comboBoxTableColumn(
+                PartDTO::lineTypeProperty,
+                "Line Type",
+                lineTypeOptions,
+                defaultLineType
+        );
+
+        col.setStyle("-fx-alignment: center-left");
+        col.setOnEditCommit(event -> {
+            noteModel.getSelectedPart().setLineType(event.getNewValue());
+            noteView.getAction().accept(NoteMessage.UPDATE_PART);
+        });
+        col.setMaxWidth(175);
+        col.setPrefWidth(150);
+
+        return col;
+    }
+
+    private TableColumn<PartDTO, String> col3() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partDescriptionProperty,"Part Description");
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
@@ -200,7 +238,7 @@ public class PartOrderBoxList implements Component<Region> {
         return col;
     }
 
-    private TableColumn<PartDTO, String> col3() {
+    private TableColumn<PartDTO, String> col4() {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partQuantityProperty,"Qty");
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {

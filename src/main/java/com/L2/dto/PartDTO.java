@@ -12,8 +12,9 @@ public class PartDTO {
     private final StringProperty partQuantity =  new SimpleStringProperty();
     private final StringProperty serialReplaced =  new SimpleStringProperty();
     private final BooleanProperty partEditable =  new SimpleBooleanProperty();
+    private final StringProperty lineType =  new SimpleStringProperty();
 
-    public PartDTO(Integer id, Integer partOrderId, String partNumber, String partDescription, String partQuantity, String serialReplaced, boolean partEditable) {
+    public PartDTO(Integer id, Integer partOrderId, String partNumber, String partDescription, String partQuantity, String serialReplaced, boolean partEditable, String lineType) {
         this.id.set(id);
         this.partOrderId.set(partOrderId);
         this.partNumber.set(partNumber);
@@ -21,6 +22,7 @@ public class PartDTO {
         this.partQuantity.set(partQuantity);
         this.serialReplaced.set(serialReplaced);
         this.partEditable.set(partEditable);
+        this.lineType.set(lineType);
     }
 
     public PartDTO(int partOrderId) {
@@ -31,6 +33,7 @@ public class PartDTO {
         this.partQuantity.set("");
         this.serialReplaced.set("");
         this.partEditable.set(false);
+        this.lineType.set("");
     }
 
     public PartDTO(int partOrderId, PartDTO partDTO) {
@@ -41,6 +44,7 @@ public class PartDTO {
         this.partQuantity.set(partDTO.getPartQuantity());
         this.serialReplaced.set(partDTO.getSerialReplaced());
         this.partEditable.set(partDTO.isPartEditable());
+        this.lineType.set(partDTO.getLineType());
     }
 
     public int getPartOrderId() {
@@ -140,6 +144,18 @@ public class PartDTO {
 
     public void setPartEditable(boolean partEditable) {
         this.partEditable.set(partEditable);
+    }
+
+    public String getLineType() {
+        return lineType.get();
+    }
+
+    public StringProperty lineTypeProperty() {
+        return lineType;
+    }
+
+    public void setLineType(String lineType) {
+        this.lineType.set(lineType);
     }
 
     public String toTestString() {
