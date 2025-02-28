@@ -250,20 +250,23 @@ public class NoteInteractor {
 
     private String shippingInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
+        NoteDTO note = noteModel.getBoundNote();
         stringBuilder.append("--- Shipping Contact ---").append("\r\n");
-        stringBuilder.append("Name: ").append(noteModel.getBoundNote().getContactName()).append("\r\n");
-        stringBuilder.append("Email: ").append(noteModel.getBoundNote().getContactEmail()).append("\r\n");
-        stringBuilder.append("Phone: ").append(noteModel.getBoundNote().getContactPhoneNumber())
+        stringBuilder.append("Name: ").append(note.getContactName()).append("\r\n");
+        if (!note.getContactEmail().equals(""))
+        stringBuilder.append("Email: ").append(note.getContactEmail()).append("\r\n");
+        if (!note.getContactPhoneNumber().equals(""))
+        stringBuilder.append("Phone: ").append(note.getContactPhoneNumber())
                 .append("\r\n").append("\r\n");
         stringBuilder
                 .append("--- Shipping Address ---").append("\r\n");
-        if (!noteModel.getBoundNote().getInstalledAt().isEmpty())
-            stringBuilder.append(noteModel.getBoundNote().getInstalledAt()).append("\r\n");
-        stringBuilder.append(noteModel.getBoundNote().getStreet()).append("\r\n")
-                .append(noteModel.getBoundNote().getCity()).append(" ")
-                .append(noteModel.getBoundNote().getState()).append(" ")
-                .append(noteModel.getBoundNote().getZip()).append("\r\n")
-                .append(noteModel.getBoundNote().getCountry()).append("\r\n");
+        if (!note.getInstalledAt().isEmpty())
+            stringBuilder.append(note.getInstalledAt()).append("\r\n");
+        stringBuilder.append(note.getStreet()).append("\r\n")
+                .append(note.getCity()).append(" ")
+                .append(note.getState()).append(" ")
+                .append(note.getZip()).append("\r\n")
+                .append(note.getCountry()).append("\r\n");
         return stringBuilder.toString();
     }
 

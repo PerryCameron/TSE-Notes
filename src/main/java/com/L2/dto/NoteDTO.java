@@ -90,7 +90,6 @@ public class NoteDTO {
         this.additionalCorrectiveActionText.set("");
         this.relatedCaseNumber.set("");
         this.tAndM.set("");
-//        System.out.print("NoteDTO created (2 params), timeStamp: " + this.timestamp.get() + " Id: " );
     }
 
     public NoteDTO(Integer id, LocalDateTime timestamp, String workOrder, String caseNumber, String serialNumber,

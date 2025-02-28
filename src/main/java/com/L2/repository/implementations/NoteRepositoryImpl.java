@@ -58,7 +58,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         String sql = "INSERT INTO Notes (timestamp, workOrder, caseNumber, serialNumber, modelNumber, callInPerson, " +
                 "callInPhoneNumber, callInEmail, underWarranty, activeServiceContract, serviceLevel, schedulingTerms, upsStatus, " +
                 "loadSupported, issue, contactName, contactPhoneNumber, contactEmail, street, installedAt, city, state, zip, country, " +
-                "createdWorkOrder, tex, partsOrder, completed, isEmail, additionalCorrectiveActionText, relatedCaseNumber) " +
+                "createdWorkOrder, tex, partsOrder, completed, isEmail, additionalCorrectiveActionText, relatedCaseNumber, t_and_m) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();

@@ -61,6 +61,8 @@ public class NoteView implements Builder<Region> {
                dateTimePicker.refreshFields();
                basicInformation.refreshFields();
                issueBox.refreshFields();
+               System.out.print(getNoteModel().getBoundNote().getId() + " ");
+               System.out.println(getNoteModel().getBoundNote().gettAndM());
            }
         });
     }

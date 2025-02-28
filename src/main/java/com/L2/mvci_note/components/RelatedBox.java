@@ -33,7 +33,7 @@ public class RelatedBox implements Component<Region> {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
         this.root = new VBox();
-        this.texTextField = TextFieldFx.standardTextField(200,  "TEX-");
+        this.texTextField = TextFieldFx.standardTextField(200,  "TEX");
         this.relatedCaseTextField = TextFieldFx.standardTextField(200,  "Created Case");
         this.createdWorkOrderTextField = TextFieldFx.createValidatedTextField(200,  "WO-", StringChecker::formatWorkOrder, noteView);
         this.tAndMTextField = TextFieldFx.standardTextField(200, "T&M");
@@ -51,7 +51,10 @@ public class RelatedBox implements Component<Region> {
         root.getChildren().add(tex());
         root.getChildren().add(tAndM());
         refreshFields();
-        root.setOnMouseExited(event -> noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE));
+        root.setOnMouseExited(event -> {
+            noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+            System.out.println("updating related info by saving note");
+        });
         return root;
     }
 
@@ -61,7 +64,7 @@ public class RelatedBox implements Component<Region> {
         vbox.setPadding(new Insets(2, 0, 2, 2));
         Label label = new Label("Time and Materials");
         label.setPadding(new Insets(0,0,0,5));
-        texTextField.textProperty().bindBidirectional(noteModel.getBoundNote().tAndMProperty());
+        tAndMTextField.textProperty().bindBidirectional(noteModel.getBoundNote().tAndMProperty());
         vbox.getChildren().addAll(label, tAndMTextField);
         return vbox;
     }
@@ -70,7 +73,7 @@ public class RelatedBox implements Component<Region> {
         VBox vbox = new VBox();
         vbox.setSpacing(2);
         vbox.setPadding(new Insets(2, 0, 2, 2));
-        Label label = new Label("TEX");
+        Label label = new Label("Technical Expert Assessments");
         label.setPadding(new Insets(0,0,0,5));
         texTextField.textProperty().bindBidirectional(noteModel.getBoundNote().texProperty());
         vbox.getChildren().addAll(label, texTextField);
