@@ -168,7 +168,7 @@ public class NoteInteractor {
             stringBuilder.append("<tr>")
                     .append("<th>Part Number</th>");
             if (noteModel.getSelectedPartOrder().showType()) {
-                stringBuilder.append("<th>Line Type</th>");
+                stringBuilder.append("<th>Type</th>");
             }
             stringBuilder.append("<th>Description</th>")
                     .append("<th>Qty</th>")
@@ -224,7 +224,6 @@ public class NoteInteractor {
         noteModel.setUser(userRepo.getUser());
         logger.info("Loading user: {}", noteModel.getUser().getSesa());
     }
-
 
     private String buildNameDateToPlainText() {
         return noteModel.getUser().getFullName() + "\t\t" + noteModel.getBoundNote().formattedDate();
@@ -415,17 +414,22 @@ public class NoteInteractor {
         stringBuilder.append(shippingInformationToPlainText()).append("\r\n");
         if (!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
             stringBuilder.append("Created ")
-                    .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("\r\n").append("\r\n");
+                    .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("\r\n");
         }
+        if (!noteModel.getBoundNote().getTex().isEmpty()) {
+            stringBuilder.append("Created ")
+                    .append(noteModel.getBoundNote().getTex()).append("\r\n");
+        }
+        if (!noteModel.getBoundNote().gettAndM().isEmpty()) {
+            stringBuilder.append("Created T&M ")
+                    .append(noteModel.getBoundNote().gettAndM()).append("\r\n");
+        }
+        stringBuilder.append("\r\n");
         if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("\r\n").append("\r\n");
         }
         if(partsOrdered)
         stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
-        if (!noteModel.getBoundNote().getTex().isEmpty()) {
-            stringBuilder.append("Created ")
-                    .append(noteModel.getBoundNote().getTex()).append("\r\n");
-        }
         return stringBuilder.toString();
     }
 
@@ -486,18 +490,26 @@ public class NoteInteractor {
     private String answerToCustomerToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
+        // created wo, TEX, or T&M
         if (!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
             stringBuilder.append("Created ")
-                    .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("\r\n").append("\r\n");
+                    .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("\r\n");
         }
-        if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
-            stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("\r\n").append("\r\n");
+        if (!noteModel.getBoundNote().gettAndM().isEmpty()) {
+            stringBuilder.append("Created T&M ")
+                    .append(noteModel.getBoundNote().gettAndM()).append("\r\n");
         }
-        stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
         if (!noteModel.getBoundNote().getTex().isEmpty()) {
             stringBuilder.append("Created ")
                     .append(noteModel.getBoundNote().getTex()).append("\r\n");
         }
+        stringBuilder.append("\r\n");
+        // add corrective action text
+        if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
+            stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("\r\n").append("\r\n");
+        }
+        // add any part orders
+        stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
         return stringBuilder.toString();
     }
 
@@ -506,16 +518,21 @@ public class NoteInteractor {
         stringBuilder.append(buildNameDateToHTML()).append("<br>");
         if (!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
             stringBuilder.append("Created ")
-                    .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("<br><br>");
+                    .append(noteModel.getBoundNote().getCreatedWorkOrder()).append("<br>");
         }
-        if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
-            stringBuilder.append(getCorrectiveActionText());
+        if (!noteModel.getBoundNote().gettAndM().isEmpty()) {
+            stringBuilder.append("Created T&M ")
+                    .append(noteModel.getBoundNote().gettAndM()).append("<br>");
         }
-        stringBuilder.append(copyAllPartOrdersToHTML(true)).append("<br>");
         if (!noteModel.getBoundNote().getTex().isEmpty()) {
             stringBuilder.append("Created ")
                     .append(noteModel.getBoundNote().getTex()).append("<br>");
         }
+        stringBuilder.append("<br>");
+        if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
+            stringBuilder.append(getCorrectiveActionText());
+        }
+        stringBuilder.append(copyAllPartOrdersToHTML(true)).append("<br>");
         return stringBuilder.toString();
     }
 

@@ -58,7 +58,6 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
 
     @Override
     public int updatePartOrder(PartOrderDTO partOrder) {
-        System.out.println("update part order");
         String sql = "UPDATE PartOrders SET noteId = ?, orderNumber = ?, showType = ? WHERE id = ?";
         return jdbcTemplate.update(sql, partOrder.getNoteId(), partOrder.getOrderNumber(), partOrder.showTypeProperty().get(), partOrder.getId());
     }
@@ -121,12 +120,4 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
         // Use partOrderDTO to get the partOrderId and pass it to the query
         return jdbcTemplate.query(sql, new PartRowMapper(), partOrderDTO.getId());
     }
-
-//    public void testDeletePart(PartDTO partDTO) {
-//        System.out.println("PartOrderRepo: deleting part: " + partDTO.getId());
-//    }
-//
-//    public void testDeletePartOrder(PartOrderDTO partOrderDTO) {
-//        System.out.println("PartOrderRepo: deleting part order: " + partOrderDTO.getId());
-//    }
 }
