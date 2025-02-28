@@ -3,6 +3,7 @@ package com.L2.static_tools;
 import com.L2.BaseApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.sqlite.SQLiteDataSource;
 
@@ -38,6 +39,9 @@ public class DatabaseTools {
             if (!columnExists(dataSource, "PartOrders", "showType")) {
                 addShowTypeColumn(jdbcTemplate);
             }
+            if (!columnExists(dataSource, "Notes", "t_and_m")) {
+                addTMColumn(jdbcTemplate);
+            }
 
         } catch (Exception e) {
             logger.error("Error during database schema check/update", e);
@@ -58,7 +62,8 @@ public class DatabaseTools {
             throw new RuntimeException("Failed to check column existence", e);
         }
     }
-// this is using sqlite
+
+    // this is using sqlite
     private static void addLineTypeColumn(JdbcTemplate jdbcTemplate) {
         String sql = "ALTER TABLE Parts ADD COLUMN lineType TEXT DEFAULT 'Advanced Exchange' NOT NULL";
         jdbcTemplate.execute(sql);
@@ -69,6 +74,12 @@ public class DatabaseTools {
         String sql = "ALTER TABLE PartOrders ADD COLUMN showType INTEGER DEFAULT 0 NOT NULL CHECK (showType IN (0, 1))";
         jdbcTemplate.execute(sql);
         logger.info("Added showType column to PartOrders table");
+    }
+
+    private static void addTMColumn(JdbcTemplate jdbcTemplate) {
+        String sql = "ALTER TABLE Notes ADD COLUMN t_and_m TEXT DEFAULT '' NOT NULL";
+        jdbcTemplate.execute(sql);
+        logger.info("Added t_and_m column to Notes table");
     }
 
     public static void backupDatabase() throws IOException {

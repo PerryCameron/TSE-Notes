@@ -59,7 +59,7 @@ public class NoteRepositoryImpl implements NoteRepository {
                 "callInPhoneNumber, callInEmail, underWarranty, activeServiceContract, serviceLevel, schedulingTerms, upsStatus, " +
                 "loadSupported, issue, contactName, contactPhoneNumber, contactEmail, street, installedAt, city, state, zip, country, " +
                 "createdWorkOrder, tex, partsOrder, completed, isEmail, additionalCorrectiveActionText, relatedCaseNumber) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -97,6 +97,7 @@ public class NoteRepositoryImpl implements NoteRepository {
             ps.setInt(29, note.isEmail() ? 1 : 0);
             ps.setString(30, note.getAdditionalCorrectiveActionText());
             ps.setString(31, note.getRelatedCaseNumber());
+            ps.setString(32, note.gettAndM());
             return ps;
         }, keyHolder);
 
@@ -114,7 +115,7 @@ public class NoteRepositoryImpl implements NoteRepository {
                 "loadSupported = ?, issue = ?, contactName = ?, contactPhoneNumber = ?, " +
                 "contactEmail = ?, street = ?, installedAt = ?, city = ?, state = ?, zip = ?, " +
                 "country = ?, createdWorkOrder = ?, tex = ?, partsOrder = ?, " +
-                "completed = ?, isEmail = ?, additionalCorrectiveActionText = ?, relatedCaseNumber = ?, title = ? " +
+                "completed = ?, isEmail = ?, additionalCorrectiveActionText = ?, relatedCaseNumber = ?, title = ?, t_and_m = ? " +
                 "WHERE id = ?";
         jdbcTemplate.update(sql,
                 note.getTimestamp().toString(),  // Assuming timestamp is a LocalDateTime
@@ -149,6 +150,7 @@ public class NoteRepositoryImpl implements NoteRepository {
                 note.getAdditionalCorrectiveActionText(),
                 note.getRelatedCaseNumber(),
                 note.getTitle(),
+                note.gettAndM(),
                 note.getId()  // WHERE clause based on id
         );
     }

@@ -22,6 +22,7 @@ import javafx.util.Duration;
 public class RelatedBox implements Component<Region> {
     private final NoteView noteView;
     private final NoteModel noteModel;
+    private final TextField tAndMTextField;
     private VBox root;
     TextField texTextField;
     TextField relatedCaseTextField;
@@ -35,6 +36,7 @@ public class RelatedBox implements Component<Region> {
         this.texTextField = TextFieldFx.standardTextField(200,  "TEX-");
         this.relatedCaseTextField = TextFieldFx.standardTextField(200,  "Created Case");
         this.createdWorkOrderTextField = TextFieldFx.createValidatedTextField(200,  "WO-", StringChecker::formatWorkOrder, noteView);
+        this.tAndMTextField = TextFieldFx.standardTextField(200, "T&M");
     }
 
     @Override
@@ -45,13 +47,23 @@ public class RelatedBox implements Component<Region> {
         Button[] buttons = new Button[] {  };
         root.getChildren().addAll(TitleBarFx.of("Related", buttons));
         root.getChildren().add(followUpWorkOrderTextField());
-        root.getChildren().add(relatedCase());
+        root.getChildren().add(createdCase());
         root.getChildren().add(tex());
+        root.getChildren().add(tAndM());
         refreshFields();
-        root.setOnMouseExited(event -> {
-            noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
-        });
+        root.setOnMouseExited(event -> noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE));
         return root;
+    }
+
+    private Node tAndM() {
+        VBox vbox = new VBox();
+        vbox.setSpacing(2);
+        vbox.setPadding(new Insets(2, 0, 2, 2));
+        Label label = new Label("Time and Materials");
+        label.setPadding(new Insets(0,0,0,5));
+        texTextField.textProperty().bindBidirectional(noteModel.getBoundNote().tAndMProperty());
+        vbox.getChildren().addAll(label, tAndMTextField);
+        return vbox;
     }
 
     private Node tex() {
@@ -65,7 +77,7 @@ public class RelatedBox implements Component<Region> {
         return vbox;
     }
 
-    private Node relatedCase() {
+    private Node createdCase() {
         VBox vbox = new VBox();
         vbox.setSpacing(2);
         vbox.setPadding(new Insets(2, 0, 2, 2));

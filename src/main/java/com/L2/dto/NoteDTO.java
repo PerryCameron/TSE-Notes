@@ -47,6 +47,7 @@ public class NoteDTO {
     private BooleanProperty isEmail = new SimpleBooleanProperty();
     private StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
     private StringProperty relatedCaseNumber = new SimpleStringProperty();
+    private StringProperty tAndM = new SimpleStringProperty();
     private ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public NoteDTO() {
@@ -88,6 +89,7 @@ public class NoteDTO {
         this.isEmail.set(isEmail);
         this.additionalCorrectiveActionText.set("");
         this.relatedCaseNumber.set("");
+        this.tAndM.set("");
 //        System.out.print("NoteDTO created (2 params), timeStamp: " + this.timestamp.get() + " Id: " );
     }
 
@@ -99,7 +101,7 @@ public class NoteDTO {
                    String city, String state, String zip, String country,
                    String createdWorkOrder, String tex, Integer partsOrder,
                    Boolean completed, Boolean isEmail, String additionalCorrectiveActionText,
-                   String relatedCaseNumber) {
+                   String relatedCaseNumber, String tAndM) {
         this.id.set(id);
         this.timestamp.set(timestamp);
         this.workOrder.set(workOrder);
@@ -133,6 +135,7 @@ public class NoteDTO {
         this.isEmail.set(isEmail);
         this.additionalCorrectiveActionText.set(additionalCorrectiveActionText);
         this.relatedCaseNumber.set(relatedCaseNumber);
+        this.tAndM.set(tAndM);
     }
 
     public void copyFrom(NoteDTO noteDTO) {
@@ -169,6 +172,7 @@ public class NoteDTO {
         isEmail.set(noteDTO.isEmail());
         additionalCorrectiveActionText.set(noteDTO.getAdditionalCorrectiveActionText());
         relatedCaseNumber.set(noteDTO.getRelatedCaseNumber());
+        tAndM.set(noteDTO.gettAndM());
         id.set(noteDTO.getId()); // since this is listened to, it must copy last
 //        System.out.println("NoteDTO copied, timeStamp: " + this.timestamp.get() + " id: " + this.id.get());
 //        System.out.println();
@@ -208,6 +212,7 @@ public class NoteDTO {
         this.isEmail.set(false);
         this.additionalCorrectiveActionText.set("");
         this.relatedCaseNumber.set("");
+        this.tAndM.set("");
     }
 
     /**
@@ -672,6 +677,18 @@ public class NoteDTO {
 
     public void setPartsList(List<PartOrderDTO> partsList) {
         this.parts.set(FXCollections.observableArrayList(partsList));
+    }
+
+    public String gettAndM() {
+        return tAndM.get();
+    }
+
+    public StringProperty tAndMProperty() {
+        return tAndM;
+    }
+
+    public void settAndM(String tAndM) {
+        this.tAndM.set(tAndM);
     }
 
     public String toTest() {
