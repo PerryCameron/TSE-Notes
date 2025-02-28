@@ -177,7 +177,6 @@ public class PartOrderBoxList implements Component<Region> {
         map.put("line-type", col2());
         map.put("description", col3());
         map.put("quantity", col4());
-        System.out.println("show lines: " + partOrderDTO.showTypeProperty().get());
         // set lineType visibility for the first time
         lineTypeIsShown(map, partOrderDTO.showTypeProperty().get(), tableView);
         // if showType changes then change visibility of lineType
@@ -236,7 +235,6 @@ public class PartOrderBoxList implements Component<Region> {
         col.setOnEditCommit(event -> {
             noteModel.getSelectedPart().setLineType(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
-            System.out.println("Updating part to " + event.getNewValue());
         });
         col.setMinWidth(175);
         col.setPrefWidth(175);

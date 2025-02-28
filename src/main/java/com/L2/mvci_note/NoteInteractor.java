@@ -145,7 +145,6 @@ public class NoteInteractor {
 
     private String buildPartOrderToHTML(boolean includePOHeader) {
         StringBuilder stringBuilder = new StringBuilder();
-        // Start the table and add headers
         if (!noteModel.getSelectedPartOrder().getParts().isEmpty()) {
             if (includePOHeader) {
                 stringBuilder.append("<b>Parts Ordered</b><br>");
@@ -156,34 +155,67 @@ public class NoteInteractor {
             logger.info("Adding order: {}", noteModel.getSelectedPartOrder().getOrderNumber());
             if (includePOHeader) {
                 if (!noteModel.getSelectedPartOrder().getOrderNumber().isEmpty()) {
-                    stringBuilder.append("<tr><th colspan=\"3\" style=\"background-color: lightgrey;\">")
+                    // Adjust colspan based on showType()
+                    int colspan = noteModel.getSelectedPartOrder().showType() ? 4 : 3;
+                    stringBuilder.append("<tr><th colspan=\"").append(colspan).append("\" style=\"background-color: lightgrey;\">")
                             .append("Part Order: ")
                             .append(noteModel.getSelectedPartOrder().getOrderNumber())
                             .append("</th></tr>");
                 }
             }
+            // Headers: Include "Line Type" column only if showType() is true
             stringBuilder.append("<tr>")
-                    .append("<th>Part Number</th>")
-                    .append("<th>Description</th>")
+                    .append("<th>Part Number</th>");
+            if (noteModel.getSelectedPartOrder().showType()) {
+                stringBuilder.append("<th>Line Type</th>");
+            }
+            stringBuilder.append("<th>Description</th>")
                     .append("<th>Qty</th>")
                     .append("</tr>");
+
+
             // Loop through each PartDTO to add table rows
-            noteModel.getSelectedPartOrder().getParts().forEach(partDTO -> stringBuilder.append("<tr>")
-                    .append("<td>").append(partDTO.getPartNumber()).append("</td>")
-                    .append("<td>").append(partDTO.getPartDescription()).append("</td>")
-                    .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
-                    .append("</tr>"));
-            // Close the table
+            noteModel.getSelectedPartOrder().getParts().forEach(partDTO -> {
+                stringBuilder.append("<tr>")
+                        .append("<td>").append(partDTO.getPartNumber()).append("</td>");
+                // Add Line Type cell only if showType() is true
+                if (noteModel.getSelectedPartOrder().showType()) {
+                    stringBuilder.append("<td>").append(partDTO.getLineType()).append("</td>");
+                }
+                stringBuilder.append("<td>").append(partDTO.getPartDescription()).append("</td>")
+                        .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
+                        .append("</tr>");
+            });
             stringBuilder.append("</table>");
         }
-        // Convert StringBuilder to String (if you need to use it as a String)
         return stringBuilder.toString();
     }
 
     private String buildPartOrderToPlainText() {
-        ObservableList<PartDTO> parts = noteModel.getSelectedPartOrder().getParts();
+        PartOrderDTO partOrderDTO = noteModel.getSelectedPartOrder();
+        StringBuilder stringBuilder = new StringBuilder();
+        ObservableList<PartDTO> parts = partOrderDTO.getParts();
         String orderNumber = noteModel.getSelectedPartOrder().getOrderNumber();
-        return TableFormatter.buildPartsTableString(parts, orderNumber);
+        if (orderNumber != null && !orderNumber.isEmpty()) {
+            stringBuilder.append("Part Order: ").append(orderNumber).append("\r\n");
+        }
+        // Build the rows
+        for (PartDTO part : parts) {
+            stringBuilder.append(String.format("%-15s", part.getPartNumber()));
+            int lineTypeLength = 0;
+            if (partOrderDTO.showType()) {
+                String lineType = part.getLineType();
+                stringBuilder.append("(");
+                stringBuilder.append(lineType);
+                stringBuilder.append(") ");
+                lineTypeLength = lineType.length() + 4;
+            }
+            int descriptionWidth = 80 - 15 - 10 - 2 - lineTypeLength;
+            stringBuilder.append(String.format("%-" + descriptionWidth + "." + descriptionWidth + "s", part.getPartDescription()));
+            stringBuilder.append("  Qty. ").append(part.getPartQuantity());
+            stringBuilder.append("\r\n");
+        }
+        return stringBuilder.toString();
     }
 
     public void loadUser() {
