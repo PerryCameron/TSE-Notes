@@ -121,6 +121,7 @@ public class NoteInteractor {
             for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
                 noteModel.setSelectedPartOrder(partOrderDTO);
                 builder.append(buildPartOrderToPlainText());
+                builder.append("\r\n");
             }
             return builder.toString();
         } else if (noteModel.getBoundNote().getPartOrders().size() == 1) {
@@ -398,14 +399,16 @@ public class NoteInteractor {
     }
 
     private String loggedCallToPlainText() {
+        boolean partsOrdered = partsWereOrdered();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
         stringBuilder.append(basicInformationToPlainText()).append("\r\n");
         stringBuilder.append(issueToPlainText()).append("\r\n");
-        if (!noteModel.getBoundNote().getPartOrders().isEmpty()) {
+        if (!noteModel.getBoundNote().getPartOrders().isEmpty() && !partsOrdered)  {
             stringBuilder.append("\r\n").append("--- Parts Needed ---").append("\r\n");
+            stringBuilder.append(copyAllPartOrdersToPlainText());
         }
-        stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
+        stringBuilder.append("\r\n");
         stringBuilder.append(shippingInformationToPlainText()).append("\r\n");
         if (!noteModel.getBoundNote().getCreatedWorkOrder().isEmpty()) {
             stringBuilder.append("Created ")
@@ -414,12 +417,19 @@ public class NoteInteractor {
         if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("\r\n").append("\r\n");
         }
+        if(partsOrdered)
         stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
         if (!noteModel.getBoundNote().getTex().isEmpty()) {
             stringBuilder.append("Created ")
                     .append(noteModel.getBoundNote().getTex()).append("\r\n");
         }
         return stringBuilder.toString();
+    }
+
+    // returns true if parts were ordered (has po number)
+    private boolean partsWereOrdered() {
+        return noteModel.getBoundNote().getPartOrders().stream()
+                .anyMatch(partOrder -> !partOrder.getOrderNumber().isEmpty());
     }
 
     private String customerRequestToPlainText() {
