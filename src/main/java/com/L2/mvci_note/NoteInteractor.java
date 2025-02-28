@@ -286,32 +286,56 @@ public class NoteInteractor {
 
     private String basicInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Customer Provided Information").append("\r\n");
-        stringBuilder.append("Case/WO # ");
-        if (!noteModel.getBoundNote().getCaseNumber().isEmpty()) {
-            stringBuilder.append(noteModel.getBoundNote().getCaseNumber());
-            if (!noteModel.getBoundNote().getWorkOrder().isEmpty()) {
+        NoteDTO note = noteModel.getBoundNote();
+        stringBuilder.append("--- Customer Provided Information ---").append("\r\n");
+        if (!note.getCaseNumber().equals(""))
+            stringBuilder.append("Case");
+        if (!note.getCaseNumber().equals("") && note.getWorkOrder().equals(""))
+            stringBuilder.append(": ");
+        if (!note.getCaseNumber().equals("") && !note.getWorkOrder().equals(""))
+            stringBuilder.append("/");
+        if(!note.getWorkOrder().equals("") && note.getCaseNumber().equals(""))
+            stringBuilder.append("WO: ");
+        if(!note.getWorkOrder().equals("") && !note.getCaseNumber().equals(""))
+            stringBuilder.append("WO # ");
+        if (!note.getCaseNumber().isEmpty()) {
+            stringBuilder.append(note.getCaseNumber());
+            if (!note.getWorkOrder().isEmpty()) {
                 stringBuilder.append(" / ");
             }
         }
-        stringBuilder.append(noteModel.getBoundNote().getWorkOrder()).append("\r\n")
-                .append("Model: ").append(noteModel.getBoundNote().getModelNumber()).append("\r\n")
-                .append("S/N: ").append(noteModel.getBoundNote().getSerialNumber()).append("\r\n").append("\r\n")
-                .append("--- Call-in person ---").append("\r\n")
-                .append("Name: ").append(noteModel.getBoundNote().getCallInPerson()).append("\r\n")
-                .append("Phone: ").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("\r\n")
-                .append("Email: ").append(noteModel.getBoundNote().getCallInEmail()).append("\r\n").append("\r\n")
-                .append("Entitlement: ").append(noteModel.getBoundNote().getActiveServiceContract()).append("\r\n")
-                .append("Scheduling Terms: ").append(noteModel.getBoundNote().getSchedulingTerms()).append("\r\n")
-                .append("Service Level: ").append(noteModel.getBoundNote().getServiceLevel()).append("\r\n")
-                .append("Status of the UPS: ").append(noteModel.getBoundNote().getUpsStatus()).append("\r\n")
-                .append("Load Supported: ").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("\r\n");
+        if (!note.getWorkOrder().equals(""))
+            stringBuilder.append(note.getWorkOrder());
+        stringBuilder.append("\r\n");
+        if (!note.getModelNumber().equals(""))
+            stringBuilder.append("Model: ").append(note.getModelNumber()).append("\r\n");
+        if (!note.getSerialNumber().equals(""))
+            stringBuilder.append("S/N: ").append(note.getSerialNumber()).append("\r\n");
+        stringBuilder.append("\r\n");
+        stringBuilder.append("--- Call-in person ---").append("\r\n");
+        // there should always be a call in person
+        stringBuilder.append("Name: ").append(note.getCallInPerson()).append("\r\n");
+        if (!note.getCallInPhoneNumber().equals(""))
+            stringBuilder.append("Phone: ").append(note.getCallInPhoneNumber()).append("\r\n");
+        if (!note.getCallInEmail().equals(""))
+            stringBuilder.append("Email: ").append(note.getCallInEmail()).append("\r\n");
+        stringBuilder.append("\r\n");
+        // always be something for entitlement
+        stringBuilder.append("Entitlement: ").append(note.getActiveServiceContract()).append("\r\n");
+        if (!note.getSchedulingTerms().equals(""))
+            stringBuilder.append("Scheduling Terms: ").append(note.getSchedulingTerms()).append("\r\n");
+        if (!note.getServiceLevel().equals(""))
+            stringBuilder.append("Service Level: ").append(note.getServiceLevel()).append("\r\n");
+        if (!note.getUpsStatus().equals(""))
+            stringBuilder.append("Status of the UPS: ").append(note.getUpsStatus()).append("\r\n");
+        // will always be true or false
+        stringBuilder.append("Load Supported: ").append(convertBool(note.isLoadSupported())).append("\r\n");
         return stringBuilder.toString();
     }
 
     private String subjectToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
-        if(noteModel.getBoundNote().getModelNumber().isEmpty()) {
+        if (noteModel.getBoundNote().getModelNumber().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getTitle()).append("\r\n");
         } else {
             stringBuilder.append(noteModel.getBoundNote().getModelNumber()).append(" - ").append(noteModel.getBoundNote().getTitle()).append("\r\n");
@@ -503,7 +527,7 @@ public class NoteInteractor {
 
     public void cloneNote() {
         String answer = DialogueFx.showYesNoCancelDialog();
-        if(!answer.equals("cancel")) {
+        if (!answer.equals("cancel")) {
             // create a new note
             NoteDTO noteDTO = new NoteDTO(0, false);
             // copy fields from bound note to our new note
@@ -523,12 +547,12 @@ public class NoteInteractor {
             // let's make the bound note copy our new note
             noteModel.getBoundNote().copyFrom(noteDTO);
             // time to add part orders / parts if selected
-            if(answer.equals("yes")) {
+            if (answer.equals("yes")) {
                 cloneParts(noteDTO);
             }
             noteModel.getBoundNote().getPartOrders().clear();
             noteModel.refreshBoundNote();
-            if(answer.equals("yes")) refreshPartOrders();
+            if (answer.equals("yes")) refreshPartOrders();
         } else {
             logger.info("Note {} cloning has been cancelled", noteModel.getBoundNote().getId());
         }
@@ -536,13 +560,13 @@ public class NoteInteractor {
 
     private void cloneParts(NoteDTO noteDTO) {
         int partOrderId;
-        for(PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
+        for (PartOrderDTO partOrderDTO : noteModel.getBoundNote().getPartOrders()) {
             // create new part order object
             PartOrderDTO newPartOrderDTO = new PartOrderDTO(noteDTO.getId());
             // insert new part order and get id from it.
             partOrderId = partOrderRepo.insertPartOrder(newPartOrderDTO);
             // cycle through parts that were in the original part order
-            for(PartDTO partDTO : partOrderDTO.getParts()) {
+            for (PartDTO partDTO : partOrderDTO.getParts()) {
                 PartDTO newPartDTO = new PartDTO(partOrderId, partDTO);
                 partOrderRepo.insertPart(newPartDTO);
             }
@@ -666,7 +690,7 @@ public class NoteInteractor {
         if (!noteModel.getBoundNote().getPartOrders().isEmpty()) {
             noteModel.getBoundNote().getPartOrders().forEach(this::deletePartOrder);
         }
-        if(deletedNoteDTO != null)
+        if (deletedNoteDTO != null)
             noteRepo.deleteNote(deletedNoteDTO);
         noteModel.getNotes().remove(deletedNoteDTO);
     }
