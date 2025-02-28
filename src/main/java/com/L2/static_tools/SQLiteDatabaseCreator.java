@@ -58,6 +58,7 @@ public class SQLiteDatabaseCreator {
                     additionalCorrectiveActionText TEXT,
                     relatedCaseNumber TEXT,
                     title TEXT,
+                    t_and_m TEXT DEFAULT '' NOT NULL,
                     CHECK (completed IN (0, 1)),
                     CHECK (isEmail IN (0, 1)),
                     CHECK (loadSupported IN (0, 1)),
