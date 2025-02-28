@@ -44,13 +44,10 @@ public class PartOrderBoxList implements Component<Region> {
 
     public Node createPartOrderBox(PartOrderDTO partOrderDTO) {
         VBox box = new VBox(10);
-        TableView<PartDTO> tableView = buildTable(partOrderDTO);
-        box.setOnMouseEntered(event -> {
-            noteModel.setSelectedPartOrder(partOrderDTO);
-        });
-        box.setOnMouseExited(event -> {
-            tableView.getSelectionModel().clearSelection();
-        });
+        Map<String, TableColumn<PartDTO,String>> tableColumnMap = new HashMap<>();
+        TableView<PartDTO> tableView = buildTable(partOrderDTO, tableColumnMap);
+        box.setOnMouseEntered(event -> noteModel.setSelectedPartOrder(partOrderDTO));
+        box.setOnMouseExited(event -> tableView.getSelectionModel().clearSelection());
         partOrderMap.put(partOrderDTO, box);
         box.getStyleClass().add("decorative-hbox");
         box.setPadding(new Insets(5, 5, 10, 5));
@@ -66,7 +63,6 @@ public class PartOrderBoxList implements Component<Region> {
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(5, 0, 5, 5));
         Button addPartButton = ButtonFx.utilityButton(() -> {
-//            noteModel.setSelectedPartOrder(partOrderDTO);
             noteView.getAction().accept(NoteMessage.INSERT_PART);
 
             // Sort parts in reverse order
@@ -78,19 +74,17 @@ public class PartOrderBoxList implements Component<Region> {
 
             // Select row 0 and focus the first column
             tableView.getSelectionModel().select(0);
-            tableView.getFocusModel().focus(0, tableView.getColumns().get(0));  // Focus the first column (index 0)
+            tableView.getFocusModel().focus(0, tableView.getColumns().getFirst());  // Focus the first column (index 0)
 
             // Edit the first cell in the first row
-            tableView.edit(0, tableView.getColumns().get(0));  // Edit row 0, first column
+            tableView.edit(0, tableView.getColumns().getFirst());  // Edit row 0, first column
         }, "Add Part", "/images/create-16.png");
 
 
-        Button deleteButton = ButtonFx.utilityButton( () -> {
-            noteView.getAction().accept(NoteMessage.DELETE_PART);
-        }, "Delete", "/images/delete-16.png");
+        Button deleteButton = ButtonFx.utilityButton( () -> noteView.getAction().accept(NoteMessage.DELETE_PART), "Delete", "/images/delete-16.png");
 
         // Create the VBox from your method
-        HBox lineTypeBox = lineTypeToggle();
+        HBox lineTypeBox = lineTypeToggle(partOrderDTO);
 
         // Set a top margin (e.g., 10 pixels) on lineTypeBox
         VBox.setMargin(lineTypeBox, new Insets(20, 0, 0, 0));
@@ -100,11 +94,14 @@ public class PartOrderBoxList implements Component<Region> {
         return vBox;
     }
 
-    private HBox lineTypeToggle() {
+    // do we want to show a line type in the table?
+    private HBox lineTypeToggle(PartOrderDTO partOrderDTO) {
         HBox vBox = new HBox(5);
         vBox.setPadding(new Insets(15, 5, 15, 5));
         Label label = new Label("Show Type");
         ToggleSwitch toggleSwitch = new ToggleSwitch();
+        toggleSwitch.setSelected(partOrderDTO.showType());
+        toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> partOrderDTO.showTypeProperty().set(observable.getValue()));
         vBox.getChildren().addAll(label, toggleSwitch);
         return vBox;
     }
@@ -172,22 +169,44 @@ public class PartOrderBoxList implements Component<Region> {
         return iconBox;
     }
 
-    public TableView<PartDTO> buildTable(PartOrderDTO partOrderDTO) {
+    public TableView<PartDTO> buildTable(PartOrderDTO partOrderDTO, Map<String, TableColumn<PartDTO, String>> map) {
         TableView<PartDTO> tableView = TableViewFx.of(PartDTO.class);
         tableView.setItems(partOrderDTO.getParts()); // Set the ObservableList here
         tableView.setEditable(true);
-        tableView.getColumns().addAll(Arrays.asList(col1(),col2(),col3(),col4()));
+        map.put("part-number", col1());
+        map.put("line-type", col2());
+        map.put("description", col3());
+        map.put("quantity", col4());
+        System.out.println("show lines: " + partOrderDTO.showTypeProperty().get());
+        // set lineType visibility for the first time
+        lineTypeIsShown(map, partOrderDTO.showTypeProperty().get(), tableView);
+        // if showType changes then change visibility of lineType
+        partOrderDTO.showTypeProperty().addListener((showType, oldValue, newValue) -> {
+            tableView.getColumns().clear();
+            lineTypeIsShown(map, showType.getValue(), tableView);
+            noteView.getAction().accept(NoteMessage.UPDATE_PART_ORDER);
+        });
         tableView.setPlaceholder(new Label(""));
         tableView.setPrefHeight(160);
-
         // auto selector
         TableView.TableViewSelectionModel<PartDTO> selectionModel = tableView.getSelectionModel();
-
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                 if (newSelection != null)
-                noteModel.setSelectedPart(newSelection);
+                    noteModel.setSelectedPart(newSelection);
         });
         return tableView;
+    }
+
+    private static void lineTypeIsShown(Map<String, TableColumn<PartDTO, String>> map, boolean showType, TableView<PartDTO> tableView) {
+        TableColumn<PartDTO, String> col1 = map.get("part-number");
+        TableColumn<PartDTO, String> col2 = map.get("line-type");
+        TableColumn<PartDTO, String> col3 = map.get("description");
+        TableColumn<PartDTO, String> col4 = map.get("quantity");
+        if(showType) {
+            tableView.getColumns().addAll(Arrays.asList(col1, col2, col3, col4));
+        } else {
+            tableView.getColumns().addAll(Arrays.asList(col1, col3, col4));
+        }
     }
 
     private TableColumn<PartDTO, String> col1() {
@@ -197,8 +216,9 @@ public class PartOrderBoxList implements Component<Region> {
             noteModel.getSelectedPart().setPartNumber(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
-        col.setMaxWidth(150);
+        col.setMinWidth(150);
         col.setPrefWidth(150);
+        col.setMaxWidth(150);
         return col;
     }
 
@@ -206,24 +226,21 @@ public class PartOrderBoxList implements Component<Region> {
         // Define options and default value
         List<String> lineTypeOptions = Arrays.asList("Advanced Exchange", "Ship Only", "Return Only");
         String defaultLineType = "Advanced Exchange";
-
-
         TableColumn<PartDTO, String> col = TableColumnFx.comboBoxTableColumn(
                 PartDTO::lineTypeProperty,
                 "Line Type",
                 lineTypeOptions,
                 defaultLineType
         );
-
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
             noteModel.getSelectedPart().setLineType(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
             System.out.println("Updating part to " + event.getNewValue());
         });
+        col.setMinWidth(175);
+        col.setPrefWidth(175);
         col.setMaxWidth(175);
-        col.setPrefWidth(150);
-
         return col;
     }
 
@@ -244,6 +261,8 @@ public class PartOrderBoxList implements Component<Region> {
             noteModel.getSelectedPart().setPartQuantity(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
+        col.setMinWidth(70.0);
+        col.setPrefWidth(70.0);
         col.setMaxWidth(70.0);
         return col;
     }

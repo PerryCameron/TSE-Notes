@@ -58,8 +58,9 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
 
     @Override
     public int updatePartOrder(PartOrderDTO partOrder) {
-        String sql = "UPDATE PartOrders SET noteId = ?, orderNumber = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, partOrder.getNoteId(), partOrder.getOrderNumber(), partOrder.getId());
+        System.out.println("update part order");
+        String sql = "UPDATE PartOrders SET noteId = ?, orderNumber = ?, showType = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, partOrder.getNoteId(), partOrder.getOrderNumber(), partOrder.showTypeProperty().get(), partOrder.getId());
     }
 
     @Override

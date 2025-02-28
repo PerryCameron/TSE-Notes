@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class SQLiteDatabaseCreator {
@@ -20,7 +19,7 @@ public class SQLiteDatabaseCreator {
 
     public static void createDataBase(String databaseName) {
     Path path = AppFileTools.getDbPath();
-        logger.info("Creating database..." + path.toString());
+        logger.info("Creating database...{}", path.toString());
         String url = "jdbc:sqlite:" + BaseApplication.dataBaseLocation.resolve(databaseName);
 
         // SQL commands for creating tables
@@ -68,9 +67,10 @@ public class SQLiteDatabaseCreator {
                 CREATE TABLE IF NOT EXISTS PartOrders (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     noteId INTEGER NOT NULL REFERENCES Notes,
-                    orderNumber TEXT
+                    orderNumber TEXT,
+                    showType INTEGER NOT NULL CHECK (showType IN (0, 1)) -- Boolean: 0 = false, 1 = true
                 );
-                
+
                 CREATE TABLE IF NOT EXISTS Parts (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     partOrderId INTEGER NOT NULL REFERENCES PartOrders,
@@ -78,8 +78,8 @@ public class SQLiteDatabaseCreator {
                     partDescription TEXT,
                     partQuantity TEXT,
                     serialReplaced TEXT,
-                    partEditable INTEGER NOT NULL,
-                    CHECK (partEditable IN (0, 1))
+                    partEditable INTEGER NOT NULL CHECK (partEditable IN (0, 1)), -- Boolean: 0 = false, 1 = true
+                    lineType TEXT DEFAULT 'Advanced Exchange' NOT NULL
                 );
                 
                 CREATE TABLE IF NOT EXISTS user (
@@ -111,11 +111,29 @@ public class SQLiteDatabaseCreator {
         // Insert statements for the `entitlements` table
         String insertEntitlements = """
                 INSERT INTO entitlements (name, includes, not_included) VALUES
-                ('Advantage Ultra', 'Labor, Travel, and Parts (Reactive)\n24/7 Technical Support\n1 Annual Preventive Maintenance Visit\n1 Set of air filters if applicable', 'Batteries\nLabor for battery replacement\nParts and labor for proactive parts replacement.'),
-                ('Advantage Prime', '24/7 Technical Support\n1 Annual Preventive Maintenance Visit\nLabor, and Travel\nParts at a discounted rate', 'Batteries, or battery replacement labor. (Internal or External)\nParts and labor for proactive parts replacement.'),
-                ('Advantage Plus', '24/7 Technical Support\n1 Annual Preventive Maintenance Visit\nLabor at standard Schneider rates\nParts at a discounted rate', 'No discount on batteries (internal or external)'),
-                ('On-Site Warranty Extension', 'Labor, Travel, and Parts (Reactive)\n24/7 Technical Support\n1 Site Inspection Visit\n1 set of air filters if applicable', 'Batteries\nParts and labor for proactive parts replacement'),
-                ('Warranty', 'Labor, Travel, and Parts (Reactive)\n24/5 Technical Support', 'Equipment that has been damaged by accident, negligence or misapplication\nEquipment that has been altered or modified in any way'),
+                ('Advantage Ultra', 'Labor, Travel, and Parts (Reactive)
+                24/7 Technical Support
+                1 Annual Preventive Maintenance Visit
+                1 Set of air filters if applicable', 'Batteries
+                Labor for battery replacement
+                Parts and labor for proactive parts replacement.'),
+                ('Advantage Prime', '24/7 Technical Support
+                1 Annual Preventive Maintenance Visit
+                Labor, and Travel
+                Parts at a discounted rate', 'Batteries, or battery replacement labor. (Internal or External)
+                Parts and labor for proactive parts replacement.'),
+                ('Advantage Plus', '24/7 Technical Support
+                1 Annual Preventive Maintenance Visit
+                Labor at standard Schneider rates
+                Parts at a discounted rate', 'No discount on batteries (internal or external)'),
+                ('On-Site Warranty Extension', 'Labor, Travel, and Parts (Reactive)
+                24/7 Technical Support
+                1 Site Inspection Visit
+                1 set of air filters if applicable', 'Batteries
+                Parts and labor for proactive parts replacement'),
+                ('Warranty', 'Labor, Travel, and Parts (Reactive)
+                24/5 Technical Support', 'Equipment that has been damaged by accident, negligence or misapplication
+                Equipment that has been altered or modified in any way'),
                 ('None', '', '');
                 """;
 

@@ -9,21 +9,21 @@ public class PartOrderDTO {
     private final IntegerProperty id = new SimpleIntegerProperty();
     private final IntegerProperty noteId = new SimpleIntegerProperty();
     private final StringProperty orderNumber = new SimpleStringProperty();
-    private final BooleanProperty showTyp = new SimpleBooleanProperty();
+    private final BooleanProperty showType = new SimpleBooleanProperty();
     private final ListProperty<PartDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public PartOrderDTO(Integer id, Integer noteId, String orderNumber, Boolean showType) {
         this.id.set(id);
         this.noteId.set(noteId);
         this.orderNumber.set(orderNumber);
-        this.showTyp.set(showType);
+        this.showType.set(showType);
     }
 
     public PartOrderDTO(int noteId) {
         this.id.set(0);
         this.noteId.set(noteId);
         this.orderNumber.set("");
-        this.showTyp.set(false);
+        this.showType.set(false);
     }
 
     public String getOrderNumber() {
@@ -72,6 +72,14 @@ public class PartOrderDTO {
 
     public void setNoteId(int noteId) {
         this.noteId.set(noteId);
+    }
+
+    public boolean showType() {
+        return showType.get();
+    }
+
+    public BooleanProperty showTypeProperty() {
+        return showType;
     }
 
     @Override
