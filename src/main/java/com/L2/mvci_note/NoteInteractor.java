@@ -294,9 +294,9 @@ public class NoteInteractor {
             stringBuilder.append(": ");
         if (!note.getCaseNumber().equals("") && !note.getWorkOrder().equals(""))
             stringBuilder.append("/");
-        if(!note.getWorkOrder().equals("") && note.getCaseNumber().equals(""))
+        if (!note.getWorkOrder().equals("") && note.getCaseNumber().equals(""))
             stringBuilder.append("WO: ");
-        if(!note.getWorkOrder().equals("") && !note.getCaseNumber().equals(""))
+        if (!note.getWorkOrder().equals("") && !note.getCaseNumber().equals(""))
             stringBuilder.append("WO # ");
         if (!note.getCaseNumber().isEmpty()) {
             stringBuilder.append(note.getCaseNumber());
@@ -333,6 +333,55 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
+    private String basicInformationToHTML() {
+        StringBuilder stringBuilder = new StringBuilder();
+        NoteDTO note = noteModel.getBoundNote();
+        stringBuilder.append("<strong>Customer Provided Information</strong><br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">");
+        if (!note.getCaseNumber().equals(""))
+            stringBuilder.append("Case");
+        if (!note.getCaseNumber().equals("") && note.getWorkOrder().equals(""))
+            stringBuilder.append(": ");
+        if (!note.getCaseNumber().equals("") && !note.getWorkOrder().equals(""))
+            stringBuilder.append("/");
+        if (!note.getWorkOrder().equals("") && note.getCaseNumber().equals(""))
+            stringBuilder.append("WO: ");
+        if (!note.getWorkOrder().equals("") && !note.getCaseNumber().equals(""))
+            stringBuilder.append("WO # ");
+        stringBuilder.append("</span>");
+        if (!note.getCaseNumber().isEmpty()) {
+            stringBuilder.append(note.getCaseNumber());
+            if (!note.getWorkOrder().isEmpty()) {
+                stringBuilder.append(" / ");
+            }
+        }
+        if (!note.getWorkOrder().equals(""))
+            stringBuilder.append(note.getWorkOrder());
+        stringBuilder.append("<br>");
+        // end of customer provided information
+        if (!note.getModelNumber().equals(""))
+            stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Model: </span>").append(note.getModelNumber()).append("<br>");
+        if (!note.getSerialNumber().equals(""))
+            stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">S/N: </span>").append(note.getSerialNumber()).append("<br>");
+        stringBuilder.append("<br>");
+        stringBuilder.append("<b>Call-in person</b><br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(ClipboardUtils.escapeHtmlContent(note.getCallInPerson())).append("<br>");
+        if (!note.getCallInPhoneNumber().equals(""))
+            stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(note.getCallInPhoneNumber()).append("<br>");
+        if (!note.getCallInEmail().equals(""))
+            stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(note.getCallInEmail()).append("<br>");
+        stringBuilder.append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Entitlement: </span>").append(note.getActiveServiceContract()).append("<br>");
+        if (!note.getSchedulingTerms().equals(""))
+            stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Scheduling Terms: </span>").append(note.getSchedulingTerms()).append("<br>");
+        if (!note.getServiceLevel().equals(""))
+            stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(note.getServiceLevel()).append("<br>");
+        if (!note.getUpsStatus().equals(""))
+            stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Status of the UPS: </span>").append(note.getUpsStatus()).append("<br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Load Supported: </span>").append(convertBool(note.isLoadSupported())).append("<br>");
+        return stringBuilder.toString();
+    }
+
     private String subjectToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
         if (noteModel.getBoundNote().getModelNumber().isEmpty()) {
@@ -347,46 +396,6 @@ public class NoteInteractor {
         if (convert) return "Yes";
         else return "No";
     }
-
-    private String basicInformationToHTML() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<strong>Customer Provided Information</strong><br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Case/WO # </span>");
-        if (!noteModel.getBoundNote().getCaseNumber().isEmpty()) {
-            stringBuilder.append(noteModel.getBoundNote().getCaseNumber());
-            if (!noteModel.getBoundNote().getWorkOrder().isEmpty()) {
-                stringBuilder.append(" / ");
-            }
-        }
-        stringBuilder.append(noteModel.getBoundNote().getWorkOrder()).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Model: </span>").append(noteModel.getBoundNote().getModelNumber()).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">S/N: </span>").append(noteModel.getBoundNote().getSerialNumber()).append("<br><br>")
-                .append("<b>Call-in person</b><br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getCallInPerson())).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getCallInPhoneNumber()).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getCallInEmail()).append("<br>")
-                .append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Entitlement: </span>").append(noteModel.getBoundNote().getActiveServiceContract()).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Scheduling Terms: </span>").append(noteModel.getBoundNote().getSchedulingTerms()).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(noteModel.getBoundNote().getServiceLevel()).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Status of the UPS: </span>").append(noteModel.getBoundNote().getUpsStatus()).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Load Supported: </span>").append(convertBool(noteModel.getBoundNote().isLoadSupported())).append("<br>");
-        return stringBuilder.toString();
-    }
-
-//    private String getCorrectiveActionText() {
-//        // Retrieve the corrective action text
-//        String correctiveActionText = noteModel.getBoundNote().getAdditionalCorrectiveActionText();
-//        // Preprocess the text to escape special characters
-//        String escapedText = ClipboardUtils.escapeHtmlContent(correctiveActionText);
-//        // Replace line breaks with <br> for HTML formatting
-//        escapedText = escapedText.replaceAll("\\r\\n|\\n|\\r", "<br>");
-//        // Append the escaped text to the StringBuilder and return
-//        StringBuilder stringBuilder = new StringBuilder();
-//        stringBuilder.append(escapedText);
-//        stringBuilder.append("<br>");
-//        return stringBuilder.toString();
-//    }
 
     private String loggedCallToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
