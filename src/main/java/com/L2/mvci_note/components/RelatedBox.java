@@ -5,6 +5,7 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.static_tools.StringChecker;
+import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.VBoxFx;
@@ -44,17 +45,14 @@ public class RelatedBox implements Component<Region> {
         this.root = VBoxFx.of(true,5.0, new Insets(3, 5, 3, 5));
         root.getStyleClass().add("decorative-hbox");
         root.setAlignment(Pos.TOP_CENTER);
-        Button[] buttons = new Button[] {  };
+        Button[] buttons = new Button[] { };
         root.getChildren().addAll(TitleBarFx.of("Related", buttons));
         root.getChildren().add(followUpWorkOrderTextField());
         root.getChildren().add(createdCase());
         root.getChildren().add(tex());
         root.getChildren().add(tAndM());
         refreshFields();
-        root.setOnMouseExited(event -> {
-            noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
-            System.out.println("updating related info by saving note");
-        });
+        root.setOnMouseExited(event -> noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE));
         return root;
     }
 

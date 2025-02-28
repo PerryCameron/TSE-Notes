@@ -14,41 +14,41 @@ import java.util.Locale;
 
 
 public class NoteDTO {
-    private IntegerProperty id = new SimpleIntegerProperty();
-    private ObjectProperty<LocalDateTime> timestamp = new SimpleObjectProperty<>(); // this is the field not updating
-    private StringProperty workOrder = new SimpleStringProperty();
-    private StringProperty caseNumber = new SimpleStringProperty();
-    private StringProperty serialNumber = new SimpleStringProperty();
-    private StringProperty modelNumber = new SimpleStringProperty();
-    private StringProperty callInPerson = new SimpleStringProperty();
-    private StringProperty callInPhoneNumber = new SimpleStringProperty();
-    private StringProperty callInEmail = new SimpleStringProperty();
-    private BooleanProperty underWarranty = new SimpleBooleanProperty();
-    private StringProperty activeServiceContract = new SimpleStringProperty();
-    private StringProperty serviceLevel = new SimpleStringProperty();
-    private StringProperty schedulingTerms = new SimpleStringProperty();
-    private StringProperty upsStatus = new SimpleStringProperty();
-    private BooleanProperty loadSupported = new SimpleBooleanProperty();
-    private StringProperty title = new SimpleStringProperty();
-    private StringProperty issue = new SimpleStringProperty();
-    private StringProperty contactName = new SimpleStringProperty();
-    private StringProperty contactPhoneNumber = new SimpleStringProperty();
-    private StringProperty contactEmail = new SimpleStringProperty();
-    private StringProperty street = new SimpleStringProperty();
-    private StringProperty installedAt = new SimpleStringProperty();
-    private StringProperty city = new SimpleStringProperty();
-    private StringProperty state = new SimpleStringProperty();
-    private StringProperty zip = new SimpleStringProperty();
-    private StringProperty country = new SimpleStringProperty();
-    private StringProperty createdWorkOrder = new SimpleStringProperty();
-    private StringProperty tex = new SimpleStringProperty();
-    private IntegerProperty partsOrder = new SimpleIntegerProperty();
-    private BooleanProperty completed = new SimpleBooleanProperty();
-    private BooleanProperty isEmail = new SimpleBooleanProperty();
-    private StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
-    private StringProperty relatedCaseNumber = new SimpleStringProperty();
-    private StringProperty tAndM = new SimpleStringProperty();
-    private ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final IntegerProperty id = new SimpleIntegerProperty();
+    private final ObjectProperty<LocalDateTime> timestamp = new SimpleObjectProperty<>(); // this is the field not updating
+    private final StringProperty workOrder = new SimpleStringProperty();
+    private final StringProperty caseNumber = new SimpleStringProperty();
+    private final StringProperty serialNumber = new SimpleStringProperty();
+    private final StringProperty modelNumber = new SimpleStringProperty();
+    private final StringProperty callInPerson = new SimpleStringProperty();
+    private final StringProperty callInPhoneNumber = new SimpleStringProperty();
+    private final StringProperty callInEmail = new SimpleStringProperty();
+    private final BooleanProperty underWarranty = new SimpleBooleanProperty();
+    private final StringProperty activeServiceContract = new SimpleStringProperty();
+    private final StringProperty serviceLevel = new SimpleStringProperty();
+    private final StringProperty schedulingTerms = new SimpleStringProperty();
+    private final StringProperty upsStatus = new SimpleStringProperty();
+    private final BooleanProperty loadSupported = new SimpleBooleanProperty();
+    private final StringProperty title = new SimpleStringProperty();
+    private final StringProperty issue = new SimpleStringProperty();
+    private final StringProperty contactName = new SimpleStringProperty();
+    private final StringProperty contactPhoneNumber = new SimpleStringProperty();
+    private final StringProperty contactEmail = new SimpleStringProperty();
+    private final StringProperty street = new SimpleStringProperty();
+    private final StringProperty installedAt = new SimpleStringProperty();
+    private final StringProperty city = new SimpleStringProperty();
+    private final StringProperty state = new SimpleStringProperty();
+    private final StringProperty zip = new SimpleStringProperty();
+    private final StringProperty country = new SimpleStringProperty();
+    private final StringProperty createdWorkOrder = new SimpleStringProperty();
+    private final StringProperty tex = new SimpleStringProperty();
+    private final IntegerProperty partsOrder = new SimpleIntegerProperty();
+    private final BooleanProperty completed = new SimpleBooleanProperty();
+    private final BooleanProperty isEmail = new SimpleBooleanProperty();
+    private final StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
+    private final StringProperty relatedCaseNumber = new SimpleStringProperty();
+    private final StringProperty tAndM = new SimpleStringProperty();
+    private final ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public NoteDTO() {
     }
@@ -668,7 +668,6 @@ public class NoteDTO {
 
     private transient ListProperty<PartOrderDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-
     public List<PartOrderDTO> getPartsList() {
         return parts.get();
     }
@@ -727,6 +726,7 @@ public class NoteDTO {
                 ", relatedCaseNumber=" + relatedCaseNumber +
                 ", partOrders=" + partOrders +
                 ", parts=" + parts +
+                ", t&m=" + tAndM +
                 '}';
     }
 }

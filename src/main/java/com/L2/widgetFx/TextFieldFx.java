@@ -54,7 +54,6 @@ public class TextFieldFx {
         textField.focusedProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue)
                 Platform.runLater(textField::selectAll);
-//            else noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
         });
         return textField;
     }

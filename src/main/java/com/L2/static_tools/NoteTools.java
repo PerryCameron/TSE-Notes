@@ -190,6 +190,11 @@ public class NoteTools {
             noteDTO1.setRelatedCaseNumber(noteDTO2.getRelatedCaseNumber());
             areSame = false;
         }
+        if (!noteDTO1.gettAndM().equals(noteDTO2.gettAndM())) {
+            logger.debug("Field 't & M' has changed: {} -> {}", noteDTO1.gettAndM(), noteDTO2.gettAndM());
+            noteDTO1.settAndM(noteDTO2.gettAndM());
+            areSame = false;
+        }
         // If no differences are found, return true, otherwise false
         return areSame;
     }
