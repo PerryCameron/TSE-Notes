@@ -35,6 +35,9 @@ public class DatabaseTools {
             if (!columnExists(dataSource, "Parts", "lineType")) {
                 addLineTypeColumn(jdbcTemplate);
             }
+            if (!columnExists(dataSource, "PartOrders", "showType")) {
+                addShowTypeColumn(jdbcTemplate);
+            }
 
         } catch (Exception e) {
             logger.error("Error during database schema check/update", e);
@@ -55,11 +58,17 @@ public class DatabaseTools {
             throw new RuntimeException("Failed to check column existence", e);
         }
     }
-
+// this is using sqlite
     private static void addLineTypeColumn(JdbcTemplate jdbcTemplate) {
         String sql = "ALTER TABLE Parts ADD COLUMN lineType TEXT DEFAULT 'Advanced Exchange' NOT NULL";
         jdbcTemplate.execute(sql);
         logger.info("Added lineType column to Parts table");
+    }
+
+    private static void addShowTypeColumn(JdbcTemplate jdbcTemplate) {
+        String sql = "ALTER TABLE PartOrders ADD COLUMN showType INTEGER DEFAULT 0 NOT NULL CHECK (showType IN (0, 1))";
+        jdbcTemplate.execute(sql);
+        logger.info("Added showType column to PartOrders table");
     }
 
     public static void backupDatabase() throws IOException {
