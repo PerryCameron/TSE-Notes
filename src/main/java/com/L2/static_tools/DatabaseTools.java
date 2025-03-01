@@ -42,6 +42,7 @@ public class DatabaseTools {
 
             // Convert version to integer for comparison
             int version = Integer.parseInt(currentVersion);
+            logger.info("Current schema version is {}", currentVersion);
 
             // Apply migrations based on version
             if (version < 2) {
@@ -67,11 +68,12 @@ public class DatabaseTools {
         }
     }
 
-    // Helper method to get the current schema version
+    // Helper method to get the latest schema version
     private static String getSchemaVersion(JdbcTemplate jdbcTemplate) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT value FROM settings WHERE key = 'schema_version'",
+                    "SELECT value FROM settings WHERE key = 'schema_version' " +
+                            "ORDER BY CAST(value AS INTEGER) DESC LIMIT 1",
                     String.class
             );
         } catch (EmptyResultDataAccessException e) {
@@ -82,6 +84,7 @@ public class DatabaseTools {
 
     // Helper method to update the schema version
     private static void updateSchemaVersion(JdbcTemplate jdbcTemplate, int newVersion, String versionDescription) {
+        logger.info("upgrading schema version to {}", newVersion);
         jdbcTemplate.update(
                 "INSERT OR REPLACE INTO settings (key, value, group_name, description, last_modified) " +
                         "VALUES ('schema_version', ?, 'schema', ?, CURRENT_TIMESTAMP)",
