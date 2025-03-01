@@ -235,6 +235,8 @@ public class SQLiteDatabaseCreator {
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }
+
+        DatabaseTools.checkForDatabaseChanges();
     }
 }
 

@@ -3,6 +3,7 @@ package com.L2.static_tools;
 import com.L2.BaseApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.sqlite.SQLiteDataSource;
 
@@ -31,21 +32,61 @@ public class DatabaseTools {
             SQLiteDataSource dataSource = DatabaseConnector.getDataSource("DatabaseTools");
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-            // Check and add order_type column if it doesn't exist
-            if (!columnExists(dataSource, "Parts", "lineType")) {
-                addLineTypeColumn(jdbcTemplate);
+            // Check current schema version
+            String currentVersion = getSchemaVersion(jdbcTemplate);
+            if (currentVersion == null) {
+                // No version exists, assume it's version 1 (original schema) and initialize
+                jdbcTemplate.update("INSERT INTO settings (key, value, group_name, description) VALUES ('schema_version', '1', 'schema', 'Original schema')");
+                currentVersion = "1";
             }
-            if (!columnExists(dataSource, "PartOrders", "showType")) {
-                addShowTypeColumn(jdbcTemplate);
+
+            // Convert version to integer for comparison
+            int version = Integer.parseInt(currentVersion);
+
+            // Apply migrations based on version
+            if (version < 2) {
+                // Upgrade from version 1 to 2
+                if (!columnExists(dataSource, "Parts", "lineType")) {
+                    addLineTypeColumn(jdbcTemplate);
+                }
+                if (!columnExists(dataSource, "PartOrders", "showType")) {
+                    addShowTypeColumn(jdbcTemplate);
+                }
+                if (!columnExists(dataSource, "Notes", "t_and_m")) {
+                    addTMColumn(jdbcTemplate);
+                }
+                // Update schema version to 2
+                updateSchemaVersion(jdbcTemplate, 2, "Added lineType to Parts, showType to PartOrders, and t_and_m to Notes");
             }
-            if (!columnExists(dataSource, "Notes", "t_and_m")) {
-                addTMColumn(jdbcTemplate);
-            }
+
+            // Future versions can be added here (e.g., if (version < 3) { ... })
 
         } catch (Exception e) {
             logger.error("Error during database schema check/update", e);
             throw new RuntimeException("Database initialization failed", e);
         }
+    }
+
+    // Helper method to get the current schema version
+    private static String getSchemaVersion(JdbcTemplate jdbcTemplate) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT value FROM settings WHERE key = 'schema_version'",
+                    String.class
+            );
+        } catch (EmptyResultDataAccessException e) {
+            // No schema_version row exists yet
+            return null;
+        }
+    }
+
+    // Helper method to update the schema version
+    private static void updateSchemaVersion(JdbcTemplate jdbcTemplate, int newVersion, String versionDescription) {
+        jdbcTemplate.update(
+                "INSERT OR REPLACE INTO settings (key, value, group_name, description, last_modified) " +
+                        "VALUES ('schema_version', ?, 'schema', ?, CURRENT_TIMESTAMP)",
+                String.valueOf(newVersion), versionDescription
+        );
     }
 
     private static boolean columnExists(SQLiteDataSource dataSource, String tableName, String columnName) {
