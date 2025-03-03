@@ -39,9 +39,13 @@ Changed pagenator to go back to the 50 latest when you scroll back to the top.
 Added dialogue which gives choice to add parts or not when cloning a note.
 Updated the JDK from 21.0.4 to 21.0.6
 
-1.0.x
+1.0.1-19
 Fixed scroll bar on note tab to be able to move with mouse instead of just scroll wheel.
 Creates a backup of database when starting app, if more than 3 backups the oldest is deleted.
+Deletes logs if more than 3 logs are in main directory.
 Added ability to make changes to the database, for future improvements.
+Cleaned up pasted output to reduce 'hand pruning the output'.
+Added ability to show line types
+
 
 
