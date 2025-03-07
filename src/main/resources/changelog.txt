@@ -45,7 +45,8 @@ Creates a backup of database when starting app, if more than 3 backups the oldes
 Deletes logs if more than 3 logs are in main directory.
 Added ability to make changes to the database, for future improvements.
 Cleaned up pasted output to reduce 'hand pruning the output'.
-Added ability to show line types
+Added ability to show line types.
+Added time & Materials text field.
 
 
 

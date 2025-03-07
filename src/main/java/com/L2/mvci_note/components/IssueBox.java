@@ -6,81 +6,197 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.static_tools.NoteDTOProcessor;
-import com.L2.widgetFx.*;
+import com.L2.widgetFx.HBoxFx;
+import com.L2.widgetFx.TitleBarFx;
+import com.L2.widgetFx.VBoxFx;
+import com.nikialeksey.hunspell.Hunspell;
 import javafx.animation.PauseTransition;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.HBox;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Insets;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
+import org.reactfx.Subscription;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class IssueBox implements Component<Region> {
-
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox root;
-    private final TextArea textAreaIssue;
+    private final CodeArea codeAreaIssue; // Replacing TextArea with CodeArea
     private static final Logger logger = LoggerFactory.getLogger(IssueBox.class);
+    private Hunspell hunspell;
+    private Subscription spellCheckSubscription;
+
 
     public IssueBox(NoteView noteView) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
-        this.textAreaIssue = TextAreaFx.of(true, 200, 16, 2);
+        this.codeAreaIssue = new CodeArea();
+        codeAreaIssue.setWrapText(true);
+        HBox.setHgrow(codeAreaIssue, Priority.ALWAYS);
+        codeAreaIssue.setPrefHeight(200); // Adjust based on your needs
     }
 
     @Override
     public Region build() {
-        this.root = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
+        this.root = VBoxFx.of(5.0, new Insets(5, 10, 10, 10));
         root.getStyleClass().add("decorative-hbox");
-        textAreaIssue.setPrefWidth(900);
-        textAreaIssue.textProperty().bindBidirectional(noteModel.getBoundNote().issueProperty());
+
+        // this is our bridge, since CodeArea does not have native FX binding support
+        StringProperty bridgeProperty = new SimpleStringProperty();
+
+        // Bind bridge to model
+        bridgeProperty.bindBidirectional(noteModel.getBoundNote().issueProperty());
+        // Sync bridge with CodeArea
+        codeAreaIssue.replaceText(bridgeProperty.getValue());
+        codeAreaIssue.textProperty().addListener((obs, oldVal, newVal) -> bridgeProperty.set(newVal));
+        bridgeProperty.addListener((obs, oldVal, newVal) -> {
+            if (!newVal.equals(codeAreaIssue.getText())) {
+                codeAreaIssue.replaceText(newVal);
+            }
+        });
+
+        // Initialize Hunspell
+        try {
+            String dictPath = Paths.get(getClass().getResource("/dictionary/en_US.dic").toURI()).toString();
+            String affPath = Paths.get(getClass().getResource("/dictionary/en_US.aff").toURI()).toString();
+            this.hunspell = new Hunspell(dictPath, affPath);
+        } catch (Exception e) {
+            logger.error("Failed to load Hunspell dictionary", e);
+            this.hunspell = null; // Fallback to no spell-checking if loading fails
+        }
+
+        // Setup spell-checking with debounce
+        if (hunspell != null) {
+            spellCheckSubscription = codeAreaIssue.multiPlainChanges()
+                    .successionEnds(java.time.Duration.ofMillis(500)) // Debounce 500ms
+                    .subscribe(ignore -> computeHighlighting());
+        }
+        // Add CSS for spell-checking
+
         HBox iconBox = HBoxFx.iconBox(10);
-        root.getChildren().addAll(TitleBarFx.of("Issue", iconBox), textAreaIssue);
+        root.getChildren().addAll(TitleBarFx.of("Issue", iconBox), codeAreaIssue);
         refreshFields();
-        textAreaIssue.focusedProperty().addListener((obs, oldValue, newValue) -> {
+
+        // Retain focus listener logic
+        codeAreaIssue.focusedProperty().addListener((obs, oldValue, newValue) -> {
             if (!newValue) { // Focus lost
                 if (!noteModel.getBoundNote().isEmail()) {
-                    // Check if the text is an email
-                    if (NoteDTOProcessor.isEmail(textAreaIssue.getText())) {
-                        // Process the text as an email and convert it into a NoteDTO
+                    if (NoteDTOProcessor.isEmail(codeAreaIssue.getText())) {
                         NoteDTO noteDTO = NoteDTOProcessor.processEmail(
-                                textAreaIssue.getText(),
+                                codeAreaIssue.getText(),
                                 noteModel.getBoundNote().getId()
                         );
-                        // Update the bound note with the processed email
                         noteModel.getBoundNote().copyFrom(noteDTO);
                         logger.info("Processed an email and updated the note model.");
-                        // Set the TextArea to read-only
-
-                        // textAreaIssue.setEditable(false);
-
-                        // add our lock here
+                        // Set to read-only
+                        codeAreaIssue.setEditable(false);
                     }
-                    // Trigger the save or update action for the note
                     noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
                 }
             }
         });
+
         return root;
     }
 
     @Override
     public void flash() {
         root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
-        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-        pause.setOnFinished(event -> root.setStyle("")); // Reset the style
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(0.2));
+        pause.setOnFinished(event -> root.setStyle(""));
         pause.play();
     }
 
     @Override
     public void refreshFields() {
-        textAreaIssue.setEditable(!noteModel.getBoundNote().isEmail());
+        codeAreaIssue.setEditable(!noteModel.getBoundNote().isEmail());
+    }
+
+
+
+    private void computeHighlighting() {
+        if (hunspell == null) return;
+
+        String text = codeAreaIssue.getText();
+        if (text.isEmpty()) {
+            codeAreaIssue.setStyleSpans(0, new StyleSpansBuilder<Collection<String>>().create());
+            return;
+        }
+
+        new Thread(() -> {
+            StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+            int totalLength = 0;
+            int i = 0;
+
+            while (i < text.length()) {
+                // Skip whitespace
+                int start = i;
+                while (i < text.length() && Character.isWhitespace(text.charAt(i))) {
+                    i++;
+                }
+                if (i > start) {
+                    spansBuilder.add(Collections.emptyList(), i - start);
+                    totalLength += i - start;
+                }
+
+                // Find word boundaries (including trailing punctuation)
+                start = i;
+                while (i < text.length() && !Character.isWhitespace(text.charAt(i))) {
+                    i++;
+                }
+
+                if (start < i) { // We have a word (possibly with punctuation)
+                    String rawWord = text.substring(start, i); // e.g., "fox,"
+                    // Strip punctuation for spell-checking
+                    String cleanWord = rawWord.replaceAll("[^\\p{L}\\p{N}]", ""); // Keep only letters and numbers
+                    if (!cleanWord.isEmpty() && !hunspell.spell(cleanWord)) {
+                        // Highlight the full raw word (including punctuation)
+                        spansBuilder.add(Collections.singleton("misspelled"), rawWord.length());
+                        totalLength += rawWord.length();
+                    } else {
+                        spansBuilder.add(Collections.emptyList(), rawWord.length());
+                        totalLength += rawWord.length();
+                    }
+                }
+            }
+
+            // Add any trailing whitespace
+            if (totalLength < text.length()) {
+                spansBuilder.add(Collections.emptyList(), text.length() - totalLength);
+                totalLength = text.length();
+            }
+
+            StyleSpans<Collection<String>> spans = spansBuilder.create();
+            Platform.runLater(() -> codeAreaIssue.setStyleSpans(0, spans));
+        }).start();
+    }
+
+
+
+
+
+
+
+    // Cleanup (optional, if IssueBox is reused or disposed)
+    public void dispose() {
+        if (spellCheckSubscription != null) {
+            spellCheckSubscription.unsubscribe();
+        }
+        if (hunspell != null) {
+            hunspell.close();
+        }
     }
 }
+

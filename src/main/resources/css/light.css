@@ -237,5 +237,9 @@
     -fx-text-fill: black;
 }
 
+.misspelled {
+    -fx-fill: red;
+    -fx-underline: true;
+}
 
 

@@ -60,6 +60,11 @@ dependencies {
     implementation("ch.qos.logback:logback-core:1.5.6")
     // allows apache poi to log
     implementation("org.apache.logging.log4j:log4j-to-slf4j:2.23.1")
+    // RichTextFX for CodeArea
+    implementation("org.fxmisc.richtext:richtextfx:0.11.2")
+    // dictionary
+    implementation("com.nikialeksey:jhunspell:1.0.5")
+
     // API for SLF4J (The Simple Logging Facade for Java) which serves as a simple facade or
     // abstraction for various logging frameworks, allowing the end user to plug in the desired
     // logging framework at deployment time.
