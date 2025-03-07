@@ -242,4 +242,11 @@
     -fx-underline: true;
 }
 
-
+.code-area {
+    -fx-font-size: 16px;
+    -fx-padding: 10;
+    -fx-border-radius: 5; /* Ensure the border follows the rounded corners */
+    -fx-border-color: #d6dada; /* Set the border color */
+    -fx-border-width: 1px; /* Set the border width */
+    -fx-border-style: solid; /* Set the border style */
+}

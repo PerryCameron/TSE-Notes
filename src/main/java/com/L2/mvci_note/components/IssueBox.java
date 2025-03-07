@@ -22,6 +22,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.geometry.Insets;
+import javafx.scene.text.Font;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -49,16 +50,19 @@ public class IssueBox implements Component<Region> {
     public IssueBox(NoteView noteView) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
-        this.codeAreaIssue = new CodeArea();
-        codeAreaIssue.setWrapText(true);
-        HBox.setHgrow(codeAreaIssue, Priority.ALWAYS);
-        codeAreaIssue.setPrefHeight(200); // Adjust based on your needs
-        // Initialize ContextMenu
+        this.codeAreaIssue = getCodeAreaIssue();
         this.contextMenu = new ContextMenu();
+    }
 
-        // Add mouse move listener for hover detection
-        codeAreaIssue.setOnMouseMoved(this::handleMouseHover);
-
+    private CodeArea getCodeAreaIssue() {
+        CodeArea codeArea = new CodeArea();
+        codeArea.setWrapText(true);
+        HBox.setHgrow(codeArea, Priority.ALWAYS);
+        codeArea.setPrefHeight(200); // Adjust based on your needs
+        codeArea.setOnMouseMoved(this::handleMouseHover);
+        codeArea.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
+        codeArea.getStyleClass().add("code-area"); // Apply the style class
+        return codeArea;
     }
 
     @Override
