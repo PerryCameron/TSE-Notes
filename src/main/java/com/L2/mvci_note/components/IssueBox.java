@@ -14,6 +14,9 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -26,6 +29,9 @@ import org.reactfx.Subscription;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.OptionalInt;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +43,7 @@ public class IssueBox implements Component<Region> {
     private static final Logger logger = LoggerFactory.getLogger(IssueBox.class);
     private Hunspell hunspell;
     private Subscription spellCheckSubscription;
+    private ContextMenu contextMenu;
 
 
     public IssueBox(NoteView noteView) {
@@ -46,6 +53,12 @@ public class IssueBox implements Component<Region> {
         codeAreaIssue.setWrapText(true);
         HBox.setHgrow(codeAreaIssue, Priority.ALWAYS);
         codeAreaIssue.setPrefHeight(200); // Adjust based on your needs
+        // Initialize ContextMenu
+        this.contextMenu = new ContextMenu();
+
+        // Add mouse move listener for hover detection
+        codeAreaIssue.setOnMouseMoved(this::handleMouseHover);
+
     }
 
     @Override
@@ -124,6 +137,68 @@ public class IssueBox implements Component<Region> {
         codeAreaIssue.setEditable(!noteModel.getBoundNote().isEmail());
     }
 
+    private void handleMouseHover(MouseEvent event) {
+        if (hunspell == null) return;
+        // Get character index under mouse
+        OptionalInt charIndexOpt = codeAreaIssue.hit(event.getX(), event.getY()).getCharacterIndex();
+        if (!charIndexOpt.isPresent()) {
+            contextMenu.hide();
+            return;
+        }
+        int charIndex = charIndexOpt.getAsInt();
+        if (charIndex < 0 || charIndex >= codeAreaIssue.getText().length()) {
+            contextMenu.hide();
+            return;
+        }
+
+        // Get word at charIndex
+        String text = codeAreaIssue.getText();
+        int wordStart = text.lastIndexOf(" ", charIndex) + 1;
+        int wordEnd = text.indexOf(" ", charIndex);
+        if (wordEnd == -1) wordEnd = text.length();
+        if (wordStart >= wordEnd) {
+            contextMenu.hide();
+            return;
+        }
+
+        String word = text.substring(wordStart, wordEnd).trim();
+        if (word.isEmpty() || hunspell.spell(word)) {
+            contextMenu.hide();
+            return;
+        }
+
+        // Word is misspelled, build context menu
+        contextMenu.getItems().clear();
+        List<String> suggestions = hunspell.suggest(word);
+        if (!suggestions.isEmpty()) {
+            for (String suggestion : suggestions) {
+                MenuItem item = new MenuItem(suggestion);
+                // Capture wordStart and wordEnd in final variables
+                final int finalWordStart = wordStart;
+                final int finalWordEnd = wordEnd;
+                item.setOnAction(e -> {
+                    codeAreaIssue.replaceText(finalWordStart, finalWordEnd, suggestion);
+                    contextMenu.hide();
+                });
+                contextMenu.getItems().add(item);
+            }
+        }
+
+        // Add "Add to Dictionary" option
+        MenuItem addToDict = new MenuItem("Add to Dictionary");
+        addToDict.setOnAction(e -> {
+            hunspell.add(word);
+            computeHighlighting(); // Re-run spell-check
+            contextMenu.hide();
+        });
+        contextMenu.getItems().add(addToDict);
+
+        // Show context menu at mouse position
+        contextMenu.show(codeAreaIssue, event.getScreenX(), event.getScreenY());
+    }
+
+
+
 
 
     private void computeHighlighting() {
@@ -182,11 +257,6 @@ public class IssueBox implements Component<Region> {
             Platform.runLater(() -> codeAreaIssue.setStyleSpans(0, spans));
         }).start();
     }
-
-
-
-
-
 
 
     // Cleanup (optional, if IssueBox is reused or disposed)
