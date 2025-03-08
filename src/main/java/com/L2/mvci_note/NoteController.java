@@ -60,6 +60,7 @@ public class NoteController extends Controller<NoteMessage> {
             case DELETE_PART_ORDER -> noteInteractor.deleteSelectedPartOrder();
             case DELETE_PART -> noteInteractor.deletePart();
             case INSERT_PART -> noteInteractor.insertPart();
+            case INITALIZE_DICTIONARY -> noteInteractor.initializeDictionary();
             case UPDATE_PART -> noteInteractor.updatePart();
             case REFRESH_PART_ORDERS -> noteInteractor.refreshPartOrders();
             case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT -> mainController.action(MainMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);

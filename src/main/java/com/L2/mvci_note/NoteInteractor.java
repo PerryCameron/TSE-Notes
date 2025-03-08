@@ -7,6 +7,7 @@ import com.L2.repository.implementations.PartOrderRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
 import com.L2.static_tools.*;
 import com.L2.widgetFx.DialogueFx;
+import com.nikialeksey.hunspell.Hunspell;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -14,6 +15,7 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
@@ -128,6 +130,17 @@ public class NoteInteractor {
             return buildPartOrderToPlainText();
         }
         return "";
+    }
+
+    public void initializeDictionary() {
+        // Initialize Hunspell
+        try {
+            String dictPath = Paths.get(getClass().getResource("/dictionary/en_US.dic").toURI()).toString();
+            String affPath = Paths.get(getClass().getResource("/dictionary/en_US.aff").toURI()).toString();
+            noteModel.hunspellProperty().setValue(new Hunspell(dictPath, affPath));
+        } catch (Exception e) {
+            logger.error("Failed to load Hunspell dictionary", e);
+        }
     }
 
     public String copyAllPartOrdersToHTML(boolean includePOHeader) {

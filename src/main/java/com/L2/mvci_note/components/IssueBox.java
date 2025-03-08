@@ -26,7 +26,6 @@ import javafx.scene.text.Font;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
-import org.reactfx.Subscription;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,16 +41,12 @@ public class IssueBox implements Component<Region> {
     private VBox root;
     private final CodeArea codeAreaIssue; // Replacing TextArea with CodeArea
     private static final Logger logger = LoggerFactory.getLogger(IssueBox.class);
-    private Hunspell hunspell;
-    private Subscription spellCheckSubscription;
-    private ContextMenu contextMenu;
 
 
     public IssueBox(NoteView noteView) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
         this.codeAreaIssue = getCodeAreaIssue();
-        this.contextMenu = new ContextMenu();
     }
 
     private CodeArea getCodeAreaIssue() {
@@ -65,11 +60,18 @@ public class IssueBox implements Component<Region> {
         return codeArea;
     }
 
+    private ContextMenu getContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
+        return contextMenu;
+    }
+
     @Override
     public Region build() {
         this.root = VBoxFx.of(5.0, new Insets(5, 10, 10, 10));
         root.getStyleClass().add("decorative-hbox");
-
+        noteModel.contextMenuProperty().setValue(getContextMenu());
+        noteView.getAction().accept(NoteMessage.INITALIZE_DICTIONARY);
         // this is our bridge, since CodeArea does not have native FX binding support
         StringProperty bridgeProperty = new SimpleStringProperty();
 
@@ -84,23 +86,12 @@ public class IssueBox implements Component<Region> {
             }
         });
 
-        // Initialize Hunspell
-        try {
-            String dictPath = Paths.get(getClass().getResource("/dictionary/en_US.dic").toURI()).toString();
-            String affPath = Paths.get(getClass().getResource("/dictionary/en_US.aff").toURI()).toString();
-            this.hunspell = new Hunspell(dictPath, affPath);
-        } catch (Exception e) {
-            logger.error("Failed to load Hunspell dictionary", e);
-            this.hunspell = null; // Fallback to no spell-checking if loading fails
-        }
-
         // Setup spell-checking with debounce
-        if (hunspell != null) {
-            spellCheckSubscription = codeAreaIssue.multiPlainChanges()
+        if (noteModel.hunspellProperty().get() != null) {
+            noteModel.spellCheckSubscriptionProperty().setValue(codeAreaIssue.multiPlainChanges()
                     .successionEnds(java.time.Duration.ofMillis(500)) // Debounce 500ms
-                    .subscribe(ignore -> computeHighlighting());
+                    .subscribe(ignore -> computeHighlighting()));
         }
-        // Add CSS for spell-checking
 
         HBox iconBox = HBoxFx.iconBox(10);
         root.getChildren().addAll(TitleBarFx.of("Issue", iconBox), codeAreaIssue);
@@ -128,6 +119,8 @@ public class IssueBox implements Component<Region> {
         return root;
     }
 
+
+
     @Override
     public void flash() {
         root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
@@ -142,16 +135,16 @@ public class IssueBox implements Component<Region> {
     }
 
     private void handleMouseHover(MouseEvent event) {
-        if (hunspell == null) return;
+        if (noteModel.hunspellProperty().get() == null) return;
         // Get character index under mouse
         OptionalInt charIndexOpt = codeAreaIssue.hit(event.getX(), event.getY()).getCharacterIndex();
         if (!charIndexOpt.isPresent()) {
-            contextMenu.hide();
+            noteModel.contextMenuProperty().get().hide();
             return;
         }
         int charIndex = charIndexOpt.getAsInt();
         if (charIndex < 0 || charIndex >= codeAreaIssue.getText().length()) {
-            contextMenu.hide();
+            noteModel.contextMenuProperty().get().hide();
             return;
         }
 
@@ -161,19 +154,19 @@ public class IssueBox implements Component<Region> {
         int wordEnd = text.indexOf(" ", charIndex);
         if (wordEnd == -1) wordEnd = text.length();
         if (wordStart >= wordEnd) {
-            contextMenu.hide();
+            noteModel.contextMenuProperty().get().hide();
             return;
         }
 
         String word = text.substring(wordStart, wordEnd).trim();
-        if (word.isEmpty() || hunspell.spell(word)) {
-            contextMenu.hide();
+        if (word.isEmpty() || noteModel.hunspellProperty().get().spell(word)) {
+            noteModel.contextMenuProperty().get().hide();
             return;
         }
 
         // Word is misspelled, build context menu
-        contextMenu.getItems().clear();
-        List<String> suggestions = hunspell.suggest(word);
+        noteModel.contextMenuProperty().get().getItems().clear();
+        List<String> suggestions = noteModel.hunspellProperty().get().suggest(word);
         if (!suggestions.isEmpty()) {
             for (String suggestion : suggestions) {
                 MenuItem item = new MenuItem(suggestion);
@@ -182,31 +175,27 @@ public class IssueBox implements Component<Region> {
                 final int finalWordEnd = wordEnd;
                 item.setOnAction(e -> {
                     codeAreaIssue.replaceText(finalWordStart, finalWordEnd, suggestion);
-                    contextMenu.hide();
+                    noteModel.contextMenuProperty().get().hide();
                 });
-                contextMenu.getItems().add(item);
+                noteModel.contextMenuProperty().get().getItems().add(item);
             }
         }
 
         // Add "Add to Dictionary" option
         MenuItem addToDict = new MenuItem("Add to Dictionary");
         addToDict.setOnAction(e -> {
-            hunspell.add(word);
+            noteModel.hunspellProperty().get().add(word);
             computeHighlighting(); // Re-run spell-check
-            contextMenu.hide();
+            noteModel.contextMenuProperty().get().hide();
         });
-        contextMenu.getItems().add(addToDict);
+        noteModel.contextMenuProperty().get().getItems().add(addToDict);
 
         // Show context menu at mouse position
-        contextMenu.show(codeAreaIssue, event.getScreenX(), event.getScreenY());
+        noteModel.contextMenuProperty().get().show(codeAreaIssue, event.getScreenX(), event.getScreenY());
     }
 
-
-
-
-
     private void computeHighlighting() {
-        if (hunspell == null) return;
+        if (noteModel.hunspellProperty().get() == null) return;
 
         String text = codeAreaIssue.getText();
         if (text.isEmpty()) {
@@ -240,7 +229,7 @@ public class IssueBox implements Component<Region> {
                     String rawWord = text.substring(start, i); // e.g., "fox,"
                     // Strip punctuation for spell-checking
                     String cleanWord = rawWord.replaceAll("[^\\p{L}\\p{N}]", ""); // Keep only letters and numbers
-                    if (!cleanWord.isEmpty() && !hunspell.spell(cleanWord)) {
+                    if (!cleanWord.isEmpty() && !noteModel.hunspellProperty().get().spell(cleanWord)) {
                         // Highlight the full raw word (including punctuation)
                         spansBuilder.add(Collections.singleton("misspelled"), rawWord.length());
                         totalLength += rawWord.length();
@@ -265,11 +254,11 @@ public class IssueBox implements Component<Region> {
 
     // Cleanup (optional, if IssueBox is reused or disposed)
     public void dispose() {
-        if (spellCheckSubscription != null) {
-            spellCheckSubscription.unsubscribe();
+        if (noteModel.spellCheckSubscriptionProperty().get() != null) {
+            noteModel.spellCheckSubscriptionProperty().get().unsubscribe();
         }
-        if (hunspell != null) {
-            hunspell.close();
+        if (noteModel.hunspellProperty().get() != null) {
+            noteModel.hunspellProperty().get().close();
         }
     }
 }

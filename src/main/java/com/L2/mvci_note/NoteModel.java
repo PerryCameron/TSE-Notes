@@ -1,10 +1,13 @@
 package com.L2.mvci_note;
 
 import com.L2.dto.*;
+import com.nikialeksey.hunspell.Hunspell;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.layout.VBox;
+import org.reactfx.Subscription;
 
 public class NoteModel {
     private ObservableList<NoteDTO> notes = FXCollections.observableArrayList();
@@ -17,12 +20,10 @@ public class NoteModel {
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
     private final ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
     private final ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
-
     // allow this many records to be displayed
     private final IntegerProperty pageSize = new SimpleIntegerProperty(50);
     // skip the first N records
     private final IntegerProperty offset = new SimpleIntegerProperty(0);
-
     // shouldn't this be under main controller???????
     private final StringProperty statusLabel = new SimpleStringProperty();
     private final ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
@@ -30,6 +31,10 @@ public class NoteModel {
     private final BooleanProperty refreshBoundNote = new SimpleBooleanProperty(false);
     private final BooleanProperty refreshEntitlements = new SimpleBooleanProperty(false);
     private final BooleanProperty openNoteTab = new SimpleBooleanProperty(false);
+    private final ObjectProperty<Hunspell> hunspell = new SimpleObjectProperty<>();
+    private final ObjectProperty<Subscription> spellCheckSubscription = new SimpleObjectProperty<>();
+    private final ObjectProperty<ContextMenu> contextMenu = new SimpleObjectProperty<>();
+
 
 
     public void clearBoundNoteFields() {
@@ -184,6 +189,30 @@ public class NoteModel {
 
     public void setCurrentEntitlement(EntitlementDTO currentEntitlement) {
         this.currentEntitlement.set(currentEntitlement);
+    }
+
+    public Hunspell getHunspell() {
+        return hunspell.get();
+    }
+
+    public ObjectProperty<Hunspell> hunspellProperty() {
+        return hunspell;
+    }
+
+    public Subscription getSpellCheckSubscription() {
+        return spellCheckSubscription.get();
+    }
+
+    public ObjectProperty<Subscription> spellCheckSubscriptionProperty() {
+        return spellCheckSubscription;
+    }
+
+    public ContextMenu getContextMenu() {
+        return contextMenu.get();
+    }
+
+    public ObjectProperty<ContextMenu> contextMenuProperty() {
+        return contextMenu;
     }
 
     public BooleanProperty openNoteTabProperty() {
