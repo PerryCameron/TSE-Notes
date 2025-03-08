@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.layout.VBox;
+import org.fxmisc.richtext.CodeArea;
 import org.reactfx.Subscription;
 
 public class NoteModel {
@@ -34,6 +35,7 @@ public class NoteModel {
     private final ObjectProperty<Hunspell> hunspell = new SimpleObjectProperty<>();
     private final ObjectProperty<Subscription> spellCheckSubscription = new SimpleObjectProperty<>();
     private final ObjectProperty<ContextMenu> contextMenu = new SimpleObjectProperty<>();
+    private final ObjectProperty<CodeArea> issueArea = new SimpleObjectProperty<>();
 
 
 
@@ -213,6 +215,14 @@ public class NoteModel {
 
     public ObjectProperty<ContextMenu> contextMenuProperty() {
         return contextMenu;
+    }
+
+    public CodeArea getIssueArea() {
+        return issueArea.get();
+    }
+
+    public ObjectProperty<CodeArea> issueAreaProperty() {
+        return issueArea;
     }
 
     public BooleanProperty openNoteTabProperty() {

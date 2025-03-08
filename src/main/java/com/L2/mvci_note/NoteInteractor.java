@@ -8,16 +8,21 @@ import com.L2.repository.implementations.UserRepositoryImpl;
 import com.L2.static_tools.*;
 import com.L2.widgetFx.DialogueFx;
 import com.nikialeksey.hunspell.Hunspell;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -115,6 +120,63 @@ public class NoteInteractor {
 
     public void copyLoggedCall() {
         ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), loggedCallToPlainText());
+    }
+
+    public void computeHighlightingForIssueArea() {
+        if (noteModel.hunspellProperty().get() == null) return;
+
+        String text = noteModel.issueAreaProperty().get().getText();
+        if (text.isEmpty()) {
+            noteModel.issueAreaProperty().get().setStyleSpans(0, new StyleSpansBuilder<Collection<String>>().create());
+            return;
+        }
+
+        new Thread(() -> {
+            StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+            int totalLength = 0;
+            int i = 0;
+
+            while (i < text.length()) {
+                // Skip whitespace
+                int start = i;
+                while (i < text.length() && Character.isWhitespace(text.charAt(i))) {
+                    i++;
+                }
+                if (i > start) {
+                    spansBuilder.add(Collections.emptyList(), i - start);
+                    totalLength += i - start;
+                }
+
+                // Find word boundaries (including trailing punctuation)
+                start = i;
+                while (i < text.length() && !Character.isWhitespace(text.charAt(i))) {
+                    i++;
+                }
+
+                if (start < i) { // We have a word (possibly with punctuation)
+                    String rawWord = text.substring(start, i); // e.g., "fox,"
+                    // Strip punctuation for spell-checking
+                    String cleanWord = rawWord.replaceAll("[^\\p{L}\\p{N}]", ""); // Keep only letters and numbers
+                    if (!cleanWord.isEmpty() && !noteModel.hunspellProperty().get().spell(cleanWord)) {
+                        // Highlight the full raw word (including punctuation)
+                        spansBuilder.add(Collections.singleton("misspelled"), rawWord.length());
+                        totalLength += rawWord.length();
+                    } else {
+                        spansBuilder.add(Collections.emptyList(), rawWord.length());
+                        totalLength += rawWord.length();
+                    }
+                }
+            }
+
+            // Add any trailing whitespace
+            if (totalLength < text.length()) {
+                spansBuilder.add(Collections.emptyList(), text.length() - totalLength);
+                totalLength = text.length();
+            }
+
+            StyleSpans<Collection<String>> spans = spansBuilder.create();
+            Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
+        }).start();
     }
 
     public String copyAllPartOrdersToPlainText() {
