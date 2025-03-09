@@ -156,14 +156,27 @@ public class NoteInteractor {
 
                 if (start < i) { // We have a word (possibly with punctuation)
                     String rawWord = text.substring(start, i); // e.g., "fox,"
+
+                    // Find the word part (letters/numbers) and punctuation
+                    int wordEnd = start;
+                    while (wordEnd < i && (Character.isLetterOrDigit(text.charAt(wordEnd)) || text.charAt(wordEnd) == '\'')) {
+                        wordEnd++;
+                    }
+                    String word = text.substring(start, wordEnd);
+
+
                     // Strip punctuation for spell-checking
                     String cleanWord = rawWord.replaceAll("[^\\p{L}\\p{N}]", ""); // Keep only letters and numbers
+
+                    String trailing = text.substring(wordEnd, i);
+
                     if (!cleanWord.isEmpty() && !noteModel.hunspellProperty().get().spell(cleanWord)) {
-                        // Highlight the full raw word (including punctuation)
-                        spansBuilder.add(Collections.singleton("misspelled"), rawWord.length());
+                        spansBuilder.add(Collections.singleton("misspelled"), word.length());
+                        spansBuilder.add(Collections.emptyList(), trailing.length());
                     } else {
-                        spansBuilder.add(Collections.emptyList(), rawWord.length());
+                        spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
                     }
+
                     totalLength += rawWord.length();
                 }
             }

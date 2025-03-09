@@ -144,21 +144,26 @@ public class IssueBox implements Component<Region> {
             return;
         }
 
-        String word = text.substring(wordStart, wordEnd).trim();
-        if (word.isEmpty() || noteModel.hunspellProperty().get().spell(word)) {
+        int actualWordEnd = wordStart;
+        while (actualWordEnd < wordEnd && (Character.isLetterOrDigit(text.charAt(actualWordEnd)) || text.charAt(actualWordEnd) == '\'')) {
+            actualWordEnd++;
+        }
+        String word = text.substring(wordStart, actualWordEnd);
+        String cleanWord = word.replaceAll("[^\\p{L}\\p{N}]", "");
+
+        if (cleanWord.isEmpty() || noteModel.hunspellProperty().get().spell(cleanWord)) {
             noteModel.contextMenuProperty().get().hide();
             return;
         }
 
         // Word is misspelled, build context menu
         noteModel.contextMenuProperty().get().getItems().clear();
-        List<String> suggestions = noteModel.hunspellProperty().get().suggest(word);
+        List<String> suggestions = noteModel.hunspellProperty().get().suggest(cleanWord);
         if (!suggestions.isEmpty()) {
             for (String suggestion : suggestions) {
                 MenuItem item = new MenuItem(suggestion);
-                // Capture wordStart and wordEnd in final variables
                 final int finalWordStart = wordStart;
-                final int finalWordEnd = wordEnd;
+                final int finalWordEnd = actualWordEnd;
                 item.setOnAction(e -> {
                     noteModel.issueAreaProperty().get().replaceText(finalWordStart, finalWordEnd, suggestion);
                     noteModel.contextMenuProperty().get().hide();
