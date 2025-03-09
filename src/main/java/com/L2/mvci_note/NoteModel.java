@@ -36,6 +36,7 @@ public class NoteModel {
     private final ObjectProperty<Subscription> spellCheckSubscription = new SimpleObjectProperty<>();
     private final ObjectProperty<ContextMenu> contextMenu = new SimpleObjectProperty<>();
     private final ObjectProperty<CodeArea> issueArea = new SimpleObjectProperty<>();
+    private final StringProperty newWord = new SimpleStringProperty();
 
 
 
@@ -223,6 +224,14 @@ public class NoteModel {
 
     public ObjectProperty<CodeArea> issueAreaProperty() {
         return issueArea;
+    }
+
+    public String getNewWord() {
+        return newWord.get();
+    }
+
+    public StringProperty newWordProperty() {
+        return newWord;
     }
 
     public BooleanProperty openNoteTabProperty() {

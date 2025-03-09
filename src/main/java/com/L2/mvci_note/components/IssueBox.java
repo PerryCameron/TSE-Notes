@@ -169,8 +169,14 @@ public class IssueBox implements Component<Region> {
 
         // Add "Add to Dictionary" option
         MenuItem addToDict = new MenuItem("Add to Dictionary");
+
         addToDict.setOnAction(e -> {
             noteModel.hunspellProperty().get().add(word);
+            // put new word on pedestal
+            noteModel.newWordProperty().set(word);
+            // save our new word
+            noteView.getAction().accept(NoteMessage.ADD_WORD_TO_DICT);
+            // send message for note interactor to add the word to stored file
             noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA); // Re-run spell-check
             noteModel.contextMenuProperty().get().hide();
         });

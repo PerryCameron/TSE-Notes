@@ -18,13 +18,14 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.*;
 
 public class NoteInteractor {
 
@@ -160,24 +161,88 @@ public class NoteInteractor {
                     if (!cleanWord.isEmpty() && !noteModel.hunspellProperty().get().spell(cleanWord)) {
                         // Highlight the full raw word (including punctuation)
                         spansBuilder.add(Collections.singleton("misspelled"), rawWord.length());
-                        totalLength += rawWord.length();
                     } else {
                         spansBuilder.add(Collections.emptyList(), rawWord.length());
-                        totalLength += rawWord.length();
                     }
+                    totalLength += rawWord.length();
                 }
             }
 
             // Add any trailing whitespace
             if (totalLength < text.length()) {
                 spansBuilder.add(Collections.emptyList(), text.length() - totalLength);
-                totalLength = text.length();
             }
 
             StyleSpans<Collection<String>> spans = spansBuilder.create();
             Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
         }).start();
     }
+
+    public void initializeDictionary() {
+        // Initialize Hunspell
+        try {
+            String dictPath = Paths.get(getClass().getResource("/dictionary/en_US.dic").toURI()).toString();
+            String affPath = Paths.get(getClass().getResource("/dictionary/en_US.aff").toURI()).toString();
+            String customDictFullPath = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic").getAbsolutePath();
+            logger.info("Loading Hunspell with aff: {}, dict: {}, custom: {}", affPath, dictPath, customDictFullPath);
+            logger.info("aff exists: {}, size: {} bytes", new File(affPath).exists(), new File(affPath).length());
+            logger.info("dict exists: {}, size: {} bytes", new File(dictPath).exists(), new File(dictPath).length());
+            logger.info("custom exists: {}, size: {} bytes", new File(customDictFullPath).exists(), new File(customDictFullPath).length());
+
+            noteModel.hunspellProperty().setValue(new Hunspell(dictPath, affPath));
+
+            // Test base dictionary
+            logger.info("Test 'hello': {}", noteModel.hunspellProperty().get().spell("hello"));
+            logger.info("Test 'xyzzy': {}", noteModel.hunspellProperty().get().spell("xyzzy"));
+            if (!noteModel.hunspellProperty().get().spell("hello")) {
+                logger.error("Hunspell failed basic test - base dictionary not working");
+            }
+
+            // Add custom dictionary if it exists and has content
+            File customDictFile = new File(customDictFullPath);
+            if (customDictFile.exists() && customDictFile.length() > 2) {
+                noteModel.hunspellProperty().get().addDic(customDictFullPath);
+                logger.info("Added custom dictionary from {}", customDictFullPath);
+                // Verify custom words loaded (optional test)
+            } else if (!customDictFile.exists()) {
+                // Create empty custom.dic if it doesn’t exist
+                if (customDictFile.getParentFile().mkdirs() || customDictFile.createNewFile()) {
+                    try (java.io.FileWriter writer = new java.io.FileWriter(customDictFile)) {
+                        writer.write("0\n");
+                    }
+                    logger.info("Created new custom dictionary file: {}", customDictFullPath);
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("Failed to load Hunspell dictionary", e);
+        }
+    }
+
+    public void appendToCustomDictionary() {
+        String word = noteModel.newWordProperty().get();
+        File customDictFile = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic");
+        try {
+            // Read existing content
+            List<String> lines = customDictFile.exists() ? Files.readAllLines(customDictFile.toPath()) : new ArrayList<>();
+            int count = lines.isEmpty() || !lines.get(0).matches("\\d+") ? 0 : Integer.parseInt(lines.get(0));
+
+            // Update content
+            List<String> newLines = new ArrayList<>();
+            newLines.add(String.valueOf(count + 1)); // Increment count
+            if (count > 0) {
+                newLines.addAll(lines.subList(1, lines.size())); // Existing words
+            }
+            newLines.add(word); // New word
+
+            // Write back
+            Files.write(customDictFile.toPath(), newLines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            logger.info("Appended '{}' to custom dictionary, new count: {}", word, count + 1);
+        } catch (IOException e) {
+            logger.error("Failed to append '{}' to custom dictionary", word, e);
+        }
+    }
+
 
     public String copyAllPartOrdersToPlainText() {
         if (noteModel.getBoundNote().getPartOrders().size() > 1) {
@@ -192,17 +257,6 @@ public class NoteInteractor {
             return buildPartOrderToPlainText();
         }
         return "";
-    }
-
-    public void initializeDictionary() {
-        // Initialize Hunspell
-        try {
-            String dictPath = Paths.get(getClass().getResource("/dictionary/en_US.dic").toURI()).toString();
-            String affPath = Paths.get(getClass().getResource("/dictionary/en_US.aff").toURI()).toString();
-            noteModel.hunspellProperty().setValue(new Hunspell(dictPath, affPath));
-        } catch (Exception e) {
-            logger.error("Failed to load Hunspell dictionary", e);
-        }
     }
 
     public String copyAllPartOrdersToHTML(boolean includePOHeader) {
@@ -327,10 +381,10 @@ public class NoteInteractor {
         NoteDTO note = noteModel.getBoundNote();
         stringBuilder.append("--- Shipping Contact ---").append("\r\n");
         stringBuilder.append("Name: ").append(note.getContactName()).append("\r\n");
-        if (!note.getContactEmail().equals(""))
-        stringBuilder.append("Email: ").append(note.getContactEmail()).append("\r\n");
-        if (!note.getContactPhoneNumber().equals(""))
-        stringBuilder.append("Phone: ").append(note.getContactPhoneNumber())
+        if (!note.getContactEmail().isEmpty())
+            stringBuilder.append("Email: ").append(note.getContactEmail()).append("\r\n");
+        if (!note.getContactPhoneNumber().isEmpty())
+            stringBuilder.append("Phone: ").append(note.getContactPhoneNumber())
                 .append("\r\n").append("\r\n");
         stringBuilder
                 .append("--- Shipping Address ---").append("\r\n");
@@ -366,15 +420,15 @@ public class NoteInteractor {
         StringBuilder stringBuilder = new StringBuilder();
         NoteDTO note = noteModel.getBoundNote();
         stringBuilder.append("--- Customer Provided Information ---").append("\r\n");
-        if (!note.getCaseNumber().equals(""))
+        if (!note.getCaseNumber().isEmpty())
             stringBuilder.append("Case");
-        if (!note.getCaseNumber().equals("") && note.getWorkOrder().equals(""))
+        if (!note.getCaseNumber().isEmpty() && note.getWorkOrder().isEmpty())
             stringBuilder.append(": ");
-        if (!note.getCaseNumber().equals("") && !note.getWorkOrder().equals(""))
+        if (!note.getCaseNumber().isEmpty() && !note.getWorkOrder().isEmpty())
             stringBuilder.append("/");
-        if (!note.getWorkOrder().equals("") && note.getCaseNumber().equals(""))
+        if (!note.getWorkOrder().isEmpty() && note.getCaseNumber().isEmpty())
             stringBuilder.append("WO: ");
-        if (!note.getWorkOrder().equals("") && !note.getCaseNumber().equals(""))
+        if (!note.getWorkOrder().isEmpty() && !note.getCaseNumber().isEmpty())
             stringBuilder.append("WO # ");
         if (!note.getCaseNumber().isEmpty()) {
             stringBuilder.append(note.getCaseNumber());
@@ -382,29 +436,29 @@ public class NoteInteractor {
                 stringBuilder.append(" / ");
             }
         }
-        if (!note.getWorkOrder().equals(""))
+        if (!note.getWorkOrder().isEmpty())
             stringBuilder.append(note.getWorkOrder());
         stringBuilder.append("\r\n");
-        if (!note.getModelNumber().equals(""))
+        if (!note.getModelNumber().isEmpty())
             stringBuilder.append("Model: ").append(note.getModelNumber()).append("\r\n");
-        if (!note.getSerialNumber().equals(""))
+        if (!note.getSerialNumber().isEmpty())
             stringBuilder.append("S/N: ").append(note.getSerialNumber()).append("\r\n");
         stringBuilder.append("\r\n");
         stringBuilder.append("--- Call-in person ---").append("\r\n");
         // there should always be a call in person
         stringBuilder.append("Name: ").append(note.getCallInPerson()).append("\r\n");
-        if (!note.getCallInPhoneNumber().equals(""))
+        if (!note.getCallInPhoneNumber().isEmpty())
             stringBuilder.append("Phone: ").append(note.getCallInPhoneNumber()).append("\r\n");
-        if (!note.getCallInEmail().equals(""))
+        if (!note.getCallInEmail().isEmpty())
             stringBuilder.append("Email: ").append(note.getCallInEmail()).append("\r\n");
         stringBuilder.append("\r\n");
         // always be something for entitlement
         stringBuilder.append("Entitlement: ").append(note.getActiveServiceContract()).append("\r\n");
-        if (!note.getSchedulingTerms().equals(""))
+        if (!note.getSchedulingTerms().isEmpty())
             stringBuilder.append("Scheduling Terms: ").append(note.getSchedulingTerms()).append("\r\n");
-        if (!note.getServiceLevel().equals(""))
+        if (!note.getServiceLevel().isEmpty())
             stringBuilder.append("Service Level: ").append(note.getServiceLevel()).append("\r\n");
-        if (!note.getUpsStatus().equals(""))
+        if (!note.getUpsStatus().isEmpty())
             stringBuilder.append("Status of the UPS: ").append(note.getUpsStatus()).append("\r\n");
         // will always be true or false
         stringBuilder.append("Load Supported: ").append(convertBool(note.isLoadSupported())).append("\r\n");
@@ -416,15 +470,15 @@ public class NoteInteractor {
         NoteDTO note = noteModel.getBoundNote();
         stringBuilder.append("<strong>Customer Provided Information</strong><br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">");
-        if (!note.getCaseNumber().equals(""))
+        if (!note.getCaseNumber().isEmpty())
             stringBuilder.append("Case");
-        if (!note.getCaseNumber().equals("") && note.getWorkOrder().equals(""))
+        if (!note.getCaseNumber().isEmpty() && note.getWorkOrder().isEmpty())
             stringBuilder.append(": ");
-        if (!note.getCaseNumber().equals("") && !note.getWorkOrder().equals(""))
+        if (!note.getCaseNumber().isEmpty() && !note.getWorkOrder().isEmpty())
             stringBuilder.append("/");
-        if (!note.getWorkOrder().equals("") && note.getCaseNumber().equals(""))
+        if (!note.getWorkOrder().isEmpty() && note.getCaseNumber().isEmpty())
             stringBuilder.append("WO: ");
-        if (!note.getWorkOrder().equals("") && !note.getCaseNumber().equals(""))
+        if (!note.getWorkOrder().isEmpty() && !note.getCaseNumber().isEmpty())
             stringBuilder.append("WO # ");
         stringBuilder.append("</span>");
         if (!note.getCaseNumber().isEmpty()) {
@@ -433,28 +487,28 @@ public class NoteInteractor {
                 stringBuilder.append(" / ");
             }
         }
-        if (!note.getWorkOrder().equals(""))
+        if (!note.getWorkOrder().isEmpty())
             stringBuilder.append(note.getWorkOrder());
         stringBuilder.append("<br>");
         // end of customer provided information
-        if (!note.getModelNumber().equals(""))
+        if (!note.getModelNumber().isEmpty())
             stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Model: </span>").append(note.getModelNumber()).append("<br>");
-        if (!note.getSerialNumber().equals(""))
+        if (!note.getSerialNumber().isEmpty())
             stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">S/N: </span>").append(note.getSerialNumber()).append("<br>");
         stringBuilder.append("<br>");
         stringBuilder.append("<b>Call-in person</b><br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(ClipboardUtils.escapeHtmlContent(note.getCallInPerson())).append("<br>");
-        if (!note.getCallInPhoneNumber().equals(""))
+        if (!note.getCallInPhoneNumber().isEmpty())
             stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(note.getCallInPhoneNumber()).append("<br>");
-        if (!note.getCallInEmail().equals(""))
+        if (!note.getCallInEmail().isEmpty())
             stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(note.getCallInEmail()).append("<br>");
         stringBuilder.append("<br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Entitlement: </span>").append(note.getActiveServiceContract()).append("<br>");
-        if (!note.getSchedulingTerms().equals(""))
+        if (!note.getSchedulingTerms().isEmpty())
             stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Scheduling Terms: </span>").append(note.getSchedulingTerms()).append("<br>");
-        if (!note.getServiceLevel().equals(""))
+        if (!note.getServiceLevel().isEmpty())
             stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Service Level: </span>").append(note.getServiceLevel()).append("<br>");
-        if (!note.getUpsStatus().equals(""))
+        if (!note.getUpsStatus().isEmpty())
             stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Status of the UPS: </span>").append(note.getUpsStatus()).append("<br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Load Supported: </span>").append(convertBool(note.isLoadSupported())).append("<br>");
         return stringBuilder.toString();
@@ -504,7 +558,7 @@ public class NoteInteractor {
             stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("\r\n").append("\r\n");
         }
         if(partsOrdered)
-        stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
+            stringBuilder.append(copyAllPartOrdersToPlainText()).append("\r\n");
         return stringBuilder.toString();
     }
 

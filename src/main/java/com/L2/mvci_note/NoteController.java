@@ -40,6 +40,7 @@ public class NoteController extends Controller<NoteMessage> {
     @Override
     public void action(NoteMessage message) {
         switch (message) {
+            case ADD_WORD_TO_DICT -> noteInteractor.appendToCustomDictionary();
             case LOAD_USER -> noteInteractor.loadUser();
             case UPDATE_STATUSBAR -> mainController.setStatusBar(noteInteractor.getStatus());
             case REPORT_NUMBER_OF_PART_ORDERS -> noteInteractor.reportNumberOfPartOrders();
