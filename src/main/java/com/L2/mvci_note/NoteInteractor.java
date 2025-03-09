@@ -124,68 +124,76 @@ public class NoteInteractor {
     }
 
     public void computeHighlightingForIssueArea() {
+        // Check if the Hunspell spell checker is available
         if (noteModel.hunspellProperty().get() == null) return;
 
+        // Get the text from the issue area
         String text = noteModel.issueAreaProperty().get().getText();
+        // If the text is empty, clear any style spans and return
         if (text.isEmpty()) {
             noteModel.issueAreaProperty().get().setStyleSpans(0, new StyleSpansBuilder<Collection<String>>().create());
             return;
         }
 
+        // Start a new thread to compute highlighting
         new Thread(() -> {
             StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
             int totalLength = 0;
             int i = 0;
 
+            // Iterate through the text to identify words and whitespace
             while (i < text.length()) {
-                // Skip whitespace
                 int start = i;
+                // Skip whitespace characters
                 while (i < text.length() && Character.isWhitespace(text.charAt(i))) {
                     i++;
                 }
                 if (i > start) {
+                    // Add empty style spans for whitespace
                     spansBuilder.add(Collections.emptyList(), i - start);
                     totalLength += i - start;
                 }
 
-                // Find word boundaries (including trailing punctuation)
                 start = i;
+                // Identify non-whitespace characters (words)
                 while (i < text.length() && !Character.isWhitespace(text.charAt(i))) {
                     i++;
                 }
 
-                if (start < i) { // We have a word (possibly with punctuation)
-                    String rawWord = text.substring(start, i); // e.g., "fox,"
-
-                    // Find the word part (letters/numbers) and punctuation
+                if (start < i) {
+                    String rawWord = text.substring(start, i);
                     int wordEnd = start;
-                    while (wordEnd < i && (Character.isLetterOrDigit(text.charAt(wordEnd)) || text.charAt(wordEnd) == '\'')) {
+                    // Adjust the word end to include valid characters
+                    while (wordEnd < i && (Character.isLetterOrDigit(text.charAt(wordEnd)) ||
+                            text.charAt(wordEnd) == '\'' ||
+                            text.charAt(wordEnd) == '-' ||
+                            text.charAt(wordEnd) == '/')) {
                         wordEnd++;
                     }
                     String word = text.substring(start, wordEnd);
-
-
-                    // Strip punctuation for spell-checking
-                    String cleanWord = rawWord.replaceAll("[^\\p{L}\\p{N}]", ""); // Keep only letters and numbers
-
+                    // Clean the word for spell-checking
+                    String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", ""); // Allow ', -, /
                     String trailing = text.substring(wordEnd, i);
 
+                    logger.debug("Checking '{}': cleanWord='{}'", word, cleanWord);
+
+                    // Add style spans based on spell-check results
                     if (!cleanWord.isEmpty() && !noteModel.hunspellProperty().get().spell(cleanWord)) {
                         spansBuilder.add(Collections.singleton("misspelled"), word.length());
                         spansBuilder.add(Collections.emptyList(), trailing.length());
                     } else {
                         spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
                     }
-
                     totalLength += rawWord.length();
                 }
             }
 
-            // Add any trailing whitespace
+            // Add empty style spans for any remaining text
             if (totalLength < text.length()) {
                 spansBuilder.add(Collections.emptyList(), text.length() - totalLength);
             }
 
+            // Create style spans and apply them to the issue area
             StyleSpans<Collection<String>> spans = spansBuilder.create();
             Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
         }).start();
@@ -232,29 +240,27 @@ public class NoteInteractor {
         }
     }
 
-    public void appendToCustomDictionary() {
+public void appendToCustomDictionary() {
         String word = noteModel.newWordProperty().get();
         File customDictFile = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic");
-        try {
-            // Read existing content
-            List<String> lines = customDictFile.exists() ? Files.readAllLines(customDictFile.toPath()) : new ArrayList<>();
-            int count = lines.isEmpty() || !lines.get(0).matches("\\d+") ? 0 : Integer.parseInt(lines.get(0));
+    try {
+        List<String> lines = customDictFile.exists() ? Files.readAllLines(customDictFile.toPath()) : new ArrayList<>();
+        int count = lines.isEmpty() || !lines.get(0).matches("\\d+") ? 0 : Integer.parseInt(lines.get(0));
 
-            // Update content
-            List<String> newLines = new ArrayList<>();
-            newLines.add(String.valueOf(count + 1)); // Increment count
-            if (count > 0) {
-                newLines.addAll(lines.subList(1, lines.size())); // Existing words
-            }
-            newLines.add(word); // New word
-
-            // Write back
-            Files.write(customDictFile.toPath(), newLines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-            logger.info("Appended '{}' to custom dictionary, new count: {}", word, count + 1);
-        } catch (IOException e) {
-            logger.error("Failed to append '{}' to custom dictionary", word, e);
+        List<String> newLines = new ArrayList<>();
+        newLines.add(String.valueOf(count + 1));
+        if (count > 0) {
+            newLines.addAll(lines.subList(1, lines.size()));
         }
+        newLines.add(word); // Already cleanWord
+
+        Files.write(customDictFile.toPath(), newLines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        logger.info("Appended '{}' to custom dictionary, new count: {}", word, count + 1);
+    } catch (IOException e) {
+        logger.error("Failed to append '{}' to custom dictionary", word, e);
     }
+}
+
 
 
     public String copyAllPartOrdersToPlainText() {

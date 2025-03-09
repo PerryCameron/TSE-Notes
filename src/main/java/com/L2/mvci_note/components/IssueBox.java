@@ -121,21 +121,26 @@ public class IssueBox implements Component<Region> {
     }
 
     private void handleMouseHover(MouseEvent event) {
+        // Check if the Hunspell spell checker is available
         if (noteModel.hunspellProperty().get() == null) return;
-        // Get character index under mouse
+
+        // Get the character index at the mouse hover position
         OptionalInt charIndexOpt = noteModel.issueAreaProperty().get().hit(event.getX(), event.getY()).getCharacterIndex();
         if (!charIndexOpt.isPresent()) {
+            // Hide the context menu if no character index is found
             noteModel.contextMenuProperty().get().hide();
             return;
         }
         int charIndex = charIndexOpt.getAsInt();
+        // Check if the character index is out of bounds
         if (charIndex < 0 || charIndex >= noteModel.issueAreaProperty().get().getText().length()) {
             noteModel.contextMenuProperty().get().hide();
             return;
         }
 
-        // Get word at charIndex
+        // Get the text from the issue area
         String text = noteModel.issueAreaProperty().get().getText();
+        // Find the start and end indices of the word at the character index
         int wordStart = text.lastIndexOf(" ", charIndex) + 1;
         int wordEnd = text.indexOf(" ", charIndex);
         if (wordEnd == -1) wordEnd = text.length();
@@ -144,50 +149,67 @@ public class IssueBox implements Component<Region> {
             return;
         }
 
+        // Adjust the word end to include valid characters
         int actualWordEnd = wordStart;
-        while (actualWordEnd < wordEnd && (Character.isLetterOrDigit(text.charAt(actualWordEnd)) || text.charAt(actualWordEnd) == '\'')) {
+        while (actualWordEnd < wordEnd && (Character.isLetterOrDigit(text.charAt(actualWordEnd)) ||
+                text.charAt(actualWordEnd) == '\'' ||
+                text.charAt(actualWordEnd) == '-' ||
+                text.charAt(actualWordEnd) == '/')) {
             actualWordEnd++;
         }
+        // Extract the word and clean it
         String word = text.substring(wordStart, actualWordEnd);
-        String cleanWord = word.replaceAll("[^\\p{L}\\p{N}]", "");
+        String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", ""); // Match computeHighlighting
 
-        if (cleanWord.isEmpty() || noteModel.hunspellProperty().get().spell(cleanWord)) {
+        // Hide the context menu if the cleaned word is empty
+        if (cleanWord.isEmpty()) {
             noteModel.contextMenuProperty().get().hide();
             return;
         }
 
-        // Word is misspelled, build context menu
+        // Check if the word is spelled correctly
+        boolean isSpelledCorrectly = noteModel.hunspellProperty().get().spell(cleanWord);
+        logger.debug("Word '{}': spelled correctly = {}, suggestions = {}", cleanWord, isSpelledCorrectly, noteModel.hunspellProperty().get().suggest(cleanWord));
+
+        // Hide the context menu if the word is spelled correctly
+        if (isSpelledCorrectly) {
+            noteModel.contextMenuProperty().get().hide();
+            return;
+        }
+
+        // Clear the context menu items
         noteModel.contextMenuProperty().get().getItems().clear();
+        // Get spelling suggestions for the word
         List<String> suggestions = noteModel.hunspellProperty().get().suggest(cleanWord);
         if (!suggestions.isEmpty()) {
             for (String suggestion : suggestions) {
-                MenuItem item = new MenuItem(suggestion);
-                final int finalWordStart = wordStart;
-                final int finalWordEnd = actualWordEnd;
-                item.setOnAction(e -> {
-                    noteModel.issueAreaProperty().get().replaceText(finalWordStart, finalWordEnd, suggestion);
-                    noteModel.contextMenuProperty().get().hide();
-                });
-                noteModel.contextMenuProperty().get().getItems().add(item);
+                if (!suggestion.equals(cleanWord)) { // Skip self-suggestions
+                    MenuItem item = new MenuItem(suggestion);
+                    final int finalWordStart = wordStart;
+                    final int finalWordEnd = actualWordEnd;
+                    item.setOnAction(e -> {
+                        // Replace the text with the suggestion and hide the context menu
+                        noteModel.issueAreaProperty().get().replaceText(finalWordStart, finalWordEnd, suggestion);
+                        noteModel.contextMenuProperty().get().hide();
+                    });
+                    noteModel.contextMenuProperty().get().getItems().add(item);
+                }
             }
         }
 
-        // Add "Add to Dictionary" option
+        // Add an option to add the word to the dictionary
         MenuItem addToDict = new MenuItem("Add to Dictionary");
-
         addToDict.setOnAction(e -> {
-            noteModel.hunspellProperty().get().add(word);
-            // put new word on pedestal
-            noteModel.newWordProperty().set(word);
-            // save our new word
+            // Add the word to the dictionary and trigger related actions
+            noteModel.hunspellProperty().get().add(cleanWord); // Use cleanWord with '
+            noteModel.newWordProperty().set(cleanWord);
             noteView.getAction().accept(NoteMessage.ADD_WORD_TO_DICT);
-            // send message for note interactor to add the word to stored file
-            noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA); // Re-run spell-check
+            noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
             noteModel.contextMenuProperty().get().hide();
         });
         noteModel.contextMenuProperty().get().getItems().add(addToDict);
 
-        // Show context menu at mouse position
+        // Show the context menu at the mouse hover position
         noteModel.contextMenuProperty().get().show(noteModel.issueAreaProperty().get(), event.getScreenX(), event.getScreenY());
     }
 }
