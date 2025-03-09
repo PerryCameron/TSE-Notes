@@ -124,6 +124,8 @@ public class NoteInteractor {
     }
 
     public void computeHighlightingForIssueArea() {
+        // If it is an email, don't check it
+        if(noteModel.getBoundNote().isEmail()) return;
         // Check if the Hunspell spell checker is available
         if (noteModel.hunspellProperty().get() == null) return;
 
@@ -206,15 +208,13 @@ public class NoteInteractor {
             String affPath = Paths.get(getClass().getResource("/dictionary/en_US.aff").toURI()).toString();
             String customDictFullPath = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic").getAbsolutePath();
             logger.info("Loading Hunspell with aff: {}, dict: {}, custom: {}", affPath, dictPath, customDictFullPath);
-            logger.info("aff exists: {}, size: {} bytes", new File(affPath).exists(), new File(affPath).length());
-            logger.info("dict exists: {}, size: {} bytes", new File(dictPath).exists(), new File(dictPath).length());
-            logger.info("custom exists: {}, size: {} bytes", new File(customDictFullPath).exists(), new File(customDictFullPath).length());
+            logger.info("definitions file exists: {}, size: {} bytes", new File(affPath).exists(), new File(affPath).length());
+            logger.info("standard dictionary exists: {}, size: {} bytes", new File(dictPath).exists(), new File(dictPath).length());
+            logger.info("custom dictionary exists: {}, size: {} bytes", new File(customDictFullPath).exists(), new File(customDictFullPath).length());
 
             noteModel.hunspellProperty().setValue(new Hunspell(dictPath, affPath));
 
             // Test base dictionary
-            logger.info("Test 'hello': {}", noteModel.hunspellProperty().get().spell("hello"));
-            logger.info("Test 'xyzzy': {}", noteModel.hunspellProperty().get().spell("xyzzy"));
             if (!noteModel.hunspellProperty().get().spell("hello")) {
                 logger.error("Hunspell failed basic test - base dictionary not working");
             }

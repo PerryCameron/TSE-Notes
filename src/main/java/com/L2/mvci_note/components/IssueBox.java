@@ -61,49 +61,67 @@ public class IssueBox implements Component<Region> {
     }
 
     private CodeArea getCodeAreaIssue() {
+        // Create a new CodeArea instance
         CodeArea codeArea = new CodeArea();
+        // Enable text wrapping in the CodeArea
         codeArea.setWrapText(true);
+        // Allow the CodeArea to grow horizontally within its parent container
         HBox.setHgrow(codeArea, Priority.ALWAYS);
+        // Set the preferred height of the CodeArea (adjust as needed)
         codeArea.setPrefHeight(200); // Adjust based on your needs
+        // Set the mouse hover event handler
         codeArea.setOnMouseMoved(this::handleMouseHover);
+        // Set the font style for the CodeArea
         codeArea.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
+        // Apply the "code-area" style class to the CodeArea
         codeArea.getStyleClass().add("code-area"); // Apply the style class
-        // this is our bridge, since CodeArea does not have native FX binding support
+
+        // Create a bridge property to sync CodeArea text with the model
         StringProperty bridgeProperty = new SimpleStringProperty();
-        // Bind bridge to model
+        // Bind the bridge property bidirectionally to the issue property of the model
         bridgeProperty.bindBidirectional(noteModel.getBoundNote().issueProperty());
-        // Sync bridge with CodeArea
+        // Sync the initial text of the CodeArea with the bridge property
         codeArea.replaceText(bridgeProperty.getValue());
+        // Update the bridge property when the text in the CodeArea changes
         codeArea.textProperty().addListener((obs, oldVal, newVal) -> bridgeProperty.set(newVal));
+        // Update the CodeArea text when the bridge property changes
         bridgeProperty.addListener((obs, oldVal, newVal) -> {
             if (!newVal.equals(codeArea.getText())) {
                 codeArea.replaceText(newVal);
             }
         });
+
         // Setup spell-checking with debounce
         if (noteModel.hunspellProperty().get() != null) {
             noteModel.spellCheckSubscriptionProperty().setValue(codeArea.multiPlainChanges()
                     .successionEnds(java.time.Duration.ofMillis(500)) // Debounce 500ms
                     .subscribe(ignore -> noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA)));
         }
+
         // Retain focus listener logic
         codeArea.focusedProperty().addListener((obs, oldValue, newValue) -> {
             if (!newValue) { // Focus lost
+                // Check if the bound note is not an email
                 if (!noteModel.getBoundNote().isEmail()) {
+                    // Process the text as an email if it matches email format
                     if (NoteDTOProcessor.isEmail(codeArea.getText())) {
                         NoteDTO noteDTO = NoteDTOProcessor.processEmail(
                                 codeArea.getText(),
                                 noteModel.getBoundNote().getId()
                         );
+                        // Update the bound note with the processed email data
                         noteModel.getBoundNote().copyFrom(noteDTO);
                         logger.info("Processed an email and updated the note model.");
-                        // Set to read-only
+                        // Set the CodeArea to read-only
                         codeArea.setEditable(false);
                     }
+                    // Trigger save or update note action
                     noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
                 }
             }
         });
+
+        // Return the configured CodeArea instance
         return codeArea;
     }
 
