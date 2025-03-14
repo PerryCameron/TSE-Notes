@@ -6,6 +6,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import org.fxmisc.richtext.CodeArea;
 import org.reactfx.Subscription;
@@ -37,6 +38,7 @@ public class NoteModel {
     private final ObjectProperty<ContextMenu> contextMenu = new SimpleObjectProperty<>();
     private final ObjectProperty<CodeArea> issueArea = new SimpleObjectProperty<>();
     private final StringProperty newWord = new SimpleStringProperty();
+    private final ObjectProperty<ScrollPane> noteScrollPane = new SimpleObjectProperty<>();
 
 
 
@@ -236,6 +238,14 @@ public class NoteModel {
 
     public BooleanProperty openNoteTabProperty() {
         return openNoteTab;
+    }
+
+    public ScrollPane getNoteScrollPane() {
+        return noteScrollPane.get();
+    }
+
+    public ObjectProperty<ScrollPane> noteScrollPaneProperty() {
+        return noteScrollPane;
     }
 
     public void openNoteTab() {

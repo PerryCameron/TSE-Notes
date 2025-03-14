@@ -44,12 +44,12 @@ public class NoteView implements Builder<Region> {
     public Region build() {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 5, 0, 0));
         ScrollPane scrollPane = new ScrollPane();
+        noteModel.noteScrollPaneProperty().setValue(scrollPane);
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(setMainVBox());
         setUpStatusBarCommunication();
         refreshBoundNoteListener();
         boundNoteListener();
-//        noteTabOpenListener();
         vBox.getChildren().add(scrollPane);
         return vBox;
     }

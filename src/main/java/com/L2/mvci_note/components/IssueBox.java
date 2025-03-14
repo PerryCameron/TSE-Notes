@@ -14,7 +14,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -119,6 +121,22 @@ public class IssueBox implements Component<Region> {
                     noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
                 }
             }
+        });
+
+        codeArea.addEventFilter(ScrollEvent.SCROLL, event -> {
+            ScrollPane scrollPane = noteModel.noteScrollPaneProperty().get();
+            double deltaY = event.getDeltaY();
+            double currentVvalue = scrollPane.getVvalue();
+            double vMax = scrollPane.getVmax();
+            double vMin = scrollPane.getVmin();
+
+            double scrollAmount = deltaY / codeArea.getHeight();
+            double newVvalue = currentVvalue - scrollAmount;
+
+            newVvalue = Math.max(vMin, Math.min(vMax, newVvalue));
+            scrollPane.setVvalue(newVvalue);
+
+            event.consume();
         });
 
         // Return the configured CodeArea instance
