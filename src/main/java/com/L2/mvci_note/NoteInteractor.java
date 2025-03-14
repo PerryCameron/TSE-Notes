@@ -127,15 +127,18 @@ public class NoteInteractor {
         if (noteModel.hunspellProperty().get() == null) return;
 
         String text = noteModel.issueAreaProperty().get().getText();
+        StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+
         if (text.isEmpty()) {
-            noteModel.issueAreaProperty().get().setStyleSpans(0, new StyleSpansBuilder<Collection<String>>().create());
+            logger.debug("Text is empty, adding default empty span");
+            spansBuilder.add(Collections.emptyList(), 0); // Add a zero-length empty span
+            noteModel.issueAreaProperty().get().setStyleSpans(0, spansBuilder.create());
             return;
         }
 
-        Pattern techIdPattern = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])[A-Z0-9-]{5,}$");
+        Pattern techIdPattern = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])[A-Z0-9-/]{5,}$");
 
         new Thread(() -> {
-            StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
             int totalLength = 0;
             int i = 0;
 
@@ -171,7 +174,6 @@ public class NoteInteractor {
 
                     if (!cleanWord.isEmpty()) {
                         if (techIdPattern.matcher(cleanWord).matches()) {
-                            // Skip spell-check for model/serial/part numbers
                             spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
                         } else if (!noteModel.hunspellProperty().get().spell(cleanWord)) {
                             spansBuilder.add(Collections.singleton("misspelled"), word.length());
