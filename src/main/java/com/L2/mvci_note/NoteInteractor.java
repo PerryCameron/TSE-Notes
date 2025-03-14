@@ -25,6 +25,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class NoteInteractor {
 
@@ -123,40 +124,32 @@ public class NoteInteractor {
     }
 
     public void computeHighlightingForIssueArea() {
-        // If it is an email, don't check it
-        if(noteModel.getBoundNote().isEmail()) return;
-        // Check if the Hunspell spell checker is available
         if (noteModel.hunspellProperty().get() == null) return;
 
-        // Get the text from the issue area
         String text = noteModel.issueAreaProperty().get().getText();
-        // If the text is empty, clear any style spans and return
         if (text.isEmpty()) {
             noteModel.issueAreaProperty().get().setStyleSpans(0, new StyleSpansBuilder<Collection<String>>().create());
             return;
         }
 
-        // Start a new thread to compute highlighting
+        Pattern techIdPattern = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])[A-Z0-9-]{5,}$");
+
         new Thread(() -> {
             StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
             int totalLength = 0;
             int i = 0;
 
-            // Iterate through the text to identify words and whitespace
             while (i < text.length()) {
                 int start = i;
-                // Skip whitespace characters
                 while (i < text.length() && Character.isWhitespace(text.charAt(i))) {
                     i++;
                 }
                 if (i > start) {
-                    // Add empty style spans for whitespace
                     spansBuilder.add(Collections.emptyList(), i - start);
                     totalLength += i - start;
                 }
 
                 start = i;
-                // Identify non-whitespace characters (words)
                 while (i < text.length() && !Character.isWhitespace(text.charAt(i))) {
                     i++;
                 }
@@ -164,7 +157,6 @@ public class NoteInteractor {
                 if (start < i) {
                     String rawWord = text.substring(start, i);
                     int wordEnd = start;
-                    // Adjust the word end to include valid characters
                     while (wordEnd < i && (Character.isLetterOrDigit(text.charAt(wordEnd)) ||
                             text.charAt(wordEnd) == '\'' ||
                             text.charAt(wordEnd) == '-' ||
@@ -172,16 +164,21 @@ public class NoteInteractor {
                         wordEnd++;
                     }
                     String word = text.substring(start, wordEnd);
-                    // Clean the word for spell-checking
-                    String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", ""); // Allow ', -, /
+                    String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", "");
                     String trailing = text.substring(wordEnd, i);
 
-                    logger.debug("Checking '{}': cleanWord='{}'", word, cleanWord);
+                    logger.debug("Checking '{}': cleanWord='{}', isTechId={}", word, cleanWord, techIdPattern.matcher(cleanWord).matches());
 
-                    // Add style spans based on spell-check results
-                    if (!cleanWord.isEmpty() && !noteModel.hunspellProperty().get().spell(cleanWord)) {
-                        spansBuilder.add(Collections.singleton("misspelled"), word.length());
-                        spansBuilder.add(Collections.emptyList(), trailing.length());
+                    if (!cleanWord.isEmpty()) {
+                        if (techIdPattern.matcher(cleanWord).matches()) {
+                            // Skip spell-check for model/serial/part numbers
+                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
+                        } else if (!noteModel.hunspellProperty().get().spell(cleanWord)) {
+                            spansBuilder.add(Collections.singleton("misspelled"), word.length());
+                            spansBuilder.add(Collections.emptyList(), trailing.length());
+                        } else {
+                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
+                        }
                     } else {
                         spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
                     }
@@ -189,12 +186,10 @@ public class NoteInteractor {
                 }
             }
 
-            // Add empty style spans for any remaining text
             if (totalLength < text.length()) {
                 spansBuilder.add(Collections.emptyList(), text.length() - totalLength);
             }
 
-            // Create style spans and apply them to the issue area
             StyleSpans<Collection<String>> spans = spansBuilder.create();
             Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
         }).start();
