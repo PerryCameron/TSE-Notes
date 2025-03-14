@@ -23,6 +23,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.geometry.Insets;
 import javafx.scene.text.Font;
+import org.fxmisc.flowless.Virtualized;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 
 import java.util.List;
@@ -55,16 +57,19 @@ public class IssueBox implements Component<Region> {
         root.getStyleClass().add("decorative-hbox");
         noteModel.contextMenuProperty().setValue(getContextMenu());
         noteView.getAction().accept(NoteMessage.INITALIZE_DICTIONARY); // This should be moved out of this class
-        noteModel.issueAreaProperty().setValue(getCodeAreaIssue());
+
         HBox iconBox = HBoxFx.iconBox(10);
-        root.getChildren().addAll(TitleBarFx.of("Issue", iconBox), noteModel.issueAreaProperty().get());
+        root.getChildren().addAll(TitleBarFx.of("Issue", iconBox), getCodeAreaIssue());
         refreshFields();
         return root;
     }
 
-    private CodeArea getCodeAreaIssue() {
+    private VirtualizedScrollPane<CodeArea> getCodeAreaIssue() {
         // Create a new CodeArea instance
         CodeArea codeArea = new CodeArea();
+        noteModel.issueAreaProperty().setValue(codeArea);
+        // wrap in a scroll pane
+        VirtualizedScrollPane<CodeArea> sp = new VirtualizedScrollPane<>(codeArea);
         // Enable text wrapping in the CodeArea
         codeArea.setWrapText(true);
         // Allow the CodeArea to grow horizontally within its parent container
@@ -123,24 +128,35 @@ public class IssueBox implements Component<Region> {
             }
         });
 
+        // only blocks outer ScrollPane if inner has enough text for a ScrollPane
         codeArea.addEventFilter(ScrollEvent.SCROLL, event -> {
-            ScrollPane scrollPane = noteModel.noteScrollPaneProperty().get();
-            double deltaY = event.getDeltaY();
-            double currentVvalue = scrollPane.getVvalue();
-            double vMax = scrollPane.getVmax();
-            double vMin = scrollPane.getVmin();
+            ScrollPane outerScrollPane = noteModel.noteScrollPaneProperty().get();
+            if (outerScrollPane == null) return; // Safety check
 
-            double scrollAmount = deltaY / codeArea.getHeight();
-            double newVvalue = currentVvalue - scrollAmount;
+            // Check if CodeArea needs to scroll
+            double totalContentHeight = sp.totalHeightEstimateProperty().getValue();
+            double visibleHeight = codeArea.getHeight();
+            boolean codeAreaScrollable = totalContentHeight > visibleHeight;
 
-            newVvalue = Math.max(vMin, Math.min(vMax, newVvalue));
-            scrollPane.setVvalue(newVvalue);
+            if (!codeAreaScrollable) {
+                // Pass scroll event to outer ScrollPane
+                double deltaY = event.getDeltaY();
+                double currentVvalue = outerScrollPane.getVvalue();
+                double vMax = outerScrollPane.getVmax();
+                double vMin = outerScrollPane.getVmin();
 
-            event.consume();
+                double scrollAmount = deltaY * 0.005; // Adjustable multiplier
+                double newVvalue = currentVvalue - scrollAmount;
+                newVvalue = Math.max(vMin, Math.min(vMax, newVvalue));
+
+                outerScrollPane.setVvalue(newVvalue);
+                event.consume(); // Prevent VirtualizedScrollPane from handling it
+            }
+            // If codeAreaScrollable is true, let VirtualizedScrollPane handle it
         });
 
         // Return the configured CodeArea instance
-        return codeArea;
+        return sp;
     }
 
     @Override
