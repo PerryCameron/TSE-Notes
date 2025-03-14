@@ -18,8 +18,7 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -202,42 +201,98 @@ public class NoteInteractor {
     }
 
     public void initializeDictionary() {
-        // Initialize Hunspell
         try {
-            String dictPath = Paths.get(getClass().getResource("/dictionary/en_US.dic").toURI()).toString();
-            String affPath = Paths.get(getClass().getResource("/dictionary/en_US.aff").toURI()).toString();
+            // Extract and load hunspell.dll
+            String dllPathInJar = "/win32-x86-64/hunspell.dll"; // Matches your JAR structure
+            File tempDll = extractNativeLibrary(dllPathInJar);
+            logger.debug("Extracted hunspell.dll to: {}", tempDll.getAbsolutePath());
+            System.load(tempDll.getAbsolutePath());
+            logger.info("Loaded hunspell.dll successfully");
+
+            // Dictionary paths
+            String dictResourcePath = "/dictionary/en_US.dic";
+            String affResourcePath = "/dictionary/en_US.aff";
+            File dictFile = extractResourceToTemp(dictResourcePath, "en_US.dic");
+            File affFile = extractResourceToTemp(affResourcePath, "en_US.aff");
+            String dictPath = dictFile.getAbsolutePath();
+            String affPath = affFile.getAbsolutePath();
             String customDictFullPath = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic").getAbsolutePath();
+
             logger.info("Loading Hunspell with aff: {}, dict: {}, custom: {}", affPath, dictPath, customDictFullPath);
-            logger.info("definitions file exists: {}, size: {} bytes", new File(affPath).exists(), new File(affPath).length());
-            logger.info("standard dictionary exists: {}, size: {} bytes", new File(dictPath).exists(), new File(dictPath).length());
-            logger.info("custom dictionary exists: {}, size: {} bytes", new File(customDictFullPath).exists(), new File(customDictFullPath).length());
+            logger.info("aff exists: {}, size: {} bytes", affFile.exists(), affFile.length());
+            logger.info("dict exists: {}, size: {} bytes", dictFile.exists(), dictFile.length());
+            logger.info("custom exists: {}, size: {} bytes", new File(customDictFullPath).exists(), new File(customDictFullPath).length());
 
             noteModel.hunspellProperty().setValue(new Hunspell(dictPath, affPath));
 
-            // Test base dictionary
+            logger.info("Test 'hello': {}", noteModel.hunspellProperty().get().spell("hello"));
+            logger.info("Test 'xyzzy': {}", noteModel.hunspellProperty().get().spell("xyzzy"));
             if (!noteModel.hunspellProperty().get().spell("hello")) {
                 logger.error("Hunspell failed basic test - base dictionary not working");
             }
 
-            // Add custom dictionary if it exists and has content
             File customDictFile = new File(customDictFullPath);
             if (customDictFile.exists() && customDictFile.length() > 2) {
                 noteModel.hunspellProperty().get().addDic(customDictFullPath);
                 logger.info("Added custom dictionary from {}", customDictFullPath);
-                // Verify custom words loaded (optional test)
             } else if (!customDictFile.exists()) {
-                // Create empty custom.dic if it doesn’t exist
                 if (customDictFile.getParentFile().mkdirs() || customDictFile.createNewFile()) {
-                    try (java.io.FileWriter writer = new java.io.FileWriter(customDictFile)) {
+                    try (FileWriter writer = new FileWriter(customDictFile)) {
                         writer.write("0\n");
                     }
                     logger.info("Created new custom dictionary file: {}", customDictFullPath);
                 }
             }
-
+        } catch (UnsatisfiedLinkError e) {
+            logger.error("Failed to load hunspell.dll", e);
+        } catch (IOException e) {
+            logger.error("IO error during Hunspell setup", e);
         } catch (Exception e) {
-            logger.error("Failed to load Hunspell dictionary", e);
+            logger.error("Unexpected error initializing Hunspell", e);
         }
+    }
+
+
+    private File extractNativeLibrary(String resourcePath) throws IOException {
+        InputStream in = getClass().getResourceAsStream(resourcePath);
+        if (in == null) {
+            throw new IOException("Resource not found in JAR: " + resourcePath);
+        }
+
+        File tempFile = File.createTempFile("hunspell", ".dll");
+        tempFile.deleteOnExit();
+
+        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+        } finally {
+            in.close();
+        }
+        return tempFile;
+    }
+
+    private File extractResourceToTemp(String resourcePath, String fileName) throws IOException {
+        InputStream in = getClass().getResourceAsStream(resourcePath);
+        if (in == null) {
+            throw new IOException("Resource not found in JAR: " + resourcePath);
+        }
+
+        File tempFile = File.createTempFile("hunspell-", fileName);
+        tempFile.deleteOnExit();
+
+        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+        } finally {
+            in.close();
+        }
+        return tempFile;
     }
 
 public void appendToCustomDictionary() {
