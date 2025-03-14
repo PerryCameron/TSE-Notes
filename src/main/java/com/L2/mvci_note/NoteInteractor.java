@@ -124,6 +124,8 @@ public class NoteInteractor {
     }
 
     public void computeHighlightingForIssueArea() {
+        if(noteModel.getBoundNote().isEmail()) return;
+
         if (noteModel.hunspellProperty().get() == null) return;
 
         String text = noteModel.issueAreaProperty().get().getText();
