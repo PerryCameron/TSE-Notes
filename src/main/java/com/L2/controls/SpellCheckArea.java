@@ -5,7 +5,6 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.static_tools.NoteDTOProcessor;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.ContextMenu;
@@ -29,6 +28,7 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
     private final NoteModel noteModel;
     private static final Logger logger = LoggerFactory.getLogger(SpellCheckArea.class);
     private final ContextMenu contextMenu;
+    private NoteMessage computeHighlight = null;
 
     public SpellCheckArea(NoteView noteView, double height) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
         super(new CodeArea());
@@ -66,7 +66,7 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
         if (noteModel.hunspellProperty().get() != null) {
             noteModel.spellCheckSubscriptionProperty().setValue(codeArea.multiPlainChanges()
                     .successionEnds(java.time.Duration.ofMillis(500)) // Debounce 500ms
-                    .subscribe(ignore -> noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA)));
+                    .subscribe(ignore -> noteView.getAction().accept(computeHighlight)));
         }
 
         // Retain focus listener logic
@@ -118,6 +118,10 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
             }
             // If codeAreaScrollable is true, let VirtualizedScrollPane handle it
         });
+    }
+
+    public void setComputeHighlight(NoteMessage message) {
+        this.computeHighlight = message;
     }
 
     public CodeArea getCodeArea() {
@@ -192,7 +196,7 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
             noteModel.hunspellProperty().get().add(cleanWord); // Add "S/N" or "TCP/IP" with slashes
             noteModel.newWordProperty().set(cleanWord);
             noteView.getAction().accept(NoteMessage.ADD_WORD_TO_DICT);
-            noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
+            noteView.getAction().accept(computeHighlight);
             this.contextMenu.hide();
         });
         this.contextMenu.getItems().add(addToDict);

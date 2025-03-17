@@ -47,6 +47,7 @@ public class IssueBox implements Component<Region> {
         // Create a new CodeArea instance
         SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 200);
         noteModel.issueAreaProperty().setValue(spellCheckArea.getCodeArea());
+        spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
         // wrap in a scroll pane
         return spellCheckArea;
     }
