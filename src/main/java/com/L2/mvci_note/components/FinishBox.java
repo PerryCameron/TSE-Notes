@@ -48,19 +48,13 @@ public class FinishBox implements Component<Region> {
         return root;
     }
 
-//    private Node correctiveText() {
-//        this.textArea = TextAreaFx.of(true, 100, 16, 4);
-//        textArea.setPromptText("Additional corrective action text");
-//        textArea.textProperty().bindBidirectional(noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
-//        HBox.setHgrow(textArea, Priority.ALWAYS);
-//        return textArea;
-//    }
-
     private Node correctiveText() {
         // Create a new CodeArea instance
         SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 100, noteModel.finishAreaProperty());
         HBox.setHgrow(spellCheckArea, Priority.ALWAYS);
         spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA);
+        // check on startup
+        noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA);
         // wrap in a scroll pane
         return spellCheckArea;
     }
