@@ -1,10 +1,8 @@
 package com.L2.controls;
 
-import com.L2.dto.NoteDTO;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
-import com.L2.static_tools.NoteDTOProcessor;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -165,6 +163,7 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
                     final int finalWordEnd = actualWordEnd;
                     item.setOnAction(e -> {
                         areaObjectProperty.get().replaceText(finalWordStart, finalWordEnd, suggestion);
+                        noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
                         this.contextMenu.hide();
                     });
                     this.contextMenu.getItems().add(item);
