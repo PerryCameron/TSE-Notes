@@ -5,6 +5,7 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import com.L2.static_tools.NoteDTOProcessor;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.ContextMenu;
@@ -29,14 +30,17 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
     private static final Logger logger = LoggerFactory.getLogger(SpellCheckArea.class);
     private final ContextMenu contextMenu;
     private NoteMessage computeHighlight = null;
+    private ObjectProperty<CodeArea> areaObjectProperty;
 
-    public SpellCheckArea(NoteView noteView, double height) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
+    public SpellCheckArea(NoteView noteView, double height, ObjectProperty<CodeArea> areaObjectProperty) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
         super(new CodeArea());
         this.codeArea = getContent();
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
         this.contextMenu = new ContextMenu();
         this.contextMenu.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
+        this.areaObjectProperty = areaObjectProperty;
+        areaObjectProperty.setValue(this.codeArea);
         // Enable text wrapping in the CodeArea
         codeArea.setWrapText(true);
         // Adjust based on your needs
@@ -131,18 +135,18 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
     private void handleMouseHover(MouseEvent event) {
         if (noteModel.hunspellProperty().get() == null) return;
 
-        OptionalInt charIndexOpt = noteModel.issueAreaProperty().get().hit(event.getX(), event.getY()).getCharacterIndex();
+        OptionalInt charIndexOpt = areaObjectProperty.get().hit(event.getX(), event.getY()).getCharacterIndex();
         if (!charIndexOpt.isPresent()) {
             this.contextMenu.hide();
             return;
         }
         int charIndex = charIndexOpt.getAsInt();
-        if (charIndex < 0 || charIndex >= noteModel.issueAreaProperty().get().getText().length()) {
+        if (charIndex < 0 || charIndex >= areaObjectProperty.get().getText().length()) {
             this.contextMenu.hide();
             return;
         }
 
-        String text = noteModel.issueAreaProperty().get().getText();
+        String text = areaObjectProperty.get().getText();
         int wordStart = text.lastIndexOf(" ", charIndex) + 1;
         int wordEnd = text.indexOf(" ", charIndex);
         if (wordEnd == -1) wordEnd = text.length();
@@ -183,7 +187,7 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
                     final int finalWordStart = wordStart;
                     final int finalWordEnd = actualWordEnd;
                     item.setOnAction(e -> {
-                        noteModel.issueAreaProperty().get().replaceText(finalWordStart, finalWordEnd, suggestion);
+                        areaObjectProperty.get().replaceText(finalWordStart, finalWordEnd, suggestion);
                         this.contextMenu.hide();
                     });
                     this.contextMenu.getItems().add(item);
@@ -201,6 +205,6 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
         });
         this.contextMenu.getItems().add(addToDict);
 
-        this.contextMenu.show(noteModel.issueAreaProperty().get(), event.getScreenX(), event.getScreenY());
+        this.contextMenu.show(areaObjectProperty.get(), event.getScreenX(), event.getScreenY());
     }
 }
