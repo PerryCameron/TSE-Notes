@@ -121,9 +121,87 @@ public class NoteInteractor {
         ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), loggedCallToPlainText());
     }
 
+//    public void computeHighlightingForIssueArea(String areaType) {
+//        if(noteModel.getBoundNote().isEmail()) return;
+//
+//        if (noteModel.hunspellProperty().get() == null) return;
+//
+//        String text = noteModel.issueAreaProperty().get().getText();
+//        StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+//
+//        if (text.isEmpty()) {
+//            logger.debug("Text is empty, adding default empty span");
+//            spansBuilder.add(Collections.emptyList(), 0); // Add a zero-length empty span
+//            noteModel.issueAreaProperty().get().setStyleSpans(0, spansBuilder.create());
+//            return;
+//        }
+//
+//        Pattern techIdPattern = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])[A-Z0-9-/]{5,}$");
+//
+//        new Thread(() -> {
+//            int totalLength = 0;
+//            int i = 0;
+//
+//            while (i < text.length()) {
+//                int start = i;
+//                while (i < text.length() && Character.isWhitespace(text.charAt(i))) {
+//                    i++;
+//                }
+//                if (i > start) {
+//                    spansBuilder.add(Collections.emptyList(), i - start);
+//                    totalLength += i - start;
+//                }
+//
+//                start = i;
+//                while (i < text.length() && !Character.isWhitespace(text.charAt(i))) {
+//                    i++;
+//                }
+//
+//                if (start < i) {
+//                    String rawWord = text.substring(start, i);
+//                    int wordEnd = start;
+//                    while (wordEnd < i && (Character.isLetterOrDigit(text.charAt(wordEnd)) ||
+//                            text.charAt(wordEnd) == '\'' ||
+//                            text.charAt(wordEnd) == '-' ||
+//                            text.charAt(wordEnd) == '/')) {
+//                        wordEnd++;
+//                    }
+//                    String word = text.substring(start, wordEnd);
+//                    String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", "");
+//                    String trailing = text.substring(wordEnd, i);
+//
+//                    logger.debug("Checking '{}': cleanWord='{}', isTechId={}", word, cleanWord, techIdPattern.matcher(cleanWord).matches());
+//
+//                    if (!cleanWord.isEmpty()) {
+//                        if (techIdPattern.matcher(cleanWord).matches()) {
+//                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
+//                        } else if (!noteModel.hunspellProperty().get().spell(cleanWord)) {
+//                            spansBuilder.add(Collections.singleton("misspelled"), word.length());
+//                            spansBuilder.add(Collections.emptyList(), trailing.length());
+//                        } else {
+//                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
+//                        }
+//                    } else {
+//                        spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
+//                    }
+//                    totalLength += rawWord.length();
+//                }
+//            }
+//
+//            if (totalLength < text.length()) {
+//                spansBuilder.add(Collections.emptyList(), text.length() - totalLength);
+//            }
+//
+//            StyleSpans<Collection<String>> spans = spansBuilder.create();
+//            if(areaType.equals("issue"))
+//                Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
+//            if(areaType.equals("finish"))
+//                Platform.runLater(() -> noteModel.finishAreaProperty().get().setStyleSpans(0, spans));
+//        }).start();
+//    }
+
     public void computeHighlightingForIssueArea(String areaType) {
         if(noteModel.getBoundNote().isEmail()) return;
-
         if (noteModel.hunspellProperty().get() == null) return;
 
         String text = noteModel.issueAreaProperty().get().getText();
@@ -131,7 +209,7 @@ public class NoteInteractor {
 
         if (text.isEmpty()) {
             logger.debug("Text is empty, adding default empty span");
-            spansBuilder.add(Collections.emptyList(), 0); // Add a zero-length empty span
+            spansBuilder.add(Collections.emptyList(), 0);
             noteModel.issueAreaProperty().get().setStyleSpans(0, spansBuilder.create());
             return;
         }
@@ -162,15 +240,18 @@ public class NoteInteractor {
                     int wordEnd = start;
                     while (wordEnd < i && (Character.isLetterOrDigit(text.charAt(wordEnd)) ||
                             text.charAt(wordEnd) == '\'' ||
-                            text.charAt(wordEnd) == '-' ||
-                            text.charAt(wordEnd) == '/')) {
+                            text.charAt(wordEnd) == '-'
+                    )) {
                         wordEnd++;
                     }
                     String word = text.substring(start, wordEnd);
                     String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", "");
                     String trailing = text.substring(wordEnd, i);
 
-                    logger.debug("Checking '{}': cleanWord='{}', isTechId={}", word, cleanWord, techIdPattern.matcher(cleanWord).matches());
+                    // Added debug logging to see exactly what's being checked
+                    logger.debug("Raw: '{}', Word: '{}', Clean: '{}', SpellCheck: {}",
+                            rawWord, word, cleanWord,
+                            noteModel.hunspellProperty().get().spell(cleanWord));
 
                     if (!cleanWord.isEmpty()) {
                         if (techIdPattern.matcher(cleanWord).matches()) {
@@ -187,11 +268,9 @@ public class NoteInteractor {
                     totalLength += rawWord.length();
                 }
             }
-
             if (totalLength < text.length()) {
                 spansBuilder.add(Collections.emptyList(), text.length() - totalLength);
             }
-
             StyleSpans<Collection<String>> spans = spansBuilder.create();
             if(areaType.equals("issue"))
                 Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
@@ -235,6 +314,9 @@ public class NoteInteractor {
             if (customDictFile.exists() && customDictFile.length() > 2) {
                 noteModel.hunspellProperty().get().addDic(customDictFullPath);
                 logger.info("Added custom dictionary from {}", customDictFullPath);
+                logger.info("Testing custom dict - TCP/IP: {}, S/N: {}",
+                        noteModel.hunspellProperty().get().spell("TCP/IP"),
+                        noteModel.hunspellProperty().get().spell("S/N"));
             } else if (!customDictFile.exists()) {
                 if (customDictFile.getParentFile().mkdirs() || customDictFile.createNewFile()) {
                     try (FileWriter writer = new FileWriter(customDictFile)) {
