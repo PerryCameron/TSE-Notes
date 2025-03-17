@@ -35,12 +35,9 @@ public class NoteModel {
     private final BooleanProperty openNoteTab = new SimpleBooleanProperty(false);
     private final ObjectProperty<Hunspell> hunspell = new SimpleObjectProperty<>();
     private final ObjectProperty<Subscription> spellCheckSubscription = new SimpleObjectProperty<>();
-    private final ObjectProperty<ContextMenu> contextMenu = new SimpleObjectProperty<>();
     private final ObjectProperty<CodeArea> issueArea = new SimpleObjectProperty<>();
     private final StringProperty newWord = new SimpleStringProperty();
     private final ObjectProperty<ScrollPane> noteScrollPane = new SimpleObjectProperty<>();
-
-
 
     public void clearBoundNoteFields() {
         boundNote.get().getPartOrders().clear();
@@ -210,14 +207,6 @@ public class NoteModel {
 
     public ObjectProperty<Subscription> spellCheckSubscriptionProperty() {
         return spellCheckSubscription;
-    }
-
-    public ContextMenu getContextMenu() {
-        return contextMenu.get();
-    }
-
-    public ObjectProperty<ContextMenu> contextMenuProperty() {
-        return contextMenu;
     }
 
     public CodeArea getIssueArea() {

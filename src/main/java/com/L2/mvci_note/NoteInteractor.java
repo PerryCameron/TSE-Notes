@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -37,7 +36,6 @@ public class NoteInteractor {
     private final EntitlementsRepositoryImpl entitlementsRepo;
 
     public NoteInteractor(NoteModel noteModel) {
-
         this.noteModel = noteModel;
         this.noteRepo = new NoteRepositoryImpl();
         this.partOrderRepo = new PartOrderRepositoryImpl();
