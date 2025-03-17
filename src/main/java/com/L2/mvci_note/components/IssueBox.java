@@ -1,10 +1,12 @@
 package com.L2.mvci_note.components;
 
 import com.L2.controls.SpellCheckArea;
+import com.L2.dto.NoteDTO;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
+import com.L2.static_tools.NoteDTOProcessor;
 import com.L2.widgetFx.HBoxFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.VBoxFx;
@@ -50,6 +52,29 @@ public class IssueBox implements Component<Region> {
         // check on startup
         noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
         // wrap in a scroll pane
+        // Retain focus listener logic
+        CodeArea codeArea = spellCheckArea.getCodeArea();
+        codeArea.focusedProperty().addListener((obs, oldValue, newValue) -> {
+            if (!newValue) { // Focus lost
+                // Check if the bound note is not an email
+                if (!noteModel.getBoundNote().isEmail()) {
+                    // Process the text as an email if it matches email format
+                    if (NoteDTOProcessor.isEmail(codeArea.getText())) {
+                        NoteDTO noteDTO = NoteDTOProcessor.processEmail(
+                                codeArea.getText(),
+                                noteModel.getBoundNote().getId()
+                        );
+                        // Update the bound note with the processed email data
+                        noteModel.getBoundNote().copyFrom(noteDTO);
+                        logger.info("Processed an email and updated the note model.");
+                        // Set the CodeArea to read-only
+                        codeArea.setEditable(false);
+                    }
+                    // Trigger save or update note action
+                    noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+                }
+            }
+        });
         return spellCheckArea;
     }
 

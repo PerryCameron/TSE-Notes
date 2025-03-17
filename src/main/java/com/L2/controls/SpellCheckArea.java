@@ -73,29 +73,6 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
                     .subscribe(ignore -> noteView.getAction().accept(computeHighlight)));
         }
 
-        // Retain focus listener logic
-        codeArea.focusedProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue) { // Focus lost
-                // Check if the bound note is not an email
-                if (!noteModel.getBoundNote().isEmail()) {
-                    // Process the text as an email if it matches email format
-                    if (NoteDTOProcessor.isEmail(codeArea.getText())) {
-                        NoteDTO noteDTO = NoteDTOProcessor.processEmail(
-                                codeArea.getText(),
-                                noteModel.getBoundNote().getId()
-                        );
-                        // Update the bound note with the processed email data
-                        noteModel.getBoundNote().copyFrom(noteDTO);
-                        logger.info("Processed an email and updated the note model.");
-                        // Set the CodeArea to read-only
-                        codeArea.setEditable(false);
-                    }
-                    // Trigger save or update note action
-                    noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
-                }
-            }
-        });
-
         // only blocks outer ScrollPane if inner has enough text for a ScrollPane
         codeArea.addEventFilter(ScrollEvent.SCROLL, event -> {
             ScrollPane outerScrollPane = noteModel.noteScrollPaneProperty().get();
