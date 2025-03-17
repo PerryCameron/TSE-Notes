@@ -121,7 +121,7 @@ public class NoteInteractor {
         ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), loggedCallToPlainText());
     }
 
-    public void computeHighlightingForIssueArea() {
+    public void computeHighlightingForIssueArea(String areaType) {
         if(noteModel.getBoundNote().isEmail()) return;
 
         if (noteModel.hunspellProperty().get() == null) return;
@@ -193,7 +193,10 @@ public class NoteInteractor {
             }
 
             StyleSpans<Collection<String>> spans = spansBuilder.create();
-            Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
+            if(areaType.equals("issue"))
+                Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
+            if(areaType.equals("finish"))
+                Platform.runLater(() -> noteModel.finishAreaProperty().get().setStyleSpans(0, spans));
         }).start();
     }
 

@@ -36,6 +36,7 @@ public class NoteModel {
     private final ObjectProperty<Hunspell> hunspell = new SimpleObjectProperty<>();
     private final ObjectProperty<Subscription> spellCheckSubscription = new SimpleObjectProperty<>();
     private final ObjectProperty<CodeArea> issueArea = new SimpleObjectProperty<>();
+    private final ObjectProperty<CodeArea> finishArea = new SimpleObjectProperty<>();
     private final StringProperty newWord = new SimpleStringProperty();
     private final ObjectProperty<ScrollPane> noteScrollPane = new SimpleObjectProperty<>();
 
@@ -209,12 +210,12 @@ public class NoteModel {
         return spellCheckSubscription;
     }
 
-    public CodeArea getIssueArea() {
-        return issueArea.get();
-    }
-
     public ObjectProperty<CodeArea> issueAreaProperty() {
         return issueArea;
+    }
+
+    public ObjectProperty<CodeArea> finishAreaProperty() {
+        return finishArea;
     }
 
     public String getNewWord() {

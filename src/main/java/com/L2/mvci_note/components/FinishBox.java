@@ -1,5 +1,6 @@
 package com.L2.mvci_note.components;
 
+import com.L2.controls.SpellCheckArea;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
@@ -47,12 +48,21 @@ public class FinishBox implements Component<Region> {
         return root;
     }
 
+//    private Node correctiveText() {
+//        this.textArea = TextAreaFx.of(true, 100, 16, 4);
+//        textArea.setPromptText("Additional corrective action text");
+//        textArea.textProperty().bindBidirectional(noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
+//        HBox.setHgrow(textArea, Priority.ALWAYS);
+//        return textArea;
+//    }
     private Node correctiveText() {
-        this.textArea = TextAreaFx.of(true, 100, 16, 4);
-        textArea.setPromptText("Additional corrective action text");
-        textArea.textProperty().bindBidirectional(noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
-        HBox.setHgrow(textArea, Priority.ALWAYS);
-        return textArea;
+        // Create a new CodeArea instance
+        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 100);
+        HBox.setHgrow(spellCheckArea, Priority.ALWAYS);
+        noteModel.finishAreaProperty().setValue(spellCheckArea.getCodeArea());
+        spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA);
+        // wrap in a scroll pane
+        return spellCheckArea;
     }
 
     private Node buttonBox() {
