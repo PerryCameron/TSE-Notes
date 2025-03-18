@@ -5,6 +5,7 @@ import com.L2.widgetFx.*;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.util.Builder;
 import javafx.scene.control.*;
 
@@ -23,7 +24,6 @@ public class NoteView implements Builder<Region> {
     private final PartOrderHeader partOrderHeader;
     private final FinishBox finishBox;
     private final PartOrderBoxList partOrderBoxList;
-
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -44,7 +44,10 @@ public class NoteView implements Builder<Region> {
     public Region build() {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 5, 0, 0));
         ScrollPane scrollPane = new ScrollPane();
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
         noteModel.noteScrollPaneProperty().setValue(scrollPane);
+        noteModel.contextMenuProperty().setValue(contextMenu);
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(setMainVBox());
         setUpStatusBarCommunication();

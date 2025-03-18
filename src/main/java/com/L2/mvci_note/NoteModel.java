@@ -39,6 +39,7 @@ public class NoteModel {
     private final ObjectProperty<CodeArea> finishArea = new SimpleObjectProperty<>();
     private final StringProperty newWord = new SimpleStringProperty();
     private final ObjectProperty<ScrollPane> noteScrollPane = new SimpleObjectProperty<>();
+    private final ObjectProperty<ContextMenu> contextMenu = new SimpleObjectProperty<>();
 
     public void clearBoundNoteFields() {
         boundNote.get().getPartOrders().clear();
@@ -141,17 +142,17 @@ public class NoteModel {
         this.statusLabel.set(statusLabel);
     }
 
-    public VBox getPlanDetailsBox() {
-        return PlanDetailsBox.get();
-    }
-
-    public ObjectProperty<VBox> planDetailsBoxProperty() {
-        return PlanDetailsBox;
-    }
-
-    public void setPlanDetailsBox(VBox planDetailsBox) {
-        this.PlanDetailsBox.set(planDetailsBox);
-    }
+//    public VBox getPlanDetailsBox() {
+//        return PlanDetailsBox.get();
+//    }
+//
+//    public ObjectProperty<VBox> planDetailsBoxProperty() {
+//        return PlanDetailsBox;
+//    }
+//
+//    public void setPlanDetailsBox(VBox planDetailsBox) {
+//        this.PlanDetailsBox.set(planDetailsBox);
+//    }
 
     public ObservableList<EntitlementDTO> getEntitlements() {
         return entitlements;
@@ -194,16 +195,8 @@ public class NoteModel {
         this.currentEntitlement.set(currentEntitlement);
     }
 
-    public Hunspell getHunspell() {
-        return hunspell.get();
-    }
-
     public ObjectProperty<Hunspell> hunspellProperty() {
         return hunspell;
-    }
-
-    public Subscription getSpellCheckSubscription() {
-        return spellCheckSubscription.get();
     }
 
     public ObjectProperty<Subscription> spellCheckSubscriptionProperty() {
@@ -218,20 +211,12 @@ public class NoteModel {
         return finishArea;
     }
 
-    public String getNewWord() {
-        return newWord.get();
+    public ObjectProperty<ContextMenu> contextMenuProperty() {
+        return contextMenu;
     }
 
     public StringProperty newWordProperty() {
         return newWord;
-    }
-
-    public BooleanProperty openNoteTabProperty() {
-        return openNoteTab;
-    }
-
-    public ScrollPane getNoteScrollPane() {
-        return noteScrollPane.get();
     }
 
     public ObjectProperty<ScrollPane> noteScrollPaneProperty() {

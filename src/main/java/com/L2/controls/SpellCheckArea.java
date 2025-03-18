@@ -26,7 +26,6 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private static final Logger logger = LoggerFactory.getLogger(SpellCheckArea.class);
-    private final ContextMenu contextMenu;
     private NoteMessage computeHighlight = null;
     private ObjectProperty<CodeArea> areaObjectProperty;
 
@@ -35,8 +34,6 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
         this.codeArea = getContent();
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
-        this.contextMenu = new ContextMenu();
-        this.contextMenu.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
         this.areaObjectProperty = areaObjectProperty;
         areaObjectProperty.setValue(this.codeArea);
         // Enable text wrapping in the CodeArea
@@ -112,12 +109,13 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
 
         OptionalInt charIndexOpt = areaObjectProperty.get().hit(event.getX(), event.getY()).getCharacterIndex();
         if (!charIndexOpt.isPresent()) {
-            this.contextMenu.hide();
+//            this.contextMenu.hide();
+
             return;
         }
         int charIndex = charIndexOpt.getAsInt();
         if (charIndex < 0 || charIndex >= areaObjectProperty.get().getText().length()) {
-            this.contextMenu.hide();
+            noteModel.contextMenuProperty().get().hide();
             return;
         }
 
@@ -126,7 +124,7 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
         int wordEnd = text.indexOf(" ", charIndex);
         if (wordEnd == -1) wordEnd = text.length();
         if (wordStart >= wordEnd) {
-            this.contextMenu.hide();
+            noteModel.contextMenuProperty().get().hide();
             return;
         }
 
@@ -141,7 +139,7 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
         String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", ""); // Keep slashes
 
         if (cleanWord.isEmpty()) {
-            this.contextMenu.hide();
+            noteModel.contextMenuProperty().get().hide();
             return;
         }
 
@@ -149,11 +147,11 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
         logger.debug("Word '{}': spelled correctly = {}, suggestions = {}", cleanWord, isSpelledCorrectly, noteModel.hunspellProperty().get().suggest(cleanWord));
 
         if (isSpelledCorrectly) {
-            this.contextMenu.hide();
+            noteModel.contextMenuProperty().get().hide();
             return;
         }
 
-        this.contextMenu.getItems().clear();
+        noteModel.contextMenuProperty().get().getItems().clear();
         List<String> suggestions = noteModel.hunspellProperty().get().suggest(cleanWord);
         if (!suggestions.isEmpty()) {
             for (String suggestion : suggestions) {
@@ -164,9 +162,9 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
                     item.setOnAction(e -> {
                         areaObjectProperty.get().replaceText(finalWordStart, finalWordEnd, suggestion);
                         noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
-                        this.contextMenu.hide();
+                        noteModel.contextMenuProperty().get().hide();
                     });
-                    this.contextMenu.getItems().add(item);
+                    noteModel.contextMenuProperty().get().getItems().add(item);
                 }
             }
         }
@@ -177,10 +175,10 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
             noteModel.newWordProperty().set(cleanWord);
             noteView.getAction().accept(NoteMessage.ADD_WORD_TO_DICT);
             noteView.getAction().accept(computeHighlight);
-            this.contextMenu.hide();
+            noteModel.contextMenuProperty().get().hide();
         });
-        this.contextMenu.getItems().add(addToDict);
+        noteModel.contextMenuProperty().get().getItems().add(addToDict);
 
-        this.contextMenu.show(areaObjectProperty.get(), event.getScreenX(), event.getScreenY());
+        noteModel.contextMenuProperty().get().show(areaObjectProperty.get(), event.getScreenX(), event.getScreenY());
     }
 }
