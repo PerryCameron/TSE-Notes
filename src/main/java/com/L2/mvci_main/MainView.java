@@ -40,8 +40,8 @@ public class MainView implements Builder<Region> {
     private Node setUpBottomPane() {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.BASELINE_LEFT);
-        Button prevNoteButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.PREVIOUS_NOTE), "Previous", "/images/back-16.png");
-        Button nextNoteButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.NEXT_NOTE), "Next", "/images/forward-16.png");
+        Button prevNoteButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.PREVIOUS_NOTE), "Previous", "/images/down-16.png");
+        Button nextNoteButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.NEXT_NOTE), "Next", "/images/up-16.png");
         nextNoteButton.disableProperty().bind(mainModel.nextButtonDisabledProperty());
         Button newNoteButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.NEW_NOTE), "New Note", "/images/create-16.png");
         Button cloneButton = ButtonFx.utilityButton(() -> action.accept(MainMessage.CLONE_NOTE), "Clone Note", "/images/clone-16.png");
