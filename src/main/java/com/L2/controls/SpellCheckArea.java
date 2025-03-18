@@ -29,7 +29,7 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
     private NoteMessage computeHighlight = null;
     private ObjectProperty<CodeArea> areaObjectProperty;
 
-    public SpellCheckArea(NoteView noteView, double height, ObjectProperty<CodeArea> areaObjectProperty) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
+    public SpellCheckArea(NoteView noteView, double height, ObjectProperty<CodeArea> areaObjectProperty, StringProperty stringProperty) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
         super(new CodeArea());
         this.codeArea = getContent();
         this.noteView = noteView;
@@ -49,7 +49,7 @@ public class SpellCheckArea extends VirtualizedScrollPane<CodeArea>   {
         // Create a bridge property to sync CodeArea text with the model
         StringProperty bridgeProperty = new SimpleStringProperty();
         // Bind the bridge property bidirectionally to the issue property of the model
-        bridgeProperty.bindBidirectional(noteModel.getBoundNote().issueProperty());
+        bridgeProperty.bindBidirectional(stringProperty);  // this must change
         // Sync the initial text of the CodeArea with the bridge property
         codeArea.replaceText(bridgeProperty.getValue());
         // Update the bridge property when the text in the CodeArea changes

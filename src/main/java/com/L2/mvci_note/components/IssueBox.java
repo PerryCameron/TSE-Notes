@@ -47,7 +47,7 @@ public class IssueBox implements Component<Region> {
     // the text area that you write in
     private VirtualizedScrollPane<CodeArea> getTextArea() {
         // Create a new CodeArea instance
-        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 200, noteModel.issueAreaProperty());
+        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 200, noteModel.issueAreaProperty(), noteModel.getBoundNote().issueProperty());
         spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
         // check on startup
         noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
