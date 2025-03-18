@@ -125,7 +125,11 @@ public class NoteInteractor {
         if(noteModel.getBoundNote().isEmail()) return;
         if (noteModel.hunspellProperty().get() == null) return;
 
-        String text = noteModel.issueAreaProperty().get().getText();
+        // Use the appropriate text area based on areaType
+        String text = areaType.equals("issue")
+                ? noteModel.issueAreaProperty().get().getText()
+                : noteModel.finishAreaProperty().get().getText();
+
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
 
         if (text.isEmpty()) {
