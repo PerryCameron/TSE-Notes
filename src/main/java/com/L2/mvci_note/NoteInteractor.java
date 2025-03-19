@@ -307,7 +307,7 @@ public void appendToCustomDictionary() {
         File customDictFile = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic");
     try {
         List<String> lines = customDictFile.exists() ? Files.readAllLines(customDictFile.toPath()) : new ArrayList<>();
-        int count = lines.isEmpty() || !lines.get(0).matches("\\d+") ? 0 : Integer.parseInt(lines.get(0));
+        int count = lines.isEmpty() || !lines.getFirst().matches("\\d+") ? 0 : Integer.parseInt(lines.getFirst());
 
         List<String> newLines = new ArrayList<>();
         newLines.add(String.valueOf(count + 1));

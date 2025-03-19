@@ -63,11 +63,13 @@ public class ClipboardUtils {
 
 
             // HTML clipboard format with correct lengths
-            String htmlHeader = "Version:0.9\r\n" +
-                    "StartHTML:%1$010d\r\n" +
-                    "EndHTML:%2$010d\r\n" +
-                    "StartFragment:%3$010d\r\n" +
-                    "EndFragment:%4$010d\r\n";
+            String htmlHeader = """
+                    Version:0.9\r
+                    StartHTML:%1$010d\r
+                    EndHTML:%2$010d\r
+                    StartFragment:%3$010d\r
+                    EndFragment:%4$010d\r
+                    """;
             String startFragment = "<!--StartFragment-->";
             String endFragment = "<!--EndFragment-->";
             String htmlContent = "<html><body>" + startFragment + utf8Html + endFragment + "</body></html>";
@@ -98,7 +100,7 @@ public class ClipboardUtils {
                 User32.INSTANCE.CloseClipboard();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -107,6 +109,7 @@ public class ClipboardUtils {
         return input.replace("&", "&amp;") // Escape ampersand first to avoid double-escaping
                 .replace("\"", "&quot;")
                 .replace("'", "&#39;")
+                .replace("’", "&rsquo;")  // Curly right single quotation mark (like in O’garro)
                 // Accented vowels (lowercase)
                 .replace("á", "&aacute;")
                 .replace("é", "&eacute;")
@@ -190,16 +193,14 @@ public class ClipboardUtils {
                 try {
                     return (String) data.getTransferData(DataFlavor.stringFlavor);
                 } catch (UnsupportedFlavorException | IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             } else {
                 logger.error("Clipboard does not contain string data.");
             }
         } catch (Exception e) {
             // Catch any exception that isn't related to text data (optional)
-            logger.error("An error occurred while retrieving clipboard data.");
-            logger.error(e.getMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return null;
     }
