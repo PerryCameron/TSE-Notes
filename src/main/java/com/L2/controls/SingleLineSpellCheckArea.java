@@ -6,93 +6,111 @@ import com.L2.mvci_note.NoteView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.text.Font;
-import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.OptionalInt;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class SingleLineSpellCheckArea extends CodeArea   {
+public class SingleLineSpellCheckArea extends CodeArea {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private static final Logger logger = LoggerFactory.getLogger(SingleLineSpellCheckArea.class);
     private NoteMessage computeHighlight = null;
     private ObjectProperty<CodeArea> areaObjectProperty;
 
-    public SingleLineSpellCheckArea(NoteView noteView, ObjectProperty<CodeArea> areaObjectProperty, StringProperty stringProperty) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
+    public SingleLineSpellCheckArea(NoteView noteView, ObjectProperty<CodeArea> areaObjectProperty, StringProperty stringProperty) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
         this.areaObjectProperty = areaObjectProperty;
         areaObjectProperty.setValue(this);
-        // Enable text wrapping in the CodeArea
-        this.setWrapText(true);
-        // Adjust based on your needs
-        this.setPrefHeight(50);
-        // Set the mouse hover event handler
+
+        // Disable wrapping and enforce single-line behavior
+        this.setWrapText(false);
+        this.setPrefHeight(40);
+        this.setMaxHeight(40);
+        this.setMinHeight(40);
+
+        // Attempt to disable scrolling
+        this.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "'; -fx-padding: 6;");
+        this.getStyleClass().add("code-area");
+
+        // Block Enter key and newlines more aggressively
+        this.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
+                event.consume();
+            }
+        });
+        this.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal.contains("\n") || newVal.contains("\r")) {
+                this.replaceText(newVal.replaceAll("[\n\r]", ""));
+            }
+        });
+
+        // Set mouse hover for spell-check context menu
         this.setOnMouseMoved(this::handleMouseHover);
-        // Set the font style for the CodeArea
-        this.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
-        // Apply the "code-area" style class to the CodeArea
-        this.getStyleClass().add("code-area"); // Apply the style class
-        // Create a bridge property to sync CodeArea text with the model
+
+        // Sync with stringProperty
         StringProperty bridgeProperty = new SimpleStringProperty();
-        // Bind the bridge property bidirectionally to the issue property of the model
-        bridgeProperty.bindBidirectional(stringProperty);  // this must change
-        // Sync the initial text of the CodeArea with the bridge property
+        bridgeProperty.bindBidirectional(stringProperty);
         this.replaceText(bridgeProperty.getValue());
-        // Update the bridge property when the text in the CodeArea changes
         this.textProperty().addListener((obs, oldVal, newVal) -> bridgeProperty.set(newVal));
-        // Update the this text when the bridge property changes
         bridgeProperty.addListener((obs, oldVal, newVal) -> {
             if (!newVal.equals(this.getText())) {
                 this.replaceText(newVal);
             }
         });
 
-        // Setup spell-checking with debounce
+        // Spell-checking with highlighting
         if (noteModel.hunspellProperty().get() != null) {
             noteModel.spellCheckSubscriptionProperty().setValue(this.multiPlainChanges()
-                    .successionEnds(java.time.Duration.ofMillis(500)) // Debounce 500ms
-                    .subscribe(ignore -> noteView.getAction().accept(computeHighlight)));
+                    .successionEnds(java.time.Duration.ofMillis(500))
+                    .subscribe(ignore -> highlightMisspelledWords()));
         }
-
-        // only blocks outer ScrollPane if inner has enough text for a ScrollPane
-        this.addEventFilter(ScrollEvent.SCROLL, event -> {
-            ScrollPane outerScrollPane = noteModel.noteScrollPaneProperty().get();
-            if (outerScrollPane == null) return; // Safety check
-
-            // Check if CodeArea needs to scroll
-            double totalContentHeight = this.totalHeightEstimateProperty().getValue();
-            double visibleHeight = this.getHeight();
-            boolean codeAreaScrollable = totalContentHeight > visibleHeight;
-
-            if (!codeAreaScrollable) {
-                // Pass scroll event to outer ScrollPane
-                double deltaY = event.getDeltaY();
-                double currentVvalue = outerScrollPane.getVvalue();
-                double vMax = outerScrollPane.getVmax();
-                double vMin = outerScrollPane.getVmin();
-
-                double scrollAmount = deltaY * 0.005; // Adjustable multiplier
-                double newVvalue = currentVvalue - scrollAmount;
-                newVvalue = Math.max(vMin, Math.min(vMax, newVvalue));
-
-                outerScrollPane.setVvalue(newVvalue);
-                event.consume(); // Prevent VirtualizedScrollPane from handling it
-            }
-            // If codeAreaScrollable is true, let VirtualizedScrollPane handle it
-        });
     }
 
     public void setComputeHighlight(NoteMessage message) {
         this.computeHighlight = message;
+    }
+
+    // Highlight misspelled words
+    private void highlightMisspelledWords() {
+        if (noteModel.hunspellProperty().get() == null) return;
+
+        String text = this.getText();
+        StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+        Pattern wordPattern = Pattern.compile("[\\p{L}\\p{N}'-/]+");
+        Matcher matcher = wordPattern.matcher(text);
+        int lastEnd = 0;
+
+        while (matcher.find()) {
+            if (matcher.start() > lastEnd) {
+                spansBuilder.add(Collections.emptyList(), matcher.start() - lastEnd); // Non-word segment
+            }
+            String word = matcher.group();
+            boolean isCorrect = noteModel.hunspellProperty().get().spell(word);
+            if (!isCorrect) {
+                spansBuilder.add(Collections.singleton("misspelled"), word.length()); // Style misspelled words
+            } else {
+                spansBuilder.add(Collections.emptyList(), word.length()); // No style for correct words
+            }
+            lastEnd = matcher.end();
+        }
+        if (lastEnd < text.length()) {
+            spansBuilder.add(Collections.emptyList(), text.length() - lastEnd); // Remaining text
+        }
+
+        StyleSpans<Collection<String>> spans = spansBuilder.create();
+        this.setStyleSpans(0, spans);
     }
 
     private void handleMouseHover(MouseEvent event) {
@@ -173,4 +191,3 @@ public class SingleLineSpellCheckArea extends CodeArea   {
         noteModel.contextMenuProperty().get().show(areaObjectProperty.get(), event.getScreenX(), event.getScreenY());
     }
 }
-// I am making this class, so that I can spell check the subject,  I need

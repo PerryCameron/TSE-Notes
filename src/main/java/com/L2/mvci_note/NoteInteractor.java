@@ -125,10 +125,13 @@ public class NoteInteractor {
         if(noteModel.getBoundNote().isEmail()) return;
         if (noteModel.hunspellProperty().get() == null) return;
 
-        // Use the appropriate text area based on areaType
-        String text = areaType.equals("issue")
-                ? noteModel.issueAreaProperty().get().getText()
-                : noteModel.finishAreaProperty().get().getText();
+        // Change this
+        String text = switch(areaType) {
+            case "issue" -> noteModel.issueAreaProperty().get().getText();
+            case "finish" -> noteModel.finishAreaProperty().get().getText();
+            case "subject" -> noteModel.subjectAreaProperty().get().getText();
+            default -> throw new IllegalArgumentException("Unknown area type: " + areaType);
+        };
 
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
 
@@ -201,6 +204,8 @@ public class NoteInteractor {
                 Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
             if(areaType.equals("finish"))
                 Platform.runLater(() -> noteModel.finishAreaProperty().get().setStyleSpans(0, spans));
+            if(areaType.equals("subject"))
+                Platform.runLater(() -> noteModel.subjectAreaProperty().get().setStyleSpans(0, spans));
         }).start();
     }
 

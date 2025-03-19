@@ -1,5 +1,7 @@
 package com.L2.mvci_note.components;
 
+import com.L2.controls.SingleLineSpellCheckArea;
+import com.L2.controls.SpellCheckArea;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
@@ -62,13 +64,18 @@ public class Subject implements Component<Region> {
         return root;
     }
 
+
     private Node createSubjectField() {
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
-        TextField textField = new TextField();
-        textField.textProperty().bindBidirectional(noteModel.getBoundNote().titleProperty());
-        HBox.setHgrow(textField, Priority.ALWAYS);
-        hBox.getChildren().add(textField);
+        SingleLineSpellCheckArea subjectField = new SingleLineSpellCheckArea(noteView, noteModel.subjectAreaProperty(), noteModel.getBoundNote().titleProperty());
+        HBox.setHgrow(subjectField, Priority.ALWAYS);
+        subjectField.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);
+        // check on startup
+        noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);
+        hBox.getChildren().add(subjectField);
         return hBox;
     }
+
+//    SpellCheckArea(noteView, 200, noteModel.issueAreaProperty(), noteModel.getBoundNote().issueProperty());
 }

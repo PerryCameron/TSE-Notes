@@ -49,6 +49,7 @@ public class NoteController extends Controller<NoteMessage> {
             case SHIPPING_INFORMATION -> noteInteractor.copyShippingInformation();
             case COMPUTE_HIGHLIGHTING_ISSUE_AREA -> noteInteractor.computeHighlightingForIssueArea("issue");
             case COMPUTE_HIGHLIGHTING_FINISH_AREA -> noteInteractor.computeHighlightingForIssueArea("finish");
+            case COMPUTE_HIGHLIGHTING_SUBJECT_AREA -> noteInteractor.computeHighlightingForIssueArea("subject");
             case COPY_BASIC_INFORMATION -> noteInteractor.copyBasicInformation();
             case COPY_SUBJECT -> noteInteractor.copySubject();
             case COPY_CUSTOMER_REQUEST -> noteInteractor.copyCustomerRequest();

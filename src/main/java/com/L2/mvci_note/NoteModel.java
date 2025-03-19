@@ -37,6 +37,7 @@ public class NoteModel {
     private final ObjectProperty<Subscription> spellCheckSubscription = new SimpleObjectProperty<>();
     private final ObjectProperty<CodeArea> issueArea = new SimpleObjectProperty<>();
     private final ObjectProperty<CodeArea> finishArea = new SimpleObjectProperty<>();
+    private final ObjectProperty<CodeArea> subjectArea = new SimpleObjectProperty<>();
     private final StringProperty newWord = new SimpleStringProperty();
     private final ObjectProperty<ScrollPane> noteScrollPane = new SimpleObjectProperty<>();
     private final ObjectProperty<ContextMenu> contextMenu = new SimpleObjectProperty<>();
@@ -209,6 +210,10 @@ public class NoteModel {
 
     public ObjectProperty<CodeArea> finishAreaProperty() {
         return finishArea;
+    }
+
+    public ObjectProperty<CodeArea> subjectAreaProperty() {
+        return subjectArea;
     }
 
     public ObjectProperty<ContextMenu> contextMenuProperty() {
