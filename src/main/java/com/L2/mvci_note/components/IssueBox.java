@@ -37,7 +37,6 @@ public class IssueBox implements Component<Region> {
     public Region build() {
         this.root = VBoxFx.of(5.0, new Insets(5, 10, 10, 10));
         root.getStyleClass().add("decorative-hbox");
-        noteView.getAction().accept(NoteMessage.INITALIZE_DICTIONARY); // This should be moved out of this class
         HBox iconBox = HBoxFx.iconBox(10);
         root.getChildren().addAll(TitleBarFx.of("Issue", iconBox), getTextArea());
         refreshFields();

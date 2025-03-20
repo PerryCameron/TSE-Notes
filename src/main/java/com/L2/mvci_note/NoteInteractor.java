@@ -122,90 +122,118 @@ public class NoteInteractor {
     }
 
     public void computeHighlightingForIssueArea(String areaType) {
-        if(noteModel.getBoundNote().isEmail()) return;
+        // Skip highlighting if the note is an email or if Hunspell spell checker is not initialized
+        if (noteModel.getBoundNote().isEmail()) return;
         if (noteModel.hunspellProperty().get() == null) return;
 
-        // Change this
-        String text = switch(areaType) {
-            case "issue" -> noteModel.issueAreaProperty().get().getText();
-            case "finish" -> noteModel.finishAreaProperty().get().getText();
-            case "subject" -> noteModel.subjectAreaProperty().get().getText();
-            default -> throw new IllegalArgumentException("Unknown area type: " + areaType);
+        // Determine which text area to process based on the areaType parameter
+        String text = switch (areaType) {
+            case "issue" -> noteModel.issueAreaProperty().get().getText();   // Text from issue area
+            case "finish" -> noteModel.finishAreaProperty().get().getText(); // Text from finish area
+            case "subject" -> noteModel.subjectAreaProperty().get().getText(); // Text from subject area
+            default -> throw new IllegalArgumentException("Unknown area type: " + areaType); // Error for invalid type
         };
 
+        // Initialize a builder to create styled text spans (e.g., for highlighting misspelled words)
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
 
+        // Handle empty text case: create an empty span and apply it immediately
         if (text.isEmpty()) {
-            spansBuilder.add(Collections.emptyList(), 0);
-            noteModel.issueAreaProperty().get().setStyleSpans(0, spansBuilder.create());
+            spansBuilder.add(Collections.emptyList(), 0);  // No styles, zero length
+            noteModel.issueAreaProperty().get().setStyleSpans(0, spansBuilder.create()); // Apply to issue area
             return;
         }
 
+        // Define a regex pattern for technical IDs (e.g., "ABC123", "X-99/Y"):
+        // - At least one number and one uppercase letter, 5+ characters, allowing letters, numbers, -, /
         Pattern techIdPattern = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])[A-Z0-9-/]{5,}$");
 
+        // Run highlighting computation in a separate thread to avoid blocking the UI
         new Thread(() -> {
-            int totalLength = 0;
-            int i = 0;
+            int totalLength = 0;  // Tracks total length of processed text
+            int i = 0;            // Current position in the text
 
+            // Process the text character by character
             while (i < text.length()) {
-                int start = i;
+                int start = i;  // Mark the start of a segment (whitespace or word)
+
+                // Skip over consecutive whitespace characters
                 while (i < text.length() && Character.isWhitespace(text.charAt(i))) {
                     i++;
                 }
-                if (i > start) {
-                    spansBuilder.add(Collections.emptyList(), i - start);
-                    totalLength += i - start;
+                if (i > start) {  // If whitespace was found
+                    spansBuilder.add(Collections.emptyList(), i - start);  // Add unstyled span for whitespace
+                    totalLength += i - start;  // Update processed length
                 }
 
-                start = i;
+                start = i;  // Mark the start of a word
+                // Move forward until hitting whitespace (end of word)
                 while (i < text.length() && !Character.isWhitespace(text.charAt(i))) {
                     i++;
                 }
 
+                // If a word was found (start < i)
                 if (start < i) {
-                    String rawWord = text.substring(start, i);
-                    int wordEnd = start;
+                    String rawWord = text.substring(start, i);  // Full word including trailing characters
+                    int wordEnd = start;  // Refine the actual word end (excluding trailing punctuation)
+
+                    // Determine the end of the valid word part (letters, digits, ', -)
                     while (wordEnd < i && (Character.isLetterOrDigit(text.charAt(wordEnd)) ||
-                            text.charAt(wordEnd) == '\'' ||
-                            text.charAt(wordEnd) == '-'
+                            text.charAt(wordEnd) == '\'' ||  // Allow apostrophes (e.g., "don't")
+                            text.charAt(wordEnd) == '-'      // Allow hyphens (e.g., "well-known")
                     )) {
                         wordEnd++;
                     }
-                    String word = text.substring(start, wordEnd);
-                    String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", "");
-                    String trailing = text.substring(wordEnd, i);
 
-                    // Added debug logging to see exactly what's being checked
+                    // Split into word and trailing characters
+                    String word = text.substring(start, wordEnd);  // Core word without trailing punctuation
+                    String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", ""); // Cleaned word (keeps letters, numbers, ', -, /)
+                    String trailing = text.substring(wordEnd, i); // Trailing characters after the word
+
+                    // Log details for debugging: raw word, processed word, cleaned word, and spell check result
                     logger.debug("Raw: '{}', Word: '{}', Clean: '{}', SpellCheck: {}",
                             rawWord, word, cleanWord,
                             noteModel.hunspellProperty().get().spell(cleanWord));
 
+                    // Process the word for highlighting
                     if (!cleanWord.isEmpty()) {
+                        // Check if the word matches a technical ID pattern (no highlighting needed)
                         if (techIdPattern.matcher(cleanWord).matches()) {
-                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
-                        } else if (!noteModel.hunspellProperty().get().spell(cleanWord)) {
-                            spansBuilder.add(Collections.singleton("misspelled"), word.length());
-                            spansBuilder.add(Collections.emptyList(), trailing.length());
-                        } else {
-                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
+                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length()); // No style
+                        }
+                        // Check if the word is misspelled
+                        else if (!noteModel.hunspellProperty().get().spell(cleanWord)) {
+                            spansBuilder.add(Collections.singleton("misspelled"), word.length()); // Highlight word
+                            spansBuilder.add(Collections.emptyList(), trailing.length());        // No style for trailing
+                        }
+                        // Word is spelled correctly and not a tech ID
+                        else {
+                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length()); // No style
                         }
                     } else {
+                        // Empty cleaned word (e.g., only punctuation), no highlighting
                         spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
                     }
-                    totalLength += rawWord.length();
+                    totalLength += rawWord.length();  // Update processed length
                 }
             }
+
+            // If any remaining text wasn't processed (e.g., trailing whitespace), add it
             if (totalLength < text.length()) {
                 spansBuilder.add(Collections.emptyList(), text.length() - totalLength);
             }
+
+            // Create the final style spans object
             StyleSpans<Collection<String>> spans = spansBuilder.create();
-            if(areaType.equals("issue"))
+
+            // Apply the spans to the appropriate text area on the JavaFX UI thread
+            if (areaType.equals("issue"))
                 Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
-            if(areaType.equals("finish"))
+            if (areaType.equals("finish"))
                 Platform.runLater(() -> noteModel.finishAreaProperty().get().setStyleSpans(0, spans));
-            if(areaType.equals("subject"))
+            if (areaType.equals("subject"))
                 Platform.runLater(() -> noteModel.subjectAreaProperty().get().setStyleSpans(0, spans));
-        }).start();
+        }).start();  // Start the background thread
     }
 
     public void initializeDictionary() {

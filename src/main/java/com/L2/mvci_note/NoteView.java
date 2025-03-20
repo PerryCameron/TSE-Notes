@@ -43,6 +43,7 @@ public class NoteView implements Builder<Region> {
     @Override
     public Region build() {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 5, 0, 0));
+        action.accept(NoteMessage.INITALIZE_DICTIONARY);
         ScrollPane scrollPane = new ScrollPane();
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");

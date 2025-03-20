@@ -178,7 +178,8 @@ public class SpellCheckArea extends CodeArea   {
 
         // Extract the word and create a cleaned version
         String word = text.substring(wordStart, actualWordEnd);
-        String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", ""); // Remove all but letters, numbers, ', -, /
+        // Remove all but letters, numbers, ', -, /
+        String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", "");
 
         // If the cleaned word is empty, hide menu and exit
         if (cleanWord.isEmpty()) {
