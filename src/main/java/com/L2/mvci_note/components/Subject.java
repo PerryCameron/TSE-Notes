@@ -1,6 +1,7 @@
 package com.L2.mvci_note.components;
 
 import com.L2.controls.SpellCheckArea;
+import com.L2.enums.AreaType;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
@@ -66,7 +67,7 @@ public class Subject implements Component<Region> {
     private Node createSubjectField() {
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
-        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, noteModel.getBoundNote().titleProperty());
+        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, noteModel.getBoundNote().titleProperty(), AreaType.subject);
         HBox.setHgrow(spellCheckArea, Priority.ALWAYS);
         noteModel.subjectAreaProperty().setValue(spellCheckArea);
         spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);

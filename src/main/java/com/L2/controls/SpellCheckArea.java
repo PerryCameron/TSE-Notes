@@ -1,5 +1,6 @@
 package com.L2.controls;
 
+import com.L2.enums.AreaType;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
@@ -12,23 +13,28 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.text.Font;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.StyleSpan;
+import org.fxmisc.richtext.model.StyleSpans;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.OptionalInt;
 
-public class SpellCheckArea extends CodeArea   {
+public class SpellCheckArea extends CodeArea {
     // Create a new CodeArea instance
     private final NoteView noteView;
     private final NoteModel noteModel;
+    private final AreaType areaType;
     private static final Logger logger = LoggerFactory.getLogger(SpellCheckArea.class);
     private NoteMessage computeHighlight = null;
 
     // this is our textArea instance
-    public SpellCheckArea(NoteView noteView, double height, StringProperty stringProperty) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
+    public SpellCheckArea(NoteView noteView, double height, StringProperty stringProperty, AreaType areaType) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
+        this.areaType = areaType;
         // Enable text wrapping in the CodeArea
         this.setWrapText(true);
         // Adjust based on your needs
@@ -46,9 +52,10 @@ public class SpellCheckArea extends CodeArea   {
     }
 
     // this is our textField instance
-    public SpellCheckArea(NoteView noteView, StringProperty stringProperty) {
+    public SpellCheckArea(NoteView noteView, StringProperty stringProperty, AreaType areaType) {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
+        this.areaType = areaType;
         // Disable wrapping and enforce single-line behavior
         this.setWrapText(false);
         this.setPrefHeight(40);
@@ -104,31 +111,45 @@ public class SpellCheckArea extends CodeArea   {
     }
 
     private void applyScrollingRules() {
-        // only blocks outer ScrollPane if inner has enough text for a ScrollPane
+        // Configures scroll event handling to manage interaction between inner CodeArea
+        // and outer ScrollPane, only blocking outer scroll when inner content needs it
         this.addEventFilter(ScrollEvent.SCROLL, event -> {
+            // Get reference to the outer ScrollPane from noteModel
             ScrollPane outerScrollPane = noteModel.noteScrollPaneProperty().get();
-            if (outerScrollPane == null) return; // Safety check
 
-            // Check if CodeArea needs to scroll
-            double totalContentHeight = this.totalHeightEstimateProperty().getValue();
-            double visibleHeight = this.getHeight();
-            boolean codeAreaScrollable = totalContentHeight > visibleHeight;
+            // Safety check: exit if outer ScrollPane isn't available
+            if (outerScrollPane == null) return;
 
+            // Calculate if CodeArea has enough content to require scrolling
+            double totalContentHeight = this.totalHeightEstimateProperty().getValue(); // Estimated height of all content
+            double visibleHeight = this.getHeight(); // Visible area of CodeArea
+            boolean codeAreaScrollable = totalContentHeight > visibleHeight; // True if content exceeds visible area
+
+            // If CodeArea doesn't need scrolling, delegate scroll to outer ScrollPane
             if (!codeAreaScrollable) {
-                // Pass scroll event to outer ScrollPane
+                // Get scroll wheel movement direction and magnitude
                 double deltaY = event.getDeltaY();
-                double currentVvalue = outerScrollPane.getVvalue();
-                double vMax = outerScrollPane.getVmax();
-                double vMin = outerScrollPane.getVmin();
 
-                double scrollAmount = deltaY * 0.005; // Adjustable multiplier
-                double newVvalue = currentVvalue - scrollAmount;
+                // Get current scroll position and bounds of outer ScrollPane
+                double currentVvalue = outerScrollPane.getVvalue(); // Current vertical scroll position (0.0 to 1.0)
+                double vMax = outerScrollPane.getVmax(); // Maximum scroll position
+                double vMin = outerScrollPane.getVmin(); // Minimum scroll position (usually 0.0)
+
+                // Calculate new scroll position based on wheel movement
+                double scrollAmount = deltaY * 0.005; // Multiplier to adjust scroll sensitivity
+                double newVvalue = currentVvalue - scrollAmount; // Proposed new scroll position
+
+                // Clamp the new scroll position to valid range [vMin, vMax]
                 newVvalue = Math.max(vMin, Math.min(vMax, newVvalue));
 
+                // Apply the calculated scroll position to outer ScrollPane
                 outerScrollPane.setVvalue(newVvalue);
-                event.consume(); // Prevent VirtualizedScrollPane from handling it
+
+                // Consume the event to prevent inner VirtualizedScrollPane from processing it
+                event.consume();
             }
-            // If codeAreaScrollable is true, let VirtualizedScrollPane handle it
+            // If codeAreaScrollable is true, event passes through to VirtualizedScrollPane
+            // for default inner scrolling behavior
         });
     }
 
@@ -141,100 +162,94 @@ public class SpellCheckArea extends CodeArea   {
     }
 
     private void handleMouseHover(MouseEvent event) {
-        // Early return if spell checker (Hunspell) is not initialized
-        if (noteModel.hunspellProperty().get() == null) return;
-
-        // Get the character index where the mouse is hovering
-        OptionalInt charIndexOpt = this.hit(event.getX(), event.getY()).getCharacterIndex();
-
-        // If no valid character index is found, exit the method
-        if (!charIndexOpt.isPresent()) {
+        if (noteModel.hunspellProperty().get() == null) {
+            logger.debug("Hunspell not initialized");
             return;
         }
 
-        // Get the actual character index and validate it's within text bounds
+        OptionalInt charIndexOpt = this.hit(event.getX(), event.getY()).getCharacterIndex();
+        if (!charIndexOpt.isPresent()) {
+            logger.debug("No character index at ({}, {})", event.getX(), event.getY());
+            return;
+        }
+
         int charIndex = charIndexOpt.getAsInt();
         if (charIndex < 0 || charIndex >= this.getText().length()) {
-            noteModel.contextMenuProperty().get().hide();  // Hide context menu if index is invalid
-            return;
-        }
-
-        // Get the full text content and find word boundaries around the hovered character
-        String text = this.getText();
-        int wordStart = text.lastIndexOf(" ", charIndex) + 1;  // Start of word (after previous space)
-        int wordEnd = text.indexOf(" ", charIndex);            // End of word (next space)
-        if (wordEnd == -1) wordEnd = text.length();           // If no space found, use text end
-        if (wordStart >= wordEnd) {                           // Invalid word boundaries
+            logger.debug("Invalid charIndex: {}", charIndex);
             noteModel.contextMenuProperty().get().hide();
             return;
         }
 
-        // Refine the word end to only include valid word characters
-        int actualWordEnd = wordStart;
-        while (actualWordEnd < wordEnd && (
-                Character.isLetterOrDigit(text.charAt(actualWordEnd)))) {                     // Slashes (e.g., TCP/IP)
-            actualWordEnd++;
+        StyleSpans<Collection<String>> spans = switch (areaType) {
+            case subject -> noteModel.subjectSpansProperty().get();
+            case issue -> noteModel.issueSpansProperty().get();
+            case finish -> noteModel.finishSpansProperty().get();
+            default -> null;
+        };
+
+        if (spans == null) {
+            logger.debug("No spans available for {}", areaType);
+            return;
         }
 
-        // Extract the word and create a cleaned version
-        String word = text.substring(wordStart, actualWordEnd);
-        // Remove all but letters, numbers, ', -, /
-        String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", "");
+        int position = 0;
+        int wordStart = -1;
+        int wordEnd = -1;
+        String cleanWord = null;
+        boolean isMisspelled = false;
 
-        // If the cleaned word is empty, hide menu and exit
-        if (cleanWord.isEmpty()) {
+        for (StyleSpan<Collection<String>> span : spans) {
+            int spanEnd = position + span.getLength();
+            if (charIndex >= position && charIndex < spanEnd) {
+                if (span.getStyle().contains("misspelled")) {
+                    wordStart = position;
+                    wordEnd = spanEnd;
+                    cleanWord = this.getText().substring(wordStart, wordEnd)
+                            .replaceAll("[^\\p{L}\\p{N}'-/]", "");
+                    isMisspelled = true;
+                }
+                break;
+            }
+            position += span.getLength();
+        }
+
+        if (!isMisspelled) {
             noteModel.contextMenuProperty().get().hide();
             return;
         }
 
-        // Check if the word is spelled correctly using Hunspell
-        boolean isSpelledCorrectly = noteModel.hunspellProperty().get().spell(cleanWord);
-        logger.debug("Word '{}': spelled correctly = {}, suggestions = {}",
-                cleanWord, isSpelledCorrectly, noteModel.hunspellProperty().get().suggest(cleanWord));
-
-        // If spelled correctly, hide menu and exit
-        if (isSpelledCorrectly) {
-            noteModel.contextMenuProperty().get().hide();
-            return;
-        }
-
-        // Clear existing context menu items to prepare for new suggestions
         noteModel.contextMenuProperty().get().getItems().clear();
-
-        // Get spelling suggestions from Hunspell
         List<String> suggestions = noteModel.hunspellProperty().get().suggest(cleanWord);
-        if (!suggestions.isEmpty()) {
-            // Add each suggestion as a menu item
-            for (String suggestion : suggestions) {
-                if (!suggestion.equals(cleanWord)) {  // Skip if suggestion matches original word
-                    MenuItem item = new MenuItem(suggestion);
-                    final int finalWordStart = wordStart;    // Capture word boundaries for replacement
-                    final int finalWordEnd = actualWordEnd;
+        logger.debug("Word '{}': suggestions={}", cleanWord, suggestions);
 
-                    // Define action: replace word and save changes
+        if (!suggestions.isEmpty()) {
+            for (String suggestion : suggestions) {
+                if (!suggestion.equals(cleanWord)) {
+                    MenuItem item = new MenuItem(suggestion);
+                    final int finalWordStart = wordStart;
+                    final int finalWordEnd = wordEnd;
                     item.setOnAction(e -> {
                         this.replaceText(finalWordStart, finalWordEnd, suggestion);
-                        noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);  // Trigger save
-                        noteModel.contextMenuProperty().get().hide();                  // Hide menu
+                        noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+                        noteModel.contextMenuProperty().get().hide();
                     });
                     noteModel.contextMenuProperty().get().getItems().add(item);
                 }
             }
         }
 
-        // Create "Add to Dictionary" option
         MenuItem addToDict = new MenuItem("Add to Dictionary");
+        String finalCleanWord = cleanWord;
         addToDict.setOnAction(e -> {
-            // Add word to Hunspell dictionary and update model
-            noteModel.hunspellProperty().get().add(cleanWord);    // Accepts words with slashes
-            noteModel.newWordProperty().set(cleanWord);          // Track new word
-            noteView.getAction().accept(NoteMessage.ADD_WORD_TO_DICT);  // Notify dictionary update
-            noteView.getAction().accept(computeHighlight);       // Refresh highlighting
-            noteModel.contextMenuProperty().get().hide();        // Hide menu
+            noteModel.hunspellProperty().get().add(finalCleanWord);
+            noteModel.newWordProperty().set(finalCleanWord);
+            noteView.getAction().accept(NoteMessage.ADD_WORD_TO_DICT);
+            noteView.getAction().accept(computeHighlight); // Assuming this is a signal to recompute
+            noteModel.contextMenuProperty().get().hide();
         });
         noteModel.contextMenuProperty().get().getItems().add(addToDict);
 
-        // Show the context menu at the mouse position
+        logger.debug("Showing context menu with {} items", noteModel.contextMenuProperty().get().getItems().size());
         noteModel.contextMenuProperty().get().show(this, event.getScreenX(), event.getScreenY());
     }
 }

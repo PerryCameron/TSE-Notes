@@ -2,6 +2,7 @@ package com.L2.mvci_note.components;
 
 import com.L2.controls.SpellCheckArea;
 import com.L2.dto.NoteDTO;
+import com.L2.enums.AreaType;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
@@ -46,7 +47,7 @@ public class IssueBox implements Component<Region> {
     // the text area that you write in
     private VirtualizedScrollPane<CodeArea> getTextArea() {
         // Create a new CodeArea instance
-        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 200, noteModel.getBoundNote().issueProperty());
+        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 200, noteModel.getBoundNote().issueProperty(), AreaType.issue);
         noteModel.issueAreaProperty().setValue(spellCheckArea);
         spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
         // check on startup

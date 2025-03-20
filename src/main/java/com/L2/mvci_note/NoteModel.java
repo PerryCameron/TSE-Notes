@@ -9,7 +9,10 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.StyleSpans;
 import org.reactfx.Subscription;
+
+import java.util.Collection;
 
 public class NoteModel {
     private ObservableList<NoteDTO> notes = FXCollections.observableArrayList();
@@ -41,6 +44,12 @@ public class NoteModel {
     private final StringProperty newWord = new SimpleStringProperty();
     private final ObjectProperty<ScrollPane> noteScrollPane = new SimpleObjectProperty<>();
     private final ObjectProperty<ContextMenu> contextMenu = new SimpleObjectProperty<>();
+    private final ObjectProperty<StyleSpans<Collection<String>>> subjectSpansProperty =
+            new SimpleObjectProperty<>(null);
+    private final ObjectProperty<StyleSpans<Collection<String>>> issueSpansProperty =
+            new SimpleObjectProperty<>(null);
+    private final ObjectProperty<StyleSpans<Collection<String>>> finishSpansProperty =
+            new SimpleObjectProperty<>(null);
 
     public void clearBoundNoteFields() {
         boundNote.get().getPartOrders().clear();
@@ -218,6 +227,18 @@ public class NoteModel {
 
     public ObjectProperty<ContextMenu> contextMenuProperty() {
         return contextMenu;
+    }
+
+    public ObjectProperty<StyleSpans<Collection<String>>> subjectSpansProperty() {
+        return subjectSpansProperty;
+    }
+
+    public ObjectProperty<StyleSpans<Collection<String>>> issueSpansProperty() {
+        return issueSpansProperty;
+    }
+
+    public ObjectProperty<StyleSpans<Collection<String>>> finishSpansProperty() {
+        return finishSpansProperty;
     }
 
     public StringProperty newWordProperty() {

@@ -1,6 +1,7 @@
 package com.L2.mvci_note;
 
 import com.L2.dto.*;
+import com.L2.enums.AreaType;
 import com.L2.repository.implementations.EntitlementsRepositoryImpl;
 import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.repository.implementations.PartOrderRepositoryImpl;
@@ -121,119 +122,126 @@ public class NoteInteractor {
         ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), loggedCallToPlainText());
     }
 
-    public void computeHighlightingForIssueArea(String areaType) {
-        // Skip highlighting if the note is an email or if Hunspell spell checker is not initialized
+    // Assuming AreaType enum is defined elsewhere as: enum AreaType { subject, issue, finish }
+    public void computeHighlighting(AreaType areaType) {
+        // Early exit if the note is an email (emails skip highlighting) or Hunspell isn't initialized
         if (noteModel.getBoundNote().isEmail()) return;
         if (noteModel.hunspellProperty().get() == null) return;
 
-        // Determine which text area to process based on the areaType parameter
+        // Retrieve the text from the appropriate SpellCheckArea based on the AreaType enum
         String text = switch (areaType) {
-            case "issue" -> noteModel.issueAreaProperty().get().getText();   // Text from issue area
-            case "finish" -> noteModel.finishAreaProperty().get().getText(); // Text from finish area
-            case "subject" -> noteModel.subjectAreaProperty().get().getText(); // Text from subject area
-            default -> throw new IllegalArgumentException("Unknown area type: " + areaType); // Error for invalid type
+            case subject -> noteModel.subjectAreaProperty().get().getText(); // Text from subject area
+            case issue -> noteModel.issueAreaProperty().get().getText();     // Text from issue area
+            case finish -> noteModel.finishAreaProperty().get().getText();   // Text from finish area
+            default -> throw new IllegalArgumentException("Unknown area type: " + areaType); // Unreachable with enum, but required for switch exhaustiveness
         };
 
-        // Initialize a builder to create styled text spans (e.g., for highlighting misspelled words)
+        // Initialize a builder to construct styled spans for highlighting (e.g., misspelled words)
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
 
-        // Handle empty text case: create an empty span and apply it immediately
+        // Handle empty text case: create a single empty span and apply it immediately
         if (text.isEmpty()) {
-            spansBuilder.add(Collections.emptyList(), 0);  // No styles, zero length
-            noteModel.issueAreaProperty().get().setStyleSpans(0, spansBuilder.create()); // Apply to issue area
+            spansBuilder.add(Collections.emptyList(), 0); // No styles applied, zero length
+            StyleSpans<Collection<String>> spans = spansBuilder.create(); // Build the spans object
+            updateSpans(areaType, spans); // Store and apply the spans to the specified area
             return;
         }
 
-        // Define a regex pattern for technical IDs (e.g., "ABC123", "X-99/Y"):
-        // - At least one number and one uppercase letter, 5+ characters, allowing letters, numbers, -, /
+        // Define a regex pattern to identify technical IDs (e.g., "ABC123", "X-99/Y")
+        // Requires at least one number and one uppercase letter, 5+ characters, allows letters, numbers, -, /
         Pattern techIdPattern = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])[A-Z0-9-/]{5,}$");
 
-        // Run highlighting computation in a separate thread to avoid blocking the UI
+        // Run the highlighting computation in a background thread to avoid blocking the UI
         new Thread(() -> {
-            int totalLength = 0;  // Tracks total length of processed text
-            int i = 0;            // Current position in the text
+            int totalLength = 0; // Tracks the total length of text processed by spans
+            int i = 0;           // Current position in the text string
 
-            // Process the text character by character
+            // Iterate through the text to identify and style whitespace and words
             while (i < text.length()) {
-                int start = i;  // Mark the start of a segment (whitespace or word)
+                int start = i; // Mark the beginning of a segment (whitespace or word)
 
                 // Skip over consecutive whitespace characters
-                while (i < text.length() && Character.isWhitespace(text.charAt(i))) {
-                    i++;
-                }
-                if (i > start) {  // If whitespace was found
-                    spansBuilder.add(Collections.emptyList(), i - start);  // Add unstyled span for whitespace
-                    totalLength += i - start;  // Update processed length
+                while (i < text.length() && Character.isWhitespace(text.charAt(i))) i++;
+                if (i > start) { // If whitespace was found
+                    spansBuilder.add(Collections.emptyList(), i - start); // Add unstyled span for whitespace
+                    totalLength += i - start; // Update the total processed length
                 }
 
-                start = i;  // Mark the start of a word
-                // Move forward until hitting whitespace (end of word)
-                while (i < text.length() && !Character.isWhitespace(text.charAt(i))) {
-                    i++;
-                }
+                start = i; // Mark the beginning of a word
+                // Move forward until hitting whitespace, indicating the end of the word
+                while (i < text.length() && !Character.isWhitespace(text.charAt(i))) i++;
 
-                // If a word was found (start < i)
+                // Process the word if one was found (start < i)
                 if (start < i) {
-                    String rawWord = text.substring(start, i);  // Full word including trailing characters
-                    int wordEnd = start;  // Refine the actual word end (excluding trailing punctuation)
+                    String rawWord = text.substring(start, i); // Full word including any trailing characters
+                    int wordEnd = start; // Tracks the end of the "core" word (excluding trailing punctuation)
 
-                    // Determine the end of the valid word part (letters, digits, ', -)
+                    // Refine the word end to include only valid characters (letters, digits, apostrophes, hyphens)
                     while (wordEnd < i && (Character.isLetterOrDigit(text.charAt(wordEnd)) ||
-                            text.charAt(wordEnd) == '\'' ||  // Allow apostrophes (e.g., "don't")
-                            text.charAt(wordEnd) == '-'      // Allow hyphens (e.g., "well-known")
+                            text.charAt(wordEnd) == '\'' || // Allows apostrophes (e.g., "don't")
+                            text.charAt(wordEnd) == '-'     // Allows hyphens (e.g., "well-known")
                     )) {
                         wordEnd++;
                     }
 
-                    // Split into word and trailing characters
-                    String word = text.substring(start, wordEnd);  // Core word without trailing punctuation
-                    String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", ""); // Cleaned word (keeps letters, numbers, ', -, /)
+                    // Extract the core word and trailing characters
+                    String word = text.substring(start, wordEnd); // Core word without trailing punctuation
+                    String cleanWord = word.replaceAll("[^\\p{L}\\p{N}'-/]", ""); // Cleaned version, keeping letters, numbers, ', -, /
                     String trailing = text.substring(wordEnd, i); // Trailing characters after the word
 
-                    // Log details for debugging: raw word, processed word, cleaned word, and spell check result
-                    logger.debug("Raw: '{}', Word: '{}', Clean: '{}', SpellCheck: {}",
-                            rawWord, word, cleanWord,
-                            noteModel.hunspellProperty().get().spell(cleanWord));
-
-                    // Process the word for highlighting
+                    // Process the word for highlighting if it's not empty after cleaning
                     if (!cleanWord.isEmpty()) {
-                        // Check if the word matches a technical ID pattern (no highlighting needed)
+                        // Check if the word matches a technical ID pattern (no highlighting applied)
                         if (techIdPattern.matcher(cleanWord).matches()) {
-                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length()); // No style
+                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length()); // Unstyled span for entire segment
                         }
-                        // Check if the word is misspelled
+                        // Check if the word is misspelled using Hunspell
                         else if (!noteModel.hunspellProperty().get().spell(cleanWord)) {
-                            spansBuilder.add(Collections.singleton("misspelled"), word.length()); // Highlight word
-                            spansBuilder.add(Collections.emptyList(), trailing.length());        // No style for trailing
+                            spansBuilder.add(Collections.singleton("misspelled"), word.length()); // Style the word as misspelled
+                            spansBuilder.add(Collections.emptyList(), trailing.length()); // Unstyled span for trailing characters
                         }
-                        // Word is spelled correctly and not a tech ID
+                        // Word is spelled correctly and not a technical ID
                         else {
-                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length()); // No style
+                            spansBuilder.add(Collections.emptyList(), word.length() + trailing.length()); // Unstyled span for entire segment
                         }
                     } else {
-                        // Empty cleaned word (e.g., only punctuation), no highlighting
+                        // If cleaned word is empty (e.g., only punctuation), add an unstyled span
                         spansBuilder.add(Collections.emptyList(), word.length() + trailing.length());
                     }
-                    totalLength += rawWord.length();  // Update processed length
+                    totalLength += rawWord.length(); // Update total processed length with the full segment
                 }
             }
 
-            // If any remaining text wasn't processed (e.g., trailing whitespace), add it
+            // If any remaining text wasn't processed (e.g., trailing whitespace), add an unstyled span
             if (totalLength < text.length()) {
                 spansBuilder.add(Collections.emptyList(), text.length() - totalLength);
             }
 
-            // Create the final style spans object
+            // Build the final StyleSpans object from the collected spans
             StyleSpans<Collection<String>> spans = spansBuilder.create();
 
-            // Apply the spans to the appropriate text area on the JavaFX UI thread
-            if (areaType.equals("issue"))
-                Platform.runLater(() -> noteModel.issueAreaProperty().get().setStyleSpans(0, spans));
-            if (areaType.equals("finish"))
-                Platform.runLater(() -> noteModel.finishAreaProperty().get().setStyleSpans(0, spans));
-            if (areaType.equals("subject"))
-                Platform.runLater(() -> noteModel.subjectAreaProperty().get().setStyleSpans(0, spans));
-        }).start();  // Start the background thread
+            // Update the NoteModel and apply the spans to the UI on the JavaFX Application Thread
+            updateSpans(areaType, spans);
+        }).start(); // Start the background thread for processing
+    }
+
+    private void updateSpans(AreaType areaType, StyleSpans<Collection<String>> spans) {
+        Platform.runLater(() -> {
+            switch (areaType) {
+                case subject -> {
+                    noteModel.subjectAreaProperty().get().setStyleSpans(0, spans);
+                    noteModel.subjectSpansProperty().set(spans);
+                }
+                case issue -> {
+                    noteModel.issueAreaProperty().get().setStyleSpans(0, spans);
+                    noteModel.issueSpansProperty().set(spans);
+                }
+                case finish -> {
+                    noteModel.finishAreaProperty().get().setStyleSpans(0, spans);
+                    noteModel.finishSpansProperty().set(spans);
+                }
+            }
+        });
     }
 
     public void initializeDictionary() {
@@ -334,26 +342,26 @@ public class NoteInteractor {
         return tempFile;
     }
 
-public void appendToCustomDictionary() {
+    public void appendToCustomDictionary() {
         String word = noteModel.newWordProperty().get();
         File customDictFile = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic");
-    try {
-        List<String> lines = customDictFile.exists() ? Files.readAllLines(customDictFile.toPath()) : new ArrayList<>();
-        int count = lines.isEmpty() || !lines.getFirst().matches("\\d+") ? 0 : Integer.parseInt(lines.getFirst());
+        try {
+            List<String> lines = customDictFile.exists() ? Files.readAllLines(customDictFile.toPath()) : new ArrayList<>();
+            int count = lines.isEmpty() || !lines.getFirst().matches("\\d+") ? 0 : Integer.parseInt(lines.getFirst());
 
-        List<String> newLines = new ArrayList<>();
-        newLines.add(String.valueOf(count + 1));
-        if (count > 0) {
-            newLines.addAll(lines.subList(1, lines.size()));
+            List<String> newLines = new ArrayList<>();
+            newLines.add(String.valueOf(count + 1));
+            if (count > 0) {
+                newLines.addAll(lines.subList(1, lines.size()));
+            }
+            newLines.add(word); // Already cleanWord
+
+            Files.write(customDictFile.toPath(), newLines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            logger.info("Appended '{}' to custom dictionary, new count: {}", word, count + 1);
+        } catch (IOException e) {
+            logger.error("Failed to append '{}' to custom dictionary", word, e);
         }
-        newLines.add(word); // Already cleanWord
-
-        Files.write(customDictFile.toPath(), newLines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        logger.info("Appended '{}' to custom dictionary, new count: {}", word, count + 1);
-    } catch (IOException e) {
-        logger.error("Failed to append '{}' to custom dictionary", word, e);
     }
-}
 
     public String copyAllPartOrdersToPlainText() {
         if (noteModel.getBoundNote().getPartOrders().size() > 1) {
@@ -496,7 +504,7 @@ public void appendToCustomDictionary() {
             stringBuilder.append("Email: ").append(note.getContactEmail()).append("\r\n");
         if (!note.getContactPhoneNumber().isEmpty())
             stringBuilder.append("Phone: ").append(note.getContactPhoneNumber())
-                .append("\r\n").append("\r\n");
+                    .append("\r\n").append("\r\n");
         stringBuilder
                 .append("--- Shipping Address ---").append("\r\n");
         if (!note.getInstalledAt().isEmpty())
@@ -646,7 +654,7 @@ public void appendToCustomDictionary() {
         stringBuilder.append(buildNameDateToPlainText()).append("\r\n").append("\r\n");
         stringBuilder.append(basicInformationToPlainText()).append("\r\n");
         stringBuilder.append(issueToPlainText()).append("\r\n");
-        if (!noteModel.getBoundNote().getPartOrders().isEmpty() && !partsOrdered)  {
+        if (!noteModel.getBoundNote().getPartOrders().isEmpty() && !partsOrdered) {
             stringBuilder.append("\r\n").append("--- Parts Needed ---").append("\r\n");
             stringBuilder.append(copyAllPartOrdersToPlainText());
         }
@@ -668,7 +676,7 @@ public void appendToCustomDictionary() {
         if (!noteModel.getBoundNote().getAdditionalCorrectiveActionText().isEmpty()) {
             stringBuilder.append(noteModel.getBoundNote().getAdditionalCorrectiveActionText()).append("\r\n").append("\r\n");
         }
-        if(partsOrdered)
+        if (partsOrdered)
             stringBuilder.append(copyAllPartOrdersToPlainText());
         return stringBuilder.toString();
     }

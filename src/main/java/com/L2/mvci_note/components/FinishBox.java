@@ -1,6 +1,7 @@
 package com.L2.mvci_note.components;
 
 import com.L2.controls.SpellCheckArea;
+import com.L2.enums.AreaType;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
@@ -52,7 +53,7 @@ public class FinishBox implements Component<Region> {
 
     private Node correctiveText() {
         // Create a new CodeArea instance
-        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 100, noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
+        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 100, noteModel.getBoundNote().additionalCorrectiveActionTextProperty(), AreaType.finish);
         spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA);
         noteModel.finishAreaProperty().setValue(spellCheckArea);
         VirtualizedScrollPane<CodeArea> scrollWrapper = new VirtualizedScrollPane<>(spellCheckArea);

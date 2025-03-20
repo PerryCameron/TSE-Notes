@@ -2,6 +2,7 @@ package com.L2.mvci_note;
 
 import com.L2.dto.NoteDTO;
 import com.L2.dto.UserDTO;
+import com.L2.enums.AreaType;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_main.MainMessage;
@@ -11,6 +12,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.geom.Area;
 
 public class NoteController extends Controller<NoteMessage> {
 
@@ -47,9 +50,9 @@ public class NoteController extends Controller<NoteMessage> {
             case COPY_PART_ORDER -> noteInteractor.copyPartOrder();
             case COPY_NAME_DATE -> noteInteractor.copyNameDate();
             case SHIPPING_INFORMATION -> noteInteractor.copyShippingInformation();
-            case COMPUTE_HIGHLIGHTING_ISSUE_AREA -> noteInteractor.computeHighlightingForIssueArea("issue");
-            case COMPUTE_HIGHLIGHTING_FINISH_AREA -> noteInteractor.computeHighlightingForIssueArea("finish");
-            case COMPUTE_HIGHLIGHTING_SUBJECT_AREA -> noteInteractor.computeHighlightingForIssueArea("subject");
+            case COMPUTE_HIGHLIGHTING_ISSUE_AREA -> noteInteractor.computeHighlighting(AreaType.issue);
+            case COMPUTE_HIGHLIGHTING_FINISH_AREA -> noteInteractor.computeHighlighting(AreaType.finish);
+            case COMPUTE_HIGHLIGHTING_SUBJECT_AREA -> noteInteractor.computeHighlighting(AreaType.subject);
             case COPY_BASIC_INFORMATION -> noteInteractor.copyBasicInformation();
             case COPY_SUBJECT -> noteInteractor.copySubject();
             case COPY_CUSTOMER_REQUEST -> noteInteractor.copyCustomerRequest();
