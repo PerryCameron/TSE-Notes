@@ -31,44 +31,41 @@ public class SpellCheckArea extends CodeArea {
     private NoteMessage computeHighlight = null;
 
     // this is our textArea instance
-    public SpellCheckArea(NoteView noteView, double height, StringProperty stringProperty, AreaType areaType) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
+    public SpellCheckArea(NoteView noteView, StringProperty stringProperty, AreaType areaType) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
         this.areaType = areaType;
-        // Enable text wrapping in the CodeArea
-        this.setWrapText(true);
-        // Adjust based on your needs
-        this.setPrefHeight(height);
-        // Set the mouse hover event handler
-        this.setOnMouseMoved(this::handleMouseHover);
-        // Set the font style for the CodeArea
+        double height;
         this.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
-        // Apply the "code-area" style class to the CodeArea
-        this.getStyleClass().add("code-area"); // Apply the style class
-        // Create a bridge property to sync CodeArea text with the model
+        if(areaType == AreaType.subject) {
+            height = 40;
+            this.getStyleClass().add("code-area-single");
+            removeReturns();
+            this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA;
+        } else if(areaType == AreaType.finish) {
+            height = 100;
+            setUpArea();
+            this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA;
+        } else {
+            height = 200;
+            setUpArea();
+            this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA;
+        }
+        this.setPrefHeight(height);
+        this.setMaxHeight(height);
+        this.setMinHeight(height);
+        this.setOnMouseMoved(this::handleMouseHover);
         setBridgeToBind(stringProperty);
         setUpSpellCheckingWithDebounce();
+    }
+
+    private void setUpArea() {
+        this.setWrapText(true);
+        this.getStyleClass().add("code-area");
         applyScrollingRules();
     }
 
-    // this is our textField instance
-    public SpellCheckArea(NoteView noteView, StringProperty stringProperty, AreaType areaType) {
-        this.noteView = noteView;
-        this.noteModel = noteView.getNoteModel();
-        this.areaType = areaType;
-        // Disable wrapping and enforce single-line behavior
-        this.setWrapText(false);
-        this.setPrefHeight(40);
-        this.setMaxHeight(40);
-        this.setMinHeight(40);
-
-        // Set mouse hover for spell-check context menu
-        this.setOnMouseMoved(this::handleMouseHover);
-
-        // Attempt to disable scrolling
-        this.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "'; -fx-padding: 6;");
-        this.getStyleClass().add("code-area-single");
-
+    private void removeReturns() {
         // Block Enter key
         this.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
@@ -81,9 +78,6 @@ public class SpellCheckArea extends CodeArea {
                 this.replaceText(newVal.replaceAll("[\n\r]", ""));
             }
         });
-        // Sync with stringProperty
-        setBridgeToBind(stringProperty);
-        setUpSpellCheckingWithDebounce();
     }
 
     private void setBridgeToBind(StringProperty stringProperty) {
@@ -151,10 +145,6 @@ public class SpellCheckArea extends CodeArea {
             // If codeAreaScrollable is true, event passes through to VirtualizedScrollPane
             // for default inner scrolling behavior
         });
-    }
-
-    public void setComputeHighlight(NoteMessage message) {
-        this.computeHighlight = message;
     }
 
     public CodeArea getCodeArea() {
@@ -244,7 +234,10 @@ public class SpellCheckArea extends CodeArea {
             noteModel.hunspellProperty().get().add(finalCleanWord);
             noteModel.newWordProperty().set(finalCleanWord);
             noteView.getAction().accept(NoteMessage.ADD_WORD_TO_DICT);
-            noteView.getAction().accept(computeHighlight); // Assuming this is a signal to recompute
+//            noteView.getAction().accept(computeHighlight); // Assuming this is a signal to recompute
+            noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);
+            noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
+            noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA);
             noteModel.contextMenuProperty().get().hide();
         });
         noteModel.contextMenuProperty().get().getItems().add(addToDict);

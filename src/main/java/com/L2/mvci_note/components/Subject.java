@@ -70,7 +70,6 @@ public class Subject implements Component<Region> {
         SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, noteModel.getBoundNote().titleProperty(), AreaType.subject);
         HBox.setHgrow(spellCheckArea, Priority.ALWAYS);
         noteModel.subjectAreaProperty().setValue(spellCheckArea);
-        spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);
         // check on startup
         noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);
         hBox.getChildren().add(spellCheckArea);

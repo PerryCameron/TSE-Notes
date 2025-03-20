@@ -257,4 +257,5 @@
     -fx-border-color: #d6dada; /* Set the border color */
     -fx-border-width: 1px; /* Set the border width */
     -fx-border-style: solid; /* Set the border style */
+    -fx-padding: 6;
 }
