@@ -19,6 +19,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.CodeArea;
 
 public class FinishBox implements Component<Region> {
 
@@ -51,12 +53,13 @@ public class FinishBox implements Component<Region> {
     private Node correctiveText() {
         // Create a new CodeArea instance
         SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 100, noteModel.finishAreaProperty(), noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
-        HBox.setHgrow(spellCheckArea, Priority.ALWAYS);
         spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA);
+        VirtualizedScrollPane<CodeArea> scrollWrapper = new VirtualizedScrollPane<>(spellCheckArea);
+        HBox.setHgrow(scrollWrapper, Priority.ALWAYS);
         // check on startup
         noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA);
         // wrap in a scroll pane
-        return spellCheckArea;
+        return scrollWrapper;
     }
 
     private Node buttonBox() {

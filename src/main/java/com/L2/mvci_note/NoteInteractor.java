@@ -136,7 +136,6 @@ public class NoteInteractor {
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
 
         if (text.isEmpty()) {
-            logger.debug("Text is empty, adding default empty span");
             spansBuilder.add(Collections.emptyList(), 0);
             noteModel.issueAreaProperty().get().setStyleSpans(0, spansBuilder.create());
             return;

@@ -76,6 +76,4 @@ public class Subject implements Component<Region> {
         hBox.getChildren().add(subjectField);
         return hBox;
     }
-
-//    SpellCheckArea(noteView, 200, noteModel.issueAreaProperty(), noteModel.getBoundNote().issueProperty());
 }

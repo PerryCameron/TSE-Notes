@@ -50,6 +50,8 @@ public class IssueBox implements Component<Region> {
         SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 200, noteModel.issueAreaProperty(), noteModel.getBoundNote().issueProperty());
         spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
         // check on startup
+        VirtualizedScrollPane<CodeArea> scrollWrapper = new VirtualizedScrollPane<>(spellCheckArea);
+
         noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
         // wrap in a scroll pane
         // Retain focus listener logic
@@ -75,7 +77,7 @@ public class IssueBox implements Component<Region> {
                 }
             }
         });
-        return spellCheckArea;
+        return scrollWrapper;
     }
 
     @Override
