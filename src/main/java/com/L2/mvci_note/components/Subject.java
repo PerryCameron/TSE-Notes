@@ -1,6 +1,5 @@
 package com.L2.mvci_note.components;
 
-import com.L2.controls.SingleLineSpellCheckArea;
 import com.L2.controls.SpellCheckArea;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
@@ -14,7 +13,6 @@ import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -68,12 +66,13 @@ public class Subject implements Component<Region> {
     private Node createSubjectField() {
         HBox hBox = new HBox(); // box to hold basic info and service plan
         hBox.setPadding(new Insets(0, 5, 5, 5));
-        SingleLineSpellCheckArea subjectField = new SingleLineSpellCheckArea(noteView, noteModel.subjectAreaProperty(), noteModel.getBoundNote().titleProperty());
-        HBox.setHgrow(subjectField, Priority.ALWAYS);
-        subjectField.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);
+        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, noteModel.getBoundNote().titleProperty());
+        HBox.setHgrow(spellCheckArea, Priority.ALWAYS);
+        noteModel.subjectAreaProperty().setValue(spellCheckArea);
+        spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);
         // check on startup
         noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);
-        hBox.getChildren().add(subjectField);
+        hBox.getChildren().add(spellCheckArea);
         return hBox;
     }
 }

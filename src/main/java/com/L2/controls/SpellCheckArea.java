@@ -3,11 +3,11 @@ package com.L2.controls;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.text.Font;
@@ -24,13 +24,11 @@ public class SpellCheckArea extends CodeArea   {
     private final NoteModel noteModel;
     private static final Logger logger = LoggerFactory.getLogger(SpellCheckArea.class);
     private NoteMessage computeHighlight = null;
-    private ObjectProperty<CodeArea> areaObjectProperty;
 
-    public SpellCheckArea(NoteView noteView, double height, ObjectProperty<CodeArea> areaObjectProperty, StringProperty stringProperty) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
+    // this is our textArea instance
+    public SpellCheckArea(NoteView noteView, double height, StringProperty stringProperty) {  //There is no parameterless constructor available in 'org. fxmisc. flowless. VirtualizedScrollPane'
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
-        this.areaObjectProperty = areaObjectProperty;
-        areaObjectProperty.setValue(this);
         // Enable text wrapping in the CodeArea
         this.setWrapText(true);
         // Adjust based on your needs
@@ -42,6 +40,46 @@ public class SpellCheckArea extends CodeArea   {
         // Apply the "code-area" style class to the CodeArea
         this.getStyleClass().add("code-area"); // Apply the style class
         // Create a bridge property to sync CodeArea text with the model
+        setBridgeToBind(stringProperty);
+        setUpSpellCheckingWithDebounce();
+        applyScrollingRules();
+    }
+
+    // this is our textField instance
+    public SpellCheckArea(NoteView noteView, StringProperty stringProperty) {
+        this.noteView = noteView;
+        this.noteModel = noteView.getNoteModel();
+        // Disable wrapping and enforce single-line behavior
+        this.setWrapText(false);
+        this.setPrefHeight(40);
+        this.setMaxHeight(40);
+        this.setMinHeight(40);
+
+        // Set mouse hover for spell-check context menu
+        this.setOnMouseMoved(this::handleMouseHover);
+
+        // Attempt to disable scrolling
+        this.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "'; -fx-padding: 6;");
+        this.getStyleClass().add("code-area-single");
+
+        // Block Enter key
+        this.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
+                event.consume();
+            }
+        });
+        // Removes hard returns
+        this.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal.contains("\n") || newVal.contains("\r")) {
+                this.replaceText(newVal.replaceAll("[\n\r]", ""));
+            }
+        });
+        // Sync with stringProperty
+        setBridgeToBind(stringProperty);
+        setUpSpellCheckingWithDebounce();
+    }
+
+    private void setBridgeToBind(StringProperty stringProperty) {
         StringProperty bridgeProperty = new SimpleStringProperty();
         // Bind the bridge property bidirectionally to the issue property of the model
         bridgeProperty.bindBidirectional(stringProperty);  // this must change
@@ -55,14 +93,17 @@ public class SpellCheckArea extends CodeArea   {
                 this.replaceText(newVal);
             }
         });
+    }
 
-        // Setup spell-checking with debounce
+    private void setUpSpellCheckingWithDebounce() {
         if (noteModel.hunspellProperty().get() != null) {
             noteModel.spellCheckSubscriptionProperty().setValue(this.multiPlainChanges()
                     .successionEnds(java.time.Duration.ofMillis(500)) // Debounce 500ms
                     .subscribe(ignore -> noteView.getAction().accept(computeHighlight)));
         }
+    }
 
+    private void applyScrollingRules() {
         // only blocks outer ScrollPane if inner has enough text for a ScrollPane
         this.addEventFilter(ScrollEvent.SCROLL, event -> {
             ScrollPane outerScrollPane = noteModel.noteScrollPaneProperty().get();
@@ -104,7 +145,7 @@ public class SpellCheckArea extends CodeArea   {
         if (noteModel.hunspellProperty().get() == null) return;
 
         // Get the character index where the mouse is hovering
-        OptionalInt charIndexOpt = areaObjectProperty.get().hit(event.getX(), event.getY()).getCharacterIndex();
+        OptionalInt charIndexOpt = this.hit(event.getX(), event.getY()).getCharacterIndex();
 
         // If no valid character index is found, exit the method
         if (!charIndexOpt.isPresent()) {
@@ -113,13 +154,13 @@ public class SpellCheckArea extends CodeArea   {
 
         // Get the actual character index and validate it's within text bounds
         int charIndex = charIndexOpt.getAsInt();
-        if (charIndex < 0 || charIndex >= areaObjectProperty.get().getText().length()) {
+        if (charIndex < 0 || charIndex >= this.getText().length()) {
             noteModel.contextMenuProperty().get().hide();  // Hide context menu if index is invalid
             return;
         }
 
         // Get the full text content and find word boundaries around the hovered character
-        String text = areaObjectProperty.get().getText();
+        String text = this.getText();
         int wordStart = text.lastIndexOf(" ", charIndex) + 1;  // Start of word (after previous space)
         int wordEnd = text.indexOf(" ", charIndex);            // End of word (next space)
         if (wordEnd == -1) wordEnd = text.length();           // If no space found, use text end
@@ -171,7 +212,7 @@ public class SpellCheckArea extends CodeArea   {
 
                     // Define action: replace word and save changes
                     item.setOnAction(e -> {
-                        areaObjectProperty.get().replaceText(finalWordStart, finalWordEnd, suggestion);
+                        this.replaceText(finalWordStart, finalWordEnd, suggestion);
                         noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);  // Trigger save
                         noteModel.contextMenuProperty().get().hide();                  // Hide menu
                     });
@@ -193,7 +234,6 @@ public class SpellCheckArea extends CodeArea   {
         noteModel.contextMenuProperty().get().getItems().add(addToDict);
 
         // Show the context menu at the mouse position
-        noteModel.contextMenuProperty().get().show(areaObjectProperty.get(),
-                event.getScreenX(), event.getScreenY());
+        noteModel.contextMenuProperty().get().show(this, event.getScreenX(), event.getScreenY());
     }
 }

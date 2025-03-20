@@ -52,8 +52,9 @@ public class FinishBox implements Component<Region> {
 
     private Node correctiveText() {
         // Create a new CodeArea instance
-        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 100, noteModel.finishAreaProperty(), noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
+        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, 100, noteModel.getBoundNote().additionalCorrectiveActionTextProperty());
         spellCheckArea.setComputeHighlight(NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA);
+        noteModel.finishAreaProperty().setValue(spellCheckArea);
         VirtualizedScrollPane<CodeArea> scrollWrapper = new VirtualizedScrollPane<>(spellCheckArea);
         HBox.setHgrow(scrollWrapper, Priority.ALWAYS);
         // check on startup
