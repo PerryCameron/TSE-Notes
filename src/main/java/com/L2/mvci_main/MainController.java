@@ -33,6 +33,7 @@ public class MainController extends Controller<MainMessage> {
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::action);
         logger.info("Main controller loaded");
+        mainInteractor.loadAppSettings();
         logger.info("Default Locale: {}", Locale.getDefault());
     }
 

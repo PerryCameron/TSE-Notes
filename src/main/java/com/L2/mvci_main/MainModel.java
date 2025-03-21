@@ -10,23 +10,21 @@ public class MainModel {
     private ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty<>();
     private ObjectProperty<Tab> noteTab = new SimpleObjectProperty<>();
     private final BooleanProperty nextButtonDisabled = new SimpleBooleanProperty(true);
+    private BooleanProperty spellCheck = new SimpleBooleanProperty(true);
+
 
     public BooleanProperty nextButtonDisabledProperty() {
         return nextButtonDisabled;
     }
-
     public String getDataBaseLocation() {
         return dataBaseLocation.get();
     }
-
     public StringProperty dataBaseLocationProperty() {
         return dataBaseLocation;
     }
-
     public void setDataBaseLocation(String dataBaseLocation) {
         this.dataBaseLocation.set(dataBaseLocation);
     }
-
     public Tab getNoteTab() {
         return noteTab.get();
     }
@@ -48,5 +46,5 @@ public class MainModel {
     public StringProperty statusStringProperty() {
         return statusLabelStringProperty;
     }
-
+    public BooleanProperty spellCheckProperty() { return spellCheck; }
 }

@@ -1,6 +1,8 @@
 package com.L2.mvci_main;
 
 import com.L2.dto.NoteDTO;
+import com.L2.repository.implementations.SettingsRepositoryImpl;
+import com.L2.repository.interfaces.SettingsRepository;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ApplicationPaths;
 import javafx.beans.property.ObjectProperty;
@@ -14,9 +16,11 @@ public class MainInteractor implements ApplicationPaths {
 
     private static final Logger logger = LoggerFactory.getLogger(MainInteractor.class);
     private final MainModel mainModel;
+    private final SettingsRepositoryImpl settingsRepo;
 
     public MainInteractor(MainModel mainModel) {
         this.mainModel = mainModel;
+        this.settingsRepo = new SettingsRepositoryImpl();
 
     }
 
@@ -32,14 +36,6 @@ public class MainInteractor implements ApplicationPaths {
         mainModel.getMainTabPane().getSelectionModel().select(mainModel.getNoteTab());
     }
 
-    public void createDataBase() {
-//        SQLiteDatabaseCreator.createDataBase();
-    }
-
-//    public void checkForDataBase() {
-//
-//    }
-
     public void showLog() {
             Desktop desktop = Desktop.getDesktop(); // Gui_Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()
             // Open the document
@@ -52,5 +48,9 @@ public class MainInteractor implements ApplicationPaths {
 
     public void disableNextButton(boolean disable) {
         mainModel.nextButtonDisabledProperty().set(disable);
+    }
+
+    public void loadAppSettings() {
+        mainModel.spellCheckProperty().set(settingsRepo.isSpellCheckEnabled());
     }
 }

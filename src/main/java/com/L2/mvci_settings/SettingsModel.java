@@ -22,7 +22,7 @@ public class SettingsModel {
     private ObjectProperty<TextArea> includeNotTextArea = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = null;
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>(null);
-    private BooleanProperty spellCheck = new SimpleBooleanProperty(true);
+
 
     public UserDTO getUser() {
         return user.get();
@@ -106,18 +106,6 @@ public class SettingsModel {
 
     public void setCurrentEntitlement(EntitlementDTO currentEntitlement) {
         this.currentEntitlement.set(currentEntitlement);
-    }
-
-    public boolean isSpellCheck() {
-        return spellCheck.get();
-    }
-
-    public BooleanProperty spellCheckProperty() {
-        return spellCheck;
-    }
-
-    public void setSpellCheck(boolean spellCheck) {
-        this.spellCheck.set(spellCheck);
     }
 
     public ObservableList<EntitlementDTO> getEntitlements() {

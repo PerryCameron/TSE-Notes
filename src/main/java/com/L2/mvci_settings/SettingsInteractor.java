@@ -4,6 +4,7 @@ import com.L2.dto.EntitlementDTO;
 import com.L2.dto.UserDTO;
 import com.L2.mvci_note.NoteModel;
 import com.L2.repository.implementations.EntitlementsRepositoryImpl;
+import com.L2.repository.implementations.SettingsRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
@@ -20,12 +21,13 @@ public class SettingsInteractor {
     private final SettingsModel settingsModel;
     private final UserRepositoryImpl userRepo;
     private final EntitlementsRepositoryImpl entitlementRepo;
+    private final SettingsRepositoryImpl settingsRepo;
 
     public SettingsInteractor(SettingsModel settingsModel) {
-        
         this.settingsModel = settingsModel;
         this.userRepo = new UserRepositoryImpl();
         this.entitlementRepo = new EntitlementsRepositoryImpl();
+        this.settingsRepo = new SettingsRepositoryImpl();
     }
 
     private static final Logger logger = LoggerFactory.getLogger(SettingsInteractor.class);
