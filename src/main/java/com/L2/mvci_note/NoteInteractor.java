@@ -503,8 +503,8 @@ public class NoteInteractor {
         if (!note.getContactEmail().isEmpty())
             stringBuilder.append("Email: ").append(note.getContactEmail()).append("\r\n");
         if (!note.getContactPhoneNumber().isEmpty())
-            stringBuilder.append("Phone: ").append(note.getContactPhoneNumber())
-                    .append("\r\n").append("\r\n");
+            stringBuilder.append("Phone: ").append(note.getContactPhoneNumber());
+        stringBuilder.append("\r\n").append("\r\n");
         stringBuilder
                 .append("--- Shipping Address ---").append("\r\n");
         if (!note.getInstalledAt().isEmpty())
@@ -518,13 +518,16 @@ public class NoteInteractor {
     }
 
     private String shippingInformationToHTML() {
+        NoteDTO note = noteModel.getBoundNote();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append("<b>Shipping Contact</b><br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getContactName())).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getContactEmail()).append("<br>")
-                .append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getContactPhoneNumber()).append("<br><br>")
-                .append("<b>Shipping Address</b>").append("<br>");
+        stringBuilder.append("<b>Shipping Contact</b><br>");
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getContactName())).append("<br>");
+        if (!note.getContactEmail().isEmpty())
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getContactEmail()).append("<br>");
+        if (!note.getContactPhoneNumber().isEmpty())
+        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getContactPhoneNumber()).append("<br>");
+        stringBuilder.append("<br>");
+        stringBuilder.append("<b>Shipping Address</b>").append("<br>");
         if (!noteModel.getBoundNote().getInstalledAt().isEmpty())
             stringBuilder.append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getInstalledAt())).append("<br>")
                     .append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getStreet())).append("<br>")
