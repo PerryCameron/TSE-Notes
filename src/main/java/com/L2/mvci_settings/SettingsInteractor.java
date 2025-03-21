@@ -87,4 +87,8 @@ public class SettingsInteractor {
     public void referenceSpellCheckProperty(BooleanProperty spellCheckedProperty) {
         settingsModel.isSpellCheckProperty().get().selectedProperty().bindBidirectional(spellCheckedProperty);
     }
+
+    public void saveSpellCheckStatus() {
+        settingsRepo.setSpellCheckEnabled(settingsModel.isSpellCheckProperty().get().selectedProperty().get());
+    }
 }

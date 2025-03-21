@@ -152,18 +152,6 @@ public class NoteModel {
         this.statusLabel.set(statusLabel);
     }
 
-//    public VBox getPlanDetailsBox() {
-//        return PlanDetailsBox.get();
-//    }
-//
-//    public ObjectProperty<VBox> planDetailsBoxProperty() {
-//        return PlanDetailsBox;
-//    }
-//
-//    public void setPlanDetailsBox(VBox planDetailsBox) {
-//        this.PlanDetailsBox.set(planDetailsBox);
-//    }
-
     public ObservableList<EntitlementDTO> getEntitlements() {
         return entitlements;
     }

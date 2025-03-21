@@ -120,4 +120,19 @@ public class NoteController extends Controller<NoteMessage> {
     public NoteView getCaseView() {
         return noteView;
     }
+
+    public void resetSpellCheckAreas() {
+        // we have turned it on
+        if(mainController.isSpellCheckedProperty().get()) {
+            noteInteractor.initializeDictionary();
+            noteInteractor.computeHighlighting(AreaType.subject);
+            noteInteractor.computeHighlighting(AreaType.issue);
+            noteInteractor.computeHighlighting(AreaType.finish);
+        } else { // we have turned if off
+            noteInteractor.clearHighlights(AreaType.subject);
+            noteInteractor.clearHighlights(AreaType.issue);
+            noteInteractor.clearHighlights(AreaType.finish);
+            noteInteractor.closeHunspell();
+        }
+    }
 }

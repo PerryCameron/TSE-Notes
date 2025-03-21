@@ -2,6 +2,7 @@ package com.L2.mvci_settings;
 
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainMessage;
+import com.L2.mvci_note.NoteController;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_settings.components.DictionaryMenu;
@@ -9,12 +10,15 @@ import com.L2.mvci_settings.components.EntitlementsMenu;
 import com.L2.mvci_settings.components.UserMenu;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.layout.Region;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SettingsController extends Controller<SettingsMessage> {
 
     MainController mainController;
     SettingsInteractor settingsInteractor;
     SettingsView settingsView;
+    private static final Logger logger = LoggerFactory.getLogger(SettingsController.class);
 
     public SettingsController(MainController mc) {
         this.mainController = mc;
@@ -48,6 +52,14 @@ public class SettingsController extends Controller<SettingsMessage> {
             case MAKE_REFERENCE_TO_USER -> settingsInteractor.setUser(mainController.getUser());
             case SAVE_USER -> settingsInteractor.saveUser();
             case REFRESH_ENTITLEMENT_COMBO_BOX -> mainController.action(MainMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
+            case TOGGLE_SPELLCHECK -> toggleSpellCheck();
         };
+    }
+
+    // sends signals different directions
+    private void toggleSpellCheck() {
+        logger.info("Spell Check set to: {}", mainController.isSpellCheckedProperty().get());
+        settingsInteractor.saveSpellCheckStatus();
+        mainController.getNoteController().resetSpellCheckAreas();
     }
 }

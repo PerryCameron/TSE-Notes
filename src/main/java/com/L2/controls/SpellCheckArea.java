@@ -159,6 +159,7 @@ public class SpellCheckArea extends CodeArea {
     }
 
     private void handleMouseHover(MouseEvent event) {
+        // Check if spell-check is enabled first
         if (noteModel.hunspellProperty().get() == null) {
             logger.debug("Hunspell not initialized");
             return;

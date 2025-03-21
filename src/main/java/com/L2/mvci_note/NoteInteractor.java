@@ -14,6 +14,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.slf4j.Logger;
@@ -122,6 +123,30 @@ public class NoteInteractor {
         ClipboardUtils.copyHtmlToClipboard(customerRequestToHTML(), loggedCallToPlainText());
     }
 
+    public void clearHighlights(AreaType areaType) {
+        CodeArea codeArea = switch (areaType) {
+            case subject -> noteModel.subjectAreaProperty().get(); // Text from subject area
+            case issue -> noteModel.issueAreaProperty().get();     // Text from issue area
+            case finish -> noteModel.finishAreaProperty().get();   // Text from finish area
+            default -> throw new IllegalArgumentException("Unknown area type: " + areaType); // Unreachable with enum, but required for switch exhaustiveness
+        };
+
+        // Get the current text length
+        int textLength = codeArea.getText().length();
+
+        // Create a StyleSpans with no styles for the entire text
+        StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+        if (textLength > 0) {
+            spansBuilder.add(Collections.emptyList(), textLength);
+        } else {
+            spansBuilder.add(Collections.emptyList(), 0); // Handle empty text
+        }
+        StyleSpans<Collection<String>> emptySpans = spansBuilder.create();
+
+        // Apply the empty spans to clear highlights
+        codeArea.setStyleSpans(0, emptySpans);
+    }
+
     // Assuming AreaType enum is defined elsewhere as: enum AreaType { subject, issue, finish }
     public void computeHighlighting(AreaType areaType) {
         // Early exit if the note is an email (emails skip highlighting) or Hunspell isn't initialized
@@ -223,6 +248,19 @@ public class NoteInteractor {
             // Update the NoteModel and apply the spans to the UI on the JavaFX Application Thread
             updateSpans(areaType, spans);
         }).start(); // Start the background thread for processing
+    }
+
+    public void closeHunspell() {
+        Hunspell hunspell = noteModel.hunspellProperty().get();
+        if (hunspell != null) {
+            try {
+                hunspell.close(); // or close(), depending on your library
+                logger.debug("Hunspell instance closed");
+            } catch (Exception e) {
+                logger.error("Failed to close Hunspell instance", e);
+            }
+            noteModel.hunspellProperty().set(null);
+        }
     }
 
     private void updateSpans(AreaType areaType, StyleSpans<Collection<String>> spans) {
@@ -1019,5 +1057,4 @@ public class NoteInteractor {
             return NoteMessage.ENABLE_NEXT_BUTTON;
         }
     }
-
 }

@@ -31,6 +31,10 @@ public class DictionaryMenu implements Builder<Region> {
     public Region build() {
         VBox vbox = new VBox();
         ObjectProperty<ToggleSwitch> toggleSwitch = settingsModel.isSpellCheckProperty();
+        settingsModel.isSpellCheckProperty().get().selectedProperty().addListener((obs, oldVal, newVal) -> {
+            logger.debug("ToggleSwitch changed from {} to {}", oldVal, newVal);
+            view.getAction().accept(SettingsMessage.TOGGLE_SPELLCHECK);
+        });
         vbox.getChildren().add(toggleSwitch.get());
         return vbox;
     }

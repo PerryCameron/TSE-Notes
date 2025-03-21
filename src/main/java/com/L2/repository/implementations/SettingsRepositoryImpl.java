@@ -37,18 +37,20 @@ public class SettingsRepositoryImpl implements SettingsRepository {
 
     @Override
     public void setSpellCheckEnabled(boolean enabled) {
-        String spellCheckKey = "spell_check_enabled";
         String value = String.valueOf(enabled); // Convert boolean to "true" or "false"
-        String upsertQuery = """
-            INSERT INTO settings (key, value, group_name, description) 
-            VALUES (?, ?, 'ui', 'Enable or disable spell checking (true/false)')
-            ON CONFLICT(key) DO UPDATE SET 
-                value = excluded.value, 
-                last_modified = CURRENT_TIMESTAMP
-            """;
+        String updateQuery = """
+        UPDATE settings 
+        SET value = ?, 
+            last_modified = CURRENT_TIMESTAMP 
+        WHERE key = 'spell_check_enabled'
+        """;
         try {
-            jdbcTemplate.update(upsertQuery, spellCheckKey, value);
-            logger.info("Spell check setting updated to {}", enabled);
+            int rowsAffected = jdbcTemplate.update(updateQuery, value);
+            if (rowsAffected == 0) {
+                logger.warn("No rows updated for spell check setting. Key 'spell_check_enabled' might not exist.");
+            } else {
+                logger.info("Spell check setting updated to {}", enabled);
+            }
         } catch (Exception e) {
             logger.error("Failed to update spell check setting to {}", enabled, e);
             throw new RuntimeException("Unable to save spell check setting", e);
