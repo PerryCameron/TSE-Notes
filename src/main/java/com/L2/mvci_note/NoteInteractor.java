@@ -498,15 +498,16 @@ public class NoteInteractor {
     private String shippingInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
         NoteDTO note = noteModel.getBoundNote();
-        stringBuilder.append("--- Shipping Contact ---").append("\r\n");
-        stringBuilder.append("Name: ").append(note.getContactName()).append("\r\n");
-        if (!note.getContactEmail().isEmpty())
-            stringBuilder.append("Email: ").append(note.getContactEmail()).append("\r\n");
-        if (!note.getContactPhoneNumber().isEmpty())
-            stringBuilder.append("Phone: ").append(note.getContactPhoneNumber());
-        stringBuilder.append("\r\n").append("\r\n");
-        stringBuilder
-                .append("--- Shipping Address ---").append("\r\n");
+        if(!note.getContactName().isEmpty()) {
+            stringBuilder.append("--- Shipping Contact ---").append("\r\n");
+            stringBuilder.append("Name: ").append(note.getContactName()).append("\r\n");
+            if (!note.getContactEmail().isEmpty())
+                stringBuilder.append("Email: ").append(note.getContactEmail()).append("\r\n");
+            if (!note.getContactPhoneNumber().isEmpty())
+                stringBuilder.append("Phone: ").append(note.getContactPhoneNumber()).append("\r\n");
+            stringBuilder.append("\r\n");
+        }
+        stringBuilder.append("--- Shipping Address ---").append("\r\n");
         if (!note.getInstalledAt().isEmpty())
             stringBuilder.append(note.getInstalledAt()).append("\r\n");
         stringBuilder.append(note.getStreet()).append("\r\n")
@@ -520,21 +521,23 @@ public class NoteInteractor {
     private String shippingInformationToHTML() {
         NoteDTO note = noteModel.getBoundNote();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<b>Shipping Contact</b><br>");
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getContactName())).append("<br>");
-        if (!note.getContactEmail().isEmpty())
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getContactEmail()).append("<br>");
-        if (!note.getContactPhoneNumber().isEmpty())
-        stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getContactPhoneNumber()).append("<br>");
-        stringBuilder.append("<br>");
+        if(!note.getContactName().isEmpty()) {
+            stringBuilder.append("<b>Shipping Contact</b><br>");
+            stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getContactName())).append("<br>");
+            if (!note.getContactEmail().isEmpty())
+                stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Email: </span>").append(noteModel.getBoundNote().getContactEmail()).append("<br>");
+            if (!note.getContactPhoneNumber().isEmpty())
+                stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Phone: </span>").append(noteModel.getBoundNote().getContactPhoneNumber()).append("<br>");
+            stringBuilder.append("<br>");
+        }
         stringBuilder.append("<b>Shipping Address</b>").append("<br>");
         if (!noteModel.getBoundNote().getInstalledAt().isEmpty())
-            stringBuilder.append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getInstalledAt())).append("<br>")
-                    .append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getStreet())).append("<br>")
-                    .append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getCity())).append(" ")
-                    .append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getState())).append(" ")
-                    .append(noteModel.getBoundNote().getZip()).append("<br>")
-                    .append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getCountry()));
+            stringBuilder.append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getInstalledAt())).append("<br>");
+        stringBuilder.append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getStreet())).append("<br>");
+        stringBuilder.append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getCity())).append(" ");
+        stringBuilder.append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getState())).append(" ");
+        stringBuilder.append(noteModel.getBoundNote().getZip()).append("<br>");
+        stringBuilder.append(ClipboardUtils.escapeHtmlContent(noteModel.getBoundNote().getCountry()));
         return stringBuilder.toString();
     }
 
