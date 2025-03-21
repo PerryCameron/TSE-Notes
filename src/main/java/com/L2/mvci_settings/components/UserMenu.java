@@ -24,57 +24,57 @@ public class UserMenu implements Builder<Region> {
 
     @Override
     public Region build() {
-        if(settingsModel.getUser() == null) {
+        if(settingsModel.userProperty().get() == null) {
             action.accept(SettingsMessage.MAKE_REFERENCE_TO_USER);
         }
         VBox vBox = new VBox(5);
         TextField tf1 = new TextField();
-        tf1.setText(settingsModel.getUser().getFirstName());
+        tf1.setText(settingsModel.userProperty().get().getFirstName());
         tf1.setPrefSize(200,20);
         tf1.setPromptText("First Name");
         tf1.textProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) {
-                settingsModel.getUser().setFirstName(tf1.getText());
+                settingsModel.userProperty().get().setFirstName(tf1.getText());
             }
         });
 
         TextField tf2 = new TextField();
-        tf2.setText(settingsModel.getUser().getLastName());
+        tf2.setText(settingsModel.userProperty().get().getLastName());
         tf2.setPromptText("Last Name");
         tf2.setPrefSize(200,20);
         tf2.textProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) {
-                settingsModel.getUser().setLastName(tf2.getText());
+                settingsModel.userProperty().get().setLastName(tf2.getText());
             }
         });
 
         TextField ef3 = new TextField();
-        ef3.setText(settingsModel.getUser().getEmail());
+        ef3.setText(settingsModel.userProperty().get().getEmail());
         ef3.setPromptText("Email");
         ef3.setPrefSize(200,20);
         ef3.textProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) {
-                settingsModel.getUser().setEmail(ef3.getText());
+                settingsModel.userProperty().get().setEmail(ef3.getText());
             }
         });
 
         TextField tf3 = new TextField();
-        tf3.setText(settingsModel.getUser().getSesa());
+        tf3.setText(settingsModel.userProperty().get().getSesa());
         tf3.setPromptText("SESA #");
         tf3.setPrefSize(200,20);
         tf3.textProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) {
-                settingsModel.getUser().setSesa(tf3.getText());
+                settingsModel.userProperty().get().setSesa(tf3.getText());
             }
         });
 
         TextField tf4 = new TextField();
-        tf4.setText(settingsModel.getUser().getProfileLink());
+        tf4.setText(settingsModel.userProperty().get().getProfileLink());
         tf4.setPromptText("URL");
         tf4.setPrefSize(200,20);
         tf4.textProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) {
-                settingsModel.getUser().setProfileLink(tf4.getText());
+                settingsModel.userProperty().get().setProfileLink(tf4.getText());
             }
         });
 

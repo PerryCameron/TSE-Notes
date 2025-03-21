@@ -6,6 +6,7 @@ import com.L2.mvci_note.NoteModel;
 import com.L2.repository.implementations.EntitlementsRepositoryImpl;
 import com.L2.repository.implementations.SettingsRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
+import javafx.beans.property.BooleanProperty;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
@@ -78,5 +79,12 @@ public class SettingsInteractor {
 
     public void saveUser() {
         userRepo.updateUserDTO(settingsModel.userProperty().get());
+    }
+
+    // this is defined in settingsModel but why can't I reference these?
+    // private BooleanProperty isSpellChecked;
+
+    public void referenceSpellCheckProperty(BooleanProperty spellCheckedProperty) {
+        settingsModel.isSpellCheckProperty().get().selectedProperty().bindBidirectional(spellCheckedProperty);
     }
 }

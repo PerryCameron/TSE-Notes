@@ -21,6 +21,7 @@ public class SettingsController extends Controller<SettingsMessage> {
         SettingsModel settingsModel = new SettingsModel();
         this.settingsInteractor = new SettingsInteractor(settingsModel);
         this.settingsView = new SettingsView(settingsModel, this::action);
+        settingsInteractor.referenceSpellCheckProperty(mainController.isSpellCheckedProperty());
         referenceExternalModels();
     }
 
@@ -49,10 +50,4 @@ public class SettingsController extends Controller<SettingsMessage> {
             case REFRESH_ENTITLEMENT_COMBO_BOX -> mainController.action(MainMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
         };
     }
-
-    private BooleanProperty isSpellChecked() {
-        return mainController.isSpellCheckedProperty();
-    }
-
-
 }

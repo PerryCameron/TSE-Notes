@@ -1,12 +1,17 @@
 package com.L2.mvci_settings.components;
 
+import atlantafx.base.controls.ToggleSwitch;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import java.util.function.Consumer;
 
@@ -24,9 +29,10 @@ public class DictionaryMenu implements Builder<Region> {
 
     @Override
     public Region build() {
-
-        // so I have this stubbed out code,
-        return null;
+        VBox vbox = new VBox();
+        ObjectProperty<ToggleSwitch> toggleSwitch = settingsModel.isSpellCheckProperty();
+        vbox.getChildren().add(toggleSwitch.get());
+        return vbox;
     }
 
 }

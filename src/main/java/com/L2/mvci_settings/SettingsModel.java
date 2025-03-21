@@ -1,5 +1,6 @@
 package com.L2.mvci_settings;
 
+import atlantafx.base.controls.ToggleSwitch;
 import com.L2.dto.EntitlementDTO;
 import com.L2.dto.UserDTO;
 import javafx.beans.property.BooleanProperty;
@@ -22,7 +23,8 @@ public class SettingsModel {
     private ObjectProperty<TextArea> includeNotTextArea = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = null;
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>(null);
-    private BooleanProperty isSpellChecked;
+    private ObjectProperty<ToggleSwitch> isSpellCheck = new SimpleObjectProperty<>(new ToggleSwitch("Enable Spell Checking"));
+
 
 
 
@@ -53,4 +55,5 @@ public class SettingsModel {
     public void setEntitlements(ObservableList<EntitlementDTO> entitlements) {
         this.entitlements = entitlements;
     }
+    public ObjectProperty<ToggleSwitch> isSpellCheckProperty() { return isSpellCheck; }
 }
