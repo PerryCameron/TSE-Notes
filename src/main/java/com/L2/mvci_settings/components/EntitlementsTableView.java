@@ -22,17 +22,17 @@ public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>>
     @Override
     public TableView<EntitlementDTO> build() {
         TableView<EntitlementDTO> tableView = TableViewFx.of(EntitlementDTO.class);
-        settingsModel.setEntitlementsTableView(tableView);
+        settingsModel.entitlementsTableViewProperty().set(tableView);
         tableView.setItems(settingsModel.getEntitlements()); // Set the ObservableList here
         tableView.getColumns().add(col1());
         tableView.setPlaceholder(new Label(""));
         // auto selector
         TableView.TableViewSelectionModel<EntitlementDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) settingsModel.setCurrentEntitlement(newSelection);
-            settingsModel.getEntitlementTextField().setText(newSelection == null ? "" : newSelection.getName());
-            settingsModel.getIncludeTextArea().setText(newSelection == null ? "" : newSelection.getIncludes());
-            settingsModel.getIncludeNotTextArea().setText(newSelection == null ? "" : newSelection.getNotIncludes());
+            if (newSelection != null) settingsModel.currentEntitlementProperty().set(newSelection);
+            settingsModel.entitlementTextFieldProperty().get().setText(newSelection == null ? "" : newSelection.getName());
+            settingsModel.includeTextAreaProperty().get().setText(newSelection == null ? "" : newSelection.getIncludes());
+            settingsModel.includeNotTextAreaProperty().get().setText(newSelection == null ? "" : newSelection.getNotIncludes());
         });
         return tableView;
     }

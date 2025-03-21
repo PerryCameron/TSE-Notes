@@ -37,8 +37,8 @@ public class EntitlementsMenu implements Builder<Region> {
         // start with first if they already exist, otherwise start with new one
         if (settingsModel.getEntitlements().isEmpty()) {
             logger.info("No entitlements exist, creating a new one");
-            settingsModel.setCurrentEntitlement(new EntitlementDTO());
-        } else settingsModel.setCurrentEntitlement(new EntitlementDTO(settingsModel.getEntitlements().getFirst()));
+            settingsModel.currentEntitlementProperty().set(new EntitlementDTO());
+        } else settingsModel.currentEntitlementProperty().set(new EntitlementDTO(settingsModel.getEntitlements().getFirst()));
     }
 
     @Override
@@ -53,13 +53,13 @@ public class EntitlementsMenu implements Builder<Region> {
         VBox vBox = new VBox(5);
         vBox.setPrefWidth(500);
         TextField tf1 = new TextField();
-        settingsModel.setEntitlementTextField(tf1);
+        settingsModel.entitlementTextFieldProperty().set(tf1);
         tf1.setPromptText("Entitlement Name");
         TextArea tf2 = new TextArea();
-        settingsModel.setIncludeTextArea(tf2);
+        settingsModel.includeTextAreaProperty().set(tf2);
         TextArea tf3 = new TextArea();
         tf3.setPromptText("Does Not Include");
-        settingsModel.setIncludeNotTextArea(tf3);
+        settingsModel.includeNotTextAreaProperty().set(tf3);
         vBox.getChildren().addAll(new Label("Plan"), tf1, new Label("Includes"), tf2, new Label("Does not include"), tf3, createButtonRow());
         return vBox;
     }

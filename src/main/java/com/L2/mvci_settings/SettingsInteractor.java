@@ -33,10 +33,10 @@ public class SettingsInteractor {
     private static final Logger logger = LoggerFactory.getLogger(SettingsInteractor.class);
 
     public void saveEntitlement() {
-        settingsModel.getCurrentEntitlement().setName(settingsModel.getEntitlementTextField().getText());
-        settingsModel.getCurrentEntitlement().setIncludes(settingsModel.getIncludeTextArea().getText());
-        settingsModel.getCurrentEntitlement().setNotIncludes(settingsModel.getIncludeNotTextArea().getText());
-        entitlementRepo.updateEntitlement(settingsModel.getCurrentEntitlement());
+        settingsModel.currentEntitlementProperty().get().setName(settingsModel.entitlementTextFieldProperty().get().getText());
+        settingsModel.currentEntitlementProperty().get().setIncludes(settingsModel.includeTextAreaProperty().get().getText());
+        settingsModel.currentEntitlementProperty().get().setNotIncludes(settingsModel.includeNotTextAreaProperty().get().getText());
+        entitlementRepo.updateEntitlement(settingsModel.currentEntitlementProperty().get());
     }
 
     public void createNewEntitlement() {
@@ -44,16 +44,16 @@ public class SettingsInteractor {
         entitlementDTO.setId(entitlementRepo.insertEntitlement(entitlementDTO));
         settingsModel.getEntitlements().add(entitlementDTO);
         // Automatically select the new entitlement in the TableView
-        TableView<EntitlementDTO> tableView = settingsModel.getEntitlementsTableView();
+        TableView<EntitlementDTO> tableView = settingsModel.entitlementsTableViewProperty().get();
         tableView.getSelectionModel().clearSelection(); // this is settingsInteractor.java:56
         tableView.getSelectionModel().select(entitlementDTO);
         tableView.scrollTo(entitlementDTO); // Optionally scroll to the new item
     }
 
     public void deleteEntitlement() {
-        if(settingsModel.getCurrentEntitlement() != null) {
-        entitlementRepo.deleteEntitlement(settingsModel.getCurrentEntitlement());
-        settingsModel.getEntitlements().remove(settingsModel.getCurrentEntitlement());
+        if(settingsModel.currentEntitlementProperty().get() != null) {
+        entitlementRepo.deleteEntitlement(settingsModel.currentEntitlementProperty().get());
+        settingsModel.getEntitlements().remove(settingsModel.currentEntitlementProperty().get());
         }
     }
 
@@ -65,7 +65,7 @@ public class SettingsInteractor {
     }
 
     public void changeMenu(Region userRegion) {
-        settingsModel.setCurrentMenu(userRegion);
+        settingsModel.currentMenuProperty().set(userRegion);
     }
 
     public void referenceExternalModels(NoteModel noteModel) {
@@ -73,10 +73,10 @@ public class SettingsInteractor {
     }
 
     public void setUser(UserDTO user) {
-        settingsModel.setUser(user);
+        settingsModel.userProperty().set(user);
     }
 
     public void saveUser() {
-        userRepo.updateUserDTO(settingsModel.getUser());
+        userRepo.updateUserDTO(settingsModel.userProperty().get());
     }
 }

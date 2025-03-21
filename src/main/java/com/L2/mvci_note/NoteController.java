@@ -6,7 +6,6 @@ import com.L2.enums.AreaType;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_main.MainMessage;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
@@ -89,7 +88,7 @@ public class NoteController extends Controller<NoteMessage> {
     }
 
     private void computeHighlighting(AreaType issue) {
-        if (isSpellChecked().get()) noteInteractor.computeHighlighting(issue);
+        if (mainController.isSpellCheckedProperty().get()) noteInteractor.computeHighlighting(issue);
     }
 
     private void checkButtonEnable() {
@@ -98,10 +97,6 @@ public class NoteController extends Controller<NoteMessage> {
         } else {
             mainController.action(MainMessage.ENABLE_NEXT_BUTTON);
         }
-    }
-
-    public BooleanProperty isSpellChecked() {
-        return mainController.isSpellCheckedProperty();
     }
 
     public UserDTO getUser() { return noteInteractor.getUser(); }

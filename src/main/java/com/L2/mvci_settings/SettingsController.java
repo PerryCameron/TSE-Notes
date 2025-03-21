@@ -7,6 +7,7 @@ import com.L2.mvci_main.MainController;
 import com.L2.mvci_settings.components.DictionaryMenu;
 import com.L2.mvci_settings.components.EntitlementsMenu;
 import com.L2.mvci_settings.components.UserMenu;
+import javafx.beans.property.BooleanProperty;
 import javafx.scene.layout.Region;
 
 public class SettingsController extends Controller<SettingsMessage> {
@@ -48,4 +49,10 @@ public class SettingsController extends Controller<SettingsMessage> {
             case REFRESH_ENTITLEMENT_COMBO_BOX -> mainController.action(MainMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
         };
     }
+
+    private BooleanProperty isSpellChecked() {
+        return mainController.isSpellCheckedProperty();
+    }
+
+
 }

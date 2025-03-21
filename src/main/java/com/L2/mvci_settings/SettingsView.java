@@ -49,7 +49,7 @@ public class SettingsView implements Builder<Region> {
             }
         });
         // default menu
-        settingsModel.setCurrentMenu(new EntitlementsMenu(this).build());
+        settingsModel.currentMenuProperty().set(new EntitlementsMenu(this).build());
         return vBox;
     }
 

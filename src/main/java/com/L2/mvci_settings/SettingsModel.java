@@ -22,96 +22,34 @@ public class SettingsModel {
     private ObjectProperty<TextArea> includeNotTextArea = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = null;
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>(null);
+    private BooleanProperty isSpellChecked;
 
 
-    public UserDTO getUser() {
-        return user.get();
-    }
 
     public ObjectProperty<UserDTO> userProperty() {
         return user;
     }
-
-    public void setUser(UserDTO user) {
-        this.user.set(user);
-    }
-
-    public TextField getEntitlementTextField() {
-        return entitlementTextField.get();
-    }
-
     public ObjectProperty<TextField> entitlementTextFieldProperty() {
         return entitlementTextField;
     }
-
-    public void setEntitlementTextField(TextField entitlementTextField) {
-        this.entitlementTextField.set(entitlementTextField);
-    }
-
-    public TextArea getIncludeTextArea() {
-        return includeTextArea.get();
-    }
-
     public ObjectProperty<TextArea> includeTextAreaProperty() {
         return includeTextArea;
     }
-
-    public void setIncludeTextArea(TextArea includeTextArea) {
-        this.includeTextArea.set(includeTextArea);
-    }
-
-    public TextArea getIncludeNotTextArea() {
-        return includeNotTextArea.get();
-    }
-
     public ObjectProperty<TextArea> includeNotTextAreaProperty() {
         return includeNotTextArea;
     }
-
-    public void setIncludeNotTextArea(TextArea includeNotTextArea) {
-        this.includeNotTextArea.set(includeNotTextArea);
-    }
-
-    public TableView<EntitlementDTO> getEntitlementsTableView() {
-        return entitlementsTableView.get();
-    }
-
     public ObjectProperty<TableView<EntitlementDTO>> entitlementsTableViewProperty() {
         return entitlementsTableView;
     }
-
-    public void setEntitlementsTableView(TableView<EntitlementDTO> entitlementsTableView) {
-        this.entitlementsTableView.set(entitlementsTableView);
-    }
-
-    public Region getCurrentMenu() {
-        return currentMenu.get();
-    }
-
     public ObjectProperty<Region> currentMenuProperty() {
         return currentMenu;
     }
-
-    public void setCurrentMenu(Region currentMenu) {
-        this.currentMenu.set(currentMenu);
-    }
-
-    public EntitlementDTO getCurrentEntitlement() {
-        return currentEntitlement.get();
-    }
-
     public ObjectProperty<EntitlementDTO> currentEntitlementProperty() {
         return currentEntitlement;
     }
-
-    public void setCurrentEntitlement(EntitlementDTO currentEntitlement) {
-        this.currentEntitlement.set(currentEntitlement);
-    }
-
     public ObservableList<EntitlementDTO> getEntitlements() {
         return entitlements;
     }
-
     public void setEntitlements(ObservableList<EntitlementDTO> entitlements) {
         this.entitlements = entitlements;
     }
