@@ -6,14 +6,13 @@ import com.L2.enums.AreaType;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_main.MainMessage;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.geom.Area;
 
 public class NoteController extends Controller<NoteMessage> {
 
@@ -50,9 +49,9 @@ public class NoteController extends Controller<NoteMessage> {
             case COPY_PART_ORDER -> noteInteractor.copyPartOrder();
             case COPY_NAME_DATE -> noteInteractor.copyNameDate();
             case SHIPPING_INFORMATION -> noteInteractor.copyShippingInformation();
-            case COMPUTE_HIGHLIGHTING_ISSUE_AREA -> noteInteractor.computeHighlighting(AreaType.issue);
-            case COMPUTE_HIGHLIGHTING_FINISH_AREA -> noteInteractor.computeHighlighting(AreaType.finish);
-            case COMPUTE_HIGHLIGHTING_SUBJECT_AREA -> noteInteractor.computeHighlighting(AreaType.subject);
+            case COMPUTE_HIGHLIGHTING_ISSUE_AREA -> computeHighlighting(AreaType.issue);
+            case COMPUTE_HIGHLIGHTING_FINISH_AREA -> computeHighlighting(AreaType.finish);
+            case COMPUTE_HIGHLIGHTING_SUBJECT_AREA -> computeHighlighting(AreaType.subject);
             case COPY_BASIC_INFORMATION -> noteInteractor.copyBasicInformation();
             case COPY_SUBJECT -> noteInteractor.copySubject();
             case COPY_CUSTOMER_REQUEST -> noteInteractor.copyCustomerRequest();
@@ -72,10 +71,7 @@ public class NoteController extends Controller<NoteMessage> {
             case REFRESH_PART_ORDERS -> noteInteractor.refreshPartOrders();
             case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT -> mainController.action(MainMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
             case UPDATE_NOTE_TAB_NAME -> mainController.action(MainMessage.UPDATE_NOTE_TAB_NAME);
-            case DELETE_NOTE -> {
-                noteInteractor.deleteNote();
-                mainController.action(MainMessage.UPDATE_TABLE);
-            }
+            case DELETE_NOTE -> deleteNote();
             case UPDATE_STATUSBAR_WITH_STRING ->  noteInteractor.setStatusLabelWithNoteInformation();
             case CLONE_NOTE -> noteInteractor.cloneNote();
             case SELECT_NOTE_TAB -> mainController.action(MainMessage.SELECT_NOTE_TAB);
@@ -84,7 +80,16 @@ public class NoteController extends Controller<NoteMessage> {
             case REFRESH_ENTITLEMENT_COMBO_BOX -> noteInteractor.refreshEntitlementComboBox();
             case COPY_LOGGED_CALL -> noteInteractor.copyLoggedCall();
             case CHECK_BUTTON_ENABLE -> checkButtonEnable();
-        };
+        }
+    }
+
+    private void deleteNote() {
+        noteInteractor.deleteNote();
+        mainController.action(MainMessage.UPDATE_TABLE);
+    }
+
+    private void computeHighlighting(AreaType issue) {
+        if (isSpellChecked().get()) noteInteractor.computeHighlighting(issue);
     }
 
     private void checkButtonEnable() {
@@ -93,6 +98,10 @@ public class NoteController extends Controller<NoteMessage> {
         } else {
             mainController.action(MainMessage.ENABLE_NEXT_BUTTON);
         }
+    }
+
+    public BooleanProperty isSpellChecked() {
+        return mainController.isSpellCheckedProperty();
     }
 
     public UserDTO getUser() { return noteInteractor.getUser(); }

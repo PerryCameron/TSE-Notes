@@ -10,38 +10,21 @@ public class MainModel {
     private ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty<>();
     private ObjectProperty<Tab> noteTab = new SimpleObjectProperty<>();
     private final BooleanProperty nextButtonDisabled = new SimpleBooleanProperty(true);
+    // settings below here
     private BooleanProperty spellCheck = new SimpleBooleanProperty(true);
 
 
     public BooleanProperty nextButtonDisabledProperty() {
         return nextButtonDisabled;
     }
-    public String getDataBaseLocation() {
-        return dataBaseLocation.get();
-    }
     public StringProperty dataBaseLocationProperty() {
         return dataBaseLocation;
-    }
-    public void setDataBaseLocation(String dataBaseLocation) {
-        this.dataBaseLocation.set(dataBaseLocation);
-    }
-    public Tab getNoteTab() {
-        return noteTab.get();
     }
     public ObjectProperty<Tab> noteTabProperty() {
         return noteTab;
     }
-    public void setNoteTab(Tab noteTab) {
-        this.noteTab.set(noteTab);
-    }
-    public TabPane getMainTabPane() {
-        return mainTabPane.get();
-    }
     public ObjectProperty<TabPane> mainTabPaneProperty() {
         return mainTabPane;
-    }
-    public void setMainTabPane(TabPane mainTabPane) {
-        this.mainTabPane.set(mainTabPane);
     }
     public StringProperty statusStringProperty() {
         return statusLabelStringProperty;

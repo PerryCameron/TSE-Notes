@@ -5,6 +5,7 @@ import com.L2.repository.implementations.SettingsRepositoryImpl;
 import com.L2.repository.interfaces.SettingsRepository;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ApplicationPaths;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +30,11 @@ public class MainInteractor implements ApplicationPaths {
     }
 
     public void updateNoteTabName(ObjectProperty<NoteDTO> boundNote) {
-        mainModel.getNoteTab().setText("Note " + boundNote.get().getId());
+        mainModel.noteTabProperty().get().setText("Note " + boundNote.get().getId());
     }
 
     public void selectNoteTab() {
-        mainModel.getMainTabPane().getSelectionModel().select(mainModel.getNoteTab());
+        mainModel.mainTabPaneProperty().get().getSelectionModel().select(mainModel.noteTabProperty().get());
     }
 
     public void showLog() {
@@ -52,5 +53,9 @@ public class MainInteractor implements ApplicationPaths {
 
     public void loadAppSettings() {
         mainModel.spellCheckProperty().set(settingsRepo.isSpellCheckEnabled());
+    }
+
+    public BooleanProperty isSpellChecked() {
+        return mainModel.spellCheckProperty();
     }
 }

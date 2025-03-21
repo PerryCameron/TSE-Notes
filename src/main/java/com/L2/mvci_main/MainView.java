@@ -69,7 +69,7 @@ public class MainView implements Builder<Region> {
         vBox.getStyleClass().add("center-pane");
         TabPane tabPane = new TabPane();
         tabPane.setStyle("-fx-background-color: white");
-        mainModel.setMainTabPane(tabPane);
+        mainModel.mainTabPaneProperty().set(tabPane);
         launchNormal();
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if (newTab != null) {
@@ -98,10 +98,10 @@ public class MainView implements Builder<Region> {
             ImageView imageViewCopy = new ImageView(copyIcon);
             newTab.setGraphic(imageViewCopy);
         }
-        if (name.equals("Note")) mainModel.setNoteTab(newTab);
+        if (name.equals("Note")) mainModel.noteTabProperty().set(newTab);
         newTab.setClosable(closeable);
-        mainModel.getMainTabPane().getTabs().add(newTab);
-        mainModel.getMainTabPane().getSelectionModel().select(newTab);
+        mainModel.mainTabPaneProperty().get().getTabs().add(newTab);
+        mainModel.mainTabPaneProperty().get().getSelectionModel().select(newTab);
     }
 
     public Consumer<MainMessage> getAction() {

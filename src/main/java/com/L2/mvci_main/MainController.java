@@ -8,6 +8,7 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_notelist.NoteListController;
 import com.L2.mvci_notelist.NoteListMessage;
 import com.L2.mvci_settings.SettingsController;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
@@ -62,7 +63,7 @@ public class MainController extends Controller<MainMessage> {
             case REFRESH_PART_ORDERS -> noteController.action(NoteMessage.REFRESH_PART_ORDERS);
             case CLONE_NOTE -> noteController.action(NoteMessage.CLONE_NOTE);
             case REFRESH_ENTITLEMENT_COMBO_BOX -> noteController.action(NoteMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
-            case CREATE_DATABASE -> mainInteractor.createDataBase();
+//            case CREATE_DATABASE -> mainInteractor.createDataBase();
 //            case CHECK_FOR_DATABASE -> mainInteractor.checkForDataBase();
             case SHOW_LOG -> mainInteractor.showLog();
             case ENABLE_NEXT_BUTTON -> mainInteractor.disableNextButton(false);
@@ -92,6 +93,8 @@ public class MainController extends Controller<MainMessage> {
     public IntegerProperty getPageSizeProperty() {
         return noteController.getPageSizeProperty();
     }
+
+    public BooleanProperty isSpellCheckedProperty() { return mainInteractor.isSpellChecked(); }
 
     public void setStatusBar(String status) {
         mainInteractor.setStatusBar(status);
