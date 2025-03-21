@@ -27,6 +27,7 @@ public class DatabaseTools {
     private DatabaseTools() {
     }
 
+    // performed during the init() function during JavaFX start-up
     public static void checkForDatabaseChanges() {
         try {
             SQLiteDataSource dataSource = DatabaseConnector.getDataSource("DatabaseTools");
@@ -62,9 +63,31 @@ public class DatabaseTools {
 
             // Future versions can be added here (e.g., if (version < 3) { ... })
 
+            // Check for spell check setting (independent of schema version)
+            checkSpellCheckSetting(jdbcTemplate);
+
         } catch (Exception e) {
             logger.error("Error during database schema check/update", e);
             throw new RuntimeException("Database initialization failed", e);
+        }
+    }
+
+    // Helper method to check and initialize spell check setting
+    private static void checkSpellCheckSetting(JdbcTemplate jdbcTemplate) {
+        String spellCheckKey = "spell_check_enabled";
+        String query = "SELECT value FROM settings WHERE key = ?";
+
+        try {
+            String spellCheckValue = jdbcTemplate.queryForObject(query, String.class, spellCheckKey);
+            logger.info("Spell check setting found: {}", spellCheckValue);
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            // No result found, insert default value (e.g., "true" for enabled)
+            String defaultValue = "true";
+            jdbcTemplate.update(
+                    "INSERT INTO settings (key, value, group_name, description) VALUES (?, ?, ?, ?)",
+                    spellCheckKey, defaultValue, "ui", "Enable or disable spell checking (true/false)"
+            );
+            logger.info("Spell check setting not found; initialized to {}", defaultValue);
         }
     }
 
