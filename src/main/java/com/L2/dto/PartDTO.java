@@ -33,7 +33,7 @@ public class PartDTO {
         this.partQuantity.set("");
         this.serialReplaced.set("");
         this.partEditable.set(false);
-        this.lineType.set("");
+        this.lineType.set("Advanced Exchange");
     }
 
     public PartDTO(int partOrderId, PartDTO partDTO) {

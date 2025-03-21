@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -18,6 +19,7 @@ import org.fxmisc.richtext.model.StyleSpans;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.OptionalInt;
@@ -35,21 +37,26 @@ public class SpellCheckArea extends CodeArea {
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
         this.areaType = areaType;
-        double height;
+        double height = 0;
         this.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
-        if(areaType == AreaType.subject) {
-            height = 40;
-            this.getStyleClass().add("code-area-single");
-            removeReturns();
-            this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA;
-        } else if(areaType == AreaType.finish) {
-            height = 100;
-            setUpArea();
-            this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA;
-        } else {
-            height = 200;
-            setUpArea();
-            this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA;
+        switch (areaType) {
+            case subject -> {
+                height = 40;
+                this.setWrapText(false);
+                this.getStyleClass().add("code-area-single");
+                removeReturns();
+                this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA;
+            }
+            case issue -> {
+                height = 200;
+                setUpArea();
+                this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA;
+            }
+            case finish -> {
+                height = 100;
+                setUpArea();
+                this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA;
+            }
         }
         this.setPrefHeight(height);
         this.setMaxHeight(height);
@@ -68,7 +75,7 @@ public class SpellCheckArea extends CodeArea {
     private void removeReturns() {
         // Block Enter key
         this.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
+            if (event.getCode() == KeyCode.ENTER) {
                 event.consume();
             }
         });
@@ -99,7 +106,7 @@ public class SpellCheckArea extends CodeArea {
     private void setUpSpellCheckingWithDebounce() {
         if (noteModel.hunspellProperty().get() != null) {
             noteModel.spellCheckSubscriptionProperty().setValue(this.multiPlainChanges()
-                    .successionEnds(java.time.Duration.ofMillis(500)) // Debounce 500ms
+                    .successionEnds(Duration.ofMillis(500)) // Debounce 500ms
                     .subscribe(ignore -> noteView.getAction().accept(computeHighlight)));
         }
     }
