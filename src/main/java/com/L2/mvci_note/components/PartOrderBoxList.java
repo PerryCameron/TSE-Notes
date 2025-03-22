@@ -36,7 +36,7 @@ public class PartOrderBoxList implements Component<Region> {
     public Region build() {
         this.root = new VBox(10);
         // for each part order create a VBOX with stuff in it
-        for(PartOrderDTO partOrderDTO: noteModel.getBoundNote().getPartOrders()) {
+        for(PartOrderDTO partOrderDTO: noteModel.boundNoteProperty().get().getPartOrders()) {
             root.getChildren().add(createPartOrderBox(partOrderDTO));
         }
         return root;
@@ -46,7 +46,7 @@ public class PartOrderBoxList implements Component<Region> {
         VBox box = new VBox(10);
         Map<String, TableColumn<PartDTO,String>> tableColumnMap = new HashMap<>();
         TableView<PartDTO> tableView = buildTable(partOrderDTO, tableColumnMap);
-        box.setOnMouseEntered(event -> noteModel.setSelectedPartOrder(partOrderDTO));
+        box.setOnMouseEntered(event -> noteModel.selectedPartOrderProperty().set(partOrderDTO));
         box.setOnMouseExited(event -> tableView.getSelectionModel().clearSelection());
         partOrderMap.put(partOrderDTO, box);
         box.getStyleClass().add("decorative-hbox");
@@ -153,7 +153,7 @@ public class PartOrderBoxList implements Component<Region> {
         HBox iconBox = HBoxFx.iconBox(10);
         Button deleteButton = ButtonFx.utilityButton( () -> {
             noteView.getAction().accept(NoteMessage.DELETE_PART_ORDER);
-            noteModel.getBoundNote().getPartOrders().remove(partOrderDTO);
+            noteModel.boundNoteProperty().get().getPartOrders().remove(partOrderDTO);
                 root.getChildren().remove(partOrderMap.get(partOrderDTO));
         }, "Delete PO", "/images/delete-16.png");
 
@@ -191,7 +191,7 @@ public class PartOrderBoxList implements Component<Region> {
         TableView.TableViewSelectionModel<PartDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                 if (newSelection != null)
-                    noteModel.setSelectedPart(newSelection);
+                    noteModel.selectedPartProperty().set(newSelection);
         });
         return tableView;
     }
@@ -212,7 +212,7 @@ public class PartOrderBoxList implements Component<Region> {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partNumberProperty,"Part Number");
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
-            noteModel.getSelectedPart().setPartNumber(event.getNewValue());
+            noteModel.selectedPartProperty().get().setPartNumber(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
         col.setMinWidth(150);
@@ -233,7 +233,7 @@ public class PartOrderBoxList implements Component<Region> {
         );
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
-            noteModel.getSelectedPart().setLineType(event.getNewValue());
+            noteModel.selectedPartProperty().get().setLineType(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
         col.setMinWidth(175);
@@ -246,7 +246,7 @@ public class PartOrderBoxList implements Component<Region> {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partDescriptionProperty,"Part Description");
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
-            noteModel.getSelectedPart().setPartDescription(event.getNewValue());
+            noteModel.selectedPartProperty().get().setPartDescription(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
         return col;
@@ -256,7 +256,7 @@ public class PartOrderBoxList implements Component<Region> {
         TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partQuantityProperty,"Qty");
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
-            noteModel.getSelectedPart().setPartQuantity(event.getNewValue());
+            noteModel.selectedPartProperty().get().setPartQuantity(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
         col.setMinWidth(70.0);
@@ -279,6 +279,6 @@ public class PartOrderBoxList implements Component<Region> {
     @Override
     public void refreshFields() {
         root.getChildren().clear();
-        noteModel.getBoundNote().getPartOrders().forEach((partOrderDTO) -> root.getChildren().add(createPartOrderBox(partOrderDTO)));
+        noteModel.boundNoteProperty().get().getPartOrders().forEach((partOrderDTO) -> root.getChildren().add(createPartOrderBox(partOrderDTO)));
     }
 }

@@ -51,194 +51,94 @@ public class NoteModel {
     private final ObjectProperty<StyleSpans<Collection<String>>> finishSpansProperty =
             new SimpleObjectProperty<>(null);
 
-    public void clearBoundNoteFields() {
-        boundNote.get().getPartOrders().clear();
-        setSelectedPartOrder(null);
-        boundNote.get().clear();
-        refreshBoundNote();
-    }
 
-    public void refreshBoundNote() {  // to refresh fields without bindings
-        setRefreshBoundNote(true);
-        setRefreshBoundNote(false);
-    }
 
-    public int getPageSize() {
-        return pageSize.get();
-    }
+
 
     public IntegerProperty pageSizeProperty() {
         return pageSize;
     }
-
-    public int getOffset() {
-        return offset.get();
-    }
-
     public IntegerProperty offsetProperty() {
         return offset;
     }
-
-    public PartOrderDTO getSelectedPartOrder() {
-        return selectedPartOrder.get();
-    }
-
     public ObjectProperty<PartOrderDTO> selectedPartOrderProperty() {
         return selectedPartOrder;
     }
-
-    public void setSelectedPartOrder(PartOrderDTO selectedPartOrder) {
-        this.selectedPartOrder.set(selectedPartOrder);
-    }
-
-    public PartDTO getSelectedPart() {
-        return selectedPart.get();
-    }
-
     public ObjectProperty<PartDTO> selectedPartProperty() {
         return selectedPart;
     }
-
-    public void setSelectedPart(PartDTO selectedPart) {
-        this.selectedPart.set(selectedPart);
-    }
-
-    public boolean isRefreshBoundNote() {
-        return refreshBoundNote.get();
-    }
-
     public BooleanProperty refreshBoundNoteProperty() {
         return refreshBoundNote;
     }
-
-    public void setRefreshBoundNote(boolean refreshBoundNote) {
-        this.refreshBoundNote.set(refreshBoundNote);
-    }
-
     public BooleanProperty clearCalledProperty() {
         return clearCalled;
     }
-
-    public void setClearCalled(boolean clearCalled) {
-        this.clearCalled.set(clearCalled);
-    }
-
     public ObservableList<NoteDTO> getNotes() {
         return notes;
     }
-
-    public void setNotes(ObservableList<NoteDTO> notes) {
-        this.notes = notes;
-    }
-
-    public UserDTO getUser() {
-        return user.get();
-    }
-
+    public void setNotes(ObservableList<NoteDTO> notes) { this.notes = notes; }
     public ObjectProperty<UserDTO> userProperty() {
         return user;
     }
-
-    public void setUser(UserDTO user) {
-        this.user.set(user);
-    }
-
-    // gets the text in the StringProperty
     public StringProperty statusLabelProperty() {
         return statusLabel;
     }
-
-    public void setStatusLabel(String statusLabel) {
-        this.statusLabel.set(statusLabel);
-    }
-
     public ObservableList<EntitlementDTO> getEntitlements() {
         return entitlements;
     }
-
     public void setEntitlements(ObservableList<EntitlementDTO> entitlements) {
         this.entitlements = entitlements;
     }
-
-    public NoteDTO getBoundNote() {
-        return boundNote.get();
-    }
-
     public ObjectProperty<NoteDTO> boundNoteProperty() {
         return boundNote;
     }
-
-    public void setBoundNote(NoteDTO boundNote) {
-        this.boundNote.set(boundNote);
-    }
-
     public BooleanProperty refreshEntitlementsProperty() {
         return refreshEntitlements;
     }
-
+    public ObjectProperty<EntitlementDTO> currentEntitlementProperty() {
+        return currentEntitlement;
+    }
+    public ObjectProperty<Hunspell> hunspellProperty() {
+        return hunspell;
+    }
+    public ObjectProperty<Subscription> spellCheckSubscriptionProperty() {
+        return spellCheckSubscription;
+    }
+    public ObjectProperty<CodeArea> issueAreaProperty() { return issueArea; }
+    public ObjectProperty<CodeArea> finishAreaProperty() { return finishArea; }
+    public ObjectProperty<CodeArea> subjectAreaProperty() { return subjectArea; }
+    public ObjectProperty<ContextMenu> contextMenuProperty() { return contextMenu; }
+    public ObjectProperty<StyleSpans<Collection<String>>> subjectSpansProperty() {
+        return subjectSpansProperty;
+    }
+    public ObjectProperty<StyleSpans<Collection<String>>> issueSpansProperty() {
+        return issueSpansProperty;
+    }
+    public ObjectProperty<StyleSpans<Collection<String>>> finishSpansProperty() {
+        return finishSpansProperty;
+    }
+    public StringProperty newWordProperty() {
+        return newWord;
+    }
+    public ObjectProperty<ScrollPane> noteScrollPaneProperty() {
+        return noteScrollPane;
+    }
     public void refreshEntitlements() {
         refreshEntitlements.set(true);
         refreshEntitlements.set(false);
     }
-
-    public EntitlementDTO getCurrentEntitlement() {
-        return currentEntitlement.get();
-    }
-
-    public ObjectProperty<EntitlementDTO> currentEntitlementProperty() {
-        return currentEntitlement;
-    }
-
-    public void setCurrentEntitlement(EntitlementDTO currentEntitlement) {
-        this.currentEntitlement.set(currentEntitlement);
-    }
-
-    public ObjectProperty<Hunspell> hunspellProperty() {
-        return hunspell;
-    }
-
-    public ObjectProperty<Subscription> spellCheckSubscriptionProperty() {
-        return spellCheckSubscription;
-    }
-
-    public ObjectProperty<CodeArea> issueAreaProperty() {
-        return issueArea;
-    }
-
-    public ObjectProperty<CodeArea> finishAreaProperty() {
-        return finishArea;
-    }
-
-    public ObjectProperty<CodeArea> subjectAreaProperty() {
-        return subjectArea;
-    }
-
-    public ObjectProperty<ContextMenu> contextMenuProperty() {
-        return contextMenu;
-    }
-
-    public ObjectProperty<StyleSpans<Collection<String>>> subjectSpansProperty() {
-        return subjectSpansProperty;
-    }
-
-    public ObjectProperty<StyleSpans<Collection<String>>> issueSpansProperty() {
-        return issueSpansProperty;
-    }
-
-    public ObjectProperty<StyleSpans<Collection<String>>> finishSpansProperty() {
-        return finishSpansProperty;
-    }
-
-    public StringProperty newWordProperty() {
-        return newWord;
-    }
-
-    public ObjectProperty<ScrollPane> noteScrollPaneProperty() {
-        return noteScrollPane;
-    }
-
     public void openNoteTab() {
         this.openNoteTab.set(true);
         this.openNoteTab.set(false);
+    }
+    public void clearBoundNoteFields() {
+        boundNote.get().getPartOrders().clear();
+        selectedPartOrderProperty().set(null);
+        boundNote.get().clear();
+        refreshBoundNote();
+    }
+    public void refreshBoundNote() {  // to refresh fields without bindings
+        refreshBoundNote.set(true);
+        refreshBoundNote.set(false);
     }
 }

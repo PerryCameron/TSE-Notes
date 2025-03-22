@@ -73,7 +73,7 @@ public class DateTimePicker implements Component<Region> {
             LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);  // Include seconds when syncing
             setDateTime(now);
             // Explicitly update the note model with the seconds-precision time
-            noteView.getNoteModel().getBoundNote().timestampProperty().set(now);
+            noteView.getNoteModel().boundNoteProperty().get().timestampProperty().set(now);
         }, "Sync", "/images/sync-16.png");
         syncButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
         return syncButton;
@@ -103,14 +103,14 @@ private void updateDateTime() {
     int hour = hourSpinner.getValue();
     int minute = minuteSpinner.getValue();
     // Get the current timestamp from the note
-    LocalDateTime currentTimestamp = noteView.getNoteModel().getBoundNote().getTimestamp();
+    LocalDateTime currentTimestamp = noteView.getNoteModel().boundNoteProperty().get().getTimestamp();
     // Preserve the seconds if they are present in the current timestamp; otherwise, default to 00
     int seconds = (currentTimestamp != null && currentTimestamp.getSecond() != 0) ? currentTimestamp.getSecond() : 0;
     // Create a new LocalTime using the provided hour, minute, and determined seconds value
     LocalTime time = LocalTime.of(hour, minute, seconds);
     // Update the timestamp with the new time values
     LocalDateTime dateTime = LocalDateTime.of(date, time);
-    noteView.getNoteModel().getBoundNote().timestampProperty().set(dateTime);
+    noteView.getNoteModel().boundNoteProperty().get().timestampProperty().set(dateTime);
     noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
     noteView.getAction().accept(NoteMessage.REFRESH_NOTE_TABLEVIEW);
     noteView.getAction().accept(NoteMessage.SORT_NOTE_TABLEVIEW);
@@ -126,10 +126,10 @@ private void updateDateTime() {
 
     @Override
     public void refreshFields() {
-        LocalDateTime localDateTime = noteView.getNoteModel().getBoundNote().getTimestamp();
+        LocalDateTime localDateTime = noteView.getNoteModel().boundNoteProperty().get().getTimestamp();
         datePicker.setValue(localDateTime.toLocalDate());
         hourSpinner.getValueFactory().setValue(localDateTime.getHour());
         minuteSpinner.getValueFactory().setValue(localDateTime.getMinute());
-        setDateTime(noteView.getNoteModel().getBoundNote().getTimestamp());
+        setDateTime(noteView.getNoteModel().boundNoteProperty().get().getTimestamp());
     }
 }

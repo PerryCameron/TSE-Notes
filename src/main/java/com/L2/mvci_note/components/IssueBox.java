@@ -47,7 +47,7 @@ public class IssueBox implements Component<Region> {
     // the text area that you write in
     private VirtualizedScrollPane<CodeArea> getTextArea() {
         // Create a new CodeArea instance
-        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, noteModel.getBoundNote().issueProperty(), AreaType.issue);
+        SpellCheckArea spellCheckArea = new SpellCheckArea(noteView, noteModel.boundNoteProperty().get().issueProperty(), AreaType.issue);
         noteModel.issueAreaProperty().setValue(spellCheckArea);
         // check on startup
         VirtualizedScrollPane<CodeArea> scrollWrapper = new VirtualizedScrollPane<>(spellCheckArea);
@@ -59,15 +59,15 @@ public class IssueBox implements Component<Region> {
         codeArea.focusedProperty().addListener((obs, oldValue, newValue) -> {
             if (!newValue) { // Focus lost
                 // Check if the bound note is not an email
-                if (!noteModel.getBoundNote().isEmail()) {
+                if (!noteModel.boundNoteProperty().get().isEmail()) {
                     // Process the text as an email if it matches email format
                     if (NoteDTOProcessor.isEmail(codeArea.getText())) {
                         NoteDTO noteDTO = NoteDTOProcessor.processEmail(
                                 codeArea.getText(),
-                                noteModel.getBoundNote().getId()
+                                noteModel.boundNoteProperty().get().getId()
                         );
                         // Update the bound note with the processed email data
-                        noteModel.getBoundNote().copyFrom(noteDTO);
+                        noteModel.boundNoteProperty().get().copyFrom(noteDTO);
                         logger.info("Processed an email and updated the note model.");
                         // Set the CodeArea to read-only
                         codeArea.setEditable(false);
@@ -90,7 +90,7 @@ public class IssueBox implements Component<Region> {
 
     @Override
     public void refreshFields() {
-        noteModel.issueAreaProperty().get().setEditable(!noteModel.getBoundNote().isEmail());
+        noteModel.issueAreaProperty().get().setEditable(!noteModel.boundNoteProperty().get().isEmail());
     }
 }
 

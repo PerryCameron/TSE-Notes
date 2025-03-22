@@ -92,7 +92,7 @@ public class BasicInformation implements Component<Region> {
         // Optional: Set a default value if needed
         if (!servicePlanComboBox.getItems().isEmpty()) {
             for(EntitlementDTO entitlementDTO: servicePlanComboBox.getItems()) {
-                if(entitlementDTO.getName().equals(noteModel.getBoundNote().getActiveServiceContract())) {
+                if(entitlementDTO.getName().equals(noteModel.boundNoteProperty().get().getActiveServiceContract())) {
                     servicePlanComboBox.getSelectionModel().select(entitlementDTO);
                 }
             }
@@ -100,16 +100,16 @@ public class BasicInformation implements Component<Region> {
         // Listener to update activeServiceContract when currentEntitlement changes
         noteModel.currentEntitlementProperty().addListener((obs, oldEntitlement, newEntitlement) -> {
             if (newEntitlement != null) {
-                noteModel.getBoundNote().setActiveServiceContract(newEntitlement.getName());
+                noteModel.boundNoteProperty().get().setActiveServiceContract(newEntitlement.getName());
             } else {
-                noteModel.getBoundNote().setActiveServiceContract("");  // Or handle null appropriately
+                noteModel.boundNoteProperty().get().setActiveServiceContract("");  // Or handle null appropriately
             }
         });
         servicePlanComboBox.setOnAction(e -> {
 
             if(servicePlanComboBox.getValue() != null) {
-                noteModel.getBoundNote().setActiveServiceContract(servicePlanComboBox.getValue().toString());
-                noteModel.setCurrentEntitlement(servicePlanComboBox.getValue());
+                noteModel.boundNoteProperty().get().setActiveServiceContract(servicePlanComboBox.getValue().toString());
+                noteModel.currentEntitlementProperty().set(servicePlanComboBox.getValue());
                 noteView.getAction().accept(NoteMessage.LOG_CURRENT_ENTITLEMENT);
                 noteView.getServicePlanDetails().updateDetails();
             }
@@ -170,17 +170,17 @@ public class BasicInformation implements Component<Region> {
     }
 
     public void bindTextFields() {
-        textFields[0].textProperty().bindBidirectional(noteModel.getBoundNote().workOrderProperty());
-        textFields[1].textProperty().bindBidirectional(noteModel.getBoundNote().caseNumberProperty());
-        textFields[2].textProperty().bindBidirectional(noteModel.getBoundNote().modelNumberProperty());
-        textFields[3].textProperty().bindBidirectional(noteModel.getBoundNote().serialNumberProperty());
-        textFields[4].textProperty().bindBidirectional(noteModel.getBoundNote().callInPersonProperty());
-        textFields[5].textProperty().bindBidirectional(noteModel.getBoundNote().callInPhoneNumberProperty());
-        textFields[6].textProperty().bindBidirectional(noteModel.getBoundNote().callInEmailProperty());
-        toggleSwitch.selectedProperty().bindBidirectional(noteModel.getBoundNote().loadSupportedProperty());
-        serviceLevelComboBox.valueProperty().bindBidirectional(noteModel.getBoundNote().serviceLevelProperty());
-        statusComboBox.valueProperty().bindBidirectional(noteModel.getBoundNote().upsStatusProperty());
-        schedulingTermsComboBox.valueProperty().bindBidirectional(noteModel.getBoundNote().schedulingTermsProperty());
+        textFields[0].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().workOrderProperty());
+        textFields[1].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().caseNumberProperty());
+        textFields[2].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().modelNumberProperty());
+        textFields[3].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().serialNumberProperty());
+        textFields[4].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().callInPersonProperty());
+        textFields[5].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().callInPhoneNumberProperty());
+        textFields[6].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().callInEmailProperty());
+        toggleSwitch.selectedProperty().bindBidirectional(noteModel.boundNoteProperty().get().loadSupportedProperty());
+        serviceLevelComboBox.valueProperty().bindBidirectional(noteModel.boundNoteProperty().get().serviceLevelProperty());
+        statusComboBox.valueProperty().bindBidirectional(noteModel.boundNoteProperty().get().upsStatusProperty());
+        schedulingTermsComboBox.valueProperty().bindBidirectional(noteModel.boundNoteProperty().get().schedulingTermsProperty());
     }
 
     public void clear() {
@@ -192,7 +192,7 @@ public class BasicInformation implements Component<Region> {
     @Override
     public void refreshFields() {
         for(EntitlementDTO entitlementDTO: servicePlanComboBox.getItems()) {
-            if(entitlementDTO.getName().equals(noteModel.getBoundNote().getActiveServiceContract())) {
+            if(entitlementDTO.getName().equals(noteModel.boundNoteProperty().get().getActiveServiceContract())) {
                 servicePlanComboBox.getSelectionModel().select(entitlementDTO);
             }
         }

@@ -62,7 +62,7 @@ public class RelatedBox implements Component<Region> {
         vbox.setPadding(new Insets(2, 0, 2, 2));
         Label label = new Label("Time and Materials");
         label.setPadding(new Insets(0,0,0,5));
-        tAndMTextField.textProperty().bindBidirectional(noteModel.getBoundNote().tAndMProperty());
+        tAndMTextField.textProperty().bindBidirectional(noteModel.boundNoteProperty().get().tAndMProperty());
         vbox.getChildren().addAll(label, tAndMTextField);
         return vbox;
     }
@@ -73,7 +73,7 @@ public class RelatedBox implements Component<Region> {
         vbox.setPadding(new Insets(2, 0, 2, 2));
         Label label = new Label("Technical Expert Assessments");
         label.setPadding(new Insets(0,0,0,5));
-        texTextField.textProperty().bindBidirectional(noteModel.getBoundNote().texProperty());
+        texTextField.textProperty().bindBidirectional(noteModel.boundNoteProperty().get().texProperty());
         vbox.getChildren().addAll(label, texTextField);
         return vbox;
     }
@@ -84,7 +84,7 @@ public class RelatedBox implements Component<Region> {
         vbox.setPadding(new Insets(2, 0, 2, 2));
         Label label = new Label("Created Case");
         label.setPadding(new Insets(0,0,0,5));
-        relatedCaseTextField.textProperty().bindBidirectional(noteModel.getBoundNote().relatedCaseNumberProperty());
+        relatedCaseTextField.textProperty().bindBidirectional(noteModel.boundNoteProperty().get().relatedCaseNumberProperty());
         vbox.getChildren().addAll(label, relatedCaseTextField);
         return vbox;
     }
@@ -95,7 +95,7 @@ public class RelatedBox implements Component<Region> {
         vbox.setPadding(new Insets(2, 0, 5, 5));
         Label label = new Label("Created Work Order");
         label.setPadding(new Insets(0,0,0,5));
-        createdWorkOrderTextField.textProperty().bindBidirectional(noteModel.getBoundNote().createdWorkOrderProperty());
+        createdWorkOrderTextField.textProperty().bindBidirectional(noteModel.boundNoteProperty().get().createdWorkOrderProperty());
         vbox.getChildren().addAll(label, createdWorkOrderTextField);
         return vbox;
     }

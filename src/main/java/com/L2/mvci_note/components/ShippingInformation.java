@@ -62,9 +62,9 @@ public class ShippingInformation implements Component<Region> {
 
         Button pasteButton = ButtonFx.utilityButton(() -> {
             String[] contactInfo = CopyPastaParser.extractContactInfo();
-            noteModel.getBoundNote().setContactName(contactInfo[0]);
-            noteModel.getBoundNote().setContactPhoneNumber(contactInfo[1]);
-            noteModel.getBoundNote().setContactEmail(contactInfo[2]);
+            noteModel.boundNoteProperty().get().setContactName(contactInfo[0]);
+            noteModel.boundNoteProperty().get().setContactPhoneNumber(contactInfo[1]);
+            noteModel.boundNoteProperty().get().setContactEmail(contactInfo[2]);
         }, "Paste", "/images/paste-16.png");
         pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Contact Information"));
 
@@ -114,15 +114,15 @@ public class ShippingInformation implements Component<Region> {
     }
 
     public void bindTextFields() {
-        aTextFields[0].textProperty().bindBidirectional(noteModel.getBoundNote().installedAtProperty());
-        streetTextArea.textProperty().bindBidirectional(noteModel.getBoundNote().streetProperty());
-        aTextFields[1].textProperty().bindBidirectional(noteModel.getBoundNote().cityProperty());
-        aTextFields[2].textProperty().bindBidirectional(noteModel.getBoundNote().stateProperty());
-        aTextFields[3].textProperty().bindBidirectional(noteModel.getBoundNote().zipProperty());
-        aTextFields[4].textProperty().bindBidirectional(noteModel.getBoundNote().countryProperty());
-        cTextFields[0].textProperty().bindBidirectional(noteModel.getBoundNote().contactNameProperty());
-        cTextFields[1].textProperty().bindBidirectional(noteModel.getBoundNote().contactPhoneNumberProperty());
-        cTextFields[2].textProperty().bindBidirectional(noteModel.getBoundNote().contactEmailProperty());
+        aTextFields[0].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().installedAtProperty());
+        streetTextArea.textProperty().bindBidirectional(noteModel.boundNoteProperty().get().streetProperty());
+        aTextFields[1].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().cityProperty());
+        aTextFields[2].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().stateProperty());
+        aTextFields[3].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().zipProperty());
+        aTextFields[4].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().countryProperty());
+        cTextFields[0].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().contactNameProperty());
+        cTextFields[1].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().contactPhoneNumberProperty());
+        cTextFields[2].textProperty().bindBidirectional(noteModel.boundNoteProperty().get().contactEmailProperty());
     }
 }
 

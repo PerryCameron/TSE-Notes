@@ -30,12 +30,12 @@ public class ServicePlanDetails implements Builder<Region> {
 
     public void updateDetails() {
         vBox.getChildren().clear();
-        Label label = new Label(noteModel.getCurrentEntitlement().getName());
+        Label label = new Label(noteModel.currentEntitlementProperty().get().getName());
         label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ff0000;");
         Label label1 = new Label("Includes");
         label1.getStyleClass().add(Styles.TEXT_BOLD);
-        String[] includes = noteModel.getCurrentEntitlement().getIncludes().split("\\R");
-        String[] notIncludes = noteModel.getCurrentEntitlement().getNotIncludes().split("\\R");
+        String[] includes = noteModel.currentEntitlementProperty().get().getIncludes().split("\\R");
+        String[] notIncludes = noteModel.currentEntitlementProperty().get().getNotIncludes().split("\\R");
         vBox.getChildren().addAll(label, label1);
         for (String include : includes) {
             vBox.getChildren().add(new Label(include));
