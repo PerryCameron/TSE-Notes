@@ -48,7 +48,7 @@ public class AddressParser {
         int numberOfCommas = countCommas(addressBlock);
         int numberOfLines = countLines(addressBlock);
         int numberOfStreetTypes = containsStreetType(addressBlock);
-        logger.info("Number of street types: " + numberOfStreetTypes);
+        logger.info("Number of street types: {}", numberOfStreetTypes);
         boolean firstWordIsInteger = isFirstWordInteger(addressBlock);
         boolean containsUnit = containsUnitDesignator(addressBlock);
         // If maps are null, initialize them
@@ -69,7 +69,7 @@ public class AddressParser {
                     componentLocations.put("streetType", streetType);
                     addressComponents.put("Street", capitalizeWords(addressBlock.substring(0, streetType.getEnd())));
                 } else {
-                    logger.error("Street type is null");
+                    logger.warn("Street type is null");
                 }
             } else {
                 if(numberOfCommas > 1) { // possibly a french address seperated by commas?
@@ -127,7 +127,7 @@ public class AddressParser {
                 }
             } else {
                 // we don't have a Zip
-                logger.error("We have no Zip");
+                logger.warn("We have no Zip");
             }
         }
 
@@ -146,7 +146,7 @@ public class AddressParser {
         for (String key : requiredKeys) {
             if (!addressComponents.containsKey(key)) {
                 addressComponents.put(key, "???");
-                logger.error("{} not found, creating default with value '???'", key);
+                logger.warn("{} not found, creating default with value '???'", key);
             }
         }
     }
@@ -204,7 +204,7 @@ public class AddressParser {
 
     public static MatchedRange getLastStreetTypeRange(String input) {
         if (input == null || input.isEmpty()) {
-            logger.error("Invalid address input");
+            logger.warn("Invalid address input");
             return null; // No match found
         }
         String[] words = input.split("[,\\s]+"); // Split by commas or whitespace
@@ -221,7 +221,7 @@ public class AddressParser {
             currentIndex += word.length() + 1; // +1 for the space or comma
         }
         if (lastMatchedRange == null) {
-            logger.error("No street type found");
+            logger.warn("No street type found");
         }
         System.out.println("street type: " + lastMatchedRange);
         return lastMatchedRange;
@@ -244,7 +244,7 @@ public class AddressParser {
 
     public static MatchedRange parseAddressForLocation(String address) {
         if (address == null || address.isEmpty()) {
-            logger.error("Invalid address input");
+            logger.warn("Invalid address input");
             return null; // No match found
         }
         MatchedRange lastMatch = null; // Keep track of the last match
@@ -281,7 +281,7 @@ public class AddressParser {
 
     public static int containsStreetType(String input) {
         if (input == null || input.isEmpty()) {
-            logger.error("Invalid address input");
+            logger.warn("Invalid address input");
             return 0; // No match found
         }
         String[] words = input.split("[,\\s]+"); // Split by commas or whitespace
