@@ -182,7 +182,6 @@ public class SpellCheckArea extends CodeArea {
             case subject -> noteModel.subjectSpansProperty().get();
             case issue -> noteModel.issueSpansProperty().get();
             case finish -> noteModel.finishSpansProperty().get();
-            default -> null;
         };
 
         if (spans == null) {
@@ -236,21 +235,29 @@ public class SpellCheckArea extends CodeArea {
             }
         }
 
+        MenuItem addToDict = getMenuItem(cleanWord);
+        noteModel.contextMenuProperty().get().getItems().add(addToDict);
+
+        logger.debug("Showing context menu with {} items", noteModel.contextMenuProperty().get().getItems().size());
+        noteModel.contextMenuProperty().get().show(this, event.getScreenX(), event.getScreenY());
+    }
+
+    private MenuItem getMenuItem(String cleanWord) {
         MenuItem addToDict = new MenuItem("Add to Dictionary");
+
+        // Set the text color to green using an inline style
+        addToDict.setStyle("-fx-text-fill: green;");
+
         String finalCleanWord = cleanWord;
         addToDict.setOnAction(e -> {
             noteModel.hunspellProperty().get().add(finalCleanWord);
             noteModel.newWordProperty().set(finalCleanWord);
             noteView.getAction().accept(NoteMessage.ADD_WORD_TO_DICT);
-//            noteView.getAction().accept(computeHighlight); // Assuming this is a signal to recompute
             noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);
             noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
             noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA);
             noteModel.contextMenuProperty().get().hide();
         });
-        noteModel.contextMenuProperty().get().getItems().add(addToDict);
-
-        logger.debug("Showing context menu with {} items", noteModel.contextMenuProperty().get().getItems().size());
-        noteModel.contextMenuProperty().get().show(this, event.getScreenX(), event.getScreenY());
+        return addToDict;
     }
 }

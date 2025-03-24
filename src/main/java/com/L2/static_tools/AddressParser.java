@@ -1,5 +1,4 @@
 package com.L2.static_tools;
-import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -158,7 +158,6 @@ public class NoteInteractor {
             case subject -> noteModel.subjectAreaProperty().get().getText(); // Text from subject area
             case issue -> noteModel.issueAreaProperty().get().getText();     // Text from issue area
             case finish -> noteModel.finishAreaProperty().get().getText();   // Text from finish area
-            default -> throw new IllegalArgumentException("Unknown area type: " + areaType); // Unreachable with enum, but required for switch exhaustiveness
         };
 
         // Initialize a builder to construct styled spans for highlighting (e.g., misspelled words)
@@ -439,7 +438,6 @@ public class NoteInteractor {
                 stringBuilder.append("<b>Parts Needed</b><br>");
             }
             stringBuilder.append("<table border=\"1\">");
-            logger.info("Adding order: {}", noteModel.selectedPartOrderProperty().get().getOrderNumber());
             if (includePOHeader) {
                 if (!noteModel.selectedPartOrderProperty().get().getOrderNumber().isEmpty()) {
                     // Adjust colspan based on showType()
@@ -459,8 +457,6 @@ public class NoteInteractor {
             stringBuilder.append("<th>Description</th>")
                     .append("<th>Qty</th>")
                     .append("</tr>");
-
-
             // Loop through each PartDTO to add table rows
             noteModel.selectedPartOrderProperty().get().getParts().forEach(partDTO -> {
                 stringBuilder.append("<tr>")

@@ -71,6 +71,7 @@ public class IssueBox implements Component<Region> {
                         logger.info("Processed an email and updated the note model.");
                         // Set the CodeArea to read-only
                         codeArea.setEditable(false);
+                        noteView.getAction().accept(NoteMessage.CLEAR_HIGHLIGHTS_ISSUE);
                     }
                     // Trigger save or update note action
                     noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);

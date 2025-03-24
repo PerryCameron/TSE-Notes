@@ -6,8 +6,6 @@ import com.L2.dto.ResultDTO;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class NoteDTOProcessor {
 
@@ -29,7 +27,7 @@ public class NoteDTOProcessor {
 
         // Variables to store data
         String firstName = "";
-        String lastName = "";
+        String lastName;
         String previousLine = "";
 
         // Loop through lines and map fields
@@ -67,10 +65,6 @@ public class NoteDTOProcessor {
             } else if (line.startsWith("Phone Number:")) {
                 ResultDTO resultDTO = StringChecker.formatPhoneNumber(line.replace("Phone Number:", "").trim());
                 noteDTO.contactPhoneNumberProperty().set(resultDTO.getFieldName());
-//            } else if (line.startsWith("Address:")) {
-//                noteDTO.streetProperty().set(lines[i + 1].trim());    // Mapping the full address to street for simplicity
-////                parseAddress(lines[i+2], noteDTO);
-//                parseAddress(lines, i, noteDTO);
             } else if (line.startsWith("Affected Part Serial:")) {
                 noteDTO.serialNumberProperty().set(line.replace("Affected Part Serial:", "").trim());
             }
@@ -85,56 +79,54 @@ public class NoteDTOProcessor {
     return noteDTO;
     }
 
-    /**
-     * Parses the address field to extract street, city, state, postal code, and country.
-     */
-    private static void parseAddress(String[] lines, int index, NoteDTO noteDTO) {
-        String streetLine = lines[index + 1].trim(); // Assuming the next line is part of the address
-        String remainingLine = index + 2 < lines.length ? lines[index + 2].trim() : "";
 
-
-        String street = streetLine;
-        String city = "";
-        String state = "";
-        String postalCode = "";
-        String country = "USA"; // Default country
-
-
-        // Check for a postal code in the second line
-        if (!remainingLine.isEmpty()) {
-            String[] parts = remainingLine.split("\\s+");
-            for (String part : parts) {
-                if (part.matches("\\d{5}(-\\d{4})?") || part.matches("[A-Z]\\d[A-Z] \\d[A-Z]\\d")) {
-                    postalCode = part; // Matches US or Canadian postal codes
-                } else if (StateCodes.STATE_ABBREVIATIONS.containsKey(part) || StateCodes.STATE_ABBREVIATIONS.containsValue(part)) {
-                    state = part; // Match US state or Canadian province
-                }
-            }
-            if (remainingLine.contains("Canada")) {
-                country = "Canada";
-            }
-        }
-
-
-        // If the street line contains city and state
-        String[] streetParts = streetLine.split("\\s+");
-        for (int i = streetParts.length - 1; i >= 0; i--) {
-            String part = streetParts[i];
-            if (StateCodes.STATE_ABBREVIATIONS.containsKey(part) || StateCodes.STATE_ABBREVIATIONS.containsValue(part)) {
-                state = part;
-                street = streetLine.substring(0, streetLine.indexOf(part)).trim();
-                break;
-            }
-        }
-
-
-        // Set parsed fields to the NoteDTO
-        noteDTO.streetProperty().set(street);
-        noteDTO.cityProperty().set(city);
-        noteDTO.stateProperty().set(state);
-        noteDTO.zipProperty().set(postalCode);
-        noteDTO.countryProperty().set(country);
-    }
+//    private static void parseAddress(String[] lines, int index, NoteDTO noteDTO) {
+//        String streetLine = lines[index + 1].trim(); // Assuming the next line is part of the address
+//        String remainingLine = index + 2 < lines.length ? lines[index + 2].trim() : "";
+//
+//
+//        String street = streetLine;
+//        String city = "";
+//        String state = "";
+//        String postalCode = "";
+//        String country = "USA"; // Default country
+//
+//
+//        // Check for a postal code in the second line
+//        if (!remainingLine.isEmpty()) {
+//            String[] parts = remainingLine.split("\\s+");
+//            for (String part : parts) {
+//                if (part.matches("\\d{5}(-\\d{4})?") || part.matches("[A-Z]\\d[A-Z] \\d[A-Z]\\d")) {
+//                    postalCode = part; // Matches US or Canadian postal codes
+//                } else if (StateCodes.STATE_ABBREVIATIONS.containsKey(part) || StateCodes.STATE_ABBREVIATIONS.containsValue(part)) {
+//                    state = part; // Match US state or Canadian province
+//                }
+//            }
+//            if (remainingLine.contains("Canada")) {
+//                country = "Canada";
+//            }
+//        }
+//
+//
+//        // If the street line contains city and state
+//        String[] streetParts = streetLine.split("\\s+");
+//        for (int i = streetParts.length - 1; i >= 0; i--) {
+//            String part = streetParts[i];
+//            if (StateCodes.STATE_ABBREVIATIONS.containsKey(part) || StateCodes.STATE_ABBREVIATIONS.containsValue(part)) {
+//                state = part;
+//                street = streetLine.substring(0, streetLine.indexOf(part)).trim();
+//                break;
+//            }
+//        }
+//
+//
+//        // Set parsed fields to the NoteDTO
+//        noteDTO.streetProperty().set(street);
+//        noteDTO.cityProperty().set(city);
+//        noteDTO.stateProperty().set(state);
+//        noteDTO.zipProperty().set(postalCode);
+//        noteDTO.countryProperty().set(country);
+//    }
 }
 
 

@@ -79,6 +79,7 @@ public class NoteController extends Controller<NoteMessage> {
             case REFRESH_ENTITLEMENT_COMBO_BOX -> noteInteractor.refreshEntitlementComboBox();
             case COPY_LOGGED_CALL -> noteInteractor.copyLoggedCall();
             case CHECK_BUTTON_ENABLE -> checkButtonEnable();
+            case CLEAR_HIGHLIGHTS_ISSUE -> noteInteractor.clearHighlights(AreaType.issue);
         }
     }
 
