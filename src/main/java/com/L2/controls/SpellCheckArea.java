@@ -92,7 +92,9 @@ public class SpellCheckArea extends CodeArea {
         // Bind the bridge property bidirectionally to the issue property of the model
         bridgeProperty.bindBidirectional(stringProperty);  // this must change
         // Sync the initial text of the CodeArea with the bridge property
-        this.replaceText(bridgeProperty.getValue());
+        // Sync the initial text of the CodeArea with the bridge property, defaulting to "" if null
+        String initialText = bridgeProperty.getValue();
+        this.replaceText(initialText != null ? initialText : "");  // Line 95 fixed
         // Update the bridge property when the text in the CodeArea changes
         this.textProperty().addListener((obs, oldVal, newVal) -> bridgeProperty.set(newVal));
         // Update the CodeArea text when the bridge property changes
