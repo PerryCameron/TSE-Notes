@@ -24,7 +24,6 @@ public class ServicePlanDetails implements Builder<Region> {
     @Override
     public Region build() {
         this.vBox = new VBox();
-//        updateDetails();
         return vBox;
     }
 
