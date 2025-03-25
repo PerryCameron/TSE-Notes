@@ -70,7 +70,7 @@ public class NoteDTO {
         this.schedulingTerms.set("");
         this.upsStatus.set("");
         this.loadSupported.set(true);
-        this.title.set("");
+        this.title.set("title");
         this.issue.set("");
         this.contactName.set("");
         this.contactPhoneNumber.set("");

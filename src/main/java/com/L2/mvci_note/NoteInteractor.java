@@ -63,9 +63,9 @@ public class NoteInteractor {
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         // if starting up for first time create first empty note
         if (noteModel.getNotes().isEmpty()) {
-            NoteDTO noteDTO = new NoteDTO(1, false);
-            noteModel.getNotes().add(new NoteDTO(1, false));
-            noteRepo.insertNote(noteDTO);
+//            NoteDTO noteDTO = new NoteDTO(1, false);
+//            noteModel.getNotes().add(new NoteDTO(1, false));
+            noteModel.getNotes().add(noteRepo.insertBlankNote());
         }
         // set bound note to copy information from latest note
         boundNote.copyFrom(noteModel.getNotes().getFirst());
@@ -843,8 +843,7 @@ public class NoteInteractor {
     public void createNewNote() {
         // let's update the list note before moving on
         saveOrUpdateNote(); // I feel like this can go
-        NoteDTO noteDTO = new NoteDTO(0, false);
-        noteDTO.setId(noteRepo.insertNote(noteDTO));
+        NoteDTO noteDTO = noteRepo.insertBlankNote();
         noteModel.getNotes().add(noteDTO);
         noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
         noteModel.boundNoteProperty().get().setId(noteDTO.getId());

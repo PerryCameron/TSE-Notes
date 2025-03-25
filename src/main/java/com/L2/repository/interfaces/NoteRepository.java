@@ -13,6 +13,9 @@ public interface NoteRepository {
 
     int insertNote(NoteDTO note);
 
+    // For creating a blank new note
+    NoteDTO insertBlankNote();
+
     void updateNote(NoteDTO note);
 
     int deleteNote(NoteDTO noteDTO);

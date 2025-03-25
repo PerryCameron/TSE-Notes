@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,57 +53,111 @@ public class NoteRepositoryImpl implements NoteRepository {
         return count != null && count > 0;
     }
 
+    // for creating note that already has a filled out object
     @Override
-    public int insertNote(NoteDTO note) {
-        logger.info("Creating note {} with timestamp: ", note.getId(), note.getTimestamp().toString());
+    public int insertNote(NoteDTO noteDTO) {
         String sql = "INSERT INTO Notes (timestamp, workOrder, caseNumber, serialNumber, modelNumber, callInPerson, " +
                 "callInPhoneNumber, callInEmail, underWarranty, activeServiceContract, serviceLevel, schedulingTerms, upsStatus, " +
-                "loadSupported, issue, contactName, contactPhoneNumber, contactEmail, street, installedAt, city, state, zip, country, " +
+                "loadSupported, title, issue, contactName, contactPhoneNumber, contactEmail, street, installedAt, city, state, zip, country, " +
                 "createdWorkOrder, tex, partsOrder, completed, isEmail, additionalCorrectiveActionText, relatedCaseNumber, t_and_m) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-//            System.out.println("TimeStamp: " + note.getTimestamp().toString());
-            ps.setString(1, note.getTimestamp().toString());
-            ps.setString(2, note.getWorkOrder());
-            ps.setString(3, note.getCaseNumber());
-            ps.setString(4, note.getSerialNumber());
-            ps.setString(5, note.getModelNumber());
-            ps.setString(6, note.getCallInPerson());
-            ps.setString(7, note.getCallInPhoneNumber());
-            ps.setString(8, note.getCallInEmail());
-            ps.setInt(9, note.isUnderWarranty() ? 1 : 0);
-            ps.setString(10, note.getActiveServiceContract());
-            ps.setString(11, note.getServiceLevel());
-            ps.setString(12, note.getSchedulingTerms());
-            ps.setString(13, note.getUpsStatus());
-            ps.setInt(14, note.isLoadSupported() ? 1 : 0);
-            ps.setString(15, note.getIssue());
-            ps.setString(16, note.getContactName());
-            ps.setString(17, note.getContactPhoneNumber());
-            ps.setString(18, note.getContactEmail());
-            ps.setString(19, note.getStreet());
-            ps.setString(20, note.getInstalledAt());
-            ps.setString(21, note.getCity());
-            ps.setString(22, note.getState());
-            ps.setString(23, note.getZip());
-            ps.setString(24, note.getCountry());
-            ps.setString(25, note.getCreatedWorkOrder());
-            ps.setString(26, note.getTex());
-            ps.setInt(27, note.getPartsOrder());
-            ps.setInt(28, note.isCompleted() ? 1 : 0);
-            ps.setInt(29, note.isEmail() ? 1 : 0);
-            ps.setString(30, note.getAdditionalCorrectiveActionText());
-            ps.setString(31, note.getRelatedCaseNumber());
-            ps.setString(32, note.gettAndM());
+            ps.setString(1, noteDTO.getTimestamp().toString());
+            ps.setString(2, noteDTO.getWorkOrder());
+            ps.setString(3, noteDTO.getCaseNumber());
+            ps.setString(4, noteDTO.getSerialNumber());
+            ps.setString(5, noteDTO.getModelNumber());
+            ps.setString(6, noteDTO.getCallInPerson());
+            ps.setString(7, noteDTO.getCallInPhoneNumber());
+            ps.setString(8, noteDTO.getCallInEmail());
+            ps.setInt(9, noteDTO.isUnderWarranty() ? 1 : 0);
+            ps.setString(10, noteDTO.getActiveServiceContract());
+            ps.setString(11, noteDTO.getServiceLevel());
+            ps.setString(12, noteDTO.getSchedulingTerms());
+            ps.setString(13, noteDTO.getUpsStatus());
+            ps.setInt(14, noteDTO.isLoadSupported() ? 1 : 0);
+            ps.setString(15, noteDTO.getTitle()); // Added title
+            ps.setString(16, noteDTO.getIssue());
+            ps.setString(17, noteDTO.getContactName());
+            ps.setString(18, noteDTO.getContactPhoneNumber());
+            ps.setString(19, noteDTO.getContactEmail());
+            ps.setString(20, noteDTO.getStreet());
+            ps.setString(21, noteDTO.getInstalledAt());
+            ps.setString(22, noteDTO.getCity());
+            ps.setString(23, noteDTO.getState());
+            ps.setString(24, noteDTO.getZip());
+            ps.setString(25, noteDTO.getCountry());
+            ps.setString(26, noteDTO.getCreatedWorkOrder());
+            ps.setString(27, noteDTO.getTex());
+            ps.setInt(28, noteDTO.getPartsOrder());
+            ps.setInt(29, noteDTO.isCompleted() ? 1 : 0);
+            ps.setInt(30, noteDTO.isEmail() ? 1 : 0);
+            ps.setString(31, noteDTO.getAdditionalCorrectiveActionText());
+            ps.setString(32, noteDTO.getRelatedCaseNumber());
+            ps.setString(33, noteDTO.gettAndM());
             return ps;
         }, keyHolder);
-
+        logger.info("Creating note {} with timestamp: ", noteDTO.getId(), noteDTO.getTimestamp().toString());
         // Return the generated key (ID)
         return keyHolder.getKey().intValue();
+    }
+
+    // For creating a blank new note
+    @Override
+    public NoteDTO insertBlankNote() {
+        NoteDTO noteDTO = new NoteDTO(0, false);
+        String sql = "INSERT INTO Notes (timestamp, workOrder, caseNumber, serialNumber, modelNumber, callInPerson, " +
+                "callInPhoneNumber, callInEmail, underWarranty, activeServiceContract, serviceLevel, schedulingTerms, upsStatus, " +
+                "loadSupported, title, issue, contactName, contactPhoneNumber, contactEmail, street, installedAt, city, state, zip, country, " +
+                "createdWorkOrder, tex, partsOrder, completed, isEmail, additionalCorrectiveActionText, relatedCaseNumber, t_and_m) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            // Use Timestamp for database compatibility instead of toString()
+            ps.setTimestamp(1, noteDTO.getTimestamp() != null ? Timestamp.valueOf(noteDTO.getTimestamp()) : null);
+            ps.setString(2, noteDTO.getWorkOrder());
+            ps.setString(3, noteDTO.getCaseNumber());
+            ps.setString(4, noteDTO.getSerialNumber());
+            ps.setString(5, noteDTO.getModelNumber());
+            ps.setString(6, noteDTO.getCallInPerson());
+            ps.setString(7, noteDTO.getCallInPhoneNumber());
+            ps.setString(8, noteDTO.getCallInEmail());
+            ps.setInt(9, noteDTO.isUnderWarranty() ? 1 : 0);
+            ps.setString(10, noteDTO.getActiveServiceContract());
+            ps.setString(11, noteDTO.getServiceLevel());
+            ps.setString(12, noteDTO.getSchedulingTerms());
+            ps.setString(13, noteDTO.getUpsStatus());
+            ps.setInt(14, noteDTO.isLoadSupported() ? 1 : 0);
+            ps.setString(15, noteDTO.getTitle()); // Added title
+            ps.setString(16, noteDTO.getIssue());
+            ps.setString(17, noteDTO.getContactName());
+            ps.setString(18, noteDTO.getContactPhoneNumber());
+            ps.setString(19, noteDTO.getContactEmail());
+            ps.setString(20, noteDTO.getStreet());
+            ps.setString(21, noteDTO.getInstalledAt());
+            ps.setString(22, noteDTO.getCity());
+            ps.setString(23, noteDTO.getState());
+            ps.setString(24, noteDTO.getZip());
+            ps.setString(25, noteDTO.getCountry());
+            ps.setString(26, noteDTO.getCreatedWorkOrder());
+            ps.setString(27, noteDTO.getTex());
+            ps.setInt(28, noteDTO.getPartsOrder());
+            ps.setInt(29, noteDTO.isCompleted() ? 1 : 0);
+            ps.setInt(30, noteDTO.isEmail() ? 1 : 0);
+            ps.setString(31, noteDTO.getAdditionalCorrectiveActionText());
+            ps.setString(32, noteDTO.getRelatedCaseNumber());
+            ps.setString(33, noteDTO.gettAndM());
+            return ps;
+        }, keyHolder);
+        // Get the generated ID
+        int generatedId = keyHolder.getKey().intValue();
+        // Update the input NoteDTO with the generated ID
+        noteDTO.idProperty().set(generatedId);
+        logger.info("Created noteDTO {} with timestamp: {}", generatedId, noteDTO.getTimestamp() != null ? noteDTO.getTimestamp().toString() : "null");
+        return noteDTO;
     }
 
     @Override
