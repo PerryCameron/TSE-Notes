@@ -10,10 +10,7 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.*;
 import javafx.scene.text.Font;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpan;
@@ -65,7 +62,13 @@ public class SpellCheckArea extends CodeArea {
         this.setMaxHeight(height);
         this.setMinHeight(height);
 
-        this.setOnMouseMoved(this::handleMouseHover);
+//        this.setOnMouseMoved(this::handleMouseHover);
+        this.setOnMouseClicked(event -> {
+            // Check if the event is a right-click (secondary button)
+            if (event.getButton() == MouseButton.SECONDARY) {
+                handleRightClick(event); // Call the handler for right-click events
+            }
+        });
 
 
         setBridgeToBind(stringProperty);
@@ -166,16 +169,8 @@ public class SpellCheckArea extends CodeArea {
         return this;
     }
 
-    // A PauseTransition to delay showing the context menu by 200 milliseconds
-    private final PauseTransition contextMenuDelay = new PauseTransition(javafx.util.Duration.millis(200));
-    // Flag to track whether the context menu is currently visible
-    private boolean contextMenuVisible = false;
-
-    // Handles mouse hover events to show a context menu for misspelled words
-    private void handleMouseHover(MouseEvent event) {
-        // Stop any ongoing delay to reset the timer if the mouse moves
-        contextMenuDelay.stop();
-        // Reference to the ContextMenu, stored as a field for reuse across hover events
+    // Handles right-click events to show a context menu for misspelled words
+    private void handleRightClick(MouseEvent event) {
         ContextMenu contextMenu = noteModel.contextMenuProperty().get();
         // Check if the Hunspell spell-check engine is initialized
         // If not, log a debug message and exit early
@@ -183,54 +178,55 @@ public class SpellCheckArea extends CodeArea {
             logger.debug("Hunspell not initialized");
             return;
         }
+
         // Get the character index under the mouse cursor using the hit() method
         // Returns an OptionalInt that may or may not contain a valid index
         OptionalInt charIndexOpt = this.hit(event.getX(), event.getY()).getCharacterIndex();
+
+        // If no character index is present (e.g., clicked on an empty area), log it and exit
         if (!charIndexOpt.isPresent()) {
             logger.debug("No character index at ({}, {})", event.getX(), event.getY());
-            if (contextMenuVisible) {
-                contextMenu.hide();
-                contextMenuVisible = false;
-            }
+            contextMenu.hide(); // Hide any existing menu
             return;
         }
+
         // Extract the character index from the OptionalInt
         int charIndex = charIndexOpt.getAsInt();
+
         // Validate the character index to ensure it’s within the text bounds
-        // If invalid, log it, hide the menu if visible, and exit
+        // If invalid, log it, hide the menu, and exit
         if (charIndex < 0 || charIndex >= this.getText().length()) {
             logger.debug("Invalid charIndex: {}", charIndex);
-            if (contextMenuVisible) {
-                contextMenu.hide();
-                contextMenuVisible = false;
-            }
+            contextMenu.hide();
             return;
         }
+
         // Fetch the latest StyleSpans based on the area type (subject, issue, or finish)
         // StyleSpans contains styling info, including which words are misspelled
         StyleSpans<Collection<String>> spans = switch (areaType) {
-            case subject -> noteModel.subjectSpansProperty().get();
-            case issue -> noteModel.issueSpansProperty().get();
-            case finish -> noteModel.finishSpansProperty().get();
+            case subject -> noteModel.subjectSpansProperty().get(); // Spans for subject area
+            case issue -> noteModel.issueSpansProperty().get();     // Spans for issue area
+            case finish -> noteModel.finishSpansProperty().get();   // Spans for finish area
         };
+
         // If no spans are available (e.g., text hasn’t been analyzed), log it, hide menu, and exit
         if (spans == null) {
             logger.debug("No spans available for {}", areaType);
-            if (contextMenuVisible) {
-                contextMenu.hide();
-                contextMenuVisible = false;
-            }
+            contextMenu.hide();
             return;
         }
+
         // Variables to track the position and boundaries of a misspelled word
         int position = 0;         // Current position in the text as we iterate through spans
         int wordStart = -1;       // Start index of the misspelled word
         int wordEnd = -1;         // End index of the misspelled word
         String cleanWord = null;  // The cleaned-up misspelled word for spell-check
-        boolean isMisspelled = false; // Flag indicating if the hovered character is misspelled
+        boolean isMisspelled = false; // Flag indicating if the clicked character is misspelled
+
         // Iterate through the StyleSpans to find the span under the cursor
         for (StyleSpan<Collection<String>> span : spans) {
-            int spanEnd = position + span.getLength();
+            int spanEnd = position + span.getLength(); // End position of the current span
+
             // Check if the character index falls within this span
             if (charIndex >= position && charIndex < spanEnd) {
                 // If the span is marked as misspelled, extract the word details
@@ -246,19 +242,20 @@ public class SpellCheckArea extends CodeArea {
             }
             position += span.getLength(); // Advance position for the next span
         }
-        // If the character isn’t in a misspelled word, hide the menu if visible and exit
+
+        // If the clicked character isn’t in a misspelled word, hide the menu and exit
         if (!isMisspelled) {
-            if (contextMenuVisible) {
-                contextMenu.hide();
-                contextMenuVisible = false;
-            }
+            contextMenu.hide();
             return;
         }
+
         // Clear the context menu to prepare for fresh suggestions
         contextMenu.getItems().clear();
+
         // Get spelling suggestions for the misspelled word from Hunspell
         List<String> suggestions = noteModel.hunspellProperty().get().suggest(cleanWord);
         logger.debug("Word '{}': suggestions={}", cleanWord, suggestions);
+
         // Populate the context menu with suggestions if any exist
         if (!suggestions.isEmpty()) {
             for (String suggestion : suggestions) {
@@ -267,12 +264,12 @@ public class SpellCheckArea extends CodeArea {
                     MenuItem item = new MenuItem(suggestion); // Create a menu item for the suggestion
                     final int finalWordStart = wordStart;     // Final for use in lambda
                     final int finalWordEnd = wordEnd;         // Final for use in lambda
+
                     // Define action: replace the word and save the note
                     item.setOnAction(e -> {
                         this.replaceText(finalWordStart, finalWordEnd, suggestion);
                         noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
-                        contextMenu.hide();
-                        contextMenuVisible = false;
+                        contextMenu.hide(); // Hide the menu after selection
                     });
                     contextMenu.getItems().add(item); // Add the suggestion to the menu
                 }
@@ -281,34 +278,12 @@ public class SpellCheckArea extends CodeArea {
         // Add an "Add to Dictionary" option to the menu
         MenuItem addToDict = getMenuItem(cleanWord);
         contextMenu.getItems().add(addToDict);
-        // Log the number of items prepared for the menu
-        logger.debug("Prepared context menu with {} items", contextMenu.getItems().size());
-        // Delay showing the context menu
-        int finalWordStart1 = wordStart;
-        int finalWordEnd1 = wordEnd;
-        // Set up the delay to show the context menu after 300ms
-        contextMenuDelay.setOnFinished(e -> {
-            // Only show the menu if it’s not already visible and the mouse is still over the word
-            if (!contextMenuVisible && isMouseOverWord(event.getX(), event.getY(), finalWordStart1, finalWordEnd1)) {
-                contextMenu.show(this, event.getScreenX(), event.getScreenY());
-                contextMenuVisible = true;
-            }
-        });
-        contextMenuDelay.playFromStart();  // Start the delay timer
-        // Update visibility flag when the menu is shown
-        contextMenu.setOnShowing(e -> contextMenuVisible = true);
-        // Update visibility flag when the menu is hidden
-        contextMenu.setOnHidden(e -> contextMenuVisible = false);
-    }
 
-    // Helper method to check if mouse is still over the word
-    private boolean isMouseOverWord(double x, double y, int wordStart, int wordEnd) {
-        // Get the current character index under the mouse
-        OptionalInt currentCharIndexOpt = this.hit(x, y).getCharacterIndex();
-        // Return true if the index is present and within the word’s bounds
-        return currentCharIndexOpt.isPresent() &&
-                currentCharIndexOpt.getAsInt() >= wordStart &&
-                currentCharIndexOpt.getAsInt() < wordEnd;
+        // Log the number of items prepared for the menu
+        logger.debug("Showing context menu with {} items", contextMenu.getItems().size());
+
+        // Show the context menu immediately at the click location
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
     }
 
     private MenuItem getMenuItem(String cleanWord) {
@@ -330,3 +305,151 @@ public class SpellCheckArea extends CodeArea {
         return addToDict;
     }
 }
+
+
+// This method works on a delay, it works beautiful but then I realized that a right click was better
+// but it was too nice to delete, may use it again some day.
+//    // A PauseTransition to delay showing the context menu by 200 milliseconds
+//    private final PauseTransition contextMenuDelay = new PauseTransition(javafx.util.Duration.millis(200));
+//    // Flag to track whether the context menu is currently visible
+//    private boolean contextMenuVisible = false;
+//
+//    // Handles mouse hover events to show a context menu for misspelled words
+//    private void handleMouseHover(MouseEvent event) {
+//        // Stop any ongoing delay to reset the timer if the mouse moves
+//        contextMenuDelay.stop();
+//        // Reference to the ContextMenu, stored as a field for reuse across hover events
+//        ContextMenu contextMenu = noteModel.contextMenuProperty().get();
+//        // Check if the Hunspell spell-check engine is initialized
+//        // If not, log a debug message and exit early
+//        if (noteModel.hunspellProperty().get() == null) {
+//            logger.debug("Hunspell not initialized");
+//            return;
+//        }
+//        // Get the character index under the mouse cursor using the hit() method
+//        // Returns an OptionalInt that may or may not contain a valid index
+//        OptionalInt charIndexOpt = this.hit(event.getX(), event.getY()).getCharacterIndex();
+//        if (!charIndexOpt.isPresent()) {
+//            logger.debug("No character index at ({}, {})", event.getX(), event.getY());
+//            if (contextMenuVisible) {
+//                contextMenu.hide();
+//                contextMenuVisible = false;
+//            }
+//            return;
+//        }
+//        // Extract the character index from the OptionalInt
+//        int charIndex = charIndexOpt.getAsInt();
+//        // Validate the character index to ensure it’s within the text bounds
+//        // If invalid, log it, hide the menu if visible, and exit
+//        if (charIndex < 0 || charIndex >= this.getText().length()) {
+//            logger.debug("Invalid charIndex: {}", charIndex);
+//            if (contextMenuVisible) {
+//                contextMenu.hide();
+//                contextMenuVisible = false;
+//            }
+//            return;
+//        }
+//        // Fetch the latest StyleSpans based on the area type (subject, issue, or finish)
+//        // StyleSpans contains styling info, including which words are misspelled
+//        StyleSpans<Collection<String>> spans = switch (areaType) {
+//            case subject -> noteModel.subjectSpansProperty().get();
+//            case issue -> noteModel.issueSpansProperty().get();
+//            case finish -> noteModel.finishSpansProperty().get();
+//        };
+//        // If no spans are available (e.g., text hasn’t been analyzed), log it, hide menu, and exit
+//        if (spans == null) {
+//            logger.debug("No spans available for {}", areaType);
+//            if (contextMenuVisible) {
+//                contextMenu.hide();
+//                contextMenuVisible = false;
+//            }
+//            return;
+//        }
+//        // Variables to track the position and boundaries of a misspelled word
+//        int position = 0;         // Current position in the text as we iterate through spans
+//        int wordStart = -1;       // Start index of the misspelled word
+//        int wordEnd = -1;         // End index of the misspelled word
+//        String cleanWord = null;  // The cleaned-up misspelled word for spell-check
+//        boolean isMisspelled = false; // Flag indicating if the hovered character is misspelled
+//        // Iterate through the StyleSpans to find the span under the cursor
+//        for (StyleSpan<Collection<String>> span : spans) {
+//            int spanEnd = position + span.getLength();
+//            // Check if the character index falls within this span
+//            if (charIndex >= position && charIndex < spanEnd) {
+//                // If the span is marked as misspelled, extract the word details
+//                if (span.getStyle().contains("misspelled")) {
+//                    wordStart = position;
+//                    wordEnd = spanEnd;
+//                    // Extract and clean the word, removing non-letter/number characters except ' - /
+//                    cleanWord = this.getText().substring(wordStart, wordEnd)
+//                            .replaceAll("[^\\p{L}\\p{N}'-/]", "");
+//                    isMisspelled = true;
+//                }
+//                break; // Exit loop once the relevant span is found
+//            }
+//            position += span.getLength(); // Advance position for the next span
+//        }
+//        // If the character isn’t in a misspelled word, hide the menu if visible and exit
+//        if (!isMisspelled) {
+//            if (contextMenuVisible) {
+//                contextMenu.hide();
+//                contextMenuVisible = false;
+//            }
+//            return;
+//        }
+//        // Clear the context menu to prepare for fresh suggestions
+//        contextMenu.getItems().clear();
+//        // Get spelling suggestions for the misspelled word from Hunspell
+//        List<String> suggestions = noteModel.hunspellProperty().get().suggest(cleanWord);
+//        logger.debug("Word '{}': suggestions={}", cleanWord, suggestions);
+//        // Populate the context menu with suggestions if any exist
+//        if (!suggestions.isEmpty()) {
+//            for (String suggestion : suggestions) {
+//                // Skip if the suggestion matches the original word
+//                if (!suggestion.equals(cleanWord)) {
+//                    MenuItem item = new MenuItem(suggestion); // Create a menu item for the suggestion
+//                    final int finalWordStart = wordStart;     // Final for use in lambda
+//                    final int finalWordEnd = wordEnd;         // Final for use in lambda
+//                    // Define action: replace the word and save the note
+//                    item.setOnAction(e -> {
+//                        this.replaceText(finalWordStart, finalWordEnd, suggestion);
+//                        noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+//                        contextMenu.hide();
+//                        contextMenuVisible = false;
+//                    });
+//                    contextMenu.getItems().add(item); // Add the suggestion to the menu
+//                }
+//            }
+//        }
+//        // Add an "Add to Dictionary" option to the menu
+//        MenuItem addToDict = getMenuItem(cleanWord);
+//        contextMenu.getItems().add(addToDict);
+//        // Log the number of items prepared for the menu
+//        logger.debug("Prepared context menu with {} items", contextMenu.getItems().size());
+//        // Delay showing the context menu
+//        int finalWordStart1 = wordStart;
+//        int finalWordEnd1 = wordEnd;
+//        // Set up the delay to show the context menu after 300ms
+//        contextMenuDelay.setOnFinished(e -> {
+//            // Only show the menu if it’s not already visible and the mouse is still over the word
+//            if (!contextMenuVisible && isMouseOverWord(event.getX(), event.getY(), finalWordStart1, finalWordEnd1)) {
+//                contextMenu.show(this, event.getScreenX(), event.getScreenY());
+//                contextMenuVisible = true;
+//            }
+//        });
+//        contextMenuDelay.playFromStart();  // Start the delay timer
+//        // Update visibility flag when the menu is shown
+//        contextMenu.setOnShowing(e -> contextMenuVisible = true);
+//        // Update visibility flag when the menu is hidden
+//        contextMenu.setOnHidden(e -> contextMenuVisible = false);
+//    }
+//
+//    // Helper method to check if mouse is still over the word
+//    private boolean isMouseOverWord(double x, double y, int wordStart, int wordEnd) {
+//        // Get the current character index under the mouse
+//        OptionalInt currentCharIndexOpt = this.hit(x, y).getCharacterIndex();
+//        // Return true if the index is present and within the word’s bounds
+//        return currentCharIndexOpt.isPresent() &&
+//                currentCharIndexOpt.getAsInt() >= wordStart &&
+//                currentCharIndexOpt.getAsInt() < wordEnd;
+//    }
