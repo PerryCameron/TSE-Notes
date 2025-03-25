@@ -68,6 +68,9 @@ public class SpellCheckArea extends CodeArea {
             if (event.getButton() == MouseButton.SECONDARY) {
                 handleRightClick(event); // Call the handler for right-click events
             }
+            else if (event.getButton() == MouseButton.PRIMARY) {
+                handleLeftClick(event); // Call the handler for left-click events
+            }
         });
 
 
@@ -304,7 +307,38 @@ public class SpellCheckArea extends CodeArea {
         });
         return addToDict;
     }
+
+    // Handles left-click events to hide the context menu if clicked outside it
+    private void handleLeftClick(MouseEvent event) {
+        ContextMenu contextMenu = noteModel.contextMenuProperty().get();
+        // If the context menu isn’t showing, no action is needed
+        if (!contextMenu.isShowing()) {
+            return;
+        }
+
+        // Get the screen coordinates of the left-click
+        double clickX = event.getScreenX();
+        double clickY = event.getScreenY();
+
+        // Get the bounds of the context menu in screen coordinates
+        double menuX = contextMenu.getX();
+        double menuY = contextMenu.getY();
+        double menuWidth = contextMenu.getWidth();
+        double menuHeight = contextMenu.getHeight();
+
+        // Check if the click is outside the context menu’s bounds
+        boolean isOutsideMenu = clickX < menuX || clickX > (menuX + menuWidth) ||
+                clickY < menuY || clickY > (menuY + menuHeight);
+
+        // If the click is outside, hide the context menu
+        if (isOutsideMenu) {
+            contextMenu.hide();
+            logger.debug("Left-click outside context menu at ({}, {}), hiding menu", clickX, clickY);
+        }
+    }
 }
+
+
 
 
 // This method works on a delay, it works beautiful but then I realized that a right click was better
