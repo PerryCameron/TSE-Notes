@@ -6,6 +6,7 @@ import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
@@ -18,6 +19,7 @@ import org.fxmisc.richtext.model.StyleSpan;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import java.time.Duration;
 import java.util.Collection;
@@ -217,7 +219,8 @@ public class SpellCheckArea extends CodeArea {
             return;
         }
 
-        noteModel.contextMenuProperty().get().getItems().clear();
+        ContextMenu contextMenu = noteModel.contextMenuProperty().get();
+        contextMenu.getItems().clear();
         List<String> suggestions = noteModel.hunspellProperty().get().suggest(cleanWord);
         logger.debug("Word '{}': suggestions={}", cleanWord, suggestions);
 
@@ -230,18 +233,21 @@ public class SpellCheckArea extends CodeArea {
                     item.setOnAction(e -> {
                         this.replaceText(finalWordStart, finalWordEnd, suggestion);
                         noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
-                        noteModel.contextMenuProperty().get().hide();
+                        contextMenu.hide();
                     });
-                    noteModel.contextMenuProperty().get().getItems().add(item);
+                    contextMenu.getItems().add(item);
                 }
             }
         }
 
+        // Add the "Add to Dictionary" menu item using the provided method
         MenuItem addToDict = getMenuItem(cleanWord);
-        noteModel.contextMenuProperty().get().getItems().add(addToDict);
+        contextMenu.getItems().add(addToDict);
 
         logger.debug("Showing context menu with {} items", noteModel.contextMenuProperty().get().getItems().size());
-        noteModel.contextMenuProperty().get().show(this, event.getScreenX(), event.getScreenY());
+
+        // Show the context menu
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
     }
 
     private MenuItem getMenuItem(String cleanWord) {
