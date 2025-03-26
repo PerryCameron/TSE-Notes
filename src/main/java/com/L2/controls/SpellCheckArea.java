@@ -4,7 +4,6 @@ import com.L2.enums.AreaType;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
-import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.ContextMenu;
@@ -72,8 +71,6 @@ public class SpellCheckArea extends CodeArea {
                 handleLeftClick(event); // Call the handler for left-click events
             }
         });
-
-
         setBridgeToBind(stringProperty);
         setUpSpellCheckingWithDebounce();
     }
@@ -187,7 +184,7 @@ public class SpellCheckArea extends CodeArea {
         OptionalInt charIndexOpt = this.hit(event.getX(), event.getY()).getCharacterIndex();
 
         // If no character index is present (e.g., clicked on an empty area), log it and exit
-        if (!charIndexOpt.isPresent()) {
+        if (charIndexOpt.isEmpty()) {
             logger.debug("No character index at ({}, {})", event.getX(), event.getY());
             contextMenu.hide(); // Hide any existing menu
             return;
@@ -295,11 +292,11 @@ public class SpellCheckArea extends CodeArea {
         // Set the text color to green using an inline style
         addToDict.setStyle("-fx-text-fill: green;");
 
-        String finalCleanWord = cleanWord;
         addToDict.setOnAction(e -> {
-            noteModel.hunspellProperty().get().add(finalCleanWord);
-            noteModel.newWordProperty().set(finalCleanWord);
+            noteModel.hunspellProperty().get().add(cleanWord);
+            noteModel.newWordProperty().set(cleanWord);
             noteView.getAction().accept(NoteMessage.ADD_WORD_TO_DICT);
+            // re-span all areas
             noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_SUBJECT_AREA);
             noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA);
             noteView.getAction().accept(NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA);
