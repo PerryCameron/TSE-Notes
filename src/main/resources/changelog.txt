@@ -48,5 +48,15 @@ Cleaned up pasted output to reduce 'hand pruning the output'.
 Added ability to show line types.
 Added time & Materials text field.
 
+1.0.3-9
+When adding a type to part-orders Advanced Exchanged wouldn't work unless you selected something else first and then selected it again, this now works fine.
+plain text shipping contact to display when filled.
+improved address grab, so Canadian ones work too.
+Fixed the pasting of shipping information to be more dynamic.
+Fixed old bug, where title was not being populated in database on first insert of a new note.
+Added spell check.
+Changed forward and backward icons to be up and down to better represent movement of row highlight in list.
+
+
 
 
