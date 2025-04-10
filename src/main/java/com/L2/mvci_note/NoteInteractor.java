@@ -430,6 +430,7 @@ public class NoteInteractor {
     }
 
     private String buildPartOrderToHTML(boolean includePOHeader) {
+        System.out.println("This is called");
         StringBuilder stringBuilder = new StringBuilder();
         if (!noteModel.selectedPartOrderProperty().get().getParts().isEmpty()) {
             if (includePOHeader) {
@@ -471,6 +472,7 @@ public class NoteInteractor {
             });
             stringBuilder.append("</table>");
         }
+        System.out.println(stringBuilder.toString());
         return stringBuilder.toString();
     }
 

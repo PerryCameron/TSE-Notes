@@ -51,58 +51,111 @@ public class ClipboardUtils {
     }
 
 
-    public static void copyHtmlToClipboard(String html, String plainText) {
-        try {
-            // Ensure proper encoding for HTML
-            byte[] htmlBytes = html.getBytes(StandardCharsets.UTF_8);
-            String utf8Html = new String(htmlBytes, StandardCharsets.UTF_8);
+//    public static void copyHtmlToClipboard(String html, String plainText) {
+//        System.out.println(html);
+//        try {
+//            // Ensure proper encoding for HTML
+//            byte[] htmlBytes = html.getBytes(StandardCharsets.UTF_8);
+//            String utf8Html = new String(htmlBytes, StandardCharsets.UTF_8);
+//
+//            // Ensure proper encoding for plain text
+//            byte[] plainTextBytes = plainText.getBytes(StandardCharsets.UTF_8);
+//            String utf8PlainText = new String(plainTextBytes, StandardCharsets.UTF_8);
+//
+//
+//            // HTML clipboard format with correct lengths
+//            String htmlHeader = """
+//                    Version:0.9\r
+//                    StartHTML:%1$010d\r
+//                    EndHTML:%2$010d\r
+//                    StartFragment:%3$010d\r
+//                    EndFragment:%4$010d\r
+//                    """;
+//            String startFragment = "<!--StartFragment-->";
+//            String endFragment = "<!--EndFragment-->";
+//            String htmlContent = "<html><body>" + startFragment + utf8Html + endFragment + "</body></html>";
+//
+//
+//            int startHTML = htmlHeader.length() - 40; // 40 is the length of the placeholders
+//            int startFragmentIndex = startHTML + htmlContent.indexOf(startFragment);
+//            int endFragmentIndex = startHTML + htmlContent.indexOf(endFragment) + endFragment.length();
+//            int endHTML = startHTML + htmlContent.length();
+//
+//
+//            String formattedHtml = String.format(htmlHeader, startHTML, endHTML, startFragmentIndex, endFragmentIndex) + htmlContent;
+//
+//
+//            // Set the clipboard data
+//            User32.INSTANCE.OpenClipboard(null);
+//            User32.INSTANCE.EmptyClipboard();
+//            try {
+//                // Set HTML format
+//                int CF_HTML = User32.INSTANCE.RegisterClipboardFormat("HTML Format");
+//                setClipboardData(CF_HTML, formattedHtml);
+//
+//
+//                // Set Plain Text format
+//                int CF_TEXT = 1; // 1 is CF_TEXT, which is the standard text format
+//                setClipboardData(CF_TEXT, utf8PlainText);
+//            } finally {
+//                User32.INSTANCE.CloseClipboard();
+//            }
+//        } catch (Exception e) {
+//            logger.error(e.getMessage(), e);
+//        }
+//    }
+public static void copyHtmlToClipboard(String html, String plainText) {
+    System.out.println("Input HTML: " + html);
+    try {
+        // Ensure proper encoding
+        byte[] htmlBytes = html.getBytes(StandardCharsets.UTF_8);
+        String utf8Html = new String(htmlBytes, StandardCharsets.UTF_8);
 
-            // Ensure proper encoding for plain text
-            byte[] plainTextBytes = plainText.getBytes(StandardCharsets.UTF_8);
-            String utf8PlainText = new String(plainTextBytes, StandardCharsets.UTF_8);
+        byte[] plainTextBytes = plainText.getBytes(StandardCharsets.UTF_8);
+        String utf8PlainText = new String(plainTextBytes, StandardCharsets.UTF_8);
 
+        // HTML clipboard format
+        String htmlHeader = "Version:0.9\r\nStartHTML:%1$010d\r\nEndHTML:%2$010d\r\nStartFragment:%3$010d\r\nEndFragment:%4$010d\r\n";
+        String startFragment = "<!--StartFragment-->";
+        String endFragment = "<!--EndFragment-->";
+        String htmlContent = "<html><body>" + startFragment + utf8Html + endFragment + "</body></html>";
 
-            // HTML clipboard format with correct lengths
-            String htmlHeader = """
-                    Version:0.9\r
-                    StartHTML:%1$010d\r
-                    EndHTML:%2$010d\r
-                    StartFragment:%3$010d\r
-                    EndFragment:%4$010d\r
-                    """;
-            String startFragment = "<!--StartFragment-->";
-            String endFragment = "<!--EndFragment-->";
-            String htmlContent = "<html><body>" + startFragment + utf8Html + endFragment + "</body></html>";
+        // Calculate offsets
+        String tempHeader = "Version:0.9\r\nStartHTML:0000000000\r\nEndHTML:0000000000\r\nStartFragment:0000000000\r\nEndFragment:0000000000\r\n";
+        int startHTML = tempHeader.length();
+        int startFragmentIndex = startHTML + "<html><body>".length() + startFragment.length();
+        int endFragmentIndex = startFragmentIndex + utf8Html.length();
+        int endHTML = startHTML + htmlContent.length();
 
+        String formattedHtml = String.format(htmlHeader, startHTML, endHTML, startFragmentIndex, endFragmentIndex) + htmlContent;
+        System.out.println("Formatted HTML: " + formattedHtml);
 
-            int startHTML = htmlHeader.length() - 40; // 40 is the length of the placeholders
-            int startFragmentIndex = startHTML + htmlContent.indexOf(startFragment);
-            int endFragmentIndex = startHTML + htmlContent.indexOf(endFragment) + endFragment.length();
-            int endHTML = startHTML + htmlContent.length();
-
-
-            String formattedHtml = String.format(htmlHeader, startHTML, endHTML, startFragmentIndex, endFragmentIndex) + htmlContent;
-
-
-            // Set the clipboard data
-            User32.INSTANCE.OpenClipboard(null);
-            User32.INSTANCE.EmptyClipboard();
-            try {
-                // Set HTML format
-                int CF_HTML = User32.INSTANCE.RegisterClipboardFormat("HTML Format");
-                setClipboardData(CF_HTML, formattedHtml);
-
-
-                // Set Plain Text format
-                int CF_TEXT = 1; // 1 is CF_TEXT, which is the standard text format
-                setClipboardData(CF_TEXT, utf8PlainText);
-            } finally {
-                User32.INSTANCE.CloseClipboard();
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+        // Set clipboard data
+        if (!User32.INSTANCE.OpenClipboard(null)) {
+            throw new Exception("Failed to open clipboard");
         }
+        try {
+            if (!User32.INSTANCE.EmptyClipboard()) {
+                throw new Exception("Failed to empty clipboard");
+            }
+
+            // Set HTML format
+            int CF_HTML = User32.INSTANCE.RegisterClipboardFormat("HTML Format");
+            setClipboardData(CF_HTML, formattedHtml);
+
+            // Set Plain Text format
+            int CF_TEXT = 1;
+            setClipboardData(CF_TEXT, utf8PlainText);
+        } finally {
+            User32.INSTANCE.CloseClipboard();
+        }
+    } catch (Exception e) {
+        logger.error("Failed to copy to clipboard: " + e.getMessage(), e);
+        throw new RuntimeException("Clipboard copy failed", e);
     }
+}
+
+    // the println: <table style="width: 100%; font-size: 13px; background-color: #F5F5F5;" class="ql-table-blob"><tbody><tr><td class="slds-cell-edit cellContainer"><span class="slds-grid slds-grid--align-spread"><a href="https://se.lightning.force.com/lightning/r/005A0000001pSZBIA2/view" target="_blank" title="FirstName LastName" class="slds-truncate outputLookupLink">Parrish Cameron</a></span></td><td class="slds-cell-edit cellContainer"><span class="slds-grid slds-grid--align-spread"><span class="slds-truncate uiOutputDateTime">4/9/2025 12:57 PM EDT</span></span></td></tr></tbody></table><br>Created WO-12898073<br><br>Provided info to service help to update warranty Case Reference #: 115588609  <br>GVXI1250KD<br>U22317000465<br>Sales / Solution Order Number: 741025271<br><br><b>Parts Ordered</b><br><table border="1"><tr><th colspan="3" style="background-color: lightgrey;">Part Order: 02121371</th></tr><tr><th>Part Number</th><th>Description</th><th>Qty</th></tr><tr><td>0J-0N-1546</td><td>POWER CABINET CONTROLLER PCIB2</td><td>1</td></tr></table><br>
 
     public static String escapeHtmlContent(String input) {
         if (input == null) return "";

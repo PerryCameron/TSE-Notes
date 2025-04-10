@@ -14,6 +14,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,8 +117,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            // Use Timestamp for database compatibility instead of toString()
-            ps.setTimestamp(1, noteDTO.getTimestamp() != null ? Timestamp.valueOf(noteDTO.getTimestamp()) : null);
+            ps.setString(1, noteDTO.getTimestamp().toString()); // Use setString instead of setTimestamp
             ps.setString(2, noteDTO.getWorkOrder());
             ps.setString(3, noteDTO.getCaseNumber());
             ps.setString(4, noteDTO.getSerialNumber());
