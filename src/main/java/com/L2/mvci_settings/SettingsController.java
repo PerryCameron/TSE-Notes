@@ -7,6 +7,7 @@ import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_main.MainController;
 import com.L2.mvci_settings.components.DictionaryMenu;
 import com.L2.mvci_settings.components.EntitlementsMenu;
+import com.L2.mvci_settings.components.GlobalSparesMenu;
 import com.L2.mvci_settings.components.UserMenu;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.layout.Region;
@@ -47,6 +48,7 @@ public class SettingsController extends Controller<SettingsMessage> {
             case SHOW_USER -> settingsInteractor.changeMenu(new UserMenu(settingsView).build());
             case SHOW_ENTITLEMENTS -> settingsInteractor.changeMenu(new EntitlementsMenu(settingsView).build());
             case SHOW_DICTIONARY -> settingsInteractor.changeMenu(new DictionaryMenu(settingsView).build());
+            case SHOW_GLOBAL_SPARES -> settingsInteractor.changeMenu(new GlobalSparesMenu(settingsView).build());
             case NEW_ENTITLEMENT -> settingsInteractor.createNewEntitlement();
             case DELETE_ENTITLEMENT -> settingsInteractor.deleteEntitlement();
             case MAKE_REFERENCE_TO_USER -> settingsInteractor.setUser(mainController.getUser());

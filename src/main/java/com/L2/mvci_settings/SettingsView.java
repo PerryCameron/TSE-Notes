@@ -33,7 +33,8 @@ public class SettingsView implements Builder<Region> {
         Button userButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_USER), "User", "/images/person-16.png");
         Button entitlementsButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_ENTITLEMENTS), "Entitlements", "/images/help-16.png");
         Button dictButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_DICTIONARY), "Dictionary", "/images/dictionary-16.png");
-        vBox.getChildren().addAll(userButton, entitlementsButton, dictButton);
+        Button globalSparesButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_GLOBAL_SPARES), "Global Spares", "/images/table-16.png");
+        vBox.getChildren().addAll(userButton, entitlementsButton, dictButton, globalSparesButton);
         return vBox;
     }
 
