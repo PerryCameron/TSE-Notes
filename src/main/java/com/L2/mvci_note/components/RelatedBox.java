@@ -20,6 +20,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+import java.time.Year;
+
 public class RelatedBox implements Component<Region> {
     private final NoteView noteView;
     private final NoteModel noteModel;
@@ -37,7 +39,7 @@ public class RelatedBox implements Component<Region> {
         this.texTextField = TextFieldFx.standardTextField(200,  "TEX");
         this.relatedCaseTextField = TextFieldFx.standardTextField(200,  "Created Case");
         this.createdWorkOrderTextField = TextFieldFx.createValidatedTextField(200,  "WO-", StringChecker::formatWorkOrder, noteView);
-        this.tAndMTextField = TextFieldFx.standardTextField(200, "T&M");
+        this.tAndMTextField = TextFieldFx.standardTextField(200, Year.now().getValue() + "-1234567");
     }
 
     @Override
