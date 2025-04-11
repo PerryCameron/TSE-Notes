@@ -55,6 +55,7 @@ public class SettingsController extends Controller<SettingsMessage> {
             case SAVE_USER -> settingsInteractor.saveUser();
             case REFRESH_ENTITLEMENT_COMBO_BOX -> mainController.action(MainMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
             case TOGGLE_SPELLCHECK -> toggleSpellCheck();
+            case CONVERT_XLSX_TO_SQL -> settingsInteractor.convertExcelToSql();
         };
     }
 

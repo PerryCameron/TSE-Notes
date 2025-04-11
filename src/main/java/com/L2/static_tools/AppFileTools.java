@@ -62,7 +62,6 @@ public class AppFileTools {
         }
     }
 
-
     public static Path getDbPath() {
         if (Files.exists(ApplicationPaths.oneDrive)) {
             logger.info("One-drive found: {}", ApplicationPaths.oneDrive);
@@ -80,5 +79,21 @@ public class AppFileTools {
             }
             return ApplicationPaths.secondaryDbDirectory;
         }
+    }
+
+    public static Path getOrCreateGlobalSparesFolder() {
+        if (Files.exists(ApplicationPaths.globalSparesDir)) {
+            logger.info("Global Spares directory found: {}", ApplicationPaths.globalSparesDir);
+            return ApplicationPaths.globalSparesDir;
+        } else {
+            try {
+                Files.createDirectories(ApplicationPaths.globalSparesDir);
+                logger.info("Global spares directory created: {}", ApplicationPaths.globalSparesDir);
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }
+        return ApplicationPaths.globalSparesDir;
     }
 }

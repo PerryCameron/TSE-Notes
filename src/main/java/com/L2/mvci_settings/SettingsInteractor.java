@@ -6,16 +6,29 @@ import com.L2.mvci_note.NoteModel;
 import com.L2.repository.implementations.EntitlementsRepositoryImpl;
 import com.L2.repository.implementations.SettingsRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
+import com.L2.static_tools.AppFileTools;
+import com.L2.static_tools.ExcelTools;
+import com.L2.static_tools.GlobalSparesSQLiteDatabaseCreator;
 import javafx.beans.property.BooleanProperty;
+import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SettingsInteractor {
 
@@ -90,5 +103,28 @@ public class SettingsInteractor {
 
     public void saveSpellCheckStatus() {
         settingsRepo.setSpellCheckEnabled(settingsModel.isSpellCheckProperty().get().selectedProperty().get());
+    }
+
+    public void convertExcelToSql() {
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                // Paste the main Excel-to-SQLite logic here, using filePath
+                try (FileInputStream fis = new FileInputStream(settingsModel.filePathProperty().get());
+                     Workbook workbook = new XSSFWorkbook(fis))
+                {
+//                    String timestamp = String.valueOf(Instant.now().getEpochSecond());
+                    // TODO add timestamp to end of database name in future
+                    // make sure folder for global spares exists and if not create it.
+                    AppFileTools.getOrCreateGlobalSparesFolder();
+                    GlobalSparesSQLiteDatabaseCreator.createDataBase("global-spares.db");
+                    ExcelTools.getSheet3(workbook);
+                }
+                return null;
+            }
+        };
+        task.setOnSucceeded(e -> System.out.println("Conversion complete"));
+        task.setOnFailed(e -> task.getException().printStackTrace());
+        new Thread(task).start();
     }
 }

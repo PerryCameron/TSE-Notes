@@ -52,13 +52,12 @@ public class GlobalSparesMenu implements Builder<Region> {
             if (dragboard.hasFiles()) {
                 // Get the first file from the dragboard
                 String filePath = dragboard.getFiles().get(0).getAbsolutePath();
-
-                // Update the text with the file path
-                dropText.setText("File path: " + filePath);
-
+                // place path in our model
+                settingsModel.filePathProperty().set(filePath);
+                // send signal to turn file into SQLdatabalse
+                action.accept(SettingsMessage.CONVERT_XLSX_TO_SQL);
                 // You can also print to console or use the path elsewhere
                 System.out.println("Dropped file path: " + filePath);
-
                 success = true;
             }
 
