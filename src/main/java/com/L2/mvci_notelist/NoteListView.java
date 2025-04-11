@@ -85,7 +85,7 @@ public class NoteListView implements Builder<Region> {
     }
 
     private Node numberOfRecordsLabel() {
-        Label label = new Label("Records:");
+        Label label = new Label("Notes:");
         label.setPadding(new Insets(0, 0, 0, 10));
         label.getStyleClass().add("prominent-label");
         return label;
