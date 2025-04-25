@@ -10,23 +10,15 @@ public class ProductToSpares {
     private String standardExchangeItem;
     private String spareDescription;
     private String catalogueVersion;
-    private Date productEndOfServiceDate;
-    private Date lastUpdate;
-    private Date addedToCatalogue;
-    private String comments;
-    private Double productGDP;
-    private String productLineHeliosCode;
+    private String productEndOfServiceDate;
+    private String lastUpdate;
+    private String addedToCatalogue;
 
     // Default constructor
     public ProductToSpares() {
     }
 
-    // Parameterized constructor
-    public ProductToSpares(String pimRange, String pimProductFamily, String spareItem,
-                   String replacementItem, String standardExchangeItem, String spareDescription,
-                   String catalogueVersion, Date productEndOfServiceDate, Date lastUpdate,
-                   Date addedToCatalogue, String comments, Double productGDP,
-                   String productLineHeliosCode) {
+    public ProductToSpares(String pimRange, String pimProductFamily, String spareItem, String replacementItem, String standardExchangeItem, String spareDescription, String catalogueVersion, String productEndOfServiceDate, String lastUpdate, String addedToCatalogue) {
         this.pimRange = pimRange;
         this.pimProductFamily = pimProductFamily;
         this.spareItem = spareItem;
@@ -37,9 +29,6 @@ public class ProductToSpares {
         this.productEndOfServiceDate = productEndOfServiceDate;
         this.lastUpdate = lastUpdate;
         this.addedToCatalogue = addedToCatalogue;
-        this.comments = comments;
-        this.productGDP = productGDP;
-        this.productLineHeliosCode = productLineHeliosCode;
     }
 
     // Getters and Setters
@@ -99,71 +88,27 @@ public class ProductToSpares {
         this.catalogueVersion = catalogueVersion;
     }
 
-    public Date getProductEndOfServiceDate() {
+    public String getProductEndOfServiceDate() {
         return productEndOfServiceDate;
     }
 
-    public void setProductEndOfServiceDate(Date productEndOfServiceDate) {
+    public void setProductEndOfServiceDate(String productEndOfServiceDate) {
         this.productEndOfServiceDate = productEndOfServiceDate;
     }
 
-    public Date getLastUpdate() {
+    public String getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Date lastUpdate) {
+    public void setLastUpdate(String lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
-    public Date getAddedToCatalogue() {
+    public String getAddedToCatalogue() {
         return addedToCatalogue;
     }
 
-    public void setAddedToCatalogue(Date addedToCatalogue) {
+    public void setAddedToCatalogue(String addedToCatalogue) {
         this.addedToCatalogue = addedToCatalogue;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public Double getProductGDP() {
-        return productGDP;
-    }
-
-    public void setProductGDP(Double productGDP) {
-        this.productGDP = productGDP;
-    }
-
-    public String getProductLineHeliosCode() {
-        return productLineHeliosCode;
-    }
-
-    public void setProductLineHeliosCode(String productLineHeliosCode) {
-        this.productLineHeliosCode = productLineHeliosCode;
-    }
-
-    // Optional: toString method for easy printing
-    @Override
-    public String toString() {
-        return "Product{" +
-                "pimRange='" + pimRange + '\'' +
-                ", pimProductFamily='" + pimProductFamily + '\'' +
-                ", spareItem='" + spareItem + '\'' +
-                ", replacementItem='" + replacementItem + '\'' +
-                ", standardExchangeItem='" + standardExchangeItem + '\'' +
-                ", spareDescription='" + spareDescription + '\'' +
-                ", catalogueVersion='" + catalogueVersion + '\'' +
-                ", productEndOfServiceDate=" + productEndOfServiceDate +
-                ", lastUpdate=" + lastUpdate +
-                ", addedToCatalogue=" + addedToCatalogue +
-                ", comments='" + comments + '\'' +
-                ", productGDP=" + productGDP +
-                ", productLineHeliosCode='" + productLineHeliosCode + '\'' +
-                '}';
     }
 }

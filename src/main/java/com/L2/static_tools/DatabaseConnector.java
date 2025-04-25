@@ -26,5 +26,20 @@ public class DatabaseConnector {
         }
         return dataSource;
     }
+
+    public static SQLiteDataSource getGlobalSparesDataSource(String caller) {
+        String DATABASE_URL = "jdbc:sqlite:" + ApplicationPaths.globalSparesDir + "/global-spares.db";
+        SQLiteDataSource dataSource = new SQLiteDataSource();
+        dataSource.setUrl(DATABASE_URL);
+
+        try {
+            // Test the connection
+            dataSource.getConnection().close();
+            logger.info("Connection to {} has been established -> {}", caller, DATABASE_URL);
+        } catch (SQLException e) {
+            logger.error("Failed to establish SQLite connection to global spares database.", e);
+        }
+        return dataSource;
+    }
 }
 

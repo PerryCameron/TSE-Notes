@@ -1,98 +1,60 @@
 package com.L2.static_tools;
 
+import com.L2.dto.global_spares.ProductToSpares;
+import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
+import com.L2.repository.interfaces.GlobalSparesRepository;
 import org.apache.poi.ss.usermodel.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.List;
+import java.text.ParseException;
 
 public class ExcelTools {
-//    private static void processSheet(Workbook workbook, Connection conn, String sheetName, int numColumns, List<Integer> columnIndices) throws SQLException {
-//        Sheet sheet = workbook.getSheet(sheetName);
-//        if (sheet == null) {
-//            System.out.println("Sheet " + sheetName + " not found.");
-//            return;
-//        }
-//
-//        // Create table dynamically based on sheet name and number of columns
-//        String tableName = sheetName.replaceAll("[^a-zA-Z0-9]", "_").toLowerCase();
-//        StringBuilder createTableSQL = new StringBuilder("CREATE TABLE IF NOT EXISTS " + tableName + " (");
-//        for (int i = 0; i < numColumns; i++) {
-//            createTableSQL.append("col").append(i).append(" TEXT");
-//            if (i < numColumns - 1) createTableSQL.append(", ");
-//        }
-//        createTableSQL.append(")");
-//        try (PreparedStatement stmt = conn.prepareStatement(createTableSQL.toString())) {
-//            stmt.execute();
-//        }
-//
-//        // Prepare insert statement
-//        StringBuilder insertSQL = new StringBuilder("INSERT INTO " + tableName + " VALUES (");
-//        for (int i = 0; i < numColumns; i++) {
-//            insertSQL.append("?");
-//            if (i < numColumns - 1) insertSQL.append(", ");
-//        }
-//        insertSQL.append(")");
-//        PreparedStatement insertStmt = conn.prepareStatement(insertSQL.toString());
-//
-//        // Iterate through rows
-//        int rowCount = 0;
-//        for (Row row : sheet) {
-//            // Skip header row if needed (uncomment if your data has headers)
-//            // if (rowCount == 0) { rowCount++; continue; }
-//
-//            // Clear previous parameters
-//            insertStmt.clearParameters();
-//
-//            // Read only specified columns
-//            for (int i = 0; i < numColumns; i++) {
-//                int colIndex = columnIndices.get(i);
-//                Cell cell = row.getCell(colIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-//                String cellValue = getCellValueAsString(cell);
-//                insertStmt.setString(i + 1, cellValue);
-//            }
-//
-//            // Execute insert
-//            insertStmt.executeUpdate();
-//
-//            rowCount++;
-//            if (rowCount % 1000 == 0) {
-//                System.out.println("Processed " + rowCount + " rows for " + sheetName);
-//            }
-//        }
-//
-//        System.out.println("Finished processing " + rowCount + " rows for " + sheetName);
-//        insertStmt.close();
-//    }
 
-    public static boolean getSheet3(Workbook workbook) {
-        // Get the "Product to Spares" sheet (third sheet, index 2)
+
+    public static boolean extractProductToSparesSheet(Workbook workbook) throws ParseException {
+        GlobalSparesRepository globalSparesRepository = new GlobalSparesRepositoryImpl();
         Sheet sheet = workbook.getSheet("Product to Spares");
         if (sheet == null) {
             System.out.println("Sheet 'Product to Spares' not found.");
             return false;
         }
-        // Counter for rows processed
-        int rowCount = 0;
         // Iterate through the first 10 rows
         for (Row row : sheet) {
-            if (rowCount >= 10) {
+            // this is temp for testing
+            if (row.getRowNum() >= 10) {
                 break; // Stop after 10 rows
             }
-            // Build a string for the row
-            StringBuilder rowData = new StringBuilder("Row " + rowCount + ": ");
+            // we will not start writing until we get to row three
+            if (row.getRowNum() < 3) {
+                continue;
+            }
+            // start rowCount when we begin
+
+            StringBuilder rowData = new StringBuilder("Row " + row.getRowNum() + ": ");
+            ProductToSpares productToSpares = new ProductToSpares();
             int colCount = 0;
             for (Cell cell : row) {
                 String cellValue = getCellValueAsString(cell);
+                switch (colCount) {
+                    case 0 -> productToSpares.setPimRange(cellValue);
+                    case 1 -> productToSpares.setPimProductFamily(cellValue);
+                    case 2 -> productToSpares.setSpareItem(cellValue);
+                    case 3 -> productToSpares.setReplacementItem(cellValue);
+                    case 4 -> productToSpares.setStandardExchangeItem(cellValue);
+                    case 5 -> productToSpares.setSpareDescription(cellValue);
+                    case 6 -> productToSpares.setCatalogueVersion(cellValue);
+                    case 7 -> productToSpares.setProductEndOfServiceDate(cellValue);
+                    case 8 -> productToSpares.setLastUpdate(cellValue);
+                    case 9 -> productToSpares.setAddedToCatalogue(cellValue);
+                }
                 rowData.append(colCount + ")" + cellValue).append("\t");
+
                 colCount++;
             }
             // Print the row
-            System.out.println(rowData.toString());
-            rowCount++;
+            globalSparesRepository.insertProductToSpare(productToSpares);
+//            System.out.println(rowData);
         }
 
-        System.out.println("Printed " + rowCount + " rows from 'Product to Spares'.");
         return true;
     }
 

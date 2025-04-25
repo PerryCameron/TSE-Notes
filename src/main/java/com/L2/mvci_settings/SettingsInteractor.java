@@ -13,22 +13,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SettingsInteractor {
 
@@ -36,6 +25,8 @@ public class SettingsInteractor {
     private final UserRepositoryImpl userRepo;
     private final EntitlementsRepositoryImpl entitlementRepo;
     private final SettingsRepositoryImpl settingsRepo;
+    private boolean isProcessing = false; // Extra flag to prevent multiple runs
+    private Task<Void> currentTask;
 
     public SettingsInteractor(SettingsModel settingsModel) {
         this.settingsModel = settingsModel;
@@ -65,15 +56,15 @@ public class SettingsInteractor {
     }
 
     public void deleteEntitlement() {
-        if(settingsModel.currentEntitlementProperty().get() != null) {
-        entitlementRepo.deleteEntitlement(settingsModel.currentEntitlementProperty().get());
-        settingsModel.getEntitlements().remove(settingsModel.currentEntitlementProperty().get());
+        if (settingsModel.currentEntitlementProperty().get() != null) {
+            entitlementRepo.deleteEntitlement(settingsModel.currentEntitlementProperty().get());
+            settingsModel.getEntitlements().remove(settingsModel.currentEntitlementProperty().get());
         }
     }
 
     public void printEntitlements() {
         System.out.println("Printing Entitlements.....");
-        for(EntitlementDTO entitlementDTO : settingsModel.getEntitlements()) {
+        for (EntitlementDTO entitlementDTO : settingsModel.getEntitlements()) {
             System.out.println(entitlementDTO.toFancyString());
         }
     }
@@ -105,26 +96,78 @@ public class SettingsInteractor {
         settingsRepo.setSpellCheckEnabled(settingsModel.isSpellCheckProperty().get().selectedProperty().get());
     }
 
+
     public void convertExcelToSql() {
-        Task<Void> task = new Task<>() {
+        if (isProcessing) {
+            System.out.println("Already processing, skipping new run.");
+            return;
+        }
+        if (currentTask != null && !currentTask.isDone()) {
+            System.out.println("Task still running, skipping new run.");
+            return;
+        }
+
+        isProcessing = true;
+        System.out.println("Starting convertExcelToSql: " + System.currentTimeMillis());
+        logMemory("Before task start");
+
+        currentTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                // Paste the main Excel-to-SQLite logic here, using filePath
-                try (FileInputStream fis = new FileInputStream(settingsModel.filePathProperty().get());
-                     Workbook workbook = new XSSFWorkbook(fis))
-                {
-//                    String timestamp = String.valueOf(Instant.now().getEpochSecond());
-                    // TODO add timestamp to end of database name in future
-                    // make sure folder for global spares exists and if not create it.
+                String filePath = settingsModel.filePathProperty().get();
+                if (filePath == null || filePath.isEmpty()) {
+                    System.out.println("No file path provided.");
+                    return null;
+                }
+
+                logMemory("Before workbook load");
+                try (FileInputStream fis = new FileInputStream(filePath);
+                     XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
+                    logMemory("After workbook load");
+
                     AppFileTools.getOrCreateGlobalSparesFolder();
                     GlobalSparesSQLiteDatabaseCreator.createDataBase("global-spares.db");
-                    ExcelTools.getSheet3(workbook);
+                    ExcelTools.extractProductToSparesSheet(workbook);
+                    logMemory("Before workbook close");
                 }
+                logMemory("After workbook close");
+
                 return null;
             }
         };
-        task.setOnSucceeded(e -> System.out.println("Conversion complete"));
-        task.setOnFailed(e -> task.getException().printStackTrace());
-        new Thread(task).start();
+
+        currentTask.setOnSucceeded(e -> {
+            System.out.println("Conversion complete");
+            logMemory("Task succeeded");
+            currentTask = null;
+            isProcessing = false;
+            System.gc(); // Ensure full release
+            logMemory("After task GC");
+        });
+        currentTask.setOnFailed(e -> {
+            System.out.println("Task failed: " + currentTask.getException());
+            logMemory("Task failed");
+            currentTask = null;
+            isProcessing = false;
+            System.gc();
+            logMemory("After task GC");
+        });
+        currentTask.setOnCancelled(e -> {
+            System.out.println("Task cancelled");
+            logMemory("Task cancelled");
+            currentTask = null;
+            isProcessing = false;
+            System.gc();
+            logMemory("After task GC");
+        });
+
+        new Thread(currentTask).start();
+    }
+
+
+    private void logMemory(String point) {
+        Runtime rt = Runtime.getRuntime();
+        long usedMB = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
+        System.out.println(point + ": " + usedMB + " MB");
     }
 }

@@ -1,6 +1,8 @@
 package com.L2.static_tools;
 
-import com.L2.BaseApplication;
+import com.L2.repository.implementations.EntitlementsRepositoryImpl;
+import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
+import com.L2.repository.interfaces.GlobalSparesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,21 +11,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 public class GlobalSparesSQLiteDatabaseCreator {
 
+
     private static final Logger logger = LoggerFactory.getLogger(GlobalSparesSQLiteDatabaseCreator.class);
 
-    public static void main(String[] args) {
-        createDataBase("global-spares.db");
-    }
+//    public static void main(String[] args) {
+//        createDataBase("global-spares.db");
+//    }
 
     public static void createDataBase(String databaseName) {
     Path path = AppFileTools.getDbPath();
         logger.info("Creating database...{}", path.toString());
-        String url = "jdbc:sqlite:" + ApplicationPaths.globalSparesDir.resolve(databaseName);
+        String url = "jdbc:sqlite:" + ApplicationPaths.globalSparesDir.resolve("global-spares.db");
 
         // SQL commands for creating tables
         String createTables = """

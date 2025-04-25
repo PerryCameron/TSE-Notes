@@ -61,9 +61,9 @@ dependencies {
     implementation("org.fxmisc.richtext:richtextfx:0.11.2")
     // dictionary
     implementation("com.nikialeksey:jhunspell:1.0.5")
-    // Apache POI for .xlsx files
-    implementation("org.apache.poi:poi:5.3.0")
-    implementation("org.apache.poi:poi-ooxml:5.3.0")
+//     Apache POI for .xlsx files
+    implementation("org.apache.poi:poi:5.4.1")
+    implementation("org.apache.poi:poi-ooxml:5.4.1")
     testImplementation("ch.qos.logback:logback-classic:1.5.6")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
