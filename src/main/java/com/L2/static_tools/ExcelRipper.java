@@ -5,12 +5,13 @@ import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.repository.interfaces.GlobalSparesRepository;
 import org.apache.poi.ss.usermodel.*;
 
-import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class ExcelTools {
+public class ExcelRipper {
 
 
-    public static boolean extractProductToSparesSheet(Workbook workbook) throws ParseException {
+    public static boolean extractProductToSparesSheet(Workbook workbook) {
         GlobalSparesRepository globalSparesRepository = new GlobalSparesRepositoryImpl();
         Sheet sheet = workbook.getSheet("Product to Spares");
         if (sheet == null) {
@@ -46,26 +47,28 @@ public class ExcelTools {
                     case 8 -> productToSpares.setLastUpdate(cellValue);
                     case 9 -> productToSpares.setAddedToCatalogue(cellValue);
                 }
-                rowData.append(colCount + ")" + cellValue).append("\t");
-
+//                rowData.append(colCount + ")" + cellValue).append("\t");
                 colCount++;
             }
             // Print the row
             globalSparesRepository.insertProductToSpare(productToSpares);
-//            System.out.println(rowData);
+            System.out.println(rowData);
         }
 
         return true;
     }
 
     public static String getCellValueAsString(Cell cell) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if (cell == null) return "";
         switch (cell.getCellType()) {
             case STRING:
                 return cell.getStringCellValue();
             case NUMERIC:
                 if (DateUtil.isCellDateFormatted(cell)) {
-                    return cell.getDateCellValue().toString();
+                    // Format the date to "yyyy-MM-dd HH:mm:ss"
+                    Date date = cell.getDateCellValue();
+                    return dateFormat.format(date);
                 }
                 // Format numbers to avoid scientific notation
                 return String.format("%.8f", cell.getNumericCellValue()).replaceAll("\\.0+$", "");

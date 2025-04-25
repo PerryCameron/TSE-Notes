@@ -1,8 +1,5 @@
 package com.L2.static_tools;
 
-import com.L2.repository.implementations.EntitlementsRepositoryImpl;
-import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
-import com.L2.repository.interfaces.GlobalSparesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,14 +14,10 @@ public class GlobalSparesSQLiteDatabaseCreator {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalSparesSQLiteDatabaseCreator.class);
 
-//    public static void main(String[] args) {
-//        createDataBase("global-spares.db");
-//    }
-
     public static void createDataBase(String databaseName) {
     Path path = AppFileTools.getDbPath();
         logger.info("Creating database...{}", path.toString());
-        String url = "jdbc:sqlite:" + ApplicationPaths.globalSparesDir.resolve("global-spares.db");
+        String url = "jdbc:sqlite:" + ApplicationPaths.globalSparesDir.resolve(databaseName);
 
         // SQL commands for creating tables
         String createTables = """
@@ -40,7 +33,7 @@ public class GlobalSparesSQLiteDatabaseCreator {
                     end_of_service_date TEXT,
                     last_update TEXT,
                     added_to_catalogue TEXT
-                );                
+                );
                 """;
 
         try (Connection conn = DriverManager.getConnection(url);

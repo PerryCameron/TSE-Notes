@@ -7,7 +7,7 @@ import com.L2.repository.implementations.EntitlementsRepositoryImpl;
 import com.L2.repository.implementations.SettingsRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
 import com.L2.static_tools.AppFileTools;
-import com.L2.static_tools.ExcelTools;
+import com.L2.static_tools.ExcelRipper;
 import com.L2.static_tools.GlobalSparesSQLiteDatabaseCreator;
 import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
@@ -119,15 +119,16 @@ public class SettingsInteractor {
                     System.out.println("No file path provided.");
                     return null;
                 }
-
                 logMemory("Before workbook load");
                 try (FileInputStream fis = new FileInputStream(filePath);
                      XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
                     logMemory("After workbook load");
-
+                    // create the folder to hold database if it does not exist
                     AppFileTools.getOrCreateGlobalSparesFolder();
+                    // creates the database and puts it in database folder
                     GlobalSparesSQLiteDatabaseCreator.createDataBase("global-spares.db");
-                    ExcelTools.extractProductToSparesSheet(workbook);
+                    // extracts information from xlsx file and updates database with extracted information
+                    ExcelRipper.extractProductToSparesSheet(workbook);
                     logMemory("Before workbook close");
                 }
                 logMemory("After workbook close");
