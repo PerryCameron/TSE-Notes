@@ -23,11 +23,23 @@ public class AddressParser {
 
     // Extract address between "Address:" and "Order Details"
     public static Map<String, String> extractAddress(String email) {
-        String addressBlock = extractAddressBlock(email);
-        if (addressBlock == null || addressBlock.isEmpty()) {
-            throw new IllegalArgumentException("No address block found");
+        // If all else fails it will still parse the email.
+        try {
+            String addressBlock = extractAddressBlock(email);
+            if (addressBlock == null || addressBlock.isEmpty()) {
+                throw new IllegalArgumentException("No address block found");
+            }
+            return parseAddress(addressBlock, null, null);
+        } catch (Exception e) {  // something gave an exception so we give up on knowing what happened
+            logger.error(e.getMessage());
+            Map<String,String> addressComponents = new HashMap<>();
+            addressComponents.put("Zip", "???");
+            addressComponents.put("State", "???");
+            addressComponents.put("Country", "???");
+            addressComponents.put("City", "???");
+            addressComponents.put("Street", "???");
+            return addressComponents;
         }
-        return parseAddress(addressBlock, null, null);
     }
 
     // Extract text between "Address:" and "Order Details"
@@ -114,8 +126,6 @@ public class AddressParser {
             // Get the city
             if(componentLocations.get("postalCode").getStart() > 0) {  // if this is null we get an exception
                 if(componentLocations.get("streetType") != null) {
-                    System.out.println("componentLocations.get(\"streetType\")=" + componentLocations.get("streetType"));
-                    try {
                         String city = addressBlock.substring(componentLocations.get("streetType").getEnd() + 1,
                                 componentLocations.get("state").getStart() - 1);
                         // has apt, ste, rm etc in string
@@ -129,9 +139,6 @@ public class AddressParser {
                         } else {
                             addressComponents.put("City", capitalizeWords(removeAllCommasAndSpaces(city)));
                         }
-                    } catch (Exception e) {
-                        addressComponents.put("City", "???");
-                    }
                 }
             } else {
                 // we don't have a Zip
@@ -231,7 +238,6 @@ public class AddressParser {
         if (lastMatchedRange == null) {
             logger.warn("No street type found");
         }
-        System.out.println("street type: " + lastMatchedRange);
         return lastMatchedRange;
     }
 
