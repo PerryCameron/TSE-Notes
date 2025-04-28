@@ -430,7 +430,7 @@ public class NoteInteractor {
     }
 
     private String buildPartOrderToHTML(boolean includePOHeader) {
-        System.out.println("This is called");
+        System.out.println("buildPartOrderToHTML called");
         StringBuilder stringBuilder = new StringBuilder();
         if (!noteModel.selectedPartOrderProperty().get().getParts().isEmpty()) {
             if (includePOHeader) {
@@ -477,6 +477,7 @@ public class NoteInteractor {
     }
 
     private String buildPartOrderToPlainText() {
+        System.out.println("buildPartOrderToPlainText() called");
         PartOrderDTO partOrderDTO = noteModel.selectedPartOrderProperty().get();
         StringBuilder stringBuilder = new StringBuilder();
         ObservableList<PartDTO> parts = partOrderDTO.getParts();

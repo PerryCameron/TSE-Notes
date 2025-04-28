@@ -114,18 +114,23 @@ public class AddressParser {
             // Get the city
             if(componentLocations.get("postalCode").getStart() > 0) {  // if this is null we get an exception
                 if(componentLocations.get("streetType") != null) {
-                    String city = addressBlock.substring(componentLocations.get("streetType").getEnd() + 1,
-                            componentLocations.get("state").getStart() - 1);
-                    // has apt, ste, rm etc in string
-                    if(containsUnit) {
-                        String[] unitAndCity = extractUnitAndRemainingText(city.trim());
-                        if(unitAndCity != null) {
-                            String newStreet = addressComponents.get("Street") + ", " + unitAndCity[0] + " " + unitAndCity[1];
-                            addressComponents.put("Street", capitalizeWords(newStreet));
-                            addressComponents.put("City", unitAndCity[2]);
+                    System.out.println("componentLocations.get(\"streetType\")=" + componentLocations.get("streetType"));
+                    try {
+                        String city = addressBlock.substring(componentLocations.get("streetType").getEnd() + 1,
+                                componentLocations.get("state").getStart() - 1);
+                        // has apt, ste, rm etc in string
+                        if (containsUnit) {
+                            String[] unitAndCity = extractUnitAndRemainingText(city.trim());
+                            if (unitAndCity != null) {
+                                String newStreet = addressComponents.get("Street") + ", " + unitAndCity[0] + " " + unitAndCity[1];
+                                addressComponents.put("Street", capitalizeWords(newStreet));
+                                addressComponents.put("City", unitAndCity[2]);
+                            }
+                        } else {
+                            addressComponents.put("City", capitalizeWords(removeAllCommasAndSpaces(city)));
                         }
-                    } else {
-                        addressComponents.put("City", capitalizeWords(removeAllCommasAndSpaces(city)));
+                    } catch (Exception e) {
+                        addressComponents.put("City", "???");
                     }
                 }
             } else {
