@@ -21,9 +21,9 @@ public class ExcelRipper {
         // Iterate through the first 10 rows
         for (Row row : sheet) {
             // this is temp for testing
-            if (row.getRowNum() >= 10) {
-                break; // Stop after 10 rows
-            }
+//            if (row.getRowNum() >= 10) {
+//                break; // Stop after 10 rows
+//            }
             // we will not start writing until we get to row three
             if (row.getRowNum() < 3) {
                 continue;
@@ -49,10 +49,13 @@ public class ExcelRipper {
                 }
 //                rowData.append(colCount + ")" + cellValue).append("\t");
                 colCount++;
+                if (colCount % 5000 == 0) {
+                    System.out.println(colCount);
+                }
             }
             // Print the row
             globalSparesRepository.insertProductToSpare(productToSpares);
-            System.out.println(rowData);
+//            System.out.println(rowData);
         }
 
         return true;

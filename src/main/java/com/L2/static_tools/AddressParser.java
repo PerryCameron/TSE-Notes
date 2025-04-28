@@ -98,17 +98,21 @@ public class AddressParser {
                 MatchedRange usZip = findUSZipCode(addressBlock);
                 if(usZip != null) {
                     componentLocations.put("postalCode", usZip);
+                } else {
+                    componentLocations.put("postalCode", new MatchedRange(0, 0, "unknown"));
                 }
             } else if(stateOrProvence.getType().equals("Canada")) {
                 MatchedRange caZip = findCanadaZipCode(addressBlock);
                 if(caZip != null) {
                     componentLocations.put("postalCode", caZip);
+                } else {
+                    componentLocations.put("postalCode", new MatchedRange(0, 0, "unknown"));
                 }
             } else {
                 componentLocations.put("postalCode", new MatchedRange(0, 0, "unknown"));
             }
             // Get the city
-            if(componentLocations.get("postalCode").getStart() > 0) {
+            if(componentLocations.get("postalCode").getStart() > 0) {  // if this is null we get an exception
                 if(componentLocations.get("streetType") != null) {
                     String city = addressBlock.substring(componentLocations.get("streetType").getEnd() + 1,
                             componentLocations.get("state").getStart() - 1);
