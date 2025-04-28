@@ -30,41 +30,41 @@ public class GlobalSparesMenu implements Builder<Region> {
         dropRegion.setPrefSize(400, 300);
 
         // Add a text node to display instructions or results
-        Text dropText = new Text("Drag and drop global spares file here");
+        Text dropText = new Text("Drag and drop global spares file here (future feature - not yet implemented)");
         dropText.setLayoutX(150);
         dropText.setLayoutY(150);
         dropRegion.getChildren().add(dropText);
 
-        // Handle drag-over event to accept file drops
-        dropRegion.setOnDragOver(event -> {
-            if (event.getGestureSource() != dropRegion && event.getDragboard().hasFiles()) {
-                // Allow copy transfer mode for files
-                event.acceptTransferModes(TransferMode.COPY);
-            }
-            event.consume();
-        });
-
-        // Handle drag-dropped event to get the file path
-        dropRegion.setOnDragDropped(event -> {
-            Dragboard dragboard = event.getDragboard();
-            boolean success = false;
-
-            if (dragboard.hasFiles()) {
-                // Get the first file from the dragboard
-                String filePath = dragboard.getFiles().get(0).getAbsolutePath();
-                // place path in our model
-                settingsModel.filePathProperty().set(filePath);
-                // send signal to turn file into SQLdatabalse
-                action.accept(SettingsMessage.CONVERT_XLSX_TO_SQL);
-                // You can also print to console or use the path elsewhere
-                System.out.println("Dropped file path: " + filePath);
-                success = true;
-            }
-
-            // Let the system know whether the drop was successful
-            event.setDropCompleted(success);
-            event.consume();
-        });
+//        // Handle drag-over event to accept file drops
+//        dropRegion.setOnDragOver(event -> {
+//            if (event.getGestureSource() != dropRegion && event.getDragboard().hasFiles()) {
+//                // Allow copy transfer mode for files
+//                event.acceptTransferModes(TransferMode.COPY);
+//            }
+//            event.consume();
+//        });
+//
+//        // Handle drag-dropped event to get the file path
+//        dropRegion.setOnDragDropped(event -> {
+//            Dragboard dragboard = event.getDragboard();
+//            boolean success = false;
+//
+//            if (dragboard.hasFiles()) {
+//                // Get the first file from the dragboard
+//                String filePath = dragboard.getFiles().get(0).getAbsolutePath();
+//                // place path in our model
+//                settingsModel.filePathProperty().set(filePath);
+//                // send signal to turn file into SQLdatabalse
+//                action.accept(SettingsMessage.CONVERT_XLSX_TO_SQL);
+//                // You can also print to console or use the path elsewhere
+//                System.out.println("Dropped file path: " + filePath);
+//                success = true;
+//            }
+//
+//            // Let the system know whether the drop was successful
+//            event.setDropCompleted(success);
+//            event.consume();
+//        });
         return dropRegion;
     }
 }
