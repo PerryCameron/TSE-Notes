@@ -4,11 +4,14 @@ import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.repository.interfaces.GlobalSparesRepository;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ExcelRipper {
+    private static final Logger logger = LoggerFactory.getLogger(ExcelRipper.class);
 
 
     public static boolean extractProductToSparesSheet(Workbook workbook) {
@@ -18,20 +21,30 @@ public class ExcelRipper {
             System.out.println("Sheet 'Product to Spares' not found.");
             return false;
         }
+        ProductToSparesDTO productToSpares = new ProductToSparesDTO(false, false);
+        logger.info("Ripping Product to Spares");
+        extractProductToSpares(sheet, productToSpares, globalSparesRepository);
+        productToSpares.setArchived(true);
+        sheet = workbook.getSheet("Archived Product to Spares");
+        logger.info("Ripping Archived Product to Spares");
+        extractProductToSpares(sheet, productToSpares, globalSparesRepository);
+
+        return true;
+    }
+
+    private static void extractProductToSpares(Sheet sheet, ProductToSparesDTO productToSpares, GlobalSparesRepository globalSparesRepository) {
         // Iterate through the first 10 rows
         for (Row row : sheet) {
             // this is temp for testing
-//            if (row.getRowNum() >= 10) {
-//                break; // Stop after 10 rows
-//            }
+            if (row.getRowNum() >= 300) {
+                break; // Stop after 300 rows
+            }
             // we will not start writing until we get to row three
             if (row.getRowNum() < 3) {
                 continue;
             }
             // start rowCount when we begin
 
-            StringBuilder rowData = new StringBuilder("Row " + row.getRowNum() + ": ");
-            ProductToSparesDTO productToSpares = new ProductToSparesDTO(false, false);
             int colCount = 0;
             for (Cell cell : row) {
                 String cellValue = getCellValueAsString(cell);
@@ -49,18 +62,15 @@ public class ExcelRipper {
                     case 10 -> productToSpares.setArchived(Boolean.parseBoolean(cellValue));
                     case 11 -> productToSpares.setCustom_add(Boolean.parseBoolean(cellValue));
                 }
-//                rowData.append(colCount + ")" + cellValue).append("\t");
                 colCount++;
-                if (colCount % 5000 == 0) {
-                    System.out.println(colCount);
+                if (row.getRowNum() % 5000 == 0) {
+                    logger.info("{} ", row.getRowNum());
                 }
             }
             // Print the row
             globalSparesRepository.insertProductToSpare(productToSpares);
-//            System.out.println(rowData);
+            productToSpares.clear();
         }
-
-        return true;
     }
 
     public static String getCellValueAsString(Cell cell) {

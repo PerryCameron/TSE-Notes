@@ -40,6 +40,19 @@ public class ProductToSparesDTO {
         this.custom_add = custom_add;
     }
 
+    public void clear() {
+        this.pimRange = "";
+        this.pimProductFamily = "";
+        this.spareItem = "";
+        this.replacementItem = "";
+        this.standardExchangeItem = "";
+        this.spareDescription = "";
+        this.catalogueVersion = "";
+        this.productEndOfServiceDate = "";
+        this.lastUpdate = "";
+        this.addedToCatalogue = "";
+    }
+
     // Getters and Setters
     public String getPimRange() {
         return pimRange;

@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
-    private static final Logger logger = LoggerFactory.getLogger(EntitlementsRepositoryImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(GlobalSparesRepositoryImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
     public GlobalSparesRepositoryImpl() {
