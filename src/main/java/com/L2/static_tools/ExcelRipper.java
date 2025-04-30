@@ -4,7 +4,9 @@ import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.dto.global_spares.ReplacementCrDTO;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.repository.interfaces.GlobalSparesRepository;
+import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +38,41 @@ public class ExcelRipper {
 
 
         return true;
+    }
+
+    public static String getWorkbookLastModifiedDate(XSSFWorkbook workbook) {
+        try  {
+            POIXMLProperties properties = workbook.getProperties();
+            POIXMLProperties.CoreProperties coreProperties = properties.getCoreProperties();
+            Date modifiedDate = coreProperties.getModified();
+            System.out.println("modifiedDate: " + modifiedDate.toString());
+            System.out.println("Category: " + coreProperties.getCategory());
+            System.out.println("Status: " + coreProperties.getContentStatus());
+            System.out.println("Title: " + coreProperties.getTitle());
+            System.out.println("Last Modified by: " + coreProperties.getLastModifiedByUser());
+            System.out.println("Creator: " + coreProperties.getCreator());
+            System.out.println("Description: " + coreProperties.getDescription());
+            System.out.println("Identifier: " + coreProperties.getIdentifier());
+            System.out.println("Revision: " + coreProperties.getRevision());
+            System.out.println("Content Type: " + coreProperties.getContentType());
+
+            System.out.println("Content Status: " + coreProperties.getContentStatus());
+            System.out.println("Keywords: " + coreProperties.getKeywords());
+            System.out.println("Subject: " + coreProperties.getSubject());
+            System.out.println("Underlying properties: " + coreProperties.getUnderlyingProperties());
+            Date created = coreProperties.getCreated();
+            System.out.println("Created: " + created.toString());
+
+            if (modifiedDate != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                return sdf.format(modifiedDate);
+            } else {
+                return "No modified date available";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error reading metadata: " + e.getMessage();
+        }
     }
 
     private static void extractReplacementCr(Sheet sheet, ReplacementCrDTO replacementCrDTO, GlobalSparesRepository globalSparesRepository) {

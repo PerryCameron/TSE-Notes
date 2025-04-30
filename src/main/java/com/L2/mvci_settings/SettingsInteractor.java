@@ -127,6 +127,8 @@ public class SettingsInteractor {
                     AppFileTools.getOrCreateGlobalSparesFolder();
                     // creates the database and puts it in database folder
                     GlobalSparesSQLiteDatabaseCreator.createDataBase("global-spares.db");
+                    // extracts metadate from workbook
+                    ExcelRipper.getWorkbookLastModifiedDate(workbook);
                     // extracts information from xlsx file and updates database with extracted information
                     ExcelRipper.extractProductToSparesSheet(workbook);
                     logMemory("Before workbook close");
