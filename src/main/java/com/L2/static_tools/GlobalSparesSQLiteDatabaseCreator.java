@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 public class GlobalSparesSQLiteDatabaseCreator {
 
@@ -45,6 +46,13 @@ public class GlobalSparesSQLiteDatabaseCreator {
                     old_qty INTEGER,
                     new_qty INTEGER
                 );
+
+                CREATE TABLE IF NOT EXISTS properties (
+                    created_by TEXT,
+                    last_modified_by TEXT,
+                    creation_date TEXT,
+                    last_modification_date TEXT
+                )
                 """;
 
         try (Connection conn = DriverManager.getConnection(url);

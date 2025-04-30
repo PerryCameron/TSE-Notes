@@ -1,6 +1,7 @@
 package com.L2.static_tools;
 
 import com.L2.dto.global_spares.ProductToSparesDTO;
+import com.L2.dto.global_spares.PropertiesDTO;
 import com.L2.dto.global_spares.ReplacementCrDTO;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.repository.interfaces.GlobalSparesRepository;
@@ -17,13 +18,16 @@ public class ExcelRipper {
     private static final Logger logger = LoggerFactory.getLogger(ExcelRipper.class);
 
 
-    public static boolean extractProductToSparesSheet(Workbook workbook) {
+    public static boolean extractWorkbookToSql(XSSFWorkbook workbook) {
         GlobalSparesRepository globalSparesRepository = new GlobalSparesRepositoryImpl();
         Sheet sheet = workbook.getSheet("Product to Spares");
         if (sheet == null) {
             System.out.println("Sheet 'Product to Spares' not found.");
             return false;
         }
+        // extracts metadate from workbook
+        logger.info("Saving Meta data properties");
+        extractWorkbookProperties(workbook, globalSparesRepository);
         ProductToSparesDTO productToSpares = new ProductToSparesDTO(false, false);
         logger.info("Ripping Product to Spares");
         extractProductToSpares(sheet, productToSpares, globalSparesRepository);
@@ -33,45 +37,30 @@ public class ExcelRipper {
         extractProductToSpares(sheet, productToSpares, globalSparesRepository);
         ReplacementCrDTO replacementCrDTO = new ReplacementCrDTO();
         sheet = workbook.getSheet("Replacement CRs");
-        logger.info("Ripping Replacement CRs");
+        logger.info("Ripping Replacement CRs (3-ph)");
         extractReplacementCr(sheet, replacementCrDTO, globalSparesRepository);
-
+        sheet = workbook.getSheet("Uniflair Cross Reference");
+        logger.info("Ripping Replacement CRs (Uniflair Cross Reference)");
+        extractReplacementCr(sheet, replacementCrDTO, globalSparesRepository);
 
         return true;
     }
 
-    public static String getWorkbookLastModifiedDate(XSSFWorkbook workbook) {
-        try  {
+    public static boolean extractWorkbookProperties(XSSFWorkbook workbook, GlobalSparesRepository globalSparesRepository) {
+        PropertiesDTO propertiesDTO = new PropertiesDTO();
+        try {
             POIXMLProperties properties = workbook.getProperties();
             POIXMLProperties.CoreProperties coreProperties = properties.getCoreProperties();
-            Date modifiedDate = coreProperties.getModified();
-            System.out.println("modifiedDate: " + modifiedDate.toString());
-            System.out.println("Category: " + coreProperties.getCategory());
-            System.out.println("Status: " + coreProperties.getContentStatus());
-            System.out.println("Title: " + coreProperties.getTitle());
-            System.out.println("Last Modified by: " + coreProperties.getLastModifiedByUser());
-            System.out.println("Creator: " + coreProperties.getCreator());
-            System.out.println("Description: " + coreProperties.getDescription());
-            System.out.println("Identifier: " + coreProperties.getIdentifier());
-            System.out.println("Revision: " + coreProperties.getRevision());
-            System.out.println("Content Type: " + coreProperties.getContentType());
-
-            System.out.println("Content Status: " + coreProperties.getContentStatus());
-            System.out.println("Keywords: " + coreProperties.getKeywords());
-            System.out.println("Subject: " + coreProperties.getSubject());
-            System.out.println("Underlying properties: " + coreProperties.getUnderlyingProperties());
-            Date created = coreProperties.getCreated();
-            System.out.println("Created: " + created.toString());
-
-            if (modifiedDate != null) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                return sdf.format(modifiedDate);
-            } else {
-                return "No modified date available";
-            }
+            propertiesDTO.setLastModifiedDate(coreProperties.getModified().toString());
+            propertiesDTO.setLastModifiedBy(coreProperties.getLastModifiedByUser());
+            propertiesDTO.setCreatedBy(coreProperties.getCreator());
+            propertiesDTO.setCreationDate(coreProperties.getCreated().toString());
+            globalSparesRepository.insertWorkbookProperties(propertiesDTO);
+            return true;
         } catch (Exception e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
-            return "Error reading metadata: " + e.getMessage();
+            return false;
         }
     }
 
@@ -79,9 +68,9 @@ public class ExcelRipper {
         // Iterate through the first 10 rows
         for (Row row : sheet) {
             // this is temp for testing
-            if (row.getRowNum() >= 300) {
-                break; // Stop after 300 rows
-            }
+//            if (row.getRowNum() >= 300) {
+//                break; // Stop after 300 rows
+//            }
             // we will not start writing until we get to row three
             if (row.getRowNum() < 3) {
                 continue;
@@ -95,8 +84,18 @@ public class ExcelRipper {
                     case 0 -> replacementCrDTO.setItem(cellValue);
                     case 1 -> replacementCrDTO.setReplacement(cellValue);
                     case 2 -> replacementCrDTO.setComment(cellValue);
-                    case 3 -> replacementCrDTO.setOld_qty(Integer.valueOf(cellValue));
-                    case 4 -> replacementCrDTO.setNew_qty(Integer.valueOf(cellValue));
+                    case 3 -> {
+                        if (!cellValue.isEmpty())
+                            replacementCrDTO.setOld_qty(Integer.valueOf(cellValue));
+                        else
+                            replacementCrDTO.setOld_qty(0);
+                    }
+                    case 4 -> {
+                        if(!cellValue.isEmpty())
+                            replacementCrDTO.setNew_qty(Integer.valueOf(cellValue));
+                        else
+                            replacementCrDTO.setNew_qty(0);
+                    }
                 }
                 colCount++;
                 if (row.getRowNum() % 100 == 0) {
@@ -113,9 +112,9 @@ public class ExcelRipper {
         // Iterate through the first 10 rows
         for (Row row : sheet) {
             // this is temp for testing
-            if (row.getRowNum() >= 300) {
-                break; // Stop after 300 rows
-            }
+//            if (row.getRowNum() >= 300) {
+//                break; // Stop after 300 rows
+//            }
             // we will not start writing until we get to row three
             if (row.getRowNum() < 3) {
                 continue;

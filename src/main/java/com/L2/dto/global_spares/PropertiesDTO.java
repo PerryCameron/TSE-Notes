@@ -4,10 +4,9 @@ import java.util.Date;
 
 public class PropertiesDTO {
     String createdBy;
-    Date creationDate;
-
+    String creationDate;
     String lastModifiedBy;
-    Date lastModifiedDate;
+    String lastModifiedDate;
 
     public PropertiesDTO() {
     }
@@ -20,11 +19,11 @@ public class PropertiesDTO {
         this.createdBy = createdBy;
     }
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -36,11 +35,11 @@ public class PropertiesDTO {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Date getLastModifiedDate() {
+    public String getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Date lastModifiedDate) {
+    public void setLastModifiedDate(String lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
@@ -48,9 +47,9 @@ public class PropertiesDTO {
     public String toString() {
         return "PropertiesDTO{" +
                 "createdBy='" + createdBy + '\'' +
-                ", creationDate=" + creationDate +
+                ", creationDate='" + creationDate + '\'' +
                 ", lastModifiedBy='" + lastModifiedBy + '\'' +
-                ", lastModifiedDate=" + lastModifiedDate +
+                ", lastModifiedDate='" + lastModifiedDate + '\'' +
                 '}';
     }
 }
