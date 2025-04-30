@@ -33,7 +33,8 @@ public class GlobalSparesSQLiteDatabaseCreator {
                     end_of_service_date TEXT,
                     last_update TEXT,
                     added_to_catalogue TEXT,
-                    archived INTEGER NOT NULL CHECK (archived IN (0, 1))
+                    archived INTEGER NOT NULL CHECK (archived IN (0, 1)),
+                    custom_add INTEGER NOT NULL CHECK (custom_add IN (0, 1))
                 );
                 """;
 
