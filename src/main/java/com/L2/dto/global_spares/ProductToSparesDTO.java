@@ -1,8 +1,6 @@
 package com.L2.dto.global_spares;
 
-import java.util.Date;
-
-public class ProductToSpares {
+public class ProductToSparesDTO {
     private String pimRange;
     private String pimProductFamily;
     private String spareItem;
@@ -17,10 +15,17 @@ public class ProductToSpares {
     private Boolean custom_add;
 
     // Default constructor
-    public ProductToSpares() {
+    public ProductToSparesDTO() {
+        this.archived = false;
+        this.custom_add = false;
     }
 
-    public ProductToSpares(String pimRange, String pimProductFamily, String spareItem, String replacementItem, String standardExchangeItem, String spareDescription, String catalogueVersion, String productEndOfServiceDate, String lastUpdate, String addedToCatalogue, Boolean archived, Boolean custom_add) {
+    public ProductToSparesDTO(Boolean archived, Boolean custom_add) {
+        this.archived = archived;
+        this.custom_add = custom_add;
+    }
+
+    public ProductToSparesDTO(String pimRange, String pimProductFamily, String spareItem, String replacementItem, String standardExchangeItem, String spareDescription, String catalogueVersion, String productEndOfServiceDate, String lastUpdate, String addedToCatalogue, Boolean archived, Boolean custom_add) {
         this.pimRange = pimRange;
         this.pimProductFamily = pimProductFamily;
         this.spareItem = spareItem;
@@ -116,7 +121,7 @@ public class ProductToSpares {
         this.addedToCatalogue = addedToCatalogue;
     }
 
-    public Boolean getArchived() {
+    public Boolean isArchived() {
         return archived;
     }
 
@@ -124,11 +129,29 @@ public class ProductToSpares {
         this.archived = archived;
     }
 
-    public Boolean getCustom_add() {
+    public Boolean isCustom_add() {
         return custom_add;
     }
 
     public void setCustom_add(Boolean custom_add) {
         this.custom_add = custom_add;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductToSparesDTO{" +
+                "pimRange='" + pimRange + '\'' +
+                ", pimProductFamily='" + pimProductFamily + '\'' +
+                ", spareItem='" + spareItem + '\'' +
+                ", replacementItem='" + replacementItem + '\'' +
+                ", standardExchangeItem='" + standardExchangeItem + '\'' +
+                ", spareDescription='" + spareDescription + '\'' +
+                ", catalogueVersion='" + catalogueVersion + '\'' +
+                ", productEndOfServiceDate='" + productEndOfServiceDate + '\'' +
+                ", lastUpdate='" + lastUpdate + '\'' +
+                ", addedToCatalogue='" + addedToCatalogue + '\'' +
+                ", archived=" + archived +
+                ", custom_add=" + custom_add +
+                '}';
     }
 }

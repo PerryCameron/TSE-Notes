@@ -1,6 +1,6 @@
 package com.L2.static_tools;
 
-import com.L2.dto.global_spares.ProductToSpares;
+import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.repository.interfaces.GlobalSparesRepository;
 import org.apache.poi.ss.usermodel.*;
@@ -31,7 +31,7 @@ public class ExcelRipper {
             // start rowCount when we begin
 
             StringBuilder rowData = new StringBuilder("Row " + row.getRowNum() + ": ");
-            ProductToSpares productToSpares = new ProductToSpares();
+            ProductToSparesDTO productToSpares = new ProductToSparesDTO(false, false);
             int colCount = 0;
             for (Cell cell : row) {
                 String cellValue = getCellValueAsString(cell);
@@ -46,6 +46,8 @@ public class ExcelRipper {
                     case 7 -> productToSpares.setProductEndOfServiceDate(cellValue);
                     case 8 -> productToSpares.setLastUpdate(cellValue);
                     case 9 -> productToSpares.setAddedToCatalogue(cellValue);
+                    case 10 -> productToSpares.setArchived(Boolean.parseBoolean(cellValue));
+                    case 11 -> productToSpares.setCustom_add(Boolean.parseBoolean(cellValue));
                 }
 //                rowData.append(colCount + ")" + cellValue).append("\t");
                 colCount++;

@@ -1,8 +1,8 @@
 package com.L2.repository.interfaces;
 
-import com.L2.dto.global_spares.ProductToSpares;
+import com.L2.dto.global_spares.ProductToSparesDTO;
 
 public interface GlobalSparesRepository {
 
-    int insertProductToSpare(ProductToSpares productToSpares);
+    int insertProductToSpare(ProductToSparesDTO productToSpares);
 }

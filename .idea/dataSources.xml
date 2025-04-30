@@ -21,7 +21,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="Global Spares" uuid="c2eee01b-a825-4c5e-a7f1-392484ddf088">
+    <data-source source="LOCAL" name="global-spares.db" uuid="7493420a-95e3-462d-b9ee-25d6de216fb3">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
