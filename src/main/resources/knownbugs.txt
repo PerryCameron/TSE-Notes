@@ -1,4 +1,3 @@
 When you first start the program if you try to copy the first one, it will leave out the parts, you have to
 select something else and then come back to make it work. this is an old bug.
 
-If postal code is missing, it will not take an email

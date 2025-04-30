@@ -32,7 +32,8 @@ public class GlobalSparesSQLiteDatabaseCreator {
                     catalogue_version TEXT,
                     end_of_service_date TEXT,
                     last_update TEXT,
-                    added_to_catalogue TEXT
+                    added_to_catalogue TEXT,
+                    archived INTEGER NOT NULL CHECK (archived IN (0, 1))
                 );
                 """;
 
