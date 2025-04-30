@@ -1,6 +1,7 @@
 package com.L2.static_tools;
 
 import com.L2.dto.global_spares.ProductToSparesDTO;
+import com.L2.dto.global_spares.ReplacementCrDTO;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.repository.interfaces.GlobalSparesRepository;
 import org.apache.poi.ss.usermodel.*;
@@ -28,8 +29,47 @@ public class ExcelRipper {
         sheet = workbook.getSheet("Archived Product to Spares");
         logger.info("Ripping Archived Product to Spares");
         extractProductToSpares(sheet, productToSpares, globalSparesRepository);
+        ReplacementCrDTO replacementCrDTO = new ReplacementCrDTO();
+        sheet = workbook.getSheet("Replacement CRs");
+        logger.info("Ripping Replacement CRs");
+        extractReplacementCr(sheet, replacementCrDTO, globalSparesRepository);
+
 
         return true;
+    }
+
+    private static void extractReplacementCr(Sheet sheet, ReplacementCrDTO replacementCrDTO, GlobalSparesRepository globalSparesRepository) {
+        // Iterate through the first 10 rows
+        for (Row row : sheet) {
+            // this is temp for testing
+            if (row.getRowNum() >= 300) {
+                break; // Stop after 300 rows
+            }
+            // we will not start writing until we get to row three
+            if (row.getRowNum() < 3) {
+                continue;
+            }
+            // start rowCount when we begin
+
+            int colCount = 0;
+            for (Cell cell : row) {
+                String cellValue = getCellValueAsString(cell);
+                switch (colCount) {
+                    case 0 -> replacementCrDTO.setItem(cellValue);
+                    case 1 -> replacementCrDTO.setReplacement(cellValue);
+                    case 2 -> replacementCrDTO.setComment(cellValue);
+                    case 3 -> replacementCrDTO.setOld_qty(Integer.valueOf(cellValue));
+                    case 4 -> replacementCrDTO.setNew_qty(Integer.valueOf(cellValue));
+                }
+                colCount++;
+                if (row.getRowNum() % 100 == 0) {
+                    logger.info("{} ", row.getRowNum());
+                }
+            }
+            // Print the row
+            globalSparesRepository.insertReplacementCr(replacementCrDTO);
+            replacementCrDTO.clear();
+        }
     }
 
     private static void extractProductToSpares(Sheet sheet, ProductToSparesDTO productToSpares, GlobalSparesRepository globalSparesRepository) {
@@ -63,7 +103,7 @@ public class ExcelRipper {
                     case 11 -> productToSpares.setCustom_add(Boolean.parseBoolean(cellValue));
                 }
                 colCount++;
-                if (row.getRowNum() % 5000 == 0) {
+                if (row.getRowNum() % 100 == 0) {
                     logger.info("{} ", row.getRowNum());
                 }
             }

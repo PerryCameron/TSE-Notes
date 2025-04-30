@@ -1,6 +1,7 @@
 package com.L2.repository.implementations;
 
 import com.L2.dto.global_spares.ProductToSparesDTO;
+import com.L2.dto.global_spares.ReplacementCrDTO;
 import com.L2.repository.interfaces.GlobalSparesRepository;
 import com.L2.static_tools.DatabaseConnector;
 import org.slf4j.Logger;
@@ -52,6 +53,34 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         } catch (Exception e) {
             logger.error(e.getMessage());
             logger.error(productToSpares.toString());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public int insertReplacementCr(ReplacementCrDTO replacementCrDTO) {
+        try {
+            String sql = "INSERT INTO replacement_cr (" +
+                    "item, replacement, comment, old_qty, new_qty)" +
+                    "VALUES (?, ?, ?, ?, ?)";
+
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, replacementCrDTO.getItem());
+                ps.setString(2, replacementCrDTO.getReplacement());
+                ps.setString(3, replacementCrDTO.getComment());
+                ps.setInt(4, replacementCrDTO.getOld_qty()); // error: incompatible types: int cannot be converted to String
+                ps.setInt(5, replacementCrDTO.getNew_qty());
+                return ps;
+            }, keyHolder);
+
+            return keyHolder.getKey().intValue(); // Returns the generated ID
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            logger.error(replacementCrDTO.toString());
             e.printStackTrace();
         }
         return 0;

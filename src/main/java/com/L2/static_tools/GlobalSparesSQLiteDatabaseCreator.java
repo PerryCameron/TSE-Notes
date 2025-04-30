@@ -36,6 +36,15 @@ public class GlobalSparesSQLiteDatabaseCreator {
                     archived INTEGER NOT NULL CHECK (archived IN (0, 1)),
                     custom_add INTEGER NOT NULL CHECK (custom_add IN (0, 1))
                 );
+
+                CREATE TABLE IF NOT EXISTS replacement_cr (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    item TEXT,
+                    replacement TEXT,
+                    comment TEXT,
+                    old_qty INTEGER,
+                    new_qty INTEGER
+                );
                 """;
 
         try (Connection conn = DriverManager.getConnection(url);

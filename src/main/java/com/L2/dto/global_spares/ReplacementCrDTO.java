@@ -10,6 +10,14 @@ public class ReplacementCrDTO {
     public ReplacementCrDTO() {
     }
 
+    public void clear() {
+        this.item = "";
+        this.replacement = "";
+        this.comment = "";
+        this.old_qty = 0;
+        this.new_qty = 0;
+    }
+
     public String getItem() {
         return item;
     }
