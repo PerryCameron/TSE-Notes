@@ -17,7 +17,6 @@ import java.util.Date;
 public class ExcelRipper {
     private static final Logger logger = LoggerFactory.getLogger(ExcelRipper.class);
 
-
     public static boolean extractWorkbookToSql(XSSFWorkbook workbook) {
         GlobalSparesRepository globalSparesRepository = new GlobalSparesRepositoryImpl();
         Sheet sheet = workbook.getSheet("Product to Spares");
@@ -42,7 +41,6 @@ public class ExcelRipper {
         sheet = workbook.getSheet("Uniflair Cross Reference");
         logger.info("Ripping Replacement CRs (Uniflair Cross Reference)");
         extractReplacementCr(sheet, replacementCrDTO, globalSparesRepository);
-
         return true;
     }
 
@@ -65,47 +63,60 @@ public class ExcelRipper {
     }
 
     private static void extractReplacementCr(Sheet sheet, ReplacementCrDTO replacementCrDTO, GlobalSparesRepository globalSparesRepository) {
-        // Iterate through the first 10 rows
-        for (Row row : sheet) {
-            // this is temp for testing
+            // Iterate through the first 10 rows
+            for (Row row : sheet) {
+                // this is temp for testing
 //            if (row.getRowNum() >= 300) {
 //                break; // Stop after 300 rows
 //            }
-            // we will not start writing until we get to row three
-            if (row.getRowNum() < 3) {
-                continue;
-            }
-            // start rowCount when we begin
+                // we will not start writing until we get to row three
+                if (row.getRowNum() < 3) {
+                    continue;
+                }
+                // start rowCount when we begin
 
-            int colCount = 0;
-            for (Cell cell : row) {
-                String cellValue = getCellValueAsString(cell);
-                switch (colCount) {
-                    case 0 -> replacementCrDTO.setItem(cellValue);
-                    case 1 -> replacementCrDTO.setReplacement(cellValue);
-                    case 2 -> replacementCrDTO.setComment(cellValue);
-                    case 3 -> {
-                        if (!cellValue.isEmpty())
-                            replacementCrDTO.setOld_qty(Integer.valueOf(cellValue));
-                        else
-                            replacementCrDTO.setOld_qty(0);
+                int colCount = 0;
+                for (Cell cell : row) {
+                    String cellValue = getCellValueAsString(cell);
+                    switch (colCount) {
+                        case 0 -> replacementCrDTO.setItem(cellValue);
+                        case 1 -> replacementCrDTO.setReplacement(cellValue);
+                        case 2 -> replacementCrDTO.setComment(cellValue);
+                        case 3 -> {
+                            try {
+                                if (!cellValue.isEmpty())
+                                    replacementCrDTO.setOld_qty(Double.valueOf(cellValue));
+                                else
+                                    replacementCrDTO.setOld_qty(0);
+                            } catch (Exception e) {
+                                logger.error(e.getMessage());
+                                e.printStackTrace();
+                                replacementCrDTO.setOld_qty(99999);
+                            }
+                        }
+                        case 4 -> {
+                            try {
+                                if (!cellValue.isEmpty())
+                                    replacementCrDTO.setNew_qty(Double.valueOf(cellValue));
+                                else
+                                    replacementCrDTO.setNew_qty(0);
+                            } catch (Exception e) {
+                                logger.error(e.getMessage());
+                                e.printStackTrace();
+                                replacementCrDTO.setNew_qty(99999);
+                            }
+                        }
                     }
-                    case 4 -> {
-                        if(!cellValue.isEmpty())
-                            replacementCrDTO.setNew_qty(Integer.valueOf(cellValue));
-                        else
-                            replacementCrDTO.setNew_qty(0);
+                    colCount++;
+                    if (row.getRowNum() % 100 == 0) {
+                        logger.info("{} ", row.getRowNum());
                     }
                 }
-                colCount++;
-                if (row.getRowNum() % 100 == 0) {
-                    logger.info("{} ", row.getRowNum());
-                }
+                // Print the row
+                if(!replacementCrDTO.getItem().isEmpty())
+                globalSparesRepository.insertReplacementCr(replacementCrDTO);
+                replacementCrDTO.clear();
             }
-            // Print the row
-            globalSparesRepository.insertReplacementCr(replacementCrDTO);
-            replacementCrDTO.clear();
-        }
     }
 
     private static void extractProductToSpares(Sheet sheet, ProductToSparesDTO productToSpares, GlobalSparesRepository globalSparesRepository) {

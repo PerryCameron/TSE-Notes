@@ -73,8 +73,8 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
                 ps.setString(1, replacementCrDTO.getItem());
                 ps.setString(2, replacementCrDTO.getReplacement());
                 ps.setString(3, replacementCrDTO.getComment());
-                ps.setInt(4, replacementCrDTO.getOld_qty()); // error: incompatible types: int cannot be converted to String
-                ps.setInt(5, replacementCrDTO.getNew_qty());
+                ps.setDouble(4, replacementCrDTO.getOld_qty()); // error: incompatible types: int cannot be converted to String
+                ps.setDouble(5, replacementCrDTO.getNew_qty());
                 return ps;
             }, keyHolder);
 

@@ -62,6 +62,11 @@ public class PartOrderBoxList implements Component<Region> {
     private Node menu(TableView<PartDTO> tableView, PartOrderDTO partOrderDTO) {
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(5, 0, 5, 5));
+
+        Button searchButton = ButtonFx.utilityButton(() -> {
+
+                },"Search", "/images/search-16.png");
+
         Button addPartButton = ButtonFx.utilityButton(() -> {
             noteView.getAction().accept(NoteMessage.INSERT_PART);
 
@@ -90,7 +95,7 @@ public class PartOrderBoxList implements Component<Region> {
         VBox.setMargin(lineTypeBox, new Insets(20, 0, 0, 0));
         vBox.getStyleClass().add("inner-decorative-hbox");
         // Now add all nodes to the parent vBox
-        vBox.getChildren().addAll(addPartButton, deleteButton, lineTypeBox);
+        vBox.getChildren().addAll(searchButton, addPartButton, deleteButton, lineTypeBox);
         return vBox;
     }
 

@@ -43,8 +43,8 @@ public class GlobalSparesSQLiteDatabaseCreator {
                     item TEXT,
                     replacement TEXT,
                     comment TEXT,
-                    old_qty INTEGER,
-                    new_qty INTEGER
+                    old_qty REAL,
+                    new_qty REAL
                 );
 
                 CREATE TABLE IF NOT EXISTS properties (

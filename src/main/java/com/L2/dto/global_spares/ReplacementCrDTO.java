@@ -4,8 +4,8 @@ public class ReplacementCrDTO {
     String item;
     String replacement;
     String comment;
-    int old_qty;
-    int new_qty;
+    double old_qty;
+    double new_qty;
 
     public ReplacementCrDTO() {
     }
@@ -42,19 +42,19 @@ public class ReplacementCrDTO {
         this.comment = comment;
     }
 
-    public int getOld_qty() {
+    public double getOld_qty() {
         return old_qty;
     }
 
-    public void setOld_qty(int old_qty) {
+    public void setOld_qty(double old_qty) {
         this.old_qty = old_qty;
     }
 
-    public int getNew_qty() {
+    public double getNew_qty() {
         return new_qty;
     }
 
-    public void setNew_qty(int new_qty) {
+    public void setNew_qty(double new_qty) {
         this.new_qty = new_qty;
     }
 
