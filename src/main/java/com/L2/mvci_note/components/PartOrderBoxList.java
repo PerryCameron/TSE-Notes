@@ -87,7 +87,7 @@ public class PartOrderBoxList implements Component<Region> {
         }, "Add Part", "/images/create-16.png");
 
 
-        Button deleteButton = ButtonFx.utilityButton( () -> noteView.getAction().accept(NoteMessage.DELETE_PART), "Delete", "/images/delete-16.png");
+        Button deleteButton = ButtonFx.utilityButton( () -> noteView.getAction().accept(NoteMessage.DELETE_PART), "Delete Part", "/images/delete-16.png");
 
         // Create the VBox from your method
         HBox lineTypeBox = lineTypeToggle(partOrderDTO);
@@ -196,8 +196,11 @@ public class PartOrderBoxList implements Component<Region> {
         // auto selector
         TableView.TableViewSelectionModel<PartDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-                if (newSelection != null)
+                if (newSelection != null) {
+                    System.out.println("setting selected part property with new part");
                     noteModel.selectedPartProperty().set(newSelection);
+                }
+
         });
         return tableView;
     }

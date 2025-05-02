@@ -979,8 +979,13 @@ public class NoteInteractor {
 
     public void insertPart() {
         PartDTO partDTO = new PartDTO(noteModel.selectedPartOrderProperty().get().getId());
+        // put part in database and retrieve id
         partDTO.setId(partOrderRepo.insertPart(partDTO)); // TODO changes this when hooked to database
+        // adding part to part order in FX view
         noteModel.selectedPartOrderProperty().get().getParts().add(partDTO);
+        // this is only used for saving part used from search dialogue
+        System.out.println("setting selected part property with part from search dialogue");
+        noteModel.selectedPartProperty().set(partDTO);  // this may need to be moved
     }
 
     public void updatePart() {
@@ -1061,10 +1066,9 @@ public class NoteInteractor {
             // we will ignore for now
 
         } else if (searchParams.length == 1) {
-            List<PartDTO> foundParts = globalSparesRepo.searchSpares(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
-            foundParts.forEach(partDTO -> {
-                System.out.println(partDTO.toTestString());
-            });
+
+            noteModel.getSearchedPart().addAll(globalSparesRepo.searchSpares(searchParams[0], noteModel.selectedPartOrderProperty().get().getId()));
+
         } else {
             // treat it as a description search
         }

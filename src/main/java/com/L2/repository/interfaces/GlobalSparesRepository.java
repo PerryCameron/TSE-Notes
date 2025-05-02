@@ -16,5 +16,5 @@ public interface GlobalSparesRepository {
 
     int insertWorkbookProperties(PropertiesDTO propertiesDTO);
 
-    List<PartDTO> searchSpares(String searchTerm, int partOrderId);
+    List<ProductToSparesDTO> searchSpares(String searchTerm, int partOrderId);
 }

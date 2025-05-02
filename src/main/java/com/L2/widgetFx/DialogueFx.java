@@ -3,6 +3,7 @@ package com.L2.widgetFx;
 import com.L2.BaseApplication;
 import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
+import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
@@ -127,26 +128,49 @@ public class DialogueFx {
         // Create buttons
         Button searchButton = new Button("Search");
         Button cancelButton = new Button("Cancel");
+
         HBox buttonBox = new HBox(10, searchButton, cancelButton);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
+        VBox partContainer = new VBox(10);
+
         // Add components to content
-        content.getChildren().addAll(messageLabel, searchField, buttonBox);
+        content.getChildren().addAll(messageLabel, searchField, buttonBox, partContainer);
         dialogPane.setContent(content);
 
         // Set DialogPane to Alert
         alert.setDialogPane(dialogPane);
-
-        // Store search result
-        final String[] searchResult = { null };
 
         // Handle Search button
         searchButton.setOnAction(e -> {
             noteModel.searchWordProperty().set(searchField.getText().trim());
             if (!noteModel.searchWordProperty().get().isEmpty()) {
                 noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
-                alert.setResult(ButtonType.OK);
-//                alert.hide();
+                partContainer.getChildren().clear();
+                Button addToPartOrderButton = new Button("Add to Part Order");
+                ListView<ProductToSparesDTO> listView = ListViewFx.partListView(noteModel.getSearchedPart());
+                partContainer.getChildren().add(listView); // I want it to expand vertically to make room for this
+                partContainer.getChildren().add(addToPartOrderButton);
+                // Force dialog to re-layout and resize to fit new content
+                addToPartOrderButton.setOnAction(add -> {
+                    ProductToSparesDTO productToSparesDTO = listView.getSelectionModel().getSelectedItem();
+                    noteView.getAction().accept(NoteMessage.INSERT_PART);
+                    PartDTO partDTO = noteModel.selectedPartProperty().get();
+                    partDTO.setPartNumber(productToSparesDTO.getSpareItem());
+                    partDTO.setPartDescription(productToSparesDTO.getSpareDescription());
+                    // no need to put in part into FX UI here as it is being done elseware
+                    noteView.getAction().accept(NoteMessage.UPDATE_PART);
+
+                    // Refresh the table view layout and focus
+                    tableView.layout();
+                    tableView.requestFocus();
+
+                    // Select row 0 and focus the first column
+                    tableView.getSelectionModel().select(0);
+                    tableView.getFocusModel().focus(0, tableView.getColumns().getFirst());  // Focus the first column (index 0)
+                });
+                dialogPane.requestLayout();
+                alert.getDialogPane().getScene().getWindow().sizeToScene();
             }
         });
 
@@ -154,6 +178,7 @@ public class DialogueFx {
         cancelButton.setOnAction(e -> {
             System.out.println("Cancel button clicked");
             noteModel.searchWordProperty().set("");
+            noteModel.getSearchedPart().clear();
             alert.setResult(ButtonType.CANCEL);
             alert.hide();
         });
@@ -161,7 +186,7 @@ public class DialogueFx {
         // put our icon in titlebar
         getTitleIcon(dialogPane);
 
-        // Tie alert to stage
+        // Tie alert to stage and calculates where to start dialogue location
         tieAlertToStage(alert, 600, 400);
 
         return alert;

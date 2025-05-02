@@ -1,6 +1,7 @@
 package com.L2.dto.global_spares;
 
 public class ProductToSparesDTO {
+    private int id;
     private String pimRange;
     private String pimProductFamily;
     private String spareItem;
@@ -39,6 +40,8 @@ public class ProductToSparesDTO {
         this.archived = archived;
         this.custom_add = custom_add;
     }
+
+
 
     public void clear() {
         this.pimRange = "";
@@ -148,6 +151,22 @@ public class ProductToSparesDTO {
 
     public void setCustom_add(Boolean custom_add) {
         this.custom_add = custom_add;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Boolean getArchived() {
+        return archived;
+    }
+
+    public Boolean getCustom_add() {
+        return custom_add;
     }
 
     @Override
