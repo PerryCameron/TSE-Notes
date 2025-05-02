@@ -64,7 +64,8 @@ public class PartOrderBoxList implements Component<Region> {
         vBox.setPadding(new Insets(5, 0, 5, 5));
 
         Button searchButton = ButtonFx.utilityButton(() -> {
-
+            Alert alert = DialogueFx.searchAlert(noteView, tableView, partOrderDTO );
+            alert.showAndWait();
                 },"Search", "/images/search-16.png");
 
         Button addPartButton = ButtonFx.utilityButton(() -> {

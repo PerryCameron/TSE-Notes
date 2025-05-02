@@ -2,10 +2,8 @@ package com.L2.mvci_note;
 
 import com.L2.dto.*;
 import com.L2.enums.AreaType;
-import com.L2.repository.implementations.EntitlementsRepositoryImpl;
-import com.L2.repository.implementations.NoteRepositoryImpl;
-import com.L2.repository.implementations.PartOrderRepositoryImpl;
-import com.L2.repository.implementations.UserRepositoryImpl;
+import com.L2.repository.implementations.*;
+import com.L2.repository.interfaces.*;
 import com.L2.static_tools.*;
 import com.L2.widgetFx.DialogueFx;
 import com.nikialeksey.hunspell.Hunspell;
@@ -32,10 +30,11 @@ public class NoteInteractor {
 
     private final NoteModel noteModel;
     private static final Logger logger = LoggerFactory.getLogger(NoteInteractor.class);
-    private final NoteRepositoryImpl noteRepo;
-    private final PartOrderRepositoryImpl partOrderRepo;
-    private final UserRepositoryImpl userRepo;
-    private final EntitlementsRepositoryImpl entitlementsRepo;
+    private final NoteRepository noteRepo;
+    private final PartOrderRepository partOrderRepo;
+    private final UserRepository userRepo;
+    private final EntitlementsRepository entitlementsRepo;
+    private final GlobalSparesRepository globalSparesRepo;
 
     public NoteInteractor(NoteModel noteModel) {
         this.noteModel = noteModel;
@@ -43,6 +42,7 @@ public class NoteInteractor {
         this.partOrderRepo = new PartOrderRepositoryImpl();
         this.userRepo = new UserRepositoryImpl();
         this.entitlementsRepo = new EntitlementsRepositoryImpl();
+        this.globalSparesRepo = new GlobalSparesRepositoryImpl();
     }
 
     public void loadEntitlements() {
@@ -1052,6 +1052,21 @@ public class NoteInteractor {
             return NoteMessage.DISABLE_NEXT_BUTTON;
         } else {
             return NoteMessage.ENABLE_NEXT_BUTTON;
+        }
+    }
+
+    public void searchParts() {
+        String[] searchParams = noteModel.searchWordProperty().get().split(" ");
+        if (searchParams.length == 0) {
+            // we will ignore for now
+
+        } else if (searchParams.length == 1) {
+            List<PartDTO> foundParts = globalSparesRepo.searchSpares(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
+            foundParts.forEach(partDTO -> {
+                System.out.println(partDTO.toTestString());
+            });
+        } else {
+            // treat it as a description search
         }
     }
 }

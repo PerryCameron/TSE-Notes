@@ -1,16 +1,31 @@
 package com.L2.widgetFx;
 
 import com.L2.BaseApplication;
+import com.L2.dto.PartDTO;
+import com.L2.dto.PartOrderDTO;
+import com.L2.mvci_note.NoteMessage;
+import com.L2.mvci_note.NoteModel;
+import com.L2.mvci_note.NoteView;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.image.Image;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class DialogueFx {
+
+    private static final Logger logger = LoggerFactory.getLogger(DialogueFx.class);
+
     public static Alert aboutDialogue(String header, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setHeaderText(header); // I would like the header to be a larger font
@@ -26,11 +41,12 @@ public class DialogueFx {
 
         // Modify the header text programmatically
         DialogPane dialogPane = alert.getDialogPane();
+        getTitleIcon(dialogPane);
         Label headerLabel = (Label) dialogPane.lookup(".dialog-pane .header-panel .label");
         if (headerLabel != null) {
             headerLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
         }
-        tieAlertToStage(alert);
+        tieAlertToStage(alert, 400, 200);
         dialogPane.getStylesheets().add("css/light.css");
         return alert;
     }
@@ -52,11 +68,13 @@ public class DialogueFx {
         ButtonType buttonNo = new ButtonType("No", ButtonBar.ButtonData.NO);
         ButtonType buttonCancel = new ButtonType("Cancel clone", ButtonBar.ButtonData.CANCEL_CLOSE);
         DialogPane dialogPane = alert.getDialogPane();
+        getTitleIcon(dialogPane);
+
         Label headerLabel = (Label) dialogPane.lookup(".dialog-pane .header-panel .label");
         if (headerLabel != null) {
             headerLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
         }
-        tieAlertToStage(alert);
+        tieAlertToStage(alert, 400, 200);
         dialogPane.getStylesheets().add("css/light.css");
 
         // Set them as the buttons for this alert.
@@ -78,48 +96,131 @@ public class DialogueFx {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(header);
         alert.setContentText(message);
-        tieAlertToStage(alert);
+        tieAlertToStage(alert, 400, 200);
         DialogPane dialogPane = alert.getDialogPane();
+        getTitleIcon(dialogPane);
         dialogPane.getStylesheets().add("css/light.css");
         dialogPane.getStyleClass().add("myDialog");
         alert.showAndWait();
         return alert;
     }
 
+    public static Alert searchAlert(NoteView noteView, TableView<PartDTO> tableView, PartOrderDTO partOrderDTO) {
+        NoteModel noteModel = noteView.getNoteModel();
+        // Create a custom Alert with no default buttons
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.setTitle("Search..."); // Set custom title bar text
+        // Create a DialogPane
+        DialogPane dialogPane = new DialogPane();
+        dialogPane.getStylesheets().add("css/light.css");
+        dialogPane.getStyleClass().add("search-dialogue");
+
+        // Create layout for content
+        VBox content = new VBox(10);
+//        content.getStyleClass().add("decorative-header-box");
+        content.setPadding(new Insets(10, 10, 10, 10));
+        content.setPrefWidth(600);
+        Label messageLabel = new Label("Part Search");
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search Part Number or description...");
+
+        // Create buttons
+        Button searchButton = new Button("Search");
+        Button cancelButton = new Button("Cancel");
+        HBox buttonBox = new HBox(10, searchButton, cancelButton);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        // Add components to content
+        content.getChildren().addAll(messageLabel, searchField, buttonBox);
+        dialogPane.setContent(content);
+
+        // Set DialogPane to Alert
+        alert.setDialogPane(dialogPane);
+
+        // Store search result
+        final String[] searchResult = { null };
+
+        // Handle Search button
+        searchButton.setOnAction(e -> {
+            noteModel.searchWordProperty().set(searchField.getText().trim());
+            if (!noteModel.searchWordProperty().get().isEmpty()) {
+                noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
+                alert.setResult(ButtonType.OK);
+//                alert.hide();
+            }
+        });
+
+        // Handle Cancel button
+        cancelButton.setOnAction(e -> {
+            System.out.println("Cancel button clicked");
+            noteModel.searchWordProperty().set("");
+            alert.setResult(ButtonType.CANCEL);
+            alert.hide();
+        });
+
+        // put our icon in titlebar
+        getTitleIcon(dialogPane);
+
+        // Tie alert to stage
+        tieAlertToStage(alert, 600, 400);
+
+        return alert;
+    }
+
+    private static void getTitleIcon(DialogPane dialogPane) {
+        // Set custom icon for the title bar
+        Stage alertStage = (Stage) dialogPane.getScene().getWindow();
+        try {
+            // Load icon from resources (adjust path as needed)
+            Image icon = new Image(Objects.requireNonNull(
+                    DialogueFx.class.getResourceAsStream("/images/TSELogo-16.png")));
+            alertStage.getIcons().add(icon);
+        } catch (Exception e) {
+            logger.error("Failed to load icon: {}", e.getMessage());
+        }
+    }
+
     public static void customAlertWithShow(String header, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setHeaderText(header);
         alert.setContentText(message);
-        tieAlertToStage(alert);
+        tieAlertToStage(alert, 400, 200);
         DialogPane dialogPane = alert.getDialogPane();
+        getTitleIcon(dialogPane);
         dialogPane.getStylesheets().add("css/light.css");
         dialogPane.getStyleClass().add("myDialog");
         alert.showAndWait();
     }
 
-    public static void tieAlertToStage(Alert alert) {
+    public static void tieAlertToStage(Alert alert, double stageWidth, double stageHeight) {
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-        // Add a window showing listener to set the position of the dialog
-        alertStage.addEventHandler(WindowEvent.WINDOW_SHOWN, setStageLocation(alertStage));
-    }
+        // Flag to ensure positioning runs only once
+        final boolean[] hasPositioned = {false};
 
-    public static boolean verifyAction(String[] string, Object o) {
-        if(o != null) {
-            Alert alert = DialogueFx.aboutDialogue(string[0], string[1], Alert.AlertType.CONFIRMATION);
-            Optional<ButtonType> result = alert.showAndWait();
-            return result.isPresent() && result.get() == ButtonType.OK;
-        } else {
-            Alert alert = DialogueFx.aboutDialogue(string[2],string[3], Alert.AlertType.INFORMATION);
-            alert.showAndWait();
-        }
-        return false;
-    }
+        // Position the dialog only once when about to show
+        EventHandler<WindowEvent> positionHandler = e -> {
+            if (!hasPositioned[0]) {
+                if (BaseApplication.primaryStage == null) {
+                    System.out.println("Warning: primaryStage is null");
+                    return;
+                }
+                hasPositioned[0] = true;
+                double primaryX = BaseApplication.primaryStage.getX();
+                double primaryY = BaseApplication.primaryStage.getY();
+                double primaryWidth = BaseApplication.primaryStage.getWidth();
+                double primaryHeight = BaseApplication.primaryStage.getHeight();
 
-    public static EventHandler<WindowEvent> setStageLocation(Stage stage) {
-        return e -> {
-            // Position the dialog at the center of the main stage
-            stage.setX(BaseApplication.primaryStage.getX() + (BaseApplication.primaryStage.getWidth() / 2) - (stage.getWidth() / 2));
-            stage.setY(BaseApplication.primaryStage.getY() + (BaseApplication.primaryStage.getHeight() / 2) - (stage.getHeight() / 2));
+
+                alertStage.setX(primaryX + (primaryWidth / 2) - (stageWidth / 2));
+                alertStage.setY(primaryY + (primaryHeight / 2) - (stageHeight / 2));
+            }
         };
+
+        // Add handler and remove it after first show to prevent re-triggering
+        alertStage.setOnShowing(positionHandler);
+        alertStage.setOnShown(e -> {
+            alertStage.removeEventHandler(WindowEvent.WINDOW_SHOWING, positionHandler);
+        });
     }
+
 }

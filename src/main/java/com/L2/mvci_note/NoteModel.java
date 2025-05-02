@@ -50,6 +50,7 @@ public class NoteModel {
             new SimpleObjectProperty<>(null);
     private final ObjectProperty<StyleSpans<Collection<String>>> finishSpansProperty =
             new SimpleObjectProperty<>(null);
+    private final StringProperty searchWord = new SimpleStringProperty();
 
 
 
@@ -123,6 +124,9 @@ public class NoteModel {
     public ObjectProperty<ScrollPane> noteScrollPaneProperty() {
         return noteScrollPane;
     }
+    public StringProperty searchWordProperty() { return searchWord; }
+
+
     public void refreshEntitlements() {
         refreshEntitlements.set(true);
         refreshEntitlements.set(false);

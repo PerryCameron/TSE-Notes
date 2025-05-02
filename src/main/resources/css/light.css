@@ -259,3 +259,7 @@
     -fx-border-style: solid; /* Set the border style */
     -fx-padding: 6;
 }
+
+.search-dialogue {
+    -fx-background-color: #efeded;
+}

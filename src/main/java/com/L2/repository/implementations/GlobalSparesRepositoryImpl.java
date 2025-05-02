@@ -1,5 +1,6 @@
 package com.L2.repository.implementations;
 
+import com.L2.dto.PartDTO;
 import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.dto.global_spares.PropertiesDTO;
 import com.L2.dto.global_spares.ReplacementCrDTO;
@@ -8,11 +9,16 @@ import com.L2.static_tools.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     private static final Logger logger = LoggerFactory.getLogger(GlobalSparesRepositoryImpl.class);
@@ -112,4 +118,58 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         return 0;
     }
 
+    @Override
+    public List<PartDTO> searchSpares(String searchTerm, int partOrderId) {
+        /*
+         * Search for a single-word term in spare_item and replacement_item columns
+         * and return a list of unique PartDTO objects based on partNumber.
+         *
+         * @param searchTerm   Single word to search for
+         * @param partOrderId  ID to set in PartDTO
+         * @return List of unique PartDTO objects for matching records
+         */
+        try {
+            String query = """
+                        SELECT id, spare_item, replacement_item, spare_description 
+                        FROM product_to_spares 
+                        WHERE (spare_item LIKE ? OR replacement_item LIKE ?)
+                        AND archived = 0
+                    """;
+
+            // Use % for partial matching
+            String searchPattern = "%" + searchTerm + "%";
+
+            // Map to store unique PartDTOs by partNumber
+            Map<String, PartDTO> uniqueParts = new HashMap<>();
+
+            // RowMapper for PartDTO
+            RowMapper<PartDTO> rowMapper = (rs, rowNum) -> {
+                PartDTO part = new PartDTO(partOrderId);
+                // Set partNumber: prefer replacement_item if not null/empty, else spare_item
+                String replacementItem = rs.getString("replacement_item");
+                String partNumber = (replacementItem != null && !replacementItem.isEmpty())
+                        ? replacementItem
+                        : rs.getString("spare_item");
+                part.setPartNumber(partNumber);
+                // Set partDescription
+                String description = rs.getString("spare_description");
+                part.setPartDescription(description != null ? description : "");
+
+                // Only add to map if partNumber is not already present
+                uniqueParts.putIfAbsent(partNumber, part);
+                return part;
+            };
+
+            // Use non-deprecated query method
+            jdbcTemplate.query(query, rowMapper, searchPattern, searchPattern);
+
+            // Return list of unique PartDTOs
+            return new ArrayList<>(uniqueParts.values());
+
+        } catch (Exception e) {
+            System.err.println("Database error: " + e.getMessage());
+            return List.of(); // Return empty list on error
+        }
+    }
 }
+

@@ -30,7 +30,7 @@ public class PartDTO {
         this.partOrderId.set(partOrderId);
         this.partNumber.set("");
         this.partDescription.set("");
-        this.partQuantity.set("");
+        this.partQuantity.set("1");
         this.serialReplaced.set("");
         this.partEditable.set(false);
         this.lineType.set("Advanced Exchange");
@@ -160,9 +160,10 @@ public class PartDTO {
 
     public String toTestString() {
         return this +
-                " ID: " + id +
-                ", partOrderId=" + partOrderId +
-                ", partNumber=" + partNumber;
+                " ID: " + id.get() +
+                ", partOrderId=" + partOrderId.get() +
+                ", partNumber=" + partNumber.get() +
+                ", PartDescription=" +partDescription.get();
     }
 }
 
