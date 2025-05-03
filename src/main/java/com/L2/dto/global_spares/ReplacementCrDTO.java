@@ -6,6 +6,8 @@ public class ReplacementCrDTO {
     String comment;
     double old_qty;
     double new_qty;
+    String lastUpdate;
+    String lastUpdatedBy;
 
     public ReplacementCrDTO() {
     }
@@ -16,6 +18,8 @@ public class ReplacementCrDTO {
         this.comment = "";
         this.old_qty = 0;
         this.new_qty = 0;
+        this.lastUpdate = "";
+        this.lastUpdatedBy = "";
     }
 
     public String getItem() {
@@ -58,14 +62,32 @@ public class ReplacementCrDTO {
         this.new_qty = new_qty;
     }
 
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
     @Override
     public String toString() {
-        return "ReplacementCR{" +
+        return "ReplacementCrDTO{" +
                 "item='" + item + '\'' +
                 ", replacement='" + replacement + '\'' +
                 ", comment='" + comment + '\'' +
                 ", old_qty=" + old_qty +
                 ", new_qty=" + new_qty +
+                ", lastUpdate='" + lastUpdate + '\'' +
+                ", lastUpdatedBy='" + lastUpdatedBy + '\'' +
                 '}';
     }
 }

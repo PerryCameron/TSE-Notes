@@ -48,7 +48,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
                 ps.setString(9, productToSpares.getLastUpdate());
                 ps.setString(10, productToSpares.getAddedToCatalogue());
                 ps.setBoolean(11, productToSpares.isArchived());
-                ps.setBoolean(12, productToSpares.isCustom_add());
+                ps.setBoolean(12, productToSpares.isCustomAdd());
                 return ps;
             }, keyHolder);
 
@@ -125,12 +125,12 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
 
             // Use % for partial matching
             String searchPattern = "%" + searchTerm + "%";
-
+            logger.info("Searching for parts...");
             // Execute the query using JdbcTemplate
             return jdbcTemplate.query(query, new ProductToSparesRowMapper(), searchPattern, searchPattern); // Parameters for both LIKE conditions
 
         } catch (Exception e) {
-            System.err.println("Database error: " + e.getMessage());
+            logger.error("Database error: {}", e.getMessage());
             return List.of(); // Return empty list on error
         }
     }

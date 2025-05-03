@@ -148,7 +148,7 @@ public class DialogueFx {
                 noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
                 partContainer.getChildren().clear();
                 Button addToPartOrderButton = new Button("Add to Part Order");
-                ListView<ProductToSparesDTO> listView = ListViewFx.partListView(noteModel.getSearchedPart());
+                ListView<ProductToSparesDTO> listView = ListViewFx.partListView(noteModel.getSearchedParts());
                 partContainer.getChildren().add(listView); // I want it to expand vertically to make room for this
                 partContainer.getChildren().add(addToPartOrderButton);
                 // Force dialog to re-layout and resize to fit new content
@@ -178,7 +178,7 @@ public class DialogueFx {
         cancelButton.setOnAction(e -> {
             System.out.println("Cancel button clicked");
             noteModel.searchWordProperty().set("");
-            noteModel.getSearchedPart().clear();
+            noteModel.getSearchedParts().clear();
             alert.setResult(ButtonType.CANCEL);
             alert.hide();
         });

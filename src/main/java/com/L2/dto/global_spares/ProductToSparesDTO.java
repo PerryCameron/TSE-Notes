@@ -12,18 +12,21 @@ public class ProductToSparesDTO {
     private String productEndOfServiceDate;
     private String lastUpdate;
     private String addedToCatalogue;
+    private String comments;
+    private String keywords;
     private Boolean archived;
-    private Boolean custom_add;
+    private Boolean customAdd;
+    private String lastUpdatedBy;
 
     // Default constructor
     public ProductToSparesDTO() {
         this.archived = false;
-        this.custom_add = false;
+        this.customAdd = false;
     }
 
     public ProductToSparesDTO(Boolean archived, Boolean custom_add) {
         this.archived = archived;
-        this.custom_add = custom_add;
+        this.customAdd = custom_add;
     }
 
     public ProductToSparesDTO(String pimRange, String pimProductFamily, String spareItem, String replacementItem, String standardExchangeItem, String spareDescription, String catalogueVersion, String productEndOfServiceDate, String lastUpdate, String addedToCatalogue, Boolean archived, Boolean custom_add) {
@@ -38,10 +41,26 @@ public class ProductToSparesDTO {
         this.lastUpdate = lastUpdate;
         this.addedToCatalogue = addedToCatalogue;
         this.archived = archived;
-        this.custom_add = custom_add;
+        this.customAdd = custom_add;
     }
 
-
+    public ProductToSparesDTO(String pimRange, String pimProductFamily, String spareItem, String replacementItem, String standardExchangeItem, String spareDescription, String catalogueVersion, String productEndOfServiceDate, String lastUpdate, String addedToCatalogue, String comments, String keywords, Boolean archived, Boolean customAdd, String lastUpdatedBy) {
+        this.pimRange = pimRange;
+        this.pimProductFamily = pimProductFamily;
+        this.spareItem = spareItem;
+        this.replacementItem = replacementItem;
+        this.standardExchangeItem = standardExchangeItem;
+        this.spareDescription = spareDescription;
+        this.catalogueVersion = catalogueVersion;
+        this.productEndOfServiceDate = productEndOfServiceDate;
+        this.lastUpdate = lastUpdate;
+        this.addedToCatalogue = addedToCatalogue;
+        this.comments = comments;
+        this.keywords = keywords;
+        this.archived = archived;
+        this.customAdd = customAdd;
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
 
     public void clear() {
         this.pimRange = "";
@@ -145,12 +164,8 @@ public class ProductToSparesDTO {
         this.archived = archived;
     }
 
-    public Boolean isCustom_add() {
-        return custom_add;
-    }
-
     public void setCustom_add(Boolean custom_add) {
-        this.custom_add = custom_add;
+        this.customAdd = custom_add;
     }
 
     public int getId() {
@@ -165,8 +180,36 @@ public class ProductToSparesDTO {
         return archived;
     }
 
-    public Boolean getCustom_add() {
-        return custom_add;
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public Boolean isCustomAdd() {
+        return customAdd;
+    }
+
+    public void setCustomAdd(Boolean customAdd) {
+        this.customAdd = customAdd;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
     }
 
     @Override
@@ -183,7 +226,7 @@ public class ProductToSparesDTO {
                 ", lastUpdate='" + lastUpdate + '\'' +
                 ", addedToCatalogue='" + addedToCatalogue + '\'' +
                 ", archived=" + archived +
-                ", custom_add=" + custom_add +
+                ", custom_add=" + customAdd +
                 '}';
     }
 }

@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 
 public class GlobalSparesSQLiteDatabaseCreator {
 
@@ -34,8 +33,11 @@ public class GlobalSparesSQLiteDatabaseCreator {
                                     end_of_service_date TEXT,
                                     last_update TEXT,
                                     added_to_catalogue TEXT,
-                                    archived INTEGER NOT NULL CHECK (archived IN (0, 1)),
-                                    custom_add INTEGER NOT NULL CHECK (custom_add IN (0, 1))
+                                    comments TEXT,
+                                    keywords TEXT,
+                                    archived INTEGER NOT NULL CHECK (archived IN (0, 1)), 
+                                    custom_add INTEGER NOT NULL CHECK (custom_add IN (0, 1)),
+                                    last_updated_by TEXT                         
                                 );
                 
                                 CREATE TABLE IF NOT EXISTS replacement_cr (
@@ -44,7 +46,9 @@ public class GlobalSparesSQLiteDatabaseCreator {
                                     replacement TEXT,
                                     comment TEXT,
                                     old_qty REAL,
-                                    new_qty REAL
+                                    new_qty REAL,
+                                    last_update TEXT,
+                                    last_updated_by TEXT
                                 );
                 
                                 CREATE TABLE IF NOT EXISTS properties (

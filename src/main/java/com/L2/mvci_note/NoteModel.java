@@ -70,7 +70,7 @@ public class NoteModel {
     public ObjectProperty<PartDTO> selectedPartProperty() {
         return selectedPart;
     }
-    public ObservableList<ProductToSparesDTO> getSearchedPart() { return searchedPart;}
+    public ObservableList<ProductToSparesDTO> getSearchedParts() { return searchedPart;}
     public BooleanProperty refreshBoundNoteProperty() {
         return refreshBoundNote;
     }

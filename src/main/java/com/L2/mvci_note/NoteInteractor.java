@@ -1,6 +1,7 @@
 package com.L2.mvci_note;
 
 import com.L2.dto.*;
+import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.enums.AreaType;
 import com.L2.repository.implementations.*;
 import com.L2.repository.interfaces.*;
@@ -12,6 +13,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -24,6 +26,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 public class NoteInteractor {
@@ -128,7 +131,8 @@ public class NoteInteractor {
             case subject -> noteModel.subjectAreaProperty().get(); // Text from subject area
             case issue -> noteModel.issueAreaProperty().get();     // Text from issue area
             case finish -> noteModel.finishAreaProperty().get();   // Text from finish area
-            default -> throw new IllegalArgumentException("Unknown area type: " + areaType); // Unreachable with enum, but required for switch exhaustiveness
+            default ->
+                    throw new IllegalArgumentException("Unknown area type: " + areaType); // Unreachable with enum, but required for switch exhaustiveness
         };
 
         // Get the current text length
@@ -535,7 +539,7 @@ public class NoteInteractor {
     private String shippingInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
         NoteDTO note = noteModel.boundNoteProperty().get();
-        if(!note.getContactName().isEmpty()) {
+        if (!note.getContactName().isEmpty()) {
             stringBuilder.append("--- Shipping Contact ---").append("\r\n");
             stringBuilder.append("Name: ").append(note.getContactName()).append("\r\n");
             if (!note.getContactEmail().isEmpty())
@@ -558,7 +562,7 @@ public class NoteInteractor {
     private String shippingInformationToHTML() {
         NoteDTO note = noteModel.boundNoteProperty().get();
         StringBuilder stringBuilder = new StringBuilder();
-        if(!note.getContactName().isEmpty()) {
+        if (!note.getContactName().isEmpty()) {
             stringBuilder.append("<b>Shipping Contact</b><br>");
             stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">Name: </span>").append(ClipboardUtils.escapeHtmlContent(noteModel.boundNoteProperty().get().getContactName())).append("<br>");
             if (!note.getContactEmail().isEmpty())
@@ -973,6 +977,7 @@ public class NoteInteractor {
         PartDTO partDTO = noteModel.selectedPartProperty().get();
         PartOrderDTO partOrderDTO = noteModel.selectedPartOrderProperty().get();
         partOrderRepo.deletePart(partDTO);
+        System.out.println("Setting selected part to null");
         noteModel.selectedPartProperty().set(null);
         partOrderDTO.getParts().remove(partDTO);
     }
@@ -984,7 +989,7 @@ public class NoteInteractor {
         // adding part to part order in FX view
         noteModel.selectedPartOrderProperty().get().getParts().add(partDTO);
         // this is only used for saving part used from search dialogue
-        System.out.println("setting selected part property with part from search dialogue");
+        System.out.println("setting selected part property with part from search dialogue,partDTO.ID=" + partDTO.getId());
         noteModel.selectedPartProperty().set(partDTO);  // this may need to be moved
     }
 
@@ -1062,15 +1067,41 @@ public class NoteInteractor {
 
     public void searchParts() {
         String[] searchParams = noteModel.searchWordProperty().get().split(" ");
+
         if (searchParams.length == 0) {
-            // we will ignore for now
+            noteModel.getSearchedParts().clear(); // Clear results for empty search
+            return;
+        }
 
-        } else if (searchParams.length == 1) {
+        if (noteModel.selectedPartOrderProperty().get() == null) {
+            // Handle missing part order
+            return;
+        }
 
-            noteModel.getSearchedPart().addAll(globalSparesRepo.searchSpares(searchParams[0], noteModel.selectedPartOrderProperty().get().getId()));
+        if (searchParams.length == 1) {
+            Task<List<ProductToSparesDTO>> searchTask = new Task<>() {
+                @Override
+                protected List<ProductToSparesDTO> call() {
+                    return globalSparesRepo.searchSpares(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
+                }
+            };
 
+            searchTask.setOnSucceeded(e -> {
+                noteModel.getSearchedParts().setAll(searchTask.getValue()); // Update UI
+            });
+
+            searchTask.setOnFailed(e -> {
+                Throwable ex = e.getSource().getException();
+                System.err.println("Search failed: " + ex.getMessage());
+                // Optionally notify user via UI
+            });
+
+            Executors.newCachedThreadPool().execute(searchTask);
         } else {
-            // treat it as a description search
+            // Implement multi-word search (e.g., description search)
+            // Example: Combine words or search as a phrase
+            String combinedQuery = String.join(" ", searchParams);
+            // Perform search with combinedQuery
         }
     }
 }
