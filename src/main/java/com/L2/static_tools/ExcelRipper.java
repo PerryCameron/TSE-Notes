@@ -29,11 +29,11 @@ public class ExcelRipper {
         extractWorkbookProperties(workbook, globalSparesRepository);
         ProductToSparesDTO productToSpares = new ProductToSparesDTO(false, false);
         logger.info("Ripping Product to Spares");
-        extractProductToSpares(sheet, productToSpares, globalSparesRepository);
+        extractProductToSpares(sheet, productToSpares, globalSparesRepository, false);
         productToSpares.setArchived(true);
         sheet = workbook.getSheet("Archived Product to Spares");
         logger.info("Ripping Archived Product to Spares");
-        extractProductToSpares(sheet, productToSpares, globalSparesRepository);
+        extractProductToSpares(sheet, productToSpares, globalSparesRepository, true);
         ReplacementCrDTO replacementCrDTO = new ReplacementCrDTO();
         sheet = workbook.getSheet("Replacement CRs");
         logger.info("Ripping Replacement CRs (3-ph)");
@@ -63,69 +63,12 @@ public class ExcelRipper {
     }
 
     private static void extractReplacementCr(Sheet sheet, ReplacementCrDTO replacementCrDTO, GlobalSparesRepository globalSparesRepository) {
-            // Iterate through the first 10 rows
-            for (Row row : sheet) {
-                // this is temp for testing
-//            if (row.getRowNum() >= 300) {
-//                break; // Stop after 300 rows
-//            }
-                // we will not start writing until we get to row three
-                if (row.getRowNum() < 3) {
-                    continue;
-                }
-                // start rowCount when we begin
-
-                int colCount = 0;
-                for (Cell cell : row) {
-                    String cellValue = getCellValueAsString(cell);
-                    switch (colCount) {
-                        case 0 -> replacementCrDTO.setItem(cellValue);
-                        case 1 -> replacementCrDTO.setReplacement(cellValue);
-                        case 2 -> replacementCrDTO.setComment(cellValue);
-                        case 3 -> {
-                            try {
-                                if (!cellValue.isEmpty())
-                                    replacementCrDTO.setOld_qty(Double.valueOf(cellValue));
-                                else
-                                    replacementCrDTO.setOld_qty(0);
-                            } catch (Exception e) {
-                                logger.error(e.getMessage());
-                                e.printStackTrace();
-                                replacementCrDTO.setOld_qty(99999);
-                            }
-                        }
-                        case 4 -> {
-                            try {
-                                if (!cellValue.isEmpty())
-                                    replacementCrDTO.setNew_qty(Double.valueOf(cellValue));
-                                else
-                                    replacementCrDTO.setNew_qty(0);
-                            } catch (Exception e) {
-                                logger.error(e.getMessage());
-                                e.printStackTrace();
-                                replacementCrDTO.setNew_qty(99999);
-                            }
-                        }
-                    }
-                    colCount++;
-                    if (row.getRowNum() % 100 == 0) {
-                        logger.info("{} ", row.getRowNum());
-                    }
-                }
-                // Print the row
-                if(!replacementCrDTO.getItem().isEmpty())
-                globalSparesRepository.insertReplacementCr(replacementCrDTO);
-                replacementCrDTO.clear();
-            }
-    }
-
-    private static void extractProductToSpares(Sheet sheet, ProductToSparesDTO productToSpares, GlobalSparesRepository globalSparesRepository) {
         // Iterate through the first 10 rows
         for (Row row : sheet) {
             // this is temp for testing
-//            if (row.getRowNum() >= 300) {
-//                break; // Stop after 300 rows
-//            }
+            if (row.getRowNum() >= 300) {
+                break; // Stop after 300 rows
+            }
             // we will not start writing until we get to row three
             if (row.getRowNum() < 3) {
                 continue;
@@ -136,7 +79,68 @@ public class ExcelRipper {
             for (Cell cell : row) {
                 String cellValue = getCellValueAsString(cell);
                 switch (colCount) {
-                    case 0 -> productToSpares.setPimRange(cellValue);
+                    case 0 -> replacementCrDTO.setItem(cellValue);
+                    case 1 -> replacementCrDTO.setReplacement(cellValue);
+                    case 2 -> replacementCrDTO.setComment(cellValue);
+                    case 3 -> {
+                        try {
+                            if (!cellValue.isEmpty())
+                                replacementCrDTO.setOld_qty(Double.valueOf(cellValue));
+                            else
+                                replacementCrDTO.setOld_qty(0);
+                        } catch (Exception e) {
+                            logger.error(e.getMessage());
+                            e.printStackTrace();
+                            replacementCrDTO.setOld_qty(99999);
+                        }
+                    }
+                    case 4 -> {
+                        try {
+                            if (!cellValue.isEmpty())
+                                replacementCrDTO.setNew_qty(Double.valueOf(cellValue));
+                            else
+                                replacementCrDTO.setNew_qty(0);
+                        } catch (Exception e) {
+                            logger.error(e.getMessage());
+                            e.printStackTrace();
+                            replacementCrDTO.setNew_qty(99999);
+                        }
+                    }
+                }
+                colCount++;
+                if (row.getRowNum() % 100 == 0 && colCount == 1) {
+                    logger.info("{} ", row.getRowNum());
+                }
+            }
+            // Print the row
+            if (!replacementCrDTO.getItem().isEmpty())
+                globalSparesRepository.insertReplacementCr(replacementCrDTO);
+            replacementCrDTO.clear();
+        }
+    }
+
+    private static void extractProductToSpares(Sheet sheet, ProductToSparesDTO productToSpares, GlobalSparesRepository globalSparesRepository, boolean isArchived) {
+        // Iterate through the first 10 rows
+        for (Row row : sheet) {
+            // this is temp for testing
+            if (row.getRowNum() >= 300) {
+                break; // Stop after 300 rows
+            }
+            // we will not start writing until we get to row three
+            if (row.getRowNum() < 3) {
+                continue;
+            }
+            // start rowCount when we begin
+
+            int colCount = 0;
+            for (Cell cell : row) {
+                String cellValue = getCellValueAsString(cell);
+                switch (colCount) {
+                    case 0 -> {
+                        productToSpares.setPimRange(cellValue);
+                        productToSpares.setArchived(isArchived);
+                        productToSpares.setCustomAdd(false);
+                    }
                     case 1 -> productToSpares.setPimProductFamily(cellValue);
                     case 2 -> productToSpares.setSpareItem(cellValue);
                     case 3 -> productToSpares.setReplacementItem(cellValue);
@@ -144,13 +148,30 @@ public class ExcelRipper {
                     case 5 -> productToSpares.setSpareDescription(cellValue);
                     case 6 -> productToSpares.setCatalogueVersion(cellValue);
                     case 7 -> productToSpares.setProductEndOfServiceDate(cellValue);
-                    case 8 -> productToSpares.setLastUpdate(cellValue);
-                    case 9 -> productToSpares.setAddedToCatalogue(cellValue);
-                    case 10 -> productToSpares.setArchived(Boolean.parseBoolean(cellValue));
-                    case 11 -> productToSpares.setCustom_add(Boolean.parseBoolean(cellValue));
+                    case 8 -> {
+                        if (isArchived)
+                            productToSpares.setRemovedFromCatalogue(cellValue);
+                        else
+                            productToSpares.setLastUpdate(cellValue);
+                    }
+                    case 9 -> {
+                        if (isArchived)
+                            productToSpares.setComments(cellValue);
+                        else
+                            productToSpares.setAddedToCatalogue(cellValue);
+                    }
+                    case 10 -> {
+                        if (!isArchived)
+                            if(cellValue.isEmpty())
+                                productToSpares.setComments(null);
+                            else
+                            productToSpares.setComments(cellValue);
+                    }
                 }
+                if (row.getRowNum() < 5)
+                    System.out.println(colCount + ") " + cellValue);
                 colCount++;
-                if (row.getRowNum() % 100 == 0) {
+                if (row.getRowNum() % 100 == 0 && colCount == 1) {
                     logger.info("{} ", row.getRowNum());
                 }
             }

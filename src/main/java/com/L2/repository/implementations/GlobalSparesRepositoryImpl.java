@@ -30,8 +30,9 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             String sql = "INSERT INTO product_to_spares (" +
                     "pim_range, pim_product_family, spare_item, replacement_item, " +
                     "standard_exchange_item, spare_description, catalogue_version, " +
-                    "end_of_service_date, last_update, added_to_catalogue, archived, custom_add) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "end_of_service_date, last_update, added_to_catalogue, removed_from_catalogue, " +
+                    "comments, keywords, archived, custom_add, last_updated_by) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -47,8 +48,12 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
                 ps.setString(8, productToSpares.getProductEndOfServiceDate());
                 ps.setString(9, productToSpares.getLastUpdate());
                 ps.setString(10, productToSpares.getAddedToCatalogue());
-                ps.setBoolean(11, productToSpares.isArchived());
-                ps.setBoolean(12, productToSpares.isCustomAdd());
+                ps.setString(11, productToSpares.getRemovedFromCatalogue());
+                ps.setString(12, productToSpares.getComments());
+                ps.setString(13, productToSpares.getKeywords());
+                ps.setBoolean(14, productToSpares.isArchived());
+                ps.setBoolean(15, productToSpares.isCustomAdd());
+                ps.setString(16, productToSpares.getLastUpdatedBy());
                 return ps;
             }, keyHolder);
 

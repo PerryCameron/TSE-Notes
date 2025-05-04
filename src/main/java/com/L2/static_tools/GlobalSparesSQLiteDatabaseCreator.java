@@ -33,6 +33,7 @@ public class GlobalSparesSQLiteDatabaseCreator {
                                     end_of_service_date TEXT,
                                     last_update TEXT,
                                     added_to_catalogue TEXT,
+                                    removed_from_catalogue TEXT,
                                     comments TEXT,
                                     keywords TEXT,
                                     archived INTEGER NOT NULL CHECK (archived IN (0, 1)), 

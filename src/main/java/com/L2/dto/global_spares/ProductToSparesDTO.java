@@ -12,6 +12,7 @@ public class ProductToSparesDTO {
     private String productEndOfServiceDate;
     private String lastUpdate;
     private String addedToCatalogue;
+    private String removedFromCatalogue;
     private String comments;
     private String keywords;
     private Boolean archived;
@@ -29,7 +30,8 @@ public class ProductToSparesDTO {
         this.customAdd = custom_add;
     }
 
-    public ProductToSparesDTO(String pimRange, String pimProductFamily, String spareItem, String replacementItem, String standardExchangeItem, String spareDescription, String catalogueVersion, String productEndOfServiceDate, String lastUpdate, String addedToCatalogue, Boolean archived, Boolean custom_add) {
+    public ProductToSparesDTO(int id, String pimRange, String pimProductFamily, String spareItem, String replacementItem, String standardExchangeItem, String spareDescription, String catalogueVersion, String productEndOfServiceDate, String lastUpdate, String addedToCatalogue, String removedFromCatalogue, String comments, String keywords, Boolean archived, Boolean customAdd, String lastUpdatedBy) {
+        this.id = id;
         this.pimRange = pimRange;
         this.pimProductFamily = pimProductFamily;
         this.spareItem = spareItem;
@@ -40,21 +42,7 @@ public class ProductToSparesDTO {
         this.productEndOfServiceDate = productEndOfServiceDate;
         this.lastUpdate = lastUpdate;
         this.addedToCatalogue = addedToCatalogue;
-        this.archived = archived;
-        this.customAdd = custom_add;
-    }
-
-    public ProductToSparesDTO(String pimRange, String pimProductFamily, String spareItem, String replacementItem, String standardExchangeItem, String spareDescription, String catalogueVersion, String productEndOfServiceDate, String lastUpdate, String addedToCatalogue, String comments, String keywords, Boolean archived, Boolean customAdd, String lastUpdatedBy) {
-        this.pimRange = pimRange;
-        this.pimProductFamily = pimProductFamily;
-        this.spareItem = spareItem;
-        this.replacementItem = replacementItem;
-        this.standardExchangeItem = standardExchangeItem;
-        this.spareDescription = spareDescription;
-        this.catalogueVersion = catalogueVersion;
-        this.productEndOfServiceDate = productEndOfServiceDate;
-        this.lastUpdate = lastUpdate;
-        this.addedToCatalogue = addedToCatalogue;
+        this.removedFromCatalogue = removedFromCatalogue;
         this.comments = comments;
         this.keywords = keywords;
         this.archived = archived;
@@ -164,9 +152,6 @@ public class ProductToSparesDTO {
         this.archived = archived;
     }
 
-    public void setCustom_add(Boolean custom_add) {
-        this.customAdd = custom_add;
-    }
 
     public int getId() {
         return id;
@@ -210,6 +195,14 @@ public class ProductToSparesDTO {
 
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public String getRemovedFromCatalogue() {
+        return removedFromCatalogue;
+    }
+
+    public void setRemovedFromCatalogue(String removedFromCatalogue) {
+        this.removedFromCatalogue = removedFromCatalogue;
     }
 
     @Override
