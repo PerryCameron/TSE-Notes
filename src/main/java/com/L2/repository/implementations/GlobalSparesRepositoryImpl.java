@@ -3,8 +3,10 @@ package com.L2.repository.implementations;
 import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.dto.global_spares.PropertiesDTO;
 import com.L2.dto.global_spares.ReplacementCrDTO;
+import com.L2.dto.global_spares.SparesDTO;
 import com.L2.repository.interfaces.GlobalSparesRepository;
 import com.L2.repository.rowmappers.ProductToSparesRowMapper;
+import com.L2.repository.rowmappers.SparesRowMapper;
 import com.L2.static_tools.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +57,47 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
                 ps.setBoolean(14, productToSpares.isArchived());
                 ps.setBoolean(15, productToSpares.isCustomAdd());
                 ps.setString(16, productToSpares.getLastUpdatedBy());
+                return ps;
+            }, keyHolder);
+
+            return keyHolder.getKey().intValue(); // Returns the generated ID
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            logger.error(productToSpares.toString());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public int insertConsolidatedProductToSpare(ProductToSparesDTO productToSpares) {
+        try {
+            String sql = "INSERT INTO spares_consolidated (" +
+                    "pim, spare_item, replacement_item, " +
+                    "standard_exchange_item, spare_description, catalogue_version, " +
+                    "end_of_service_date, last_update, added_to_catalogue, removed_from_catalogue, " +
+                    "comments, keywords, archived, custom_add, last_updated_by) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, productToSpares.getPimRange());
+                ps.setString(2, productToSpares.getSpareItem());
+                ps.setString(3, productToSpares.getReplacementItem());
+                ps.setString(4, productToSpares.getStandardExchangeItem());
+                ps.setString(5, productToSpares.getSpareDescription());
+                ps.setString(6, productToSpares.getCatalogueVersion());
+                ps.setString(7, productToSpares.getProductEndOfServiceDate());
+                ps.setString(8, productToSpares.getLastUpdate());
+                ps.setString(9, productToSpares.getAddedToCatalogue());
+                ps.setString(10, productToSpares.getRemovedFromCatalogue());
+                ps.setString(11, productToSpares.getComments());
+                ps.setString(12, productToSpares.getKeywords());
+                ps.setBoolean(13, productToSpares.isArchived());
+                ps.setBoolean(14, productToSpares.isCustomAdd());
+                ps.setString(15, productToSpares.getLastUpdatedBy());
                 return ps;
             }, keyHolder);
 
@@ -133,14 +176,8 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         }
     }
 
-//    C:\Users\sesa91827\IdeaProjects\TSE-Notes\src\main\java\com\L2\repository\implementations\GlobalSparesRepositoryImpl.java:128: warning: [deprecation] <T>query(String,Object[],RowMapper<T>) in JdbcTemplate has been deprecated
-//    List<String> spareItemsList = jdbcTemplate.query(query, new Object[]{archived}, (rs, rowNum) -> rs.getString("spare_item"));
-//                                                      ^
-//    where T is a type-variable:
-//    T extends Object declared in method <T>query(String,Object[],RowMapper<T>)
-
     @Override
-    public List<ProductToSparesDTO> searchSpares(String searchTerm, int partOrderId) {
+    public List<ProductToSparesDTO> searchProductToSpares(String searchTerm, int partOrderId) {
         try {
             String query = """
                 SELECT *
@@ -154,6 +191,28 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             logger.info("Searching for parts...");
             // Execute the query using JdbcTemplate
             return jdbcTemplate.query(query, new ProductToSparesRowMapper(), searchPattern, searchPattern); // Parameters for both LIKE conditions
+
+        } catch (Exception e) {
+            logger.error("Database error: {}", e.getMessage());
+            return List.of(); // Return empty list on error
+        }
+    }
+
+    @Override
+    public List<SparesDTO> searchSpares(String searchTerm, int partOrderId) {
+        try {
+            String query = """
+                SELECT *
+                FROM spares_consolidated
+                WHERE (spare_item LIKE ? OR replacement_item LIKE ?)
+                GROUP BY spare_item;
+                """;
+
+            // Use % for partial matching
+            String searchPattern = "%" + searchTerm + "%";
+            logger.info("Searching for parts...");
+            // Execute the query using JdbcTemplate
+            return jdbcTemplate.query(query, new SparesRowMapper(), searchPattern, searchPattern); // Parameters for both LIKE conditions
 
         } catch (Exception e) {
             logger.error("Database error: {}", e.getMessage());
@@ -186,9 +245,23 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             return List.of(); // Return empty list on error
         }
     }
-//--this will get our products from our range
-//    SELECT DISTINCT product_to_spares.pim_product_family from product_to_spares where spare_item = 'AP9547' and pim_range = 'Easy UPS 3L';
 
+    @Override
+    public ProductToSparesDTO getProductToSpares(String spare, boolean isArchived) {
+        try {
+            String query = """
+                    SELECT *
+                    FROM product_to_spares
+                    WHERE spare_item = ? and archived = ?
+                    ORDER BY id
+                    LIMIT 1;
+                    """;
+            return jdbcTemplate.queryForObject(query, new ProductToSparesRowMapper(), spare, isArchived);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return null;
+    }
 
 }
 

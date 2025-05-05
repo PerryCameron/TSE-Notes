@@ -4,6 +4,7 @@ import com.L2.BaseApplication;
 import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
 import com.L2.dto.global_spares.ProductToSparesDTO;
+import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
@@ -148,16 +149,16 @@ public class DialogueFx {
                 noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
                 partContainer.getChildren().clear();
                 Button addToPartOrderButton = new Button("Add to Part Order");
-                ListView<ProductToSparesDTO> listView = ListViewFx.partListView(noteModel.getSearchedParts());
+                ListView<SparesDTO> listView = ListViewFx.partListView(noteModel.getSearchedParts());
                 partContainer.getChildren().add(listView); // I want it to expand vertically to make room for this
                 partContainer.getChildren().add(addToPartOrderButton);
                 // Force dialog to re-layout and resize to fit new content
                 addToPartOrderButton.setOnAction(add -> {
-                    ProductToSparesDTO productToSparesDTO = listView.getSelectionModel().getSelectedItem();
+                    SparesDTO sparesDTO = listView.getSelectionModel().getSelectedItem();
                     noteView.getAction().accept(NoteMessage.INSERT_PART);
                     PartDTO partDTO = noteModel.selectedPartProperty().get();
-                    partDTO.setPartNumber(productToSparesDTO.getSpareItem());
-                    partDTO.setPartDescription(productToSparesDTO.getSpareDescription());
+                    partDTO.setPartNumber(sparesDTO.getSpareItem());
+                    partDTO.setPartDescription(sparesDTO.getSpareDescription());
                     // no need to put in part into FX UI here as it is being done elseware
                     noteView.getAction().accept(NoteMessage.UPDATE_PART);
 

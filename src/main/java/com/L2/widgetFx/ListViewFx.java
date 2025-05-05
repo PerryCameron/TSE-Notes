@@ -1,6 +1,6 @@
 package com.L2.widgetFx;
 
-import com.L2.dto.global_spares.ProductToSparesDTO;
+import com.L2.dto.global_spares.SparesDTO;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -11,8 +11,8 @@ import java.util.List;
 
 public class ListViewFx {
 
-    public static ListView<ProductToSparesDTO> partListView(ObservableList<ProductToSparesDTO> parts) {
-        ListView<ProductToSparesDTO> listView = new ListView<>();
+    public static ListView<SparesDTO> partListView(ObservableList<SparesDTO> parts) {
+        ListView<SparesDTO> listView = new ListView<>();
 
         // Set ListView to grow vertically and limit its height
         VBox.setVgrow(listView, Priority.ALWAYS);
@@ -24,7 +24,7 @@ public class ListViewFx {
         // Customize the cell factory to display partNumber and partDescription
         listView.setCellFactory(lv -> new ListCell<>() {
             @Override
-            protected void updateItem(ProductToSparesDTO part, boolean empty) {
+            protected void updateItem(SparesDTO part, boolean empty) {
                 super.updateItem(part, empty);
                 if (empty || part == null) {
                     setText(null);

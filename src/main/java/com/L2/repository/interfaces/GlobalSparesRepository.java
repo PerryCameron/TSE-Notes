@@ -4,6 +4,7 @@ import com.L2.dto.PartDTO;
 import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.dto.global_spares.PropertiesDTO;
 import com.L2.dto.global_spares.ReplacementCrDTO;
+import com.L2.dto.global_spares.SparesDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -12,15 +13,20 @@ public interface GlobalSparesRepository {
 
     int insertProductToSpare(ProductToSparesDTO productToSpares);
 
+    int insertConsolidatedProductToSpare(ProductToSparesDTO productToSpares);
+
     int insertReplacementCr(ReplacementCrDTO replacementCrDTO);
 
     int insertWorkbookProperties(PropertiesDTO propertiesDTO);
 
     List<String> getDistinctSpareItems(boolean isArchived);
 
-    List<ProductToSparesDTO> searchSpares(String searchTerm, int partOrderId);
+    List<ProductToSparesDTO> searchProductToSpares(String searchTerm, int partOrderId);
+    List<SparesDTO> searchSpares(String searchTerm, int partOrderId);
 
     List<String> getRangesFromSpareItem(String spare, boolean isArchived);
 
     List<String> getProductsFromRange(String spare, String range, boolean isArchived);
+
+    ProductToSparesDTO getProductToSpares(String spare, boolean isArchived);
 }

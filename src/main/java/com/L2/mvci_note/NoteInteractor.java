@@ -2,6 +2,7 @@ package com.L2.mvci_note;
 
 import com.L2.dto.*;
 import com.L2.dto.global_spares.ProductToSparesDTO;
+import com.L2.dto.global_spares.SparesDTO;
 import com.L2.enums.AreaType;
 import com.L2.repository.implementations.*;
 import com.L2.repository.interfaces.*;
@@ -1079,9 +1080,9 @@ public class NoteInteractor {
         }
 
         if (searchParams.length == 1) {
-            Task<List<ProductToSparesDTO>> searchTask = new Task<>() {
+            Task<List<SparesDTO>> searchTask = new Task<>() {
                 @Override
-                protected List<ProductToSparesDTO> call() {
+                protected List<SparesDTO> call() {
                     return globalSparesRepo.searchSpares(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
                 }
             };

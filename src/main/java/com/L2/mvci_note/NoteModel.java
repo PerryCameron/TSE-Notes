@@ -2,6 +2,7 @@ package com.L2.mvci_note;
 
 import com.L2.dto.*;
 import com.L2.dto.global_spares.ProductToSparesDTO;
+import com.L2.dto.global_spares.SparesDTO;
 import com.nikialeksey.hunspell.Hunspell;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -21,7 +22,7 @@ public class NoteModel {
     private final ObjectProperty<NoteDTO> boundNote = new SimpleObjectProperty<>();
     // you can only select one part at a time, so simpler to keep here.
     private final ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
-    private final ObservableList<ProductToSparesDTO> searchedPart = FXCollections.observableArrayList();;
+    private final ObservableList<SparesDTO> searchedPart = FXCollections.observableArrayList();;
     // you can only have one part order focused at time, so simpler to keep here as well
     private final ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
     private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
@@ -70,7 +71,7 @@ public class NoteModel {
     public ObjectProperty<PartDTO> selectedPartProperty() {
         return selectedPart;
     }
-    public ObservableList<ProductToSparesDTO> getSearchedParts() { return searchedPart;}
+    public ObservableList<SparesDTO> getSearchedParts() { return searchedPart;}
     public BooleanProperty refreshBoundNoteProperty() {
         return refreshBoundNote;
     }

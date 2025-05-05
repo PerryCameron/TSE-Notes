@@ -45,10 +45,10 @@ public class ExcelRipper {
         logger.info("Consolidating Product to Spares ");
         consolidateWithJSON(false, globalSparesRepository);
         logger.info("Consolidating Archived Product to Spares");
+        consolidateWithJSON(true, globalSparesRepository);
         return true;
     }
 
-    // I would like this method to make my JSON
     private static void consolidateWithJSON(boolean isArchived, GlobalSparesRepository globalSparesRepository) {
         ObjectMapper objectMapper = new ObjectMapper();
         List<String> compactedSpares = globalSparesRepository.getDistinctSpareItems(isArchived);
@@ -84,8 +84,11 @@ public class ExcelRipper {
                 logger.error("Error serializing JSON for spare_item: {}", spare, e);
                 return;
             }
-            System.out.println(pimJson);
 
+            ProductToSparesDTO productToSpares = globalSparesRepository.getProductToSpares(spare, isArchived);
+            productToSpares.setPimProductFamily("");
+            productToSpares.setPimRange(pimJson);
+            globalSparesRepository.insertConsolidatedProductToSpare(productToSpares);
         });
     }
 
@@ -111,9 +114,9 @@ public class ExcelRipper {
         // Iterate through the first 10 rows
         for (Row row : sheet) {
             // this is temp for testing
-            if (row.getRowNum() >= 300) {
-                break; // Stop after 300 rows
-            }
+//            if (row.getRowNum() >= 300) {
+//                break; // Stop after 300 rows
+//            }
             // we will not start writing until we get to row three
             if (row.getRowNum() < 3) {
                 continue;
@@ -168,9 +171,9 @@ public class ExcelRipper {
         // Iterate through the first 10 rows
         for (Row row : sheet) {
             // this is temp for testing
-            if (row.getRowNum() >= 300) {
-                break; // Stop after 300 rows
-            }
+//            if (row.getRowNum() >= 300) {
+//                break; // Stop after 300 rows
+//            }
             // we will not start writing until we get to row three
             if (row.getRowNum() < 3) {
                 continue;
