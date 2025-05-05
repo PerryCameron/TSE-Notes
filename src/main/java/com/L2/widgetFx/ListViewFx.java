@@ -7,8 +7,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import java.util.List;
-
 public class ListViewFx {
 
     public static ListView<SparesDTO> partListView(ObservableList<SparesDTO> parts) {
@@ -29,7 +27,7 @@ public class ListViewFx {
                 if (empty || part == null) {
                     setText(null);
                 } else {
-                    setText(part.getSpareItem() + " - " + part.getSpareDescription());
+                    setText(part.getSpareItem() + " - " + part.getSpareDescription() + " - inCatalog: " + part.getArchived());
                 }
             }
         });

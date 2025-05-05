@@ -72,7 +72,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     @Override
     public int insertConsolidatedProductToSpare(ProductToSparesDTO productToSpares) {
         try {
-            String sql = "INSERT INTO spares_consolidated (" +
+            String sql = "INSERT INTO spares (" +
                     "pim, spare_item, replacement_item, " +
                     "standard_exchange_item, spare_description, catalogue_version, " +
                     "end_of_service_date, last_update, added_to_catalogue, removed_from_catalogue, " +
@@ -203,7 +203,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         try {
             String query = """
                 SELECT *
-                FROM spares_consolidated
+                FROM spares
                 WHERE (spare_item LIKE ? OR replacement_item LIKE ?)
                 GROUP BY spare_item;
                 """;
