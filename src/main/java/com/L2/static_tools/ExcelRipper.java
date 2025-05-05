@@ -1,5 +1,6 @@
 package com.L2.static_tools;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.dto.global_spares.PropertiesDTO;
 import com.L2.dto.global_spares.ReplacementCrDTO;
@@ -12,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 public class ExcelRipper {
     private static final Logger logger = LoggerFactory.getLogger(ExcelRipper.class);
@@ -41,7 +42,51 @@ public class ExcelRipper {
         sheet = workbook.getSheet("Uniflair Cross Reference");
         logger.info("Ripping Replacement CRs (Uniflair Cross Reference)");
         extractReplacementCr(sheet, replacementCrDTO, globalSparesRepository);
+        logger.info("Consolidating Product to Spares ");
+        consolidateWithJSON(false, globalSparesRepository);
+        logger.info("Consolidating Archived Product to Spares");
         return true;
+    }
+
+    // I would like this method to make my JSON
+    private static void consolidateWithJSON(boolean isArchived, GlobalSparesRepository globalSparesRepository) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> compactedSpares = globalSparesRepository.getDistinctSpareItems(isArchived);
+
+        compactedSpares.forEach(spare -> {
+
+            // Get pim_range values for this spare_item
+            List<String> ranges = globalSparesRepository.getRangesFromSpareItem(spare, isArchived);
+
+            // Build JSON for pim column
+            List<Map<String, Object>> pimData = new ArrayList<>();
+            for (String range : ranges) {
+                List<String> products = globalSparesRepository.getProductsFromRange(spare, range, isArchived);
+                if (!products.isEmpty()) {
+                    Map<String, Object> rangeEntry = new HashMap<>();
+                    rangeEntry.put("range", range);
+                    rangeEntry.put("product_families", products);
+                    pimData.add(rangeEntry);
+                }
+            }
+
+            // Skip if no pim data
+            if (pimData.isEmpty()) {
+                logger.warn("No pim data for spare_item: {}", spare);
+                return;
+            }
+
+            // Convert pimData to JSON
+            String pimJson;
+            try {
+                pimJson = objectMapper.writeValueAsString(pimData);
+            } catch (Exception e) {
+                logger.error("Error serializing JSON for spare_item: {}", spare, e);
+                return;
+            }
+            System.out.println(pimJson);
+
+        });
     }
 
     public static boolean extractWorkbookProperties(XSSFWorkbook workbook, GlobalSparesRepository globalSparesRepository) {

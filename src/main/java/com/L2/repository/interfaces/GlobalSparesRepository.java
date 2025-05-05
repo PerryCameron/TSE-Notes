@@ -16,5 +16,11 @@ public interface GlobalSparesRepository {
 
     int insertWorkbookProperties(PropertiesDTO propertiesDTO);
 
+    List<String> getDistinctSpareItems(boolean isArchived);
+
     List<ProductToSparesDTO> searchSpares(String searchTerm, int partOrderId);
+
+    List<String> getRangesFromSpareItem(String spare, boolean isArchived);
+
+    List<String> getProductsFromRange(String spare, String range, boolean isArchived);
 }

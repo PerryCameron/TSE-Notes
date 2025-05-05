@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 
+
 public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     private static final Logger logger = LoggerFactory.getLogger(GlobalSparesRepositoryImpl.class);
     private final JdbcTemplate jdbcTemplate;
@@ -119,6 +120,26 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         return 0;
     }
 
+    @Override
+    public List<String> getDistinctSpareItems(boolean isArchived) {
+        try {
+            int archived = isArchived ? 1 : 0;
+            String query = "SELECT DISTINCT spare_item FROM product_to_spares WHERE product_to_spares.archived = ? ORDER BY spare_item";
+            List<String> spareItemsList = jdbcTemplate.query(query, (rs, rowNum) -> rs.getString("spare_item"), archived);
+            return spareItemsList;
+        } catch (Exception e) {
+            logger.error("Error querying spare items: {}", e.getMessage(), e);
+            return List.of();
+        }
+    }
+
+//    C:\Users\sesa91827\IdeaProjects\TSE-Notes\src\main\java\com\L2\repository\implementations\GlobalSparesRepositoryImpl.java:128: warning: [deprecation] <T>query(String,Object[],RowMapper<T>) in JdbcTemplate has been deprecated
+//    List<String> spareItemsList = jdbcTemplate.query(query, new Object[]{archived}, (rs, rowNum) -> rs.getString("spare_item"));
+//                                                      ^
+//    where T is a type-variable:
+//    T extends Object declared in method <T>query(String,Object[],RowMapper<T>)
+
+    @Override
     public List<ProductToSparesDTO> searchSpares(String searchTerm, int partOrderId) {
         try {
             String query = """
@@ -139,5 +160,35 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             return List.of(); // Return empty list on error
         }
     }
+
+    @Override
+    public List<String> getRangesFromSpareItem(String spare, boolean isArchived) {
+        try {
+            int archived = isArchived ? 1 : 0;
+            String query = "SELECT DISTINCT pim_range FROM product_to_spares WHERE spare_item = ? AND product_to_spares.archived = ?";
+            List<String> spareItemsList = jdbcTemplate.query(query, (rs, rowNum) -> rs.getString("pim_range"), spare, archived);
+            return spareItemsList;
+        } catch (Exception e) {
+            logger.error("Error querying spare items: {}", e.getMessage(), e);
+            return List.of();
+        }
+    }
+
+    @Override
+    public List<String> getProductsFromRange(String spare, String range, boolean isArchived) {
+        try {
+            int archived = isArchived ? 1 : 0;
+            String query = "SELECT DISTINCT product_to_spares.pim_product_family from product_to_spares where spare_item = ? and pim_range = ? and product_to_spares.archived = ?";
+            List<String> spareItemsList = jdbcTemplate.query(query, (rs, rowNum) -> rs.getString("pim_product_family"), spare, range, archived);
+            return spareItemsList; // Return the list directly
+        } catch (Exception e) {
+            logger.error("Error querying spare items: {}", e.getMessage(), e);
+            return List.of(); // Return empty list on error
+        }
+    }
+//--this will get our products from our range
+//    SELECT DISTINCT product_to_spares.pim_product_family from product_to_spares where spare_item = 'AP9547' and pim_range = 'Easy UPS 3L';
+
+
 }
 

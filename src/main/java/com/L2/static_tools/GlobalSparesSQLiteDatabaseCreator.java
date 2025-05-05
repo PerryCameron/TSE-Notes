@@ -40,7 +40,28 @@ public class GlobalSparesSQLiteDatabaseCreator {
                                     custom_add INTEGER NOT NULL CHECK (custom_add IN (0, 1)),
                                     last_updated_by TEXT                         
                                 );
-                
+
+                                CREATE TABLE  IF NOT EXISTS spares_consolidated (
+                                    id                     INTEGER PRIMARY KEY AUTOINCREMENT,
+                                    pim                    TEXT, -- JSON storing pim_range and pim_product_family
+                                    spare_item             TEXT,
+                                    replacement_item       TEXT,
+                                    standard_exchange_item TEXT,
+                                    spare_description      TEXT,
+                                    catalogue_version      TEXT,
+                                    end_of_service_date    TEXT,
+                                    last_update            TEXT,
+                                    added_to_catalogue     TEXT,
+                                    removed_from_catalogue TEXT,
+                                    comments               TEXT,
+                                    keywords               TEXT,
+                                    archived               INTEGER NOT NULL,
+                                    custom_add             INTEGER NOT NULL,
+                                    last_updated_by        TEXT,
+                                    CHECK (archived IN (0, 1)),
+                                    CHECK (custom_add IN (0, 1))
+                                );
+              
                                 CREATE TABLE IF NOT EXISTS replacement_cr (
                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                                     item TEXT,
@@ -59,35 +80,7 @@ public class GlobalSparesSQLiteDatabaseCreator {
                                     last_modification_date TEXT
                                 );
                 
-                                CREATE TABLE IF NOT EXISTS pimTypes (
-                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                     product TEXT,
-                                     range TEXT,
-                                     is_power INTEGER NOT NULL CHECK (is_power IN (0, 1))
-                                );
-                
-                
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('ETO - Cooling', '0G-EQMCW', 0);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Uniflair', 'Uniflair InRow Cooling Accessories', 0);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Uniflair', 'Uniflair Chilled Water InRow Cooling', 0);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Uniflair', 'Uniflair Direct Expansion InRow Cooling', 0);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Uniflair', 'Uniflair Rack Mounted Room Cooling', 0);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Uniflair', 'Uniflair InRow Cooling Accessories', 0);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Uniflair', 'Uniflair InRow Cooling Accessories', 0);
-                
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('InRow', 'InRow', 0);
-                
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Galaxy VM', '0G-GVMI200KH', 1);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Galaxy VM', '0G-GVMIP200KH', 1);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Galaxy VM', '0G-GVMIP225KG65K', 1);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Galaxy VM', '0G-GVMIPR225KG', 1);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Galaxy VM', '0G-GVMIPR225KG65K', 1);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Galaxy VM', '0G-GVMPB160K180D', 1);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Galaxy VM', '0G-GVMPB160KG', 1);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('Galaxy VM', '0G-GVMPB200K225D', 1);
-                INSERT INTO pimTypes (product, range, is_power)VALUES ('ISX PDU', '0G-PD150G6FX', 1);
-                
-                """;
+                                """;
 
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement()) {
