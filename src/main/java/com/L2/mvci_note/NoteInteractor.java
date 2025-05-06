@@ -1099,13 +1099,27 @@ public class NoteInteractor {
 
             Executors.newCachedThreadPool().execute(searchTask);
         } else {
-            // Implement multi-word search (e.g., description search)
-            // Example: Combine words or search as a phrase
-            String combinedQuery = String.join(" ", searchParams);
-            // Perform search with combinedQuery
+            Task<List<SparesDTO>> searchTask = new Task<>() {
+                @Override
+                protected List<SparesDTO> call() {
+                    String[] range = {"Galaxy VM", "Galaxy VS"};
+                    return globalSparesRepo.searchSparesScoringDual(range, searchParams);
+                }
+            };
+
+            searchTask.setOnSucceeded(e -> {
+                noteModel.getSearchedParts().setAll(searchTask.getValue()); // Update UI
+            });
+
+            searchTask.setOnFailed(e -> {
+                Throwable ex = e.getSource().getException();
+                System.err.println("Search failed: " + ex.getMessage());
+                // Optionally notify user via UI
+            });
+
+            Executors.newCachedThreadPool().execute(searchTask);
         }
     }
-
     public void getRanges() {
         System.out.println("getting ranges");
         noteModel.getRanges().addAll(globalSparesRepo.findAllRanges());

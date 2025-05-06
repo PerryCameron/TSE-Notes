@@ -6,6 +6,7 @@ import com.L2.repository.rowmappers.ProductToSparesRowMapper;
 import com.L2.repository.rowmappers.RangesRowMapper;
 import com.L2.repository.rowmappers.SparesRowMapper;
 import com.L2.static_tools.DatabaseConnector;
+import com.L2.static_tools.NoteTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -251,5 +253,167 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         return List.of();
     }
 
+    @Override
+    public List<SparesDTO> searchSparesScoring(String[] keywords) {
+        StringBuilder scoreBuilder = new StringBuilder();
+        StringBuilder whereBuilder = new StringBuilder();
+        for (int k = 0; k < keywords.length; k++) {
+            if (k > 0) {
+                scoreBuilder.append(" + ");
+                whereBuilder.append(" OR ");
+            }
+            scoreBuilder.append("""
+            (CASE WHEN spare_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN replacement_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN spare_description LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN comments LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN keywords LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END)
+        """);
+            // Remove trailing '+' from scoreBuilder if it's the last keyword
+            if (k < keywords.length - 1) {
+                scoreBuilder.append(" + ");
+            }
+            whereBuilder.append("""
+            spare_item LIKE '%' || ? || '%' COLLATE NOCASE
+            OR replacement_item LIKE '%' || ? || '%' COLLATE NOCASE
+            OR standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE
+            OR spare_description LIKE '%' || ? || '%' COLLATE NOCASE
+            OR comments LIKE '%' || ? || '%' COLLATE NOCASE
+            OR keywords LIKE '%' || ? || '%' COLLATE NOCASE
+        """);
+        }
+        String sql = String.format("""
+        SELECT *, (%s) AS match_score
+        FROM spares
+        WHERE %s
+        ORDER BY match_score DESC
+    """, scoreBuilder.toString().replaceAll("\\+\\s*$", ""), whereBuilder.toString());
+        List<Object> params = new ArrayList<>();
+        for (String keyword : keywords) {
+            String normalizedKeyword = NoteTools.normalizeDate(keyword);
+            String likeKeyword = "%" + normalizedKeyword + "%";
+            // Add parameters for scoring (6 columns)
+            for (int i = 0; i < 6; i++) {
+                params.add(likeKeyword);
+            }
+            // Add parameters for WHERE clause (6 columns)
+            for (int i = 0; i < 6; i++) {
+                params.add(likeKeyword);
+            }
+        }
+        return jdbcTemplate.query(sql, ps -> {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i)); // JDBC indices are 1-based
+            }
+        }, new SparesRowMapper());
+    }
+
+    @Override
+    public List<SparesDTO> searchSparesScoringDual(String[] keywords1, String[] keywords2) {
+        StringBuilder scoreBuilder = new StringBuilder();
+        StringBuilder whereBuilder1 = new StringBuilder();
+        StringBuilder whereBuilder2 = new StringBuilder();
+
+        // Build scoring and WHERE clause for keywords1
+        for (int k = 0; k < keywords1.length; k++) {
+            if (k > 0) {
+                scoreBuilder.append(" + ");
+                whereBuilder1.append(" OR ");
+            }
+            scoreBuilder.append("""
+            (CASE WHEN spare_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN replacement_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN spare_description LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN comments LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN keywords LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END)
+        """);
+            whereBuilder1.append("""
+            spare_item LIKE '%' || ? || '%' COLLATE NOCASE
+            OR replacement_item LIKE '%' || ? || '%' COLLATE NOCASE
+            OR standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE
+            OR spare_description LIKE '%' || ? || '%' COLLATE NOCASE
+            OR comments LIKE '%' || ? || '%' COLLATE NOCASE
+            OR keywords LIKE '%' || ? || '%' COLLATE NOCASE
+        """);
+        }
+
+        // Add separator between keywords1 and keywords2 scoring
+        if (keywords1.length > 0 && keywords2.length > 0) {
+            scoreBuilder.append(" + ");
+        }
+
+        // Build scoring and WHERE clause for keywords2
+        for (int k = 0; k < keywords2.length; k++) {
+            if (k > 0) {
+                scoreBuilder.append(" + ");
+                whereBuilder2.append(" OR ");
+            }
+            scoreBuilder.append("""
+            (CASE WHEN spare_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN replacement_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN spare_description LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN comments LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN keywords LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END)
+        """);
+            whereBuilder2.append("""
+            spare_item LIKE '%' || ? || '%' COLLATE NOCASE
+            OR replacement_item LIKE '%' || ? || '%' COLLATE NOCASE
+            OR standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE
+            OR spare_description LIKE '%' || ? || '%' COLLATE NOCASE
+            OR comments LIKE '%' || ? || '%' COLLATE NOCASE
+            OR keywords LIKE '%' || ? || '%' COLLATE NOCASE
+        """);
+        }
+
+        // Combine WHERE clauses with AND
+        String whereClause = String.format("(%s) AND (%s)",
+                whereBuilder1.length() > 0 ? whereBuilder1.toString() : "1=1",
+                whereBuilder2.length() > 0 ? whereBuilder2.toString() : "1=1");
+
+        // Build the final SQL query
+        String sql = String.format("""
+        SELECT *, (%s) AS match_score
+        FROM spares
+        WHERE %s
+        ORDER BY match_score DESC
+    """, scoreBuilder.toString().replaceAll("\\+\\s*$", ""), whereClause);
+
+        // Collect parameters
+        List<Object> params = new ArrayList<>();
+        for (String keyword : keywords1) {
+            String normalizedKeyword = NoteTools.normalizeDate(keyword);
+            String likeKeyword = "%" + normalizedKeyword + "%";
+            // Scoring parameters (6 columns)
+            for (int i = 0; i < 6; i++) {
+                params.add(likeKeyword);
+            }
+            // WHERE parameters (6 columns)
+            for (int i = 0; i < 6; i++) {
+                params.add(likeKeyword);
+            }
+        }
+        for (String keyword : keywords2) {
+            String normalizedKeyword = NoteTools.normalizeDate(keyword);
+            String likeKeyword = "%" + normalizedKeyword + "%";
+            // Scoring parameters (6 columns)
+            for (int i = 0; i < 6; i++) {
+                params.add(likeKeyword);
+            }
+            // WHERE parameters (6 columns)
+            for (int i = 0; i < 6; i++) {
+                params.add(likeKeyword);
+            }
+        }
+
+        // Execute query
+        return jdbcTemplate.query(sql, ps -> {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i)); // JDBC indices are 1-based
+            }
+        }, new SparesRowMapper());
+    }
 }
 

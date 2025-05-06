@@ -27,4 +27,8 @@ public interface GlobalSparesRepository {
     ProductToSparesDTO getProductToSpares(String spare, boolean isArchived);
 
     List<RangesDTO> findAllRanges();
+
+    List<SparesDTO> searchSparesScoring(String[] keywords);
+
+    List<SparesDTO> searchSparesScoringDual(String[] keywords1, String[] keywords2);
 }

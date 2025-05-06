@@ -27,7 +27,7 @@ public class ListViewFx {
                 if (empty || part == null) {
                     setText(null);
                 } else {
-                    setText(part.getSpareItem() + " - " + part.getSpareDescription() + " - inCatalog: " + part.getArchived());
+                    setText(part.getSpareItem() + " - " + part.getSpareDescription() + " -  In Catalog: " + !part.getArchived());
                 }
             }
         });

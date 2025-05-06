@@ -136,8 +136,6 @@ public class DialogueFx {
         Button searchButton = new Button("Search");
         Button cancelButton = new Button("Cancel");
 
-
-        System.out.println(noteModel.getRanges().size() + " ranges");
         ObservableList<String> rangeItems = FXCollections.observableArrayList(
                 noteModel.getRanges().stream()
                         .map(RangesDTO::getRange)
@@ -146,6 +144,7 @@ public class DialogueFx {
 
         // Create ComboBox and set items
         ComboBox<String> rangeComboBox = new ComboBox<>();
+        rangeComboBox.getSelectionModel().select("Range");
         rangeComboBox.setItems(rangeItems);
         HBox.setHgrow(rangeComboBox, Priority.ALWAYS);
 
