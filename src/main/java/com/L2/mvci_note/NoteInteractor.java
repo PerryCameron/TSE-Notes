@@ -1105,4 +1105,9 @@ public class NoteInteractor {
             // Perform search with combinedQuery
         }
     }
+
+    public void getRanges() {
+        System.out.println("getting ranges");
+        noteModel.getRanges().addAll(globalSparesRepo.findAllRanges());
+    }
 }

@@ -3,17 +3,20 @@ package com.L2.widgetFx;
 import com.L2.BaseApplication;
 import com.L2.dto.PartDTO;
 import com.L2.dto.PartOrderDTO;
-import com.L2.dto.global_spares.ProductToSparesDTO;
+import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -23,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DialogueFx {
 
@@ -112,6 +116,8 @@ public class DialogueFx {
         // Create a custom Alert with no default buttons
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setTitle("Search..."); // Set custom title bar text
+
+
         // Create a DialogPane
         DialogPane dialogPane = new DialogPane();
         dialogPane.getStylesheets().add("css/light.css");
@@ -130,7 +136,20 @@ public class DialogueFx {
         Button searchButton = new Button("Search");
         Button cancelButton = new Button("Cancel");
 
-        HBox buttonBox = new HBox(10, searchButton, cancelButton);
+
+        System.out.println(noteModel.getRanges().size() + " ranges");
+        ObservableList<String> rangeItems = FXCollections.observableArrayList(
+                noteModel.getRanges().stream()
+                        .map(RangesDTO::getRange)
+                        .collect(Collectors.toList())
+        );
+
+        // Create ComboBox and set items
+        ComboBox<String> rangeComboBox = new ComboBox<>();
+        rangeComboBox.setItems(rangeItems);
+        HBox.setHgrow(rangeComboBox, Priority.ALWAYS);
+
+        HBox buttonBox = new HBox(10, rangeComboBox, searchButton, cancelButton);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
         VBox partContainer = new VBox(10);

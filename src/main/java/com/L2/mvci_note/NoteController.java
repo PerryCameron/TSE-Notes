@@ -35,6 +35,7 @@ public class NoteController extends Controller<NoteMessage> {
         noteInteractor.loadNotes();
         noteInteractor.setActiveServiceContract();
         action(NoteMessage.LOAD_USER);
+        action(NoteMessage.GET_RANGES);
         return noteView.build();
     }
 
@@ -63,6 +64,7 @@ public class NoteController extends Controller<NoteMessage> {
             case DELETE_NOTE -> deleteNote();
             case DELETE_PART_ORDER -> noteInteractor.deleteSelectedPartOrder();
             case DELETE_PART -> noteInteractor.deletePart();
+            case GET_RANGES -> noteInteractor.getRanges();
             case INSERT_PART_ORDER -> noteInteractor.insertPartOrder();
             case INSERT_PART -> noteInteractor.insertPart();
             case INITALIZE_DICTIONARY -> noteInteractor.initializeDictionary();

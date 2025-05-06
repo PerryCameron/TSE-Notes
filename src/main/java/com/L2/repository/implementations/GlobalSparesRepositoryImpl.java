@@ -1,11 +1,9 @@
 package com.L2.repository.implementations;
 
-import com.L2.dto.global_spares.ProductToSparesDTO;
-import com.L2.dto.global_spares.PropertiesDTO;
-import com.L2.dto.global_spares.ReplacementCrDTO;
-import com.L2.dto.global_spares.SparesDTO;
+import com.L2.dto.global_spares.*;
 import com.L2.repository.interfaces.GlobalSparesRepository;
 import com.L2.repository.rowmappers.ProductToSparesRowMapper;
+import com.L2.repository.rowmappers.RangesRowMapper;
 import com.L2.repository.rowmappers.SparesRowMapper;
 import com.L2.static_tools.DatabaseConnector;
 import org.slf4j.Logger;
@@ -177,28 +175,6 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     }
 
     @Override
-    public List<ProductToSparesDTO> searchProductToSpares(String searchTerm, int partOrderId) {
-        try {
-            String query = """
-                SELECT *
-                FROM product_to_spares
-                WHERE (spare_item LIKE ? OR replacement_item LIKE ?)
-                GROUP BY spare_item;
-                """;
-
-            // Use % for partial matching
-            String searchPattern = "%" + searchTerm + "%";
-            logger.info("Searching for parts...");
-            // Execute the query using JdbcTemplate
-            return jdbcTemplate.query(query, new ProductToSparesRowMapper(), searchPattern, searchPattern); // Parameters for both LIKE conditions
-
-        } catch (Exception e) {
-            logger.error("Database error: {}", e.getMessage());
-            return List.of(); // Return empty list on error
-        }
-    }
-
-    @Override
     public List<SparesDTO> searchSpares(String searchTerm, int partOrderId) {
         try {
             String query = """
@@ -261,6 +237,18 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             logger.error(e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public List<RangesDTO> findAllRanges() {
+        try {
+            String sql = "SELECT id, range, range_additional, range_type, last_update, last_updated_by FROM ranges";
+            return jdbcTemplate.query(sql, new RangesRowMapper());
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return List.of();
     }
 
 }
