@@ -156,4 +156,8 @@ public class StringChecker {
         return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
     }
 
+    public static boolean hasNumbers(String input) {
+        return input != null && input.matches(".*\\d+.*");
+    }
+
 }

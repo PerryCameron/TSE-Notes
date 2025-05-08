@@ -16,6 +16,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -177,7 +179,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     }
 
     @Override
-    public List<SparesDTO> searchSpares(String searchTerm, int partOrderId) {
+    public List<SparesDTO> searchSparesByPartNumber(String searchTerm, int partOrderId) {
         try {
             String query = """
                 SELECT *
@@ -309,111 +311,150 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         }, new SparesRowMapper());
     }
 
+
+
+
+
+
+
+
+
     @Override
-    public List<SparesDTO> searchSparesScoringDual(String[] keywords1, String[] keywords2) {
-        StringBuilder scoreBuilder = new StringBuilder();
-        StringBuilder whereBuilder1 = new StringBuilder();
-        StringBuilder whereBuilder2 = new StringBuilder();
+    public List<SparesDTO> searchSparesWithRange(String[] ranges, String[] keywords) {
+        if (ranges == null || ranges.length == 0 || keywords == null || keywords.length == 0) {
+            return Collections.emptyList();
+        }
 
-        // Build scoring and WHERE clause for keywords1
-        for (int k = 0; k < keywords1.length; k++) {
+        // Build WHERE clause for range counting
+        StringBuilder rangeCountWhereBuilder = new StringBuilder("(");
+        for (int k = 0; k < ranges.length; k++) {
             if (k > 0) {
-                scoreBuilder.append(" + ");
-                whereBuilder1.append(" OR ");
+                rangeCountWhereBuilder.append(" OR ");
             }
-            scoreBuilder.append("""
-            (CASE WHEN spare_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN replacement_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN spare_description LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN comments LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN keywords LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END)
-        """);
-            whereBuilder1.append("""
-            spare_item LIKE '%' || ? || '%' COLLATE NOCASE
-            OR replacement_item LIKE '%' || ? || '%' COLLATE NOCASE
-            OR standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE
-            OR spare_description LIKE '%' || ? || '%' COLLATE NOCASE
-            OR comments LIKE '%' || ? || '%' COLLATE NOCASE
-            OR keywords LIKE '%' || ? || '%' COLLATE NOCASE
-        """);
+            rangeCountWhereBuilder.append("pim LIKE '%").append(ranges[k].replace("'", "''")).append("%' COLLATE NOCASE");
+        }
+        rangeCountWhereBuilder.append(")");
+
+        // Count rows matching range condition
+        String rangeCountSql = "SELECT COUNT(*) FROM spares WHERE " + rangeCountWhereBuilder.toString();
+        int rangeMatchCount = 0;
+        try {
+            rangeMatchCount = jdbcTemplate.queryForObject(rangeCountSql, Integer.class);
+            System.out.println("Range match count: " + rangeMatchCount + " rows for ranges: " + Arrays.toString(ranges));
+        } catch (Exception e) {
+            System.err.println("Range count query failed: " + e.getMessage());
         }
 
-        // Add separator between keywords1 and keywords2 scoring
-        if (keywords1.length > 0 && keywords2.length > 0) {
-            scoreBuilder.append(" + ");
-        }
-
-        // Build scoring and WHERE clause for keywords2
-        for (int k = 0; k < keywords2.length; k++) {
+        // Debug: Raw SQL query to count keyword matches
+        StringBuilder rawDebugSql = new StringBuilder("SELECT COUNT(*) FROM spares WHERE pim LIKE '%");
+        for (int k = 0; k < ranges.length; k++) {
             if (k > 0) {
-                scoreBuilder.append(" + ");
-                whereBuilder2.append(" OR ");
+                rawDebugSql.append("%' OR pim LIKE '%");
             }
-            scoreBuilder.append("""
-            (CASE WHEN spare_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN replacement_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN spare_description LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN comments LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN keywords LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END)
-        """);
-            whereBuilder2.append("""
-            spare_item LIKE '%' || ? || '%' COLLATE NOCASE
-            OR replacement_item LIKE '%' || ? || '%' COLLATE NOCASE
-            OR standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE
-            OR spare_description LIKE '%' || ? || '%' COLLATE NOCASE
-            OR comments LIKE '%' || ? || '%' COLLATE NOCASE
-            OR keywords LIKE '%' || ? || '%' COLLATE NOCASE
-        """);
+            rawDebugSql.append(ranges[k].replace("'", "''"));
+        }
+        rawDebugSql.append("%' COLLATE NOCASE AND (");
+        for (int k = 0; k < keywords.length; k++) {
+            if (k > 0) {
+                rawDebugSql.append(" OR ");
+            }
+            String keyword = keywords[k].replace("'", "''");
+            rawDebugSql.append("spare_item LIKE '%").append(keyword).append("%' COLLATE NOCASE OR ")
+                    .append("replacement_item LIKE '%").append(keyword).append("%' COLLATE NOCASE OR ")
+                    .append("standard_exchange_item LIKE '%").append(keyword).append("%' COLLATE NOCASE OR ")
+                    .append("spare_description LIKE '%").append(keyword).append("%' COLLATE NOCASE OR ")
+                    .append("comments LIKE '%").append(keyword).append("%' COLLATE NOCASE OR ")
+                    .append("keywords LIKE '%").append(keyword).append("%' COLLATE NOCASE");
+        }
+        rawDebugSql.append(")");
+        int rawDebugCount = 0;
+        try {
+            rawDebugCount = jdbcTemplate.queryForObject(rawDebugSql.toString(), Integer.class);
+            System.out.println("Raw debug count: " + rawDebugCount + " rows for keywords: " + Arrays.toString(keywords));
+        } catch (Exception e) {
+            System.err.println("Raw debug count query failed: " + e.getMessage());
         }
 
-        // Combine WHERE clauses with AND
-        String whereClause = String.format("(%s) AND (%s)",
-                whereBuilder1.length() > 0 ? whereBuilder1.toString() : "1=1",
-                whereBuilder2.length() > 0 ? whereBuilder2.toString() : "1=1");
-
-        // Build the final SQL query
-        String sql = String.format("""
-        SELECT *, (%s) AS match_score
-        FROM spares
-        WHERE %s
-        ORDER BY match_score DESC
-    """, scoreBuilder.toString().replaceAll("\\+\\s*$", ""), whereClause);
-
-        // Collect parameters
-        List<Object> params = new ArrayList<>();
-        for (String keyword : keywords1) {
-            String normalizedKeyword = NoteTools.normalizeDate(keyword);
-            String likeKeyword = "%" + normalizedKeyword + "%";
-            // Scoring parameters (6 columns)
-            for (int i = 0; i < 6; i++) {
-                params.add(likeKeyword);
-            }
-            // WHERE parameters (6 columns)
-            for (int i = 0; i < 6; i++) {
-                params.add(likeKeyword);
-            }
-        }
-        for (String keyword : keywords2) {
-            String normalizedKeyword = NoteTools.normalizeDate(keyword);
-            String likeKeyword = "%" + normalizedKeyword + "%";
-            // Scoring parameters (6 columns)
-            for (int i = 0; i < 6; i++) {
-                params.add(likeKeyword);
-            }
-            // WHERE parameters (6 columns)
-            for (int i = 0; i < 6; i++) {
-                params.add(likeKeyword);
+        // Debug: Log rows matching raw SQL
+        if (rawDebugCount > 0) {
+            String rawDebugRowsSql = rawDebugSql.toString().replace("COUNT(*)", "spare_description, pim, spare_item, replacement_item, standard_exchange_item, comments, keywords") + " LIMIT 20";
+            try {
+                jdbcTemplate.query(rawDebugRowsSql, (rs, rowNum) -> {
+                    System.out.println("Raw debug matched row - spare_description: " + rs.getString("spare_description") +
+                                       ", pim: " + rs.getString("pim") +
+                                       ", spare_item: " + rs.getString("spare_item") +
+                                       ", replacement_item: " + rs.getString("replacement_item") +
+                                       ", standard_exchange_item: " + rs.getString("standard_exchange_item") +
+                                       ", comments: " + rs.getString("comments") +
+                                       ", keywords: " + rs.getString("keywords"));
+                    return null;
+                });
+            } catch (Exception e) {
+                System.err.println("Raw debug rows query failed: " + e.getMessage());
             }
         }
 
-        // Execute query
-        return jdbcTemplate.query(sql, ps -> {
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i)); // JDBC indices are 1-based
+        // Main query: Raw SQL
+        StringBuilder rawMainSql = new StringBuilder("SELECT *, (");
+        for (int k = 0; k < keywords.length; k++) {
+            if (k > 0) {
+                rawMainSql.append(" + ");
             }
-        }, new SparesRowMapper());
+            String keyword = keywords[k].replace("'", "''");
+            rawMainSql.append("(CASE WHEN spare_item LIKE '%").append(keyword).append("%' COLLATE NOCASE THEN 1 ELSE 0 END + ")
+                    .append("CASE WHEN replacement_item LIKE '%").append(keyword).append("%' COLLATE NOCASE THEN 1 ELSE 0 END + ")
+                    .append("CASE WHEN standard_exchange_item LIKE '%").append(keyword).append("%' COLLATE NOCASE THEN 1 ELSE 0 END + ")
+                    .append("CASE WHEN spare_description LIKE '%").append(keyword).append("%' COLLATE NOCASE THEN 1 ELSE 0 END + ")
+                    .append("CASE WHEN comments LIKE '%").append(keyword).append("%' COLLATE NOCASE THEN 1 ELSE 0 END + ")
+                    .append("CASE WHEN keywords LIKE '%").append(keyword).append("%' COLLATE NOCASE THEN 1 ELSE 0 END)");
+        }
+        rawMainSql.append(") AS match_score FROM spares WHERE pim LIKE '%");
+        for (int k = 0; k < ranges.length; k++) {
+            if (k > 0) {
+                rawMainSql.append("%' OR pim LIKE '%");
+            }
+            rawMainSql.append(ranges[k].replace("'", "''"));
+        }
+        rawMainSql.append("%' COLLATE NOCASE AND (");
+        for (int k = 0; k < keywords.length; k++) {
+            if (k > 0) {
+                rawMainSql.append(" OR ");
+            }
+            String keyword = keywords[k].replace("'", "''");
+            rawMainSql.append("spare_item LIKE '%").append(keyword).append("%' COLLATE NOCASE OR ")
+                    .append("replacement_item LIKE '%").append(keyword).append("%' COLLATE NOCASE OR ")
+                    .append("standard_exchange_item LIKE '%").append(keyword).append("%' COLLATE NOCASE OR ")
+                    .append("spare_description LIKE '%").append(keyword).append("%' COLLATE NOCASE OR ")
+                    .append("comments LIKE '%").append(keyword).append("%' COLLATE NOCASE OR ")
+                    .append("keywords LIKE '%").append(keyword).append("%' COLLATE NOCASE");
+        }
+        rawMainSql.append(") ORDER BY match_score DESC");
+
+        // Log
+        System.out.println("SQL: " + rawMainSql.toString());
+        System.out.println("Ranges: " + Arrays.toString(ranges));
+        System.out.println("Keywords: " + Arrays.toString(keywords));
+
+        // Execute main query
+        try {
+            List<SparesDTO> results = jdbcTemplate.query(rawMainSql.toString(), (rs, rowNum) -> {
+                SparesDTO dto = new SparesRowMapper().mapRow(rs, rowNum);
+                System.out.println("Matched row - spare_description: " + dto.getSpareDescription() +
+                                   ", pim: " + rs.getString("pim") +
+                                   ", spare_item: " + rs.getString("spare_item") +
+                                   ", replacement_item: " + rs.getString("replacement_item") +
+                                   ", standard_exchange_item: " + rs.getString("standard_exchange_item") +
+                                   ", comments: " + rs.getString("comments") +
+                                   ", keywords: " + rs.getString("keywords") +
+                                   ", match_score: " + rs.getInt("match_score"));
+                return dto;
+            });
+            System.out.println("Results count: " + results.size());
+            return results;
+        } catch (Exception e) {
+            System.err.println("Query failed: " + e.getMessage());
+            return Collections.emptyList();
+        }
     }
 }
 

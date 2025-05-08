@@ -1,10 +1,8 @@
 package com.L2.repository.interfaces;
 
-import com.L2.dto.PartDTO;
 import com.L2.dto.global_spares.*;
 
 import java.util.List;
-import java.util.Map;
 
 public interface GlobalSparesRepository {
 
@@ -18,7 +16,7 @@ public interface GlobalSparesRepository {
 
     List<String> getDistinctSpareItems(boolean isArchived);
 
-    List<SparesDTO> searchSpares(String searchTerm, int partOrderId);
+    List<SparesDTO> searchSparesByPartNumber(String searchTerm, int partOrderId);
 
     List<String> getRangesFromSpareItem(String spare, boolean isArchived);
 
@@ -30,5 +28,5 @@ public interface GlobalSparesRepository {
 
     List<SparesDTO> searchSparesScoring(String[] keywords);
 
-    List<SparesDTO> searchSparesScoringDual(String[] keywords1, String[] keywords2);
+    List<SparesDTO> searchSparesWithRange(String[] keywords1, String[] keywords2);
 }

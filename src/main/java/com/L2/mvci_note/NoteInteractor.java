@@ -1,7 +1,6 @@
 package com.L2.mvci_note;
 
 import com.L2.dto.*;
-import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.enums.AreaType;
 import com.L2.repository.implementations.*;
@@ -141,11 +140,8 @@ public class NoteInteractor {
 
         // Create a StyleSpans with no styles for the entire text
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
-        if (textLength > 0) {
-            spansBuilder.add(Collections.emptyList(), textLength);
-        } else {
-            spansBuilder.add(Collections.emptyList(), 0); // Handle empty text
-        }
+        // Handle empty text
+        spansBuilder.add(Collections.emptyList(), Math.max(textLength, 0));
         StyleSpans<Collection<String>> emptySpans = spansBuilder.create();
 
         // Apply the empty spans to clear highlights
@@ -1071,6 +1067,7 @@ public class NoteInteractor {
         String[] searchParams = noteModel.searchWordProperty().get().split(" ");
 
         if (searchParams.length == 0) {
+            System.out.println("No search parameters entered");
             noteModel.getSearchedParts().clear(); // Clear results for empty search
             return;
         }
@@ -1080,54 +1077,44 @@ public class NoteInteractor {
             return;
         }
 
-        if (searchParams.length == 1 && noteModel.selectedRangeProperty().get().equals("Range")) {
-            Task<List<SparesDTO>> searchTask = new Task<>() {
-                @Override
-                protected List<SparesDTO> call() {
-                    return globalSparesRepo.searchSpares(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
-                }
-            };
+        Task<List<SparesDTO>> searchTask = new Task<>() {
+            @Override
+            protected List<SparesDTO> call() {
+                // we are not searching a range, and there is one keyword, probably a part
+                if(noteModel.selectedRangeProperty().get().getRange().equals("Range")) {
+                    System.out.print("Using range? false ->");
+                    if (searchParams.length == 1) {
+                        System.out.println("There is only one parameter: " + searchParams[0]);
+                        if (StringChecker.hasNumbers(searchParams[0])) {
+                            System.out.println("likely a part number: " + searchParams[0]);
+                            return globalSparesRepo.searchSparesByPartNumber(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
+                        } else {
+                            System.out.println("not a part number");
+                        }
+                    } else { // there is more than one parameter but no range
+                        System.out.println("there are several parameters: " + Arrays.toString(searchParams));
 
-            searchTask.setOnSucceeded(e -> {
-                noteModel.getSearchedParts().setAll(searchTask.getValue()); // Update UI
-            });
-
-            searchTask.setOnFailed(e -> {
-                Throwable ex = e.getSource().getException();
-                System.err.println("Search failed: " + ex.getMessage());
-                // Optionally notify user via UI
-            });
-
-            Executors.newCachedThreadPool().execute(searchTask);
-        } else {
-            Task<List<SparesDTO>> searchTask = new Task<>() {
-                @Override
-                protected List<SparesDTO> call() {
-                    String[] range = new String[1];
-                    if(!noteModel.selectedRangeProperty().get().equals("Range")) {
-                        range[0] = noteModel.selectedRangeProperty().get().getRange();
-                        System.out.println("Serching with " + range[0] + " and " + Arrays.stream(searchParams).toArray());
-                        // need to add more range items here
-                        return globalSparesRepo.searchSparesScoringDual(range, searchParams);
-                    } else {
-                        return List.of();
                     }
+                } else { // There is a range in the search
+                    System.out.println("Searching a range");
+                    String[] range = { noteModel.selectedRangeProperty().get().getRange() };
+                    return globalSparesRepo.searchSparesWithRange(range, searchParams);
                 }
-            };
+                return List.of(); // Default case for invalid range
+            }
+        };
 
-            searchTask.setOnSucceeded(e -> {
-                noteModel.getSearchedParts().setAll(searchTask.getValue()); // Update UI
-            });
+        searchTask.setOnSucceeded(e -> noteModel.getSearchedParts().setAll(searchTask.getValue())); // Update UI
 
-            searchTask.setOnFailed(e -> {
-                Throwable ex = e.getSource().getException();
-                System.err.println("Search failed: " + ex.getMessage());
-                // Optionally notify user via UI
-            });
+        searchTask.setOnFailed(e -> {
+            Throwable ex = e.getSource().getException();
+            System.err.println("Search failed: " + ex.getMessage());
+            // Optionally notify user via UI
+        });
 
-            Executors.newCachedThreadPool().execute(searchTask);
-        }
+        Executors.newCachedThreadPool().execute(searchTask);
     }
+
     public void getRanges() {
         System.out.println("getting ranges");
         noteModel.getRanges().addAll(globalSparesRepo.findAllRanges());
