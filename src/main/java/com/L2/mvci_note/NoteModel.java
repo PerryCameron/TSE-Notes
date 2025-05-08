@@ -24,6 +24,7 @@ public class NoteModel {
     // you can only select one part at a time, so simpler to keep here.
     private final ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
     private final ObservableList<SparesDTO> searchedPart = FXCollections.observableArrayList();
+    private final ObjectProperty<RangesDTO> selectedRange = new SimpleObjectProperty<>();
     private final ObservableList<RangesDTO> ranges = FXCollections.observableArrayList();
     // you can only have one part order focused at time, so simpler to keep here as well
     private final ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
@@ -131,9 +132,8 @@ public class NoteModel {
         return noteScrollPane;
     }
     public StringProperty searchWordProperty() { return searchWord; }
-    public ObservableList<RangesDTO> getRanges() {
-        return ranges;
-    }
+    public ObservableList<RangesDTO> getRanges() { return ranges; }
+    public ObjectProperty<RangesDTO> selectedRangeProperty() { return selectedRange;}
 
 
 

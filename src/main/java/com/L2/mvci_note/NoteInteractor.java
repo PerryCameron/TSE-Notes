@@ -1066,6 +1066,7 @@ public class NoteInteractor {
         }
     }
 
+    // Experimental
     public void searchParts() {
         String[] searchParams = noteModel.searchWordProperty().get().split(" ");
 
@@ -1079,7 +1080,7 @@ public class NoteInteractor {
             return;
         }
 
-        if (searchParams.length == 1) {
+        if (searchParams.length == 1 && noteModel.selectedRangeProperty().get().equals("Range")) {
             Task<List<SparesDTO>> searchTask = new Task<>() {
                 @Override
                 protected List<SparesDTO> call() {
@@ -1102,8 +1103,15 @@ public class NoteInteractor {
             Task<List<SparesDTO>> searchTask = new Task<>() {
                 @Override
                 protected List<SparesDTO> call() {
-                    String[] range = {"Galaxy VM", "Galaxy VS"};
-                    return globalSparesRepo.searchSparesScoringDual(range, searchParams);
+                    String[] range = new String[1];
+                    if(!noteModel.selectedRangeProperty().get().equals("Range")) {
+                        range[0] = noteModel.selectedRangeProperty().get().getRange();
+                        System.out.println("Serching with " + range[0] + " and " + Arrays.stream(searchParams).toArray());
+                        // need to add more range items here
+                        return globalSparesRepo.searchSparesScoringDual(range, searchParams);
+                    } else {
+                        return List.of();
+                    }
                 }
             };
 

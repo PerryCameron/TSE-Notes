@@ -117,7 +117,6 @@ public class DialogueFx {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setTitle("Search..."); // Set custom title bar text
 
-
         // Create a DialogPane
         DialogPane dialogPane = new DialogPane();
         dialogPane.getStylesheets().add("css/light.css");
@@ -125,7 +124,6 @@ public class DialogueFx {
 
         // Create layout for content
         VBox content = new VBox(10);
-//        content.getStyleClass().add("decorative-header-box");
         content.setPadding(new Insets(10, 10, 10, 10));
         content.setPrefWidth(600);
         Label messageLabel = new Label("Part Search");
@@ -145,6 +143,14 @@ public class DialogueFx {
         // Create ComboBox and set items
         ComboBox<String> rangeComboBox = new ComboBox<>();
         rangeComboBox.getSelectionModel().select("Range");
+        // sets the range to default so that it will search without looking
+        setSelectedRange("Range", noteModel);
+        rangeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            // Assuming noteModel.getRanges() returns a list of RangeDTO objects
+            System.out.println("new value: " + newValue);
+            setSelectedRange(newValue, noteModel);
+        });
+
         rangeComboBox.setItems(rangeItems);
         HBox.setHgrow(rangeComboBox, Priority.ALWAYS);
 
@@ -187,6 +193,7 @@ public class DialogueFx {
                     // Select row 0 and focus the first column
                     tableView.getSelectionModel().select(0);
                     tableView.getFocusModel().focus(0, tableView.getColumns().getFirst());  // Focus the first column (index 0)
+                    cleanAlertClose(noteModel, alert);
                 });
                 dialogPane.requestLayout();
                 alert.getDialogPane().getScene().getWindow().sizeToScene();
@@ -195,11 +202,7 @@ public class DialogueFx {
 
         // Handle Cancel button
         cancelButton.setOnAction(e -> {
-            System.out.println("Cancel button clicked");
-            noteModel.searchWordProperty().set("");
-            noteModel.getSearchedParts().clear();
-            alert.setResult(ButtonType.CANCEL);
-            alert.hide();
+            cleanAlertClose(noteModel, alert);
         });
 
         // put our icon in titlebar
@@ -209,6 +212,23 @@ public class DialogueFx {
         tieAlertToStage(alert, 600, 400);
 
         return alert;
+    }
+
+    // helper method to close alert
+    private static void cleanAlertClose(NoteModel noteModel, Alert alert) {
+        noteModel.searchWordProperty().set("");
+        noteModel.getSearchedParts().clear();
+        alert.setResult(ButtonType.CANCEL);
+        alert.hide();
+    }
+
+    // helper method to set range to match what is selected in the combobox
+    private static void setSelectedRange(String newValue, NoteModel noteModel) {
+        RangesDTO selectedRange = noteModel.getRanges().stream()
+                .filter(range -> range.getRange().equals(newValue))
+                .findFirst()
+                .orElse(null);
+        noteModel.selectedRangeProperty().set(selectedRange);
     }
 
     private static void getTitleIcon(DialogPane dialogPane) {
