@@ -193,29 +193,6 @@ public class DialogueFx {
                 TableView<SparesDTO> sparesTableView = SparesTableViewFx.createTableView(noteModel);
                 // add new tableview to dialogue
                 partContainer.getChildren().add(sparesTableView);
-                // Ensure the TableView is laid out and rendered
-                sparesTableView.layout();
-
-                Platform.runLater(() -> {
-                    // Check if the TableView has items
-                    if (!sparesTableView.getItems().isEmpty()) {
-                        // Select the first row (index 0)
-                        sparesTableView.getSelectionModel().clearAndSelect(0);
-
-                        // Focus the first row and the first column
-                        TableColumn<SparesDTO, ?> firstColumn = sparesTableView.getColumns().get(0);
-                        sparesTableView.getFocusModel().focus(0, firstColumn);
-
-                        // Optionally, scroll to the selected row to ensure it's visible
-                        sparesTableView.scrollTo(0);
-
-                        // Request focus on the TableView to ensure it receives keyboard input
-                        sparesTableView.requestFocus();
-                    } else {
-                        System.out.println("Table view is empty");
-                    }
-                });
-
                 partOrderButton.setOnAction(add -> {
                     SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
                     if (sparesDTO != null) {
@@ -226,11 +203,7 @@ public class DialogueFx {
                         // no need to put in part into FX UI here as it is being done elsewhere
                         noteView.getAction().accept(NoteMessage.UPDATE_PART);
                         // Refresh the table view layout and focus
-                        partsTableView.layout();
-                        partsTableView.requestFocus();
-                        // Select row 0 and focus the first column
-                        partsTableView.getSelectionModel().select(0);
-                        partsTableView.getFocusModel().focus(0, partsTableView.getColumns().getFirst());  // Focus the first column (index 0)
+                        TableViewFx.focusOnLastItem(partsTableView);
                         // make sure we clear our label out so that we get no memory leaks, the label continues to exist but not the hbox
                         resultsLabelHbox.getChildren().clear();
                         cleanAlertClose(noteModel, alert);
