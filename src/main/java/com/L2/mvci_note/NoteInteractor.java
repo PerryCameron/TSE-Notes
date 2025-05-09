@@ -1091,17 +1091,15 @@ public class NoteInteractor {
                             System.out.println("likely a part number: " + searchParams[0]);
                             return globalSparesRepo.searchSparesByPartNumber(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
                         } else {
-                            System.out.println("not a part number");
+                            return globalSparesRepo.searchSparesScoring(searchParams);
                         }
                     } else { // there is more than one parameter but no range
-                        System.out.println("there are several parameters: " + Arrays.toString(searchParams));
-
+                        return globalSparesRepo.searchSparesScoring(searchParams);
                     }
                 } else { // There is a range in the search
                     System.out.println("Searching a range");
                     return globalSparesRepo.searchSparesWithRange(range, searchParams);
                 }
-                return List.of(); // Default case for invalid range
             }
         };
 
