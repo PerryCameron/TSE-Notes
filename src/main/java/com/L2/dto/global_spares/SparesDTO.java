@@ -141,6 +141,12 @@ public class SparesDTO {
         this.keywords = keywords;
     }
 
+    public String isArchived() {
+        if(archived == null) return "No";
+        if (archived) return "No";
+        else return "Yes";
+    }
+
     public Boolean getArchived() {
         return archived;
     }

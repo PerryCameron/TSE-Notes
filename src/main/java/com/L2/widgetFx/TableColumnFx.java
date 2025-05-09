@@ -2,6 +2,7 @@ package com.L2.widgetFx;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
@@ -24,6 +25,12 @@ public class TableColumnFx {
     public static <T> TableColumn<T, String> stringTableColumn(Function<T, StringProperty> property, String label) {
         TableColumn<T, String> col = new TableColumn<>(label);
         col.setCellValueFactory(cellData -> property.apply(cellData.getValue()));
+        return col;
+    }
+
+    public static <T> TableColumn<T, String> stringTableColumnSimple(Function<T, String> property, String label) {
+        TableColumn<T, String> col = new TableColumn<>(label);
+        col.setCellValueFactory(cellData -> new SimpleStringProperty(property.apply(cellData.getValue())));
         return col;
     }
 
