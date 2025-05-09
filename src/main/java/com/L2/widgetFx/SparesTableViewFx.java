@@ -2,6 +2,7 @@ package com.L2.widgetFx;
 
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci_note.NoteModel;
+import javafx.collections.ListChangeListener;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -48,10 +49,11 @@ public class SparesTableViewFx {
                 SparesDTO::isArchived,
                 "In catalogue"
         );
-        col.setStyle("-fx-alignment: center-right");
+        col.setStyle("-fx-alignment: center");
         col.setMinWidth(125);
         col.setPrefWidth(125);
         col.setMaxWidth(125);
         return col;
     }
 }
+// for some reason col3 isn't displaying its data

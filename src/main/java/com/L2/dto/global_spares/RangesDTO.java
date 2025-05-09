@@ -1,5 +1,7 @@
 package com.L2.dto.global_spares;
 
+import java.util.Arrays;
+
 public class RangesDTO {
     int id;
     String range;
@@ -63,5 +65,13 @@ public class RangesDTO {
 
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public void printRanges() {
+        String[] subRanges = rangeAdditional.split(",");
+        Arrays.stream(subRanges).forEach(subRange -> {
+            System.out.print(subRange + " ");
+        });
+        System.out.println();
     }
 }

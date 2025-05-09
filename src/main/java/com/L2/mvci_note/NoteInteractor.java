@@ -1065,6 +1065,7 @@ public class NoteInteractor {
     // Experimental
     public void searchParts() {
         String[] searchParams = noteModel.searchWordProperty().get().split(" ");
+        String[] range = noteModel.selectedRangeProperty().get().getRangeAdditional().split(",");
 
         if (searchParams.length == 0) {
             System.out.println("No search parameters entered");
@@ -1097,7 +1098,6 @@ public class NoteInteractor {
                     }
                 } else { // There is a range in the search
                     System.out.println("Searching a range");
-                    String[] range = { noteModel.selectedRangeProperty().get().getRange() };
                     return globalSparesRepo.searchSparesWithRange(range, searchParams);
                 }
                 return List.of(); // Default case for invalid range

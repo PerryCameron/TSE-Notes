@@ -110,11 +110,11 @@ public class DialogueFx {
         return alert;
     }
 
-    public static Alert searchAlert(NoteView noteView, TableView<PartDTO> tableView) {
+    public static Alert searchAlert(NoteView noteView, TableView<PartDTO> partsTableView) {
         NoteModel noteModel = noteView.getNoteModel();
         // Create a custom Alert with no default buttons
         Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.setTitle("Search..."); // Set custom title bar text
+        alert.setTitle("Search spares"); // Set custom title bar text
 
         // Create a DialogPane
         DialogPane dialogPane = new DialogPane();
@@ -141,12 +141,12 @@ public class DialogueFx {
 
         // Create ComboBox and set items
         ComboBox<String> rangeComboBox = new ComboBox<>();
-        rangeComboBox.getSelectionModel().select("Range");
+        rangeComboBox.getSelectionModel().select("None");
         // sets the range to default so that it will search without looking
-        setSelectedRange("Range", noteModel);
+        setSelectedRange("None", noteModel);
+
         rangeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             // Assuming noteModel.getRanges() returns a list of RangeDTO objects
-            System.out.println("new value: " + newValue);
             setSelectedRange(newValue, noteModel);
         });
 
@@ -172,9 +172,7 @@ public class DialogueFx {
                 noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
                 partContainer.getChildren().clear();
                 Button addToPartOrderButton = new Button("Add to Part Order");
-//                ListView<SparesDTO> listView = ListViewFx.partListView(noteModel.getSearchedParts());
                 TableView<SparesDTO> sparesTableView = SparesTableViewFx.createTableView(noteModel);
-
                 partContainer.getChildren().add(sparesTableView); // I want it to expand vertically to make room for this
                 partContainer.getChildren().add(addToPartOrderButton);
                 // Force dialog to re-layout and resize to fit new content
@@ -188,12 +186,12 @@ public class DialogueFx {
                     noteView.getAction().accept(NoteMessage.UPDATE_PART);
 
                     // Refresh the table view layout and focus
-                    tableView.layout();
-                    tableView.requestFocus();
+                    partsTableView.layout();
+                    partsTableView.requestFocus();
 
                     // Select row 0 and focus the first column
-                    tableView.getSelectionModel().select(0);
-                    tableView.getFocusModel().focus(0, tableView.getColumns().getFirst());  // Focus the first column (index 0)
+                    partsTableView.getSelectionModel().select(0);
+                    partsTableView.getFocusModel().focus(0, partsTableView.getColumns().getFirst());  // Focus the first column (index 0)
                     cleanAlertClose(noteModel, alert);
                 });
                 dialogPane.requestLayout();
@@ -227,6 +225,7 @@ public class DialogueFx {
                 .filter(range -> range.getRange().equals(newValue))
                 .findFirst()
                 .orElse(null);
+        selectedRange.printRanges(); // testing
         noteModel.selectedRangeProperty().set(selectedRange);
     }
 
