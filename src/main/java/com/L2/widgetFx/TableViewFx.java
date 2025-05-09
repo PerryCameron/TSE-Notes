@@ -1,6 +1,7 @@
 package com.L2.widgetFx;
 
-import javafx.scene.control.TableColumn;
+import com.L2.dto.global_spares.SparesDTO;
+import com.L2.mvci_note.NoteModel;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -26,4 +27,6 @@ public class TableViewFx {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         return tableView;
     }
+
+
 }

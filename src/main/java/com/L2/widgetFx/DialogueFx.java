@@ -2,7 +2,6 @@ package com.L2.widgetFx;
 
 import com.L2.BaseApplication;
 import com.L2.dto.PartDTO;
-import com.L2.dto.PartOrderDTO;
 import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci_note.NoteMessage;
@@ -39,7 +38,7 @@ public class DialogueFx {
 
         alert.setTitle("");
 
-        Image image = new Image(DialogueFx.class.getResourceAsStream("/images/TSELogo-64.png"));
+        Image image = new Image(Objects.requireNonNull(DialogueFx.class.getResourceAsStream("/images/TSELogo-64.png")));
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(64); // Adjust the height as needed
         imageView.setFitWidth(64);  // Adjust the width as needed
@@ -63,7 +62,7 @@ public class DialogueFx {
         alert.setHeaderText("Cloning Options");
         alert.setContentText("Do you want to also clone the parts?");
 
-        Image image = new Image(DialogueFx.class.getResourceAsStream("/images/TSELogo-64.png"));
+        Image image = new Image(Objects.requireNonNull(DialogueFx.class.getResourceAsStream("/images/TSELogo-64.png")));
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(64); // Adjust the height as needed
         imageView.setFitWidth(64);  // Adjust the width as needed
@@ -111,7 +110,7 @@ public class DialogueFx {
         return alert;
     }
 
-    public static Alert searchAlert(NoteView noteView, TableView<PartDTO> tableView, PartOrderDTO partOrderDTO) {
+    public static Alert searchAlert(NoteView noteView, TableView<PartDTO> tableView) {
         NoteModel noteModel = noteView.getNoteModel();
         // Create a custom Alert with no default buttons
         Alert alert = new Alert(Alert.AlertType.NONE);
@@ -169,21 +168,23 @@ public class DialogueFx {
         // Handle Search button
         searchButton.setOnAction(e -> {
             noteModel.searchWordProperty().set(searchField.getText().trim());
-            if (!noteModel.searchWordProperty().get().isEmpty()) {
+            if (!noteModel.searchWordProperty().get().isEmpty()) { // there are search terms
                 noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
                 partContainer.getChildren().clear();
                 Button addToPartOrderButton = new Button("Add to Part Order");
-                ListView<SparesDTO> listView = ListViewFx.partListView(noteModel.getSearchedParts());
-                partContainer.getChildren().add(listView); // I want it to expand vertically to make room for this
+//                ListView<SparesDTO> listView = ListViewFx.partListView(noteModel.getSearchedParts());
+                TableView<SparesDTO> sparesTableView = SparesTableViewFx.createTableView(noteModel);
+
+                partContainer.getChildren().add(sparesTableView); // I want it to expand vertically to make room for this
                 partContainer.getChildren().add(addToPartOrderButton);
                 // Force dialog to re-layout and resize to fit new content
                 addToPartOrderButton.setOnAction(add -> {
-                    SparesDTO sparesDTO = listView.getSelectionModel().getSelectedItem();
+                    SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
                     noteView.getAction().accept(NoteMessage.INSERT_PART);
                     PartDTO partDTO = noteModel.selectedPartProperty().get();
                     partDTO.setPartNumber(sparesDTO.getSpareItem());
                     partDTO.setPartDescription(sparesDTO.getSpareDescription());
-                    // no need to put in part into FX UI here as it is being done elseware
+                    // no need to put in part into FX UI here as it is being done elsewhere
                     noteView.getAction().accept(NoteMessage.UPDATE_PART);
 
                     // Refresh the table view layout and focus
@@ -201,11 +202,9 @@ public class DialogueFx {
         });
 
         // Handle Cancel button
-        cancelButton.setOnAction(e -> {
-            cleanAlertClose(noteModel, alert);
-        });
+        cancelButton.setOnAction(e -> cleanAlertClose(noteModel, alert));
 
-        // put our icon in titlebar
+        // put our icon in title bar
         getTitleIcon(dialogPane);
 
         // Tie alert to stage and calculates where to start dialogue location
@@ -282,9 +281,7 @@ public class DialogueFx {
 
         // Add handler and remove it after first show to prevent re-triggering
         alertStage.setOnShowing(positionHandler);
-        alertStage.setOnShown(e -> {
-            alertStage.removeEventHandler(WindowEvent.WINDOW_SHOWING, positionHandler);
-        });
+        alertStage.setOnShown(e -> alertStage.removeEventHandler(WindowEvent.WINDOW_SHOWING, positionHandler));
     }
 
 }
