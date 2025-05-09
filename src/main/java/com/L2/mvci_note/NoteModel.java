@@ -1,7 +1,6 @@
 package com.L2.mvci_note;
 
 import com.L2.dto.*;
-import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.SparesDTO;
 import com.nikialeksey.hunspell.Hunspell;
@@ -9,6 +8,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import org.fxmisc.richtext.CodeArea;
@@ -57,6 +57,7 @@ public class NoteModel {
     private final ObjectProperty<StyleSpans<Collection<String>>> finishSpansProperty =
             new SimpleObjectProperty<>(null);
     private final StringProperty searchWord = new SimpleStringProperty();
+    private final ObjectProperty<Label> resultsLabel = new SimpleObjectProperty<>(new Label("Results"));
 
 
 
@@ -134,6 +135,7 @@ public class NoteModel {
     public StringProperty searchWordProperty() { return searchWord; }
     public ObservableList<RangesDTO> getRanges() { return ranges; }
     public ObjectProperty<RangesDTO> selectedRangeProperty() { return selectedRange;}
+    public ObjectProperty<Label> resultsLabelProperty() { return resultsLabel; }
 
 
 

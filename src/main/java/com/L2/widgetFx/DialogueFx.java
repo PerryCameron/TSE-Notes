@@ -7,15 +7,20 @@ import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -111,7 +116,9 @@ public class DialogueFx {
     }
 
     public static Alert searchAlert(NoteView noteView, TableView<PartDTO> partsTableView) {
+        final BooleanProperty searchedBefore = new SimpleBooleanProperty(false);
         NoteModel noteModel = noteView.getNoteModel();
+
         // Create a custom Alert with no default buttons
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setTitle("Search spares"); // Set custom title bar text
@@ -132,34 +139,36 @@ public class DialogueFx {
         // Create buttons
         Button searchButton = new Button("Search");
         Button cancelButton = new Button("Cancel");
+        Button partOrderButton = new Button("Add to Part Order");
 
-        ObservableList<String> rangeItems = FXCollections.observableArrayList(
-                noteModel.getRanges().stream()
-                        .map(RangesDTO::getRange)
-                        .collect(Collectors.toList())
-        );
+        // Spacer Region
+        HBox searchHbox = new HBox();
+        searchHbox.setAlignment(Pos.CENTER_RIGHT);
+        searchHbox.getChildren().add(searchButton);
+        HBox.setHgrow(searchHbox, Priority.ALWAYS); // Spacer grows to push buttons right
 
-        // Create ComboBox and set items
-        ComboBox<String> rangeComboBox = new ComboBox<>();
-        rangeComboBox.getSelectionModel().select("None");
-        // sets the range to default so that it will search without looking
-        setSelectedRange("None", noteModel);
+        VBox cancelHbox = new VBox();
+        cancelHbox.setAlignment(Pos.CENTER_RIGHT);
+        cancelHbox.getChildren().add(cancelButton);
 
-        rangeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            // Assuming noteModel.getRanges() returns a list of RangeDTO objects
-            setSelectedRange(newValue, noteModel);
-        });
+        HBox buttonBox = new HBox(10, rangeBox(noteModel), searchHbox, cancelHbox);
 
-        rangeComboBox.setItems(rangeItems);
-        HBox.setHgrow(rangeComboBox, Priority.ALWAYS);
-
-        HBox buttonBox = new HBox(10, rangeComboBox, searchButton, cancelButton);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
+        // contains the tableview and buttons
         VBox partContainer = new VBox(10);
 
+        // contains label for number of results
+        HBox resultsLabelHbox = new HBox();
+        HBox.setHgrow(resultsLabelHbox, Priority.ALWAYS);
+        resultsLabelHbox.setAlignment(Pos.CENTER_LEFT);
+        resultsLabelHbox.getChildren().addAll(noteModel.resultsLabelProperty().get(), messageLabel);
+        // contains buttons
+        HBox partContainerButtonBox = new HBox(5);
+        partContainerButtonBox.setAlignment(Pos.CENTER_RIGHT);
+
         // Add components to content
-        content.getChildren().addAll(messageLabel, searchField, buttonBox, partContainer);
+        content.getChildren().addAll(messageLabel, searchField, buttonBox, partContainer, partContainerButtonBox);
         dialogPane.setContent(content);
 
         // Set DialogPane to Alert
@@ -169,30 +178,63 @@ public class DialogueFx {
         searchButton.setOnAction(e -> {
             noteModel.searchWordProperty().set(searchField.getText().trim());
             if (!noteModel.searchWordProperty().get().isEmpty()) { // there are search terms
+
                 noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
+                // clear everything in part container in case we already made a search
+                if(!searchedBefore.get()) {
+                    buttonBox.getChildren().remove(cancelHbox);
+                    partContainerButtonBox.getChildren().addAll(resultsLabelHbox, partOrderButton, cancelButton);
+                }
+                searchedBefore.set(true);
+                // clears for new tableview
                 partContainer.getChildren().clear();
-                Button addToPartOrderButton = new Button("Add to Part Order");
+
+                // make tableview with new list of parts
                 TableView<SparesDTO> sparesTableView = SparesTableViewFx.createTableView(noteModel);
-                partContainer.getChildren().add(sparesTableView); // I want it to expand vertically to make room for this
-                partContainer.getChildren().add(addToPartOrderButton);
-                // Force dialog to re-layout and resize to fit new content
-                addToPartOrderButton.setOnAction(add -> {
+                // add new tableview to dialogue
+                partContainer.getChildren().add(sparesTableView);
+                // Ensure the TableView is laid out and rendered
+                sparesTableView.layout();
+
+                Platform.runLater(() -> {
+                    // Check if the TableView has items
+                    if (!sparesTableView.getItems().isEmpty()) {
+                        // Select the first row (index 0)
+                        sparesTableView.getSelectionModel().clearAndSelect(0);
+
+                        // Focus the first row and the first column
+                        TableColumn<SparesDTO, ?> firstColumn = sparesTableView.getColumns().get(0);
+                        sparesTableView.getFocusModel().focus(0, firstColumn);
+
+                        // Optionally, scroll to the selected row to ensure it's visible
+                        sparesTableView.scrollTo(0);
+
+                        // Request focus on the TableView to ensure it receives keyboard input
+                        sparesTableView.requestFocus();
+                    } else {
+                        System.out.println("Table view is empty");
+                    }
+                });
+
+                partOrderButton.setOnAction(add -> {
                     SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
-                    noteView.getAction().accept(NoteMessage.INSERT_PART);
-                    PartDTO partDTO = noteModel.selectedPartProperty().get();
-                    partDTO.setPartNumber(sparesDTO.getSpareItem());
-                    partDTO.setPartDescription(sparesDTO.getSpareDescription());
-                    // no need to put in part into FX UI here as it is being done elsewhere
-                    noteView.getAction().accept(NoteMessage.UPDATE_PART);
-
-                    // Refresh the table view layout and focus
-                    partsTableView.layout();
-                    partsTableView.requestFocus();
-
-                    // Select row 0 and focus the first column
-                    partsTableView.getSelectionModel().select(0);
-                    partsTableView.getFocusModel().focus(0, partsTableView.getColumns().getFirst());  // Focus the first column (index 0)
-                    cleanAlertClose(noteModel, alert);
+                    if (sparesDTO != null) {
+                        noteView.getAction().accept(NoteMessage.INSERT_PART);
+                        PartDTO partDTO = noteModel.selectedPartProperty().get();
+                        partDTO.setPartNumber(sparesDTO.getSpareItem());
+                        partDTO.setPartDescription(sparesDTO.getSpareDescription());
+                        // no need to put in part into FX UI here as it is being done elsewhere
+                        noteView.getAction().accept(NoteMessage.UPDATE_PART);
+                        // Refresh the table view layout and focus
+                        partsTableView.layout();
+                        partsTableView.requestFocus();
+                        // Select row 0 and focus the first column
+                        partsTableView.getSelectionModel().select(0);
+                        partsTableView.getFocusModel().focus(0, partsTableView.getColumns().getFirst());  // Focus the first column (index 0)
+                        // make sure we clear our label out so that we get no memory leaks, the label continues to exist but not the hbox
+                        resultsLabelHbox.getChildren().clear();
+                        cleanAlertClose(noteModel, alert);
+                    }
                 });
                 dialogPane.requestLayout();
                 alert.getDialogPane().getScene().getWindow().sizeToScene();
@@ -209,6 +251,32 @@ public class DialogueFx {
         tieAlertToStage(alert, 600, 400);
 
         return alert;
+    }
+
+    private static Node rangeBox(NoteModel noteModel) {
+        ObservableList<String> rangeItems = FXCollections.observableArrayList(
+                noteModel.getRanges().stream()
+                        .map(RangesDTO::getRange)
+                        .collect(Collectors.toList())
+        );
+        HBox hBox = new HBox(10);
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        Label rangeLabel = new Label("Range");
+        // Create ComboBox and set items
+        ComboBox<String> rangeComboBox = new ComboBox<>();
+        rangeComboBox.getSelectionModel().select("All");
+        // sets the range to default so that it will search without looking
+        setSelectedRange("All", noteModel);
+
+        rangeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            // Assuming noteModel.getRanges() returns a list of RangeDTO objects
+            setSelectedRange(newValue, noteModel);
+        });
+
+        rangeComboBox.setItems(rangeItems);
+        HBox.setHgrow(rangeComboBox, Priority.ALWAYS);
+        hBox.getChildren().addAll(rangeLabel, rangeComboBox);
+        return hBox;
     }
 
     // helper method to close alert

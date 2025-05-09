@@ -14,6 +14,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.control.Label;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -1082,7 +1083,7 @@ public class NoteInteractor {
             @Override
             protected List<SparesDTO> call() {
                 // we are not searching a range, and there is one keyword, probably a part
-                if(noteModel.selectedRangeProperty().get().getRange().equals("Range")) {
+                if(noteModel.selectedRangeProperty().get().getRangeAdditional().equals("all")) {
                     System.out.print("Using range? false ->");
                     if (searchParams.length == 1) {
                         System.out.println("There is only one parameter: " + searchParams[0]);
@@ -1104,7 +1105,10 @@ public class NoteInteractor {
             }
         };
 
-        searchTask.setOnSucceeded(e -> noteModel.getSearchedParts().setAll(searchTask.getValue())); // Update UI
+        searchTask.setOnSucceeded(e -> {
+            noteModel.getSearchedParts().setAll(searchTask.getValue());
+            noteModel.resultsLabelProperty().get().setText(setNumberByResults(noteModel.getSearchedParts().size()));
+        }); // Update UI
 
         searchTask.setOnFailed(e -> {
             Throwable ex = e.getSource().getException();
@@ -1118,5 +1122,11 @@ public class NoteInteractor {
     public void getRanges() {
         System.out.println("getting ranges");
         noteModel.getRanges().addAll(globalSparesRepo.findAllRanges());
+    }
+
+    // helper method to return appropriate sting
+    private String setNumberByResults(int size) {
+        if(size == 1) return "1 Result";
+        else return size + " Results";
     }
 }
