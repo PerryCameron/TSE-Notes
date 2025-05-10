@@ -29,4 +29,6 @@ public interface GlobalSparesRepository {
     List<SparesDTO> searchSparesScoring(String[] keywords);
 
     List<SparesDTO> searchSparesWithRange(String[] keywords1, String[] keywords2);
+
+    int countSparesByRanges(String[] ranges);
 }

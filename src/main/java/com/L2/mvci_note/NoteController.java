@@ -83,6 +83,7 @@ public class NoteController extends Controller<NoteMessage> {
             case UPDATE_NOTE_TAB_NAME -> mainController.action(MainMessage.UPDATE_NOTE_TAB_NAME);
             case UPDATE_PART_ORDER -> noteInteractor.updatePartOrder();
             case UPDATE_PART -> noteInteractor.updatePart();
+            case UPDATE_RANGE_COUNT -> noteInteractor.updateRangeCount();
         }
     }
 

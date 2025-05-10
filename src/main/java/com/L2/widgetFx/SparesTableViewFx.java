@@ -37,9 +37,9 @@ public class SparesTableViewFx {
                 "Description"
         );
         col.setStyle("-fx-alignment: center-left");
-        col.setMinWidth(350);
-        col.setPrefWidth(350);
-        col.setMaxWidth(350);
+        col.setMinWidth(540);
+        col.setPrefWidth(540);
+        col.setMaxWidth(540);
         return col;
     }
 

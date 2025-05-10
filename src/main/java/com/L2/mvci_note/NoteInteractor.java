@@ -1127,4 +1127,62 @@ public class NoteInteractor {
         if(size == 1) return "1 Result";
         else return size + " Results";
     }
+
+    /**
+     * Updates the {@code numberInRangeProperty} of the {@code noteModel} with the count of spares matching the
+     * selected range keywords, executing the database query in a background task to prevent UI blocking.
+     * <p>
+     * This method retrieves the comma-separated range keywords from
+     * {@code noteModel.selectedRangeProperty().get().getRangeAdditional()}, splits them into an array, and passes
+     * them to {@code globalSparesRepo.countSparesByRanges} to count matching spares in the {@code pim} column of
+     * the {@code spares} table. The query is executed in a JavaFX {@link Task} on a background thread to ensure
+     * responsiveness of the UI. Upon successful completion, the count is set to
+     * {@code noteModel.numberInRangeProperty()} on the JavaFX Application Thread. If the task fails or the range
+     * string is invalid, the property is set to 0, and errors are logged.
+     * </p>
+     *
+     * @throws IllegalStateException if {@code noteModel} or {@code globalSparesRepo} is null
+     */
+    public void updateRangeCount() {
+        if (noteModel == null || globalSparesRepo == null) {
+            logger.error("Cannot update range count: noteModel or globalSparesRepo is null");
+            throw new IllegalStateException("noteModel and globalSparesRepo must not be null");
+        }
+
+        // Get range keywords
+        String rangeString = noteModel.selectedRangeProperty().get().getRangeAdditional();
+        String[] range = rangeString != null ? rangeString.split(",") : new String[0];
+
+        // Create a Task for the database query
+        Task<Integer> countTask = new Task<>() {
+            @Override
+            protected Integer call() {
+                try {
+                    logger.info("Counting spares for ranges: {}", Arrays.toString(range));
+                    return globalSparesRepo.countSparesByRanges(range);
+                } catch (Exception e) {
+                    logger.error("Error counting spares by ranges: {}", e.getMessage());
+                    return 0; // Return 0 on error
+                }
+            }
+        };
+
+        // Handle task success and update UI on JavaFX Application Thread
+        countTask.setOnSucceeded(event -> {
+            int sparesCountByRange = countTask.getValue();
+            Platform.runLater(() -> {
+                noteModel.numberInRangeProperty().set(sparesCountByRange);
+                logger.info("Updated numberInRangeProperty to: {}", sparesCountByRange);
+            });
+        });
+
+        // Handle task failure
+        countTask.setOnFailed(event -> {
+            logger.error("Range count task failed: {}", countTask.getException().getMessage());
+            Platform.runLater(() -> noteModel.numberInRangeProperty().set(0));
+        });
+
+        // Run the task in a background thread
+        new Thread(countTask).start();
+    }
 }

@@ -179,28 +179,6 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     }
 
     @Override
-    public List<SparesDTO> searchSparesByPartNumber(String searchTerm, int partOrderId) {
-        try {
-            String query = """
-                SELECT *
-                FROM spares
-                WHERE (spare_item LIKE ? OR replacement_item LIKE ?)
-                GROUP BY spare_item;
-                """;
-
-            // Use % for partial matching
-            String searchPattern = "%" + searchTerm + "%";
-            logger.info("Searching for parts...");
-            // Execute the query using JdbcTemplate
-            return jdbcTemplate.query(query, new SparesRowMapper(), searchPattern, searchPattern); // Parameters for both LIKE conditions
-
-        } catch (Exception e) {
-            logger.error("Database error: {}", e.getMessage());
-            return List.of(); // Return empty list on error
-        }
-    }
-
-    @Override
     public List<String> getRangesFromSpareItem(String spare, boolean isArchived) {
         try {
             int archived = isArchived ? 1 : 0;
@@ -255,6 +233,28 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         return List.of();
     }
 
+    /**
+     * Searches the spares database for records matching the provided keywords, scoring matches based on keyword
+     * occurrences across multiple columns and returning results ordered by relevance.
+     * <p>
+     * This method constructs a dynamic SQL query to search for keywords in the {@code spare_item},
+     * {@code replacement_item}, {@code standard_exchange_item}, {@code spare_description}, {@code comments},
+     * and {@code keywords} columns of the {@code spares} table. Each keyword match in these columns contributes
+     * to a match score, calculated as the sum of binary indicators (1 for a match, 0 otherwise) per column per
+     * keyword. The search is case-insensitive, and results are ordered by descending match score.
+     * </p>
+     * <p>
+     * Keywords are normalized using {@link NoteTools#normalizeDate} to handle date formats, and the LIKE operator
+     * with wildcards ({@code %keyword%}) is used for partial matches. The method uses prepared statements to safely
+     * bind parameters and prevent SQL injection.
+     * </p>
+     *
+     * @param keywords An array of keywords to search for in the spares database. Must not be null or empty.
+     * @return A list of {@link SparesDTO} objects representing matching spares records, sorted by match score
+     *         in descending order. Returns an empty list if no matches are found.
+     * @throws org.springframework.jdbc.BadSqlGrammarException If the generated SQL query is invalid.
+     * @throws org.springframework.jdbc.JdbcSQLException If a database access error occurs.
+     */
     @Override
     public List<SparesDTO> searchSparesScoring(String[] keywords) {
         StringBuilder scoreBuilder = new StringBuilder();
@@ -439,6 +439,110 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         } catch (Exception e) {
             System.err.println("Query failed: " + e.getMessage());
             return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Searches the spares database for records where the part number matches the provided search term in either the
+     * {@code spare_item} or {@code replacement_item} columns, returning distinct results grouped by {@code spare_item}.
+     * <p>
+     * This method constructs a SQL query to perform a case-sensitive partial match using the LIKE operator with wildcards
+     * ({@code %searchTerm%}) on the {@code spare_item} and {@code replacement_item} columns of the {@code spares} table.
+     * Results are grouped by {@code spare_item} to avoid duplicates. The {@code partOrderId} parameter is currently unused
+     * but included for potential future filtering by part order. The query is executed using a prepared statement to prevent
+     * SQL injection.
+     * </p>
+     *
+     * @param searchTerm The search term to match against {@code spare_item} or {@code replacement_item}. Must not be null.
+     * @param partOrderId The ID of the part order, currently unused but reserved for future functionality.
+     * @return A list of {@link SparesDTO} objects representing matching spares records, grouped by {@code spare_item}.
+     *         Returns an empty list if no matches are found or if a database error occurs.
+     * @throws org.springframework.jdbc.JdbcSQLException If a database access error occurs (logged and handled by returning an empty list).
+     */
+    @Override
+    public List<SparesDTO> searchSparesByPartNumber(String searchTerm, int partOrderId) {
+        try {
+            String query = """
+                SELECT *
+                FROM spares
+                WHERE (spare_item LIKE ? OR replacement_item LIKE ?)
+                GROUP BY spare_item;
+                """;
+
+            // Use % for partial matching
+            String searchPattern = "%" + searchTerm + "%";
+            logger.info("Searching for parts...");
+            // Execute the query using JdbcTemplate
+            return jdbcTemplate.query(query, new SparesRowMapper(), searchPattern, searchPattern); // Parameters for both LIKE conditions
+
+        } catch (Exception e) {
+            logger.error("Database error: {}", e.getMessage());
+            return List.of(); // Return empty list on error
+        }
+    }
+
+    /**
+     * Counts the number of tuples in the spares database where the {@code pim} column matches any of the provided
+     * range keywords, with a special case for the keyword "all" to return the total count of all tuples.
+     * <p>
+     * This method constructs a dynamic SQL query to perform a case-insensitive partial match using the LIKE operator
+     * with wildcards ({@code %keyword%}) on the {@code pim} column of the {@code spares} table for each range keyword.
+     * If the keyword "all" is included in the {@code ranges} array, the method returns the total count of tuples in the
+     * {@code spares} table, ignoring other keywords. Otherwise, it sums the distinct counts of tuples matching each
+     * range keyword to avoid double-counting overlapping matches. The query uses prepared statements to prevent SQL
+     * injection.
+     * </p>
+     *
+     * @param ranges An array of range keywords to search for in the {@code pim} column. Must not be null or empty.
+     *               The keyword "all" triggers a count of all tuples in the {@code spares} table.
+     * @return An integer representing the total count of matching tuples. If "all" is present, returns the count of all
+     *         tuples in the {@code spares} table. Otherwise, returns the sum of distinct tuples matching each range keyword.
+     *         Returns 0 if no matches are found, the input is invalid, or a database error occurs.
+     * @throws org.springframework.jdbc.JdbcSQLException If a database access error occurs (logged and handled by returning 0).
+     */
+    @Override
+    public int countSparesByRanges(String[] ranges) {
+        try {
+            // Validate input
+            if (ranges == null || ranges.length == 0) {
+                logger.warn("Invalid input: ranges array is null or empty");
+                return 0;
+            }
+
+            // Check for "all" keyword
+            for (String range : ranges) {
+                if ("all".equalsIgnoreCase(range)) {
+                    String query = "SELECT COUNT(*) FROM spares";
+                    logger.info("Counting all tuples in spares table...");
+                    return jdbcTemplate.queryForObject(query, Integer.class);
+                }
+            }
+
+            // Build dynamic query for range keywords
+            StringBuilder whereBuilder = new StringBuilder();
+            List<Object> params = new ArrayList<>();
+            for (int i = 0; i < ranges.length; i++) {
+                if (i > 0) {
+                    whereBuilder.append(" OR ");
+                }
+                whereBuilder.append("pim LIKE ? COLLATE NOCASE");
+                String searchPattern = "%" + ranges[i] + "%";
+                params.add(searchPattern);
+            }
+
+            String query = String.format("""
+            SELECT COUNT(DISTINCT spare_item) AS range_count
+            FROM spares
+            WHERE %s
+        """, whereBuilder.toString());
+
+            logger.info("Counting spares for ranges: {}", Arrays.toString(ranges));
+            Integer result = jdbcTemplate.queryForObject(query, params.toArray(), Integer.class);
+            return result != null ? result : 0;
+
+        } catch (Exception e) {
+            logger.error("Database error while counting spares by ranges: {}", e.getMessage());
+            return 0; // Return 0 on error
         }
     }
 }

@@ -58,6 +58,7 @@ public class NoteModel {
             new SimpleObjectProperty<>(null);
     private final StringProperty searchWord = new SimpleStringProperty();
     private final ObjectProperty<Label> resultsLabel = new SimpleObjectProperty<>(new Label("Results"));
+    private final IntegerProperty numberInRange = new SimpleIntegerProperty();
 
 
 
@@ -136,6 +137,7 @@ public class NoteModel {
     public ObservableList<RangesDTO> getRanges() { return ranges; }
     public ObjectProperty<RangesDTO> selectedRangeProperty() { return selectedRange;}
     public ObjectProperty<Label> resultsLabelProperty() { return resultsLabel; }
+    public IntegerProperty numberInRangeProperty() { return numberInRange; }
 
 
 

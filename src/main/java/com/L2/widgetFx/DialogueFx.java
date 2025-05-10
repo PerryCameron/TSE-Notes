@@ -114,6 +114,7 @@ public class DialogueFx {
     }
 
     public static Alert searchAlert(NoteView noteView, TableView<PartDTO> partsTableView) {
+        double width = 800;
         final BooleanProperty searchedBefore = new SimpleBooleanProperty(false);
         NoteModel noteModel = noteView.getNoteModel();
 
@@ -121,16 +122,31 @@ public class DialogueFx {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setTitle("Search spares"); // Set custom title bar text
 
+
         // Create a DialogPane
         DialogPane dialogPane = new DialogPane();
         dialogPane.getStylesheets().add("css/light.css");
         dialogPane.getStyleClass().add("search-dialogue");
+        dialogPane.setPrefWidth(width);
+        dialogPane.setMinWidth(width); // Ensure minimum width is 800
+        // Since AlertType is set to NONE there is no close button which allows the x in the corner to
+        // close the alert window. This listener fixes that.
+        alert.showingProperty().addListener((obs, wasShowing, isShowing) -> {
+            if (isShowing) {
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.setOnCloseRequest(event -> {
+                    cleanAlertClose(noteModel, alert);
+                });
+            }
+        });
 
         // Create layout for content
         VBox content = new VBox(10);
         content.setPadding(new Insets(10, 10, 10, 10));
-        content.setPrefWidth(600);
+        content.setPrefWidth(width);
         Label messageLabel = new Label("Part Search");
+        Label rangeNumberLabel = new Label("Spares");
+        rangeNumberLabel.setPadding(new Insets(0, 200, 0, 0));
         TextField searchField = new TextField();
         searchField.setPromptText("Search Part Number or description...");
 
@@ -142,14 +158,14 @@ public class DialogueFx {
         // Spacer Region
         HBox searchHbox = new HBox();
         searchHbox.setAlignment(Pos.CENTER_RIGHT);
-        searchHbox.getChildren().add(searchButton);
+        searchHbox.getChildren().addAll(rangeNumberLabel, searchButton);
         HBox.setHgrow(searchHbox, Priority.ALWAYS); // Spacer grows to push buttons right
 
         VBox cancelHbox = new VBox();
         cancelHbox.setAlignment(Pos.CENTER_RIGHT);
         cancelHbox.getChildren().add(cancelButton);
 
-        HBox buttonBox = new HBox(10, rangeBox(noteModel), searchHbox, cancelHbox);
+        HBox buttonBox = new HBox(10, rangeBox(noteModel, noteView), searchHbox, cancelHbox);
 
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
@@ -212,6 +228,8 @@ public class DialogueFx {
             }
         });
 
+        noteModel.numberInRangeProperty().addListener(rangeNumber -> rangeNumberLabel.setText("Spares in range: " + noteModel.numberInRangeProperty().get()));
+
         // Handle Cancel button
         cancelButton.setOnAction(e -> cleanAlertClose(noteModel, alert));
 
@@ -219,12 +237,15 @@ public class DialogueFx {
         getTitleIcon(dialogPane);
 
         // Tie alert to stage and calculates where to start dialogue location
-        tieAlertToStage(alert, 600, 400);
+        tieAlertToStage(alert, width, 400);
 
+        noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
         return alert;
     }
 
-    private static Node rangeBox(NoteModel noteModel) {
+
+    // helper method to handle the combo box of ranges
+    private static Node rangeBox(NoteModel noteModel, NoteView noteView) {
         ObservableList<String> rangeItems = FXCollections.observableArrayList(
                 noteModel.getRanges().stream()
                         .map(RangesDTO::getRange)
@@ -242,6 +263,7 @@ public class DialogueFx {
         rangeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             // Assuming noteModel.getRanges() returns a list of RangeDTO objects
             setSelectedRange(newValue, noteModel);
+            noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
         });
 
         rangeComboBox.setItems(rangeItems);
@@ -250,14 +272,22 @@ public class DialogueFx {
         return hBox;
     }
 
-    // helper method to close alert
-    private static void cleanAlertClose(NoteModel noteModel, Alert alert) {
+private static void cleanAlertClose(NoteModel noteModel, Alert alert) {
+    try {
+        System.out.println("Cleaning and closing alert...");
         noteModel.searchWordProperty().set("");
         noteModel.getSearchedParts().clear();
+        noteModel.resultsLabelProperty().get().setText("");
         alert.setResult(ButtonType.CANCEL);
+        alert.close(); // Use close() instead of hide()
+        System.out.println("Alert closed successfully");
+    } catch (Exception e) {
+        System.err.println("Error closing alert: " + e.getMessage());
+        e.printStackTrace(); // Print stack trace for debugging
+        // Fallback to hide() if close() fails
         alert.hide();
     }
-
+}
     // helper method to set range to match what is selected in the combobox
     private static void setSelectedRange(String newValue, NoteModel noteModel) {
         RangesDTO selectedRange = noteModel.getRanges().stream()
@@ -297,7 +327,7 @@ public class DialogueFx {
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         // Flag to ensure positioning runs only once
         final boolean[] hasPositioned = {false};
-
+        System.out.println("tieAlertwidth: " + stageWidth);
         // Position the dialog only once when about to show
         EventHandler<WindowEvent> positionHandler = e -> {
             if (!hasPositioned[0]) {
