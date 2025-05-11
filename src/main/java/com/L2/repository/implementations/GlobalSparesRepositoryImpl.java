@@ -253,7 +253,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
      * @return A list of {@link SparesDTO} objects representing matching spares records, sorted by match score
      *         in descending order. Returns an empty list if no matches are found.
      * @throws org.springframework.jdbc.BadSqlGrammarException If the generated SQL query is invalid.
-     * @throws org.springframework.jdbc.JdbcSQLException If a database access error occurs.
+     * @throws // org.springframework.jdbc.JdbcSQLException If a database access error occurs.
      */
     @Override
     public List<SparesDTO> searchSparesScoring(String[] keywords) {
@@ -290,7 +290,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         FROM spares
         WHERE %s
         ORDER BY match_score DESC
-    """, scoreBuilder.toString().replaceAll("\\+\\s*$", ""), whereBuilder.toString());
+    """, scoreBuilder.toString().replaceAll("\\+\\s*$", ""), whereBuilder);
         List<Object> params = new ArrayList<>();
         for (String keyword : keywords) {
             String normalizedKeyword = NoteTools.normalizeDate(keyword);
@@ -344,8 +344,8 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         rangeWhereBuilder.append(")");
 
         // Count rows matching range condition (for debugging)
-        String rangeCountSql = "SELECT COUNT(*) FROM spares WHERE " + rangeWhereBuilder.toString();
-        int rangeMatchCount = 0;
+        String rangeCountSql = "SELECT COUNT(*) FROM spares WHERE " + rangeWhereBuilder;
+        int rangeMatchCount;
         try {
             rangeMatchCount = jdbcTemplate.queryForObject(rangeCountSql, Integer.class);
             System.out.println("Range match count: " + rangeMatchCount + " rows for ranges: " + Arrays.toString(cleanedRanges));
@@ -370,7 +370,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         keywordWhereBuilder.append(")");
 
         // Debug: Count rows matching both range and keyword conditions
-        String debugCountSql = "SELECT COUNT(*) FROM spares WHERE " + rangeWhereBuilder.toString() + " AND " + keywordWhereBuilder.toString();
+        String debugCountSql = "SELECT COUNT(*) FROM spares WHERE " + rangeWhereBuilder.toString() + " AND " + keywordWhereBuilder;
         int debugCount = 0;
         try {
             debugCount = jdbcTemplate.queryForObject(debugCountSql, Integer.class);
@@ -382,7 +382,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         // Debug: Log sample matching rows with pim values
         if (debugCount > 0) {
             String debugRowsSql = "SELECT spare_description, pim, spare_item, replacement_item, standard_exchange_item, comments, keywords FROM spares WHERE " +
-                                  rangeWhereBuilder.toString() + " AND " + keywordWhereBuilder.toString();
+                    rangeWhereBuilder + " AND " + keywordWhereBuilder;
             try {
                 jdbcTemplate.query(debugRowsSql, (rs, rowNum) -> {
                     System.out.println("Debug row - pim: " + rs.getString("pim") +
@@ -414,25 +414,24 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
                     .append("CASE WHEN keywords LIKE '%").append(keyword).append("%' COLLATE NOCASE THEN 1 ELSE 0 END)");
         }
         mainSql.append(") AS match_score FROM spares WHERE ");
-        mainSql.append(rangeWhereBuilder.toString());
+        mainSql.append(rangeWhereBuilder);
         mainSql.append(" AND ");
-        mainSql.append(keywordWhereBuilder.toString());
+        mainSql.append(keywordWhereBuilder);
         mainSql.append(" ORDER BY match_score DESC");
 
         // Log
-        System.out.println("SQL: " + mainSql.toString());
+        System.out.println("SQL: " + mainSql);
         System.out.println("Ranges: " + Arrays.toString(cleanedRanges));
         System.out.println("Keywords: " + Arrays.toString(keywords));
 
         // Execute main query
         try {
             List<SparesDTO> results = jdbcTemplate.query(mainSql.toString(), (rs, rowNum) -> {
-                SparesDTO dto = new SparesRowMapper().mapRow(rs, rowNum);
-                System.out.println("Matched row - pim: " + rs.getString("pim") +
-                                   ", spare_description: " + dto.getSpareDescription() +
-                                   ", match_score: " + rs.getInt("match_score") +
-                                   ", isArchived: " + dto.isArchived());
-                return dto;
+                //                System.out.println("Matched row - pim: " + rs.getString("pim") +
+//                                   ", spare_description: " + dto.getSpareDescription() +
+//                                   ", match_score: " + rs.getInt("match_score") +
+//                                   ", isArchived: " + dto.isArchived());
+                return new SparesRowMapper().mapRow(rs, rowNum);
             });
             System.out.println("Results count: " + results.size());
             return results;
@@ -457,7 +456,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
      * @param partOrderId The ID of the part order, currently unused but reserved for future functionality.
      * @return A list of {@link SparesDTO} objects representing matching spares records, grouped by {@code spare_item}.
      *         Returns an empty list if no matches are found or if a database error occurs.
-     * @throws org.springframework.jdbc.JdbcSQLException If a database access error occurs (logged and handled by returning an empty list).
+     * @throws // org.springframework.jdbc.JdbcSQLException If a database access error occurs (logged and handled by returning an empty list).
      */
     @Override
     public List<SparesDTO> searchSparesByPartNumber(String searchTerm, int partOrderId) {
@@ -498,7 +497,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
      * @return An integer representing the total count of matching tuples. If "all" is present, returns the count of all
      *         tuples in the {@code spares} table. Otherwise, returns the sum of distinct tuples matching each range keyword.
      *         Returns 0 if no matches are found, the input is invalid, or a database error occurs.
-     * @throws org.springframework.jdbc.JdbcSQLException If a database access error occurs (logged and handled by returning 0).
+     * @throws // org.springframework.jdbc.JdbcSQLException If a database access error occurs (logged and handled by returning 0).
      */
     @Override
     public int countSparesByRanges(String[] ranges) {
@@ -534,10 +533,10 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             SELECT COUNT(DISTINCT spare_item) AS range_count
             FROM spares
             WHERE %s
-        """, whereBuilder.toString());
+        """, whereBuilder);
 
             logger.info("Counting spares for ranges: {}", Arrays.toString(ranges));
-            Integer result = jdbcTemplate.queryForObject(query, params.toArray(), Integer.class);
+            Integer result = jdbcTemplate.queryForObject(query, Integer.class, params.toArray());
             return result != null ? result : 0;
 
         } catch (Exception e) {
@@ -545,4 +544,11 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             return 0; // Return 0 on error
         }
     }
+//    C:\Users\sesa91827\IdeaProjects\TSE-Notes\src\main\java\com\L2\repository\implementations\GlobalSparesRepositoryImpl.java:540: warning: [deprecation] <T>queryForObject(String,Object[],Class<T>) in JdbcTemplate has been deprecated
+//    Integer result = jdbcTemplate.queryForObject(query, params.toArray(), Integer.class);
+//                                         ^
+//    where T is a type-variable:
+//    T extends Object declared in method <T>queryForObject(String,Object[],Class<T>)
+//1 warning
+
 }
