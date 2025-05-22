@@ -1,0 +1,6 @@
+
+// to temp set path for java 26
+$env:Path = "C:\Users\sesa91827\.jdks\jdk-21.0.6-full\bin;" + $env:Path
+
+// to build
+./gradlew clean build shadowJar generateRuntime packageApp

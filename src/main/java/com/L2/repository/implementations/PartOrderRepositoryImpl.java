@@ -29,14 +29,15 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
 
     @Override
     public int insertPartOrder(PartOrderDTO partOrder) {
-        String sql = "INSERT INTO PartOrders (noteId, orderNumber) VALUES (?, ?)";
+        String sql = "INSERT INTO PartOrders (noteId, orderNumber, showType) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
+        jdbcTemplate.update(connection -> {  // line 36
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, partOrder.getNoteId());
             ps.setString(2, partOrder.getOrderNumber());
+            ps.setBoolean(3, partOrder.showTypeProperty().get()); // or partOrder.isShowType()
             return ps;
         }, keyHolder);
 

@@ -962,6 +962,7 @@ public class NoteInteractor {
     public void insertPartOrder() {
         int noteId = noteModel.boundNoteProperty().get().getId();
         PartOrderDTO partOrderDTO = new PartOrderDTO(0, noteId, "", false);
+        System.out.println("showType value: " + partOrderDTO.showTypeProperty().get());
         partOrderDTO.setId(partOrderRepo.insertPartOrder(partOrderDTO));
         noteModel.boundNoteProperty().get().getPartOrders().add(partOrderDTO);
         noteModel.selectedPartOrderProperty().set(noteModel.boundNoteProperty().get().getPartOrders().getLast());
