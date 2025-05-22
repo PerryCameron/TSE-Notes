@@ -57,6 +57,8 @@ Fixed old bug, where title was not being populated in database on first insert o
 Added spell check.
 Changed forward and backward icons to be up and down to better represent movement of row highlight in list.
 
+1.0.3-53
+Several bug fixes
 
 
 
