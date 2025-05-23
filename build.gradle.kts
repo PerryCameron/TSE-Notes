@@ -55,19 +55,14 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.5.6")
     // Core implementation of Logback, a reliable, generic, fast and flexible logging framework.
     implementation("ch.qos.logback:logback-core:1.5.6")
-    // allows apache poi to log
-    implementation("org.apache.logging.log4j:log4j-to-slf4j:2.23.1")
     // RichTextFX for CodeArea
     implementation("org.fxmisc.richtext:richtextfx:0.11.2")
     // dictionary
     implementation("com.nikialeksey:jhunspell:1.0.5")
-//     Apache POI for .xlsx files
-    implementation("org.apache.poi:poi:5.4.1")
-    implementation("org.apache.poi:poi-ooxml:5.4.1")
 // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.18.3")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.3")
+//    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
+//    implementation("com.fasterxml.jackson.core:jackson-core:2.18.3")
+//    implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.3")
     testImplementation("ch.qos.logback:logback-classic:1.5.6")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")

@@ -41,6 +41,10 @@ public class GlobalSparesMenu implements Builder<Region> {
     @Override
     public Region build() {
         VBox vbox = new VBox();
+        VBox.setVgrow(vbox, Priority.ALWAYS);
+        vbox.setPadding(new Insets(10, 10, 10, 10));
+//        vbox.setStyle("-fx-background-color: lightblue;");
+        vbox.getStyleClass().add("decorative-hbox");
         setPartsAvailabilityListener(vbox);
         action.accept(SettingsMessage.VERIFY_PARTS_DATABASE);
         return vbox;

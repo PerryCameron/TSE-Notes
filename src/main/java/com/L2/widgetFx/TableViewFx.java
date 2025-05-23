@@ -1,15 +1,12 @@
 package com.L2.widgetFx;
 
 import com.L2.dto.PartDTO;
-import com.L2.dto.global_spares.SparesDTO;
-import com.L2.mvci_note.NoteModel;
 import javafx.application.Platform;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.apache.poi.ss.formula.functions.T;
 
 public class TableViewFx {
     public static <T> TableView<T> of(Class<T> objectClass, double prefHeight) {
