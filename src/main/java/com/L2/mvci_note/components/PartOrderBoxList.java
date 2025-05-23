@@ -36,7 +36,7 @@ public class PartOrderBoxList implements Component<Region> {
     public Region build() {
         this.root = new VBox(10);
         // for each part order create a VBOX with stuff in it
-        for(PartOrderDTO partOrderDTO: noteModel.boundNoteProperty().get().getPartOrders()) {
+        for (PartOrderDTO partOrderDTO : noteModel.boundNoteProperty().get().getPartOrders()) {
             root.getChildren().add(createPartOrderBox(partOrderDTO));
         }
         return root;
@@ -44,7 +44,7 @@ public class PartOrderBoxList implements Component<Region> {
 
     public Node createPartOrderBox(PartOrderDTO partOrderDTO) {
         VBox box = new VBox(10);
-        Map<String, TableColumn<PartDTO,String>> tableColumnMap = new HashMap<>();
+        Map<String, TableColumn<PartDTO, String>> tableColumnMap = new HashMap<>();
         TableView<PartDTO> tableView = buildTable(partOrderDTO, tableColumnMap);
         box.setOnMouseEntered(event -> noteModel.selectedPartOrderProperty().set(partOrderDTO));
         box.setOnMouseExited(event -> tableView.getSelectionModel().clearSelection());
@@ -62,10 +62,11 @@ public class PartOrderBoxList implements Component<Region> {
     private Node menu(TableView<PartDTO> tableView, PartOrderDTO partOrderDTO) {
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(5, 0, 5, 5));
+        // parts search dialogue
         Button searchButton = ButtonFx.utilityButton(() -> {
-            Alert alert = DialogueFx.searchAlert(noteView, tableView);
-            alert.showAndWait();
-                },"Search", "/images/search-16.png");
+            Optional<Alert> alert = Optional.ofNullable(DialogueFx.searchAlert(noteView, tableView));
+            alert.ifPresent(Dialog::showAndWait);
+        }, "Search", "/images/search-16.png");
         Button addPartButton = ButtonFx.utilityButton(() -> {
             noteView.getAction().accept(NoteMessage.INSERT_PART);
             // Sort parts in reverse order
@@ -79,7 +80,7 @@ public class PartOrderBoxList implements Component<Region> {
             // Edit the first cell in the first row
             tableView.edit(0, tableView.getColumns().getFirst());  // Edit row 0, first column
         }, "Add Part", "/images/create-16.png");
-        Button deleteButton = ButtonFx.utilityButton( () -> noteView.getAction().accept(NoteMessage.DELETE_PART), "Delete Part", "/images/delete-16.png");
+        Button deleteButton = ButtonFx.utilityButton(() -> noteView.getAction().accept(NoteMessage.DELETE_PART), "Delete Part", "/images/delete-16.png");
         // Create the VBox from your method
         HBox lineTypeBox = lineTypeToggle(partOrderDTO);
         // Set a top margin (e.g., 10 pixels) on lineTypeBox
@@ -122,14 +123,14 @@ public class PartOrderBoxList implements Component<Region> {
         outerBox.setAlignment(Pos.CENTER_LEFT);
         Label label = new Label("Part Order");
         label.setPadding(new Insets(0, 0, 2, 5));
-        if(partOrderDTO.getOrderNumber().isEmpty() || partOrderDTO.getOrderNumber() == null) {
+        if (partOrderDTO.getOrderNumber().isEmpty() || partOrderDTO.getOrderNumber() == null) {
             hBox.getChildren().add(partNameTextField);
         } else {
             label.setText("Part Order: " + partOrderDTO.getOrderNumber());
             hBox.getChildren().add(label);
         }
         label.setOnMouseClicked(event -> {
-            if(event.getClickCount() == 2) {
+            if (event.getClickCount() == 2) {
                 hBox.getChildren().remove(label);
                 hBox.getChildren().add(partNameTextField);
             }
@@ -147,13 +148,13 @@ public class PartOrderBoxList implements Component<Region> {
 
     private Node createButtons(PartOrderDTO partOrderDTO) {
         HBox iconBox = HBoxFx.iconBox(10);
-        Button deleteButton = ButtonFx.utilityButton( () -> {
+        Button deleteButton = ButtonFx.utilityButton(() -> {
             noteView.getAction().accept(NoteMessage.DELETE_PART_ORDER);
             noteModel.boundNoteProperty().get().getPartOrders().remove(partOrderDTO);
-                root.getChildren().remove(partOrderMap.get(partOrderDTO));
+            root.getChildren().remove(partOrderMap.get(partOrderDTO));
         }, "Delete PO", "/images/delete-16.png");
 
-        Button copyButton = ButtonFx.utilityButton( () -> {
+        Button copyButton = ButtonFx.utilityButton(() -> {
             noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
             VBox vBox = partOrderMap.get(partOrderDTO);
             vBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
@@ -186,10 +187,10 @@ public class PartOrderBoxList implements Component<Region> {
         // auto selector
         TableView.TableViewSelectionModel<PartDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-                if (newSelection != null) {
-                    System.out.println("setting selected part property with new part");
-                    noteModel.selectedPartProperty().set(newSelection);
-                }
+            if (newSelection != null) {
+                System.out.println("setting selected part property with new part");
+                noteModel.selectedPartProperty().set(newSelection);
+            }
         });
         return tableView;
     }
@@ -199,7 +200,7 @@ public class PartOrderBoxList implements Component<Region> {
         TableColumn<PartDTO, String> col2 = map.get("line-type");
         TableColumn<PartDTO, String> col3 = map.get("description");
         TableColumn<PartDTO, String> col4 = map.get("quantity");
-        if(showType) {
+        if (showType) {
             tableView.getColumns().addAll(Arrays.asList(col1, col2, col3, col4));
         } else {
             tableView.getColumns().addAll(Arrays.asList(col1, col3, col4));
@@ -207,7 +208,7 @@ public class PartOrderBoxList implements Component<Region> {
     }
 
     private TableColumn<PartDTO, String> col1() {
-        TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partNumberProperty,"Part Number");
+        TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partNumberProperty, "Part Number");
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
             noteModel.selectedPartProperty().get().setPartNumber(event.getNewValue());
@@ -241,7 +242,7 @@ public class PartOrderBoxList implements Component<Region> {
     }
 
     private TableColumn<PartDTO, String> col3() {
-        TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partDescriptionProperty,"Part Description");
+        TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partDescriptionProperty, "Part Description");
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
             noteModel.selectedPartProperty().get().setPartDescription(event.getNewValue());
@@ -251,7 +252,7 @@ public class PartOrderBoxList implements Component<Region> {
     }
 
     private TableColumn<PartDTO, String> col4() {
-        TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partQuantityProperty,"Qty");
+        TableColumn<PartDTO, String> col = TableColumnFx.editableStringTableColumn(PartDTO::partQuantityProperty, "Qty");
         col.setStyle("-fx-alignment: center-left");
         col.setOnEditCommit(event -> {
             noteModel.selectedPartProperty().get().setPartQuantity(event.getNewValue());
@@ -265,7 +266,7 @@ public class PartOrderBoxList implements Component<Region> {
 
     @Override
     public void flash() {
-        for(Map.Entry<PartOrderDTO, VBox> entry : partOrderMap.entrySet()) {
+        for (Map.Entry<PartOrderDTO, VBox> entry : partOrderMap.entrySet()) {
             VBox vBox = entry.getValue();
             vBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));

@@ -240,7 +240,9 @@ public class DialogueFx {
         tieAlertToStage(alert, width, 400);
 
         noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
+        if(noteModel.selectedRangeProperty().get() != null)
         return alert;
+        else return null;
     }
 
 
@@ -334,7 +336,6 @@ private static void cleanAlertClose(NoteModel noteModel, Alert alert) {
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         // Flag to ensure positioning runs only once
         final boolean[] hasPositioned = {false};
-        System.out.println("tieAlertwidth: " + stageWidth);
         // Position the dialog only once when about to show
         EventHandler<WindowEvent> positionHandler = e -> {
             if (!hasPositioned[0]) {

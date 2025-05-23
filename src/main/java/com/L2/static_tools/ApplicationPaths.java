@@ -18,4 +18,6 @@ public interface ApplicationPaths {
     Path globalSparesDir = Paths.get(secondaryDbDirectory.toString(), "global_spares");
     // this will be where we store attachments
     Path fileDirectory = homeDir.resolve("OneDrive - Schneider Electric\\TSENotes\\files");
+
+
 }

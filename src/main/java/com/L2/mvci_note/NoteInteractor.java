@@ -1119,7 +1119,7 @@ public class NoteInteractor {
     }
 
     public void getRanges() {
-        System.out.println("getting ranges");
+        noteModel.getRanges().clear();
         noteModel.getRanges().addAll(globalSparesRepo.findAllRanges());
     }
 
@@ -1151,6 +1151,11 @@ public class NoteInteractor {
         }
 
         // Get range keywords
+        if(noteModel.selectedRangeProperty().get() == null) {
+            logger.error("Cannot update range count: noteModel.selectedRangeProperty is null");
+            DialogueFx.errorAlert("Ranges not found", "It appears that the parts database is not available");
+            return;
+        }
         String rangeString = noteModel.selectedRangeProperty().get().getRangeAdditional();
         String[] range = rangeString != null ? rangeString.split(",") : new String[0];
 

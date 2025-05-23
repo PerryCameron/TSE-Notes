@@ -10,6 +10,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 
+import java.nio.file.Path;
+
 public class SettingsModel {
     // The one we wish to change
     private ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
@@ -22,6 +24,8 @@ public class SettingsModel {
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>(null);
     private ObjectProperty<ToggleSwitch> isSpellCheck = new SimpleObjectProperty<>(new ToggleSwitch("Enable Spell Checking"));
     private StringProperty filePath = new SimpleStringProperty();
+    private BooleanProperty partsDBAvailable = new SimpleBooleanProperty(false);
+    private ObjectProperty<Path> droppedFile = new SimpleObjectProperty<>();
 
 
 
@@ -55,4 +59,10 @@ public class SettingsModel {
     }
     public ObjectProperty<ToggleSwitch> isSpellCheckProperty() { return isSpellCheck; }
     public StringProperty filePathProperty() { return filePath; }
+    public BooleanProperty partsDBAvailableProperty() { return partsDBAvailable; }
+    public void togglePartsDbAvailable(boolean state) {
+        partsDBAvailable.set(!state);
+        partsDBAvailable.set(state);
+    }
+    public ObjectProperty<Path> droppedFileProperty() { return droppedFile; }
 }
