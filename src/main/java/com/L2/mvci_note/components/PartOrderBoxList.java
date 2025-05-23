@@ -62,41 +62,31 @@ public class PartOrderBoxList implements Component<Region> {
     private Node menu(TableView<PartDTO> tableView, PartOrderDTO partOrderDTO) {
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(5, 0, 5, 5));
-
         Button searchButton = ButtonFx.utilityButton(() -> {
             Alert alert = DialogueFx.searchAlert(noteView, tableView);
             alert.showAndWait();
                 },"Search", "/images/search-16.png");
-
         Button addPartButton = ButtonFx.utilityButton(() -> {
             noteView.getAction().accept(NoteMessage.INSERT_PART);
-
             // Sort parts in reverse order
             partOrderDTO.getParts().sort(Comparator.comparing(PartDTO::getId).reversed());
-
             // Refresh the table view layout and focus
             tableView.layout();
             tableView.requestFocus();
-
             // Select row 0 and focus the first column
             tableView.getSelectionModel().select(0);
             tableView.getFocusModel().focus(0, tableView.getColumns().getFirst());  // Focus the first column (index 0)
-
             // Edit the first cell in the first row
             tableView.edit(0, tableView.getColumns().getFirst());  // Edit row 0, first column
         }, "Add Part", "/images/create-16.png");
-
-
         Button deleteButton = ButtonFx.utilityButton( () -> noteView.getAction().accept(NoteMessage.DELETE_PART), "Delete Part", "/images/delete-16.png");
-
         // Create the VBox from your method
         HBox lineTypeBox = lineTypeToggle(partOrderDTO);
-
         // Set a top margin (e.g., 10 pixels) on lineTypeBox
         VBox.setMargin(lineTypeBox, new Insets(20, 0, 0, 0));
         vBox.getStyleClass().add("inner-decorative-hbox");
         // Now add all nodes to the parent vBox
-        vBox.getChildren().addAll(addPartButton, deleteButton, lineTypeBox, searchButton);
+        vBox.getChildren().addAll(searchButton, addPartButton, deleteButton, lineTypeBox);
         return vBox;
     }
 
@@ -200,7 +190,6 @@ public class PartOrderBoxList implements Component<Region> {
                     System.out.println("setting selected part property with new part");
                     noteModel.selectedPartProperty().set(newSelection);
                 }
-
         });
         return tableView;
     }

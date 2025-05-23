@@ -6,18 +6,11 @@ import com.L2.mvci_note.NoteModel;
 import com.L2.repository.implementations.EntitlementsRepositoryImpl;
 import com.L2.repository.implementations.SettingsRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
-import com.L2.static_tools.AppFileTools;
-import com.L2.static_tools.ExcelRipper;
-import com.L2.static_tools.GlobalSparesSQLiteDatabaseCreator;
 import javafx.beans.property.BooleanProperty;
-import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
 
 public class SettingsInteractor {
 
@@ -25,8 +18,6 @@ public class SettingsInteractor {
     private final UserRepositoryImpl userRepo;
     private final EntitlementsRepositoryImpl entitlementRepo;
     private final SettingsRepositoryImpl settingsRepo;
-    private boolean isProcessing = false; // Extra flag to prevent multiple runs
-    private Task<Void> currentTask;
 
     public SettingsInteractor(SettingsModel settingsModel) {
         this.settingsModel = settingsModel;
@@ -94,81 +85,5 @@ public class SettingsInteractor {
 
     public void saveSpellCheckStatus() {
         settingsRepo.setSpellCheckEnabled(settingsModel.isSpellCheckProperty().get().selectedProperty().get());
-    }
-
-
-    public void convertExcelToSql() {
-        if (isProcessing) {
-            System.out.println("Already processing, skipping new run.");
-            return;
-        }
-        if (currentTask != null && !currentTask.isDone()) {
-            System.out.println("Task still running, skipping new run.");
-            return;
-        }
-
-        isProcessing = true;
-        System.out.println("Starting convertExcelToSql: " + System.currentTimeMillis());
-        logMemory("Before task start");
-
-        currentTask = new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                String filePath = settingsModel.filePathProperty().get();
-                if (filePath == null || filePath.isEmpty()) {
-                    System.out.println("No file path provided.");
-                    return null;
-                }
-                logMemory("Before workbook load");
-                try (FileInputStream fis = new FileInputStream(filePath);
-                     XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
-                    logMemory("After workbook load");
-                    // create the folder to hold database if it does not exist
-                    AppFileTools.getOrCreateGlobalSparesFolder();
-                    // creates the database and puts it in database folder
-                    GlobalSparesSQLiteDatabaseCreator.createDataBase("global-spares.db");
-                    // extracts information from xlsx file and updates database with extracted information
-                    ExcelRipper.extractWorkbookToSql(workbook);
-                    logMemory("Before workbook close");
-                }
-                logMemory("After workbook close");
-
-                return null;
-            }
-        };
-
-        currentTask.setOnSucceeded(e -> {
-            System.out.println("Conversion complete");
-            logMemory("Task succeeded");
-            currentTask = null;
-            isProcessing = false;
-            System.gc(); // Ensure full release
-            logMemory("After task GC");
-        });
-        currentTask.setOnFailed(e -> {
-            System.out.println("Task failed: " + currentTask.getException());
-            logMemory("Task failed");
-            currentTask = null;
-            isProcessing = false;
-            System.gc();
-            logMemory("After task GC");
-        });
-        currentTask.setOnCancelled(e -> {
-            System.out.println("Task cancelled");
-            logMemory("Task cancelled");
-            currentTask = null;
-            isProcessing = false;
-            System.gc();
-            logMemory("After task GC");
-        });
-
-        new Thread(currentTask).start();
-    }
-
-
-    private void logMemory(String point) {
-        Runtime rt = Runtime.getRuntime();
-        long usedMB = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-        System.out.println(point + ": " + usedMB + " MB");
     }
 }

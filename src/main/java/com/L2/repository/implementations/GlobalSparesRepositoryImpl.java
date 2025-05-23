@@ -140,32 +140,6 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     }
 
     @Override
-    public int insertWorkbookProperties(PropertiesDTO propertiesDTO) {
-        try {
-            String sql = "INSERT INTO properties (" +
-                    "created_by, last_modified_by, creation_date, last_modification_date)" +
-                    "VALUES (?, ?, ?, ?)";
-
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-
-            jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, propertiesDTO.getCreatedBy());
-                ps.setString(2, propertiesDTO.getLastModifiedBy());
-                ps.setString(3, propertiesDTO.getCreationDate());
-                ps.setString(4, propertiesDTO.getLastModifiedDate()); // error: incompatible types: int cannot be converted to String
-                return ps;
-            }, keyHolder);
-
-            return keyHolder.getKey().intValue(); // Returns the generated ID
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
     public List<String> getDistinctSpareItems(boolean isArchived) {
         try {
             int archived = isArchived ? 1 : 0;

@@ -274,17 +274,14 @@ public class DialogueFx {
 
 private static void cleanAlertClose(NoteModel noteModel, Alert alert) {
     try {
-        System.out.println("Cleaning and closing alert...");
         noteModel.searchWordProperty().set("");
         noteModel.getSearchedParts().clear();
         noteModel.resultsLabelProperty().get().setText("");
         alert.setResult(ButtonType.CANCEL);
         alert.close(); // Use close() instead of hide()
-        System.out.println("Alert closed successfully");
     } catch (Exception e) {
         System.err.println("Error closing alert: " + e.getMessage());
         e.printStackTrace(); // Print stack trace for debugging
-        // Fallback to hide() if close() fails
         alert.hide();
     }
 }
@@ -294,8 +291,18 @@ private static void cleanAlertClose(NoteModel noteModel, Alert alert) {
                 .filter(range -> range.getRange().equals(newValue))
                 .findFirst()
                 .orElse(null);
-        selectedRange.printRanges(); // testing
-        noteModel.selectedRangeProperty().set(selectedRange);
+        if (selectedRange != null) {
+            noteModel.selectedRangeProperty().set(selectedRange);
+        } else {
+            logger.error("No matching range found for: {}", newValue);
+            if (!noteModel.getRanges().isEmpty()) {
+                logger.warn("Defaulting to first range");
+                noteModel.selectedRangeProperty().set(noteModel.getRanges().getFirst());
+            } else {
+                logger.error("Ranges list is empty, setting selectedRange to null");
+                noteModel.selectedRangeProperty().set(null);
+            }
+        }
     }
 
     private static void getTitleIcon(DialogPane dialogPane) {

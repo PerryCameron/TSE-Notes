@@ -12,7 +12,7 @@ public interface GlobalSparesRepository {
 
     int insertReplacementCr(ReplacementCrDTO replacementCrDTO);
 
-    int insertWorkbookProperties(PropertiesDTO propertiesDTO);
+//    int insertWorkbookProperties(PropertiesDTO propertiesDTO);
 
     List<String> getDistinctSpareItems(boolean isArchived);
 
