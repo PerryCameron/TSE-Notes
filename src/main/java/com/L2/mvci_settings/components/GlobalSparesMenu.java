@@ -4,6 +4,7 @@ import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
+import com.L2.static_tools.GraphicFx;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -68,27 +69,15 @@ public class GlobalSparesMenu implements Builder<Region> {
         Circle circle = new Circle();
         circle.setRadius(10.0);
 
-        // Define the radial gradient: lighter green center to darker green edge
-        RadialGradient gradient = new RadialGradient(
-                0, // focusAngle
-                0.1, // focusDistance
-                0.5, // centerX (relative to circle)
-                0.5, // centerY (relative to circle)
-                1.0, // radius (relative to circle)
-                true, // proportional (coordinates are relative to circle size)
-                CycleMethod.NO_CYCLE, // No repeating gradient
-                new Stop(0.0, Color.LIGHTGREEN), // Center: Light green
-                new Stop(1.0, Color.DARKGREEN) // Edge: Dark green
-        );
 
         // Bind circle fill to database status
         circle.fillProperty().bind(Bindings.createObjectBinding(() -> {
             if (settingsModel.partsDBAvailableProperty().get()) {
                 label.setText("Parts Database available");
-                return gradient; // Green gradient for available
+                return GraphicFx.greenCircle(); // Green gradient for available
             } else {
                 label.setText("Parts Database not available");
-                return Color.RED; // Red for unavailable
+                return GraphicFx.redCircle(); // Red for unavailable
             }
         }, settingsModel.partsDBAvailableProperty()));
 
