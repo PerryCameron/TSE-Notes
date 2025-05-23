@@ -3,6 +3,7 @@ package com.L2.mvci_settings;
 import atlantafx.base.controls.ToggleSwitch;
 import com.L2.dto.EntitlementDTO;
 import com.L2.dto.UserDTO;
+import com.L2.dto.global_spares.RangesDTO;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
@@ -26,6 +27,8 @@ public class SettingsModel {
     private StringProperty filePath = new SimpleStringProperty();
     private BooleanProperty partsDBAvailable = new SimpleBooleanProperty(false);
     private ObjectProperty<Path> droppedFile = new SimpleObjectProperty<>();
+    ObservableList<RangesDTO> ranges = null;
+    private ObjectProperty<RangesDTO> selectedRange = new SimpleObjectProperty<>();
 
 
 
@@ -65,4 +68,13 @@ public class SettingsModel {
         partsDBAvailable.set(state);
     }
     public ObjectProperty<Path> droppedFileProperty() { return droppedFile; }
+    public ObservableList<RangesDTO> getRanges() {
+        return ranges;
+    }
+    public void setRanges(ObservableList<RangesDTO> ranges) {
+        this.ranges = ranges;
+    }
+    public ObjectProperty<RangesDTO> selectedRangeProperty() {
+        return selectedRange;
+    }
 }

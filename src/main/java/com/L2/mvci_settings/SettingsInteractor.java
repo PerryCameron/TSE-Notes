@@ -2,6 +2,7 @@ package com.L2.mvci_settings;
 
 import com.L2.dto.EntitlementDTO;
 import com.L2.dto.UserDTO;
+import com.L2.dto.global_spares.RangesDTO;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.repository.implementations.EntitlementsRepositoryImpl;
@@ -11,6 +12,7 @@ import com.L2.static_tools.ApplicationPaths;
 import com.L2.widgetFx.DialogueFx;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
@@ -172,5 +174,9 @@ public class SettingsInteractor {
         });
         // Run the task in a background thread
         new Thread(task).start();
+    }
+
+    public void setRanges(ObservableList<RangesDTO> ranges) {
+        settingsModel.setRanges(ranges);
     }
 }

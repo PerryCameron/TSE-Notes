@@ -1,6 +1,7 @@
 package com.L2.mvci_note;
 
 import com.L2.dto.*;
+import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.enums.AreaType;
 import com.L2.repository.implementations.*;
@@ -14,7 +15,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.scene.control.Label;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -1190,5 +1190,9 @@ public class NoteInteractor {
 
         // Run the task in a background thread
         new Thread(countTask).start();
+    }
+
+    public ObservableList<RangesDTO> getRangesList() {
+        return noteModel.getRanges();
     }
 }

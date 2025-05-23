@@ -12,10 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
@@ -33,9 +30,11 @@ public class GlobalSparesMenu implements Builder<Region> {
     private static final Logger logger = LoggerFactory.getLogger(GlobalSparesMenu.class);
     private final SettingsModel settingsModel;
     private final Consumer<SettingsMessage> action;
+    private final SettingsView settingsView;
 
     public GlobalSparesMenu(SettingsView view) {
         this.settingsModel = view.getSettingsModel();
+        this.settingsView = view;
         this.action = view.getAction();
     }
 
@@ -51,13 +50,29 @@ public class GlobalSparesMenu implements Builder<Region> {
         settingsModel.partsDBAvailableProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue) {
                 vbox.getChildren().clear();
-                vbox.getChildren().add(dbStatus());
+                vbox.getChildren().addAll(dbStatus(), rangeEditor());
                 action.accept(SettingsMessage.GET_RANGES);
             } else {
                 vbox.getChildren().clear();
                 vbox.getChildren().addAll(dbStatus(), createDropRegion());
             }
         });
+    }
+
+    private Node rangeEditor() {
+        // get a reference to the list located in noteModel
+        action.accept(SettingsMessage.GET_RANGES_REFERENCE);
+        HBox hbox = new HBox();
+        VBox.setVgrow(hbox, Priority.ALWAYS);
+        hbox.getChildren().add(rangeSelector());
+        return hbox;
+    }
+
+    public Node rangeSelector() {
+        VBox vbox = new VBox();
+        vbox.getChildren().add(new Label("Range"));
+        vbox.getChildren().add(new RangesListView(settingsView).build());
+        return vbox;
     }
 
     public Node dbStatus() {

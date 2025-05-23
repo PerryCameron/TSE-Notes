@@ -74,4 +74,16 @@ public class RangesDTO {
         });
         System.out.println();
     }
+
+    @Override
+    public String toString() {
+        return "RangesDTO{" +
+                "id=" + id +
+                ", range='" + range + '\'' +
+                ", rangeAdditional='" + rangeAdditional + '\'' +
+                ", rangeType='" + rangeType + '\'' +
+                ", lastUpdate='" + lastUpdate + '\'' +
+                ", lastUpdatedBy='" + lastUpdatedBy + '\'' +
+                '}';
+    }
 }

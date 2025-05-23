@@ -57,6 +57,7 @@ public class SettingsController extends Controller<SettingsMessage> {
             case VERIFY_PARTS_DATABASE -> settingsInteractor.checkDatabase();
             case INSTALL_PART_DATABASE -> { settingsInteractor.installPartsDatabase(); }
             case GET_RANGES -> mainController.getNoteController().action(NoteMessage.GET_RANGES);
+            case GET_RANGES_REFERENCE -> getRangesReference();
         };
     }
 
@@ -65,5 +66,9 @@ public class SettingsController extends Controller<SettingsMessage> {
         logger.info("Spell Check set to: {}", mainController.isSpellCheckedProperty().get());
         settingsInteractor.saveSpellCheckStatus();
         mainController.getNoteController().resetSpellCheckAreas();
+    }
+
+    private void getRangesReference() {
+        settingsInteractor.setRanges(mainController.getNoteController().getRanges());
     }
 }

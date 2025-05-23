@@ -2,6 +2,7 @@ package com.L2.mvci_note;
 
 import com.L2.dto.NoteDTO;
 import com.L2.dto.UserDTO;
+import com.L2.dto.global_spares.RangesDTO;
 import com.L2.enums.AreaType;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
@@ -139,5 +140,9 @@ public class NoteController extends Controller<NoteMessage> {
             noteInteractor.clearHighlights(AreaType.finish);
             noteInteractor.closeHunspell();
         }
+    }
+
+    public ObservableList<RangesDTO> getRanges() {
+        return noteInteractor.getRangesList();
     }
 }
