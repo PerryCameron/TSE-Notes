@@ -19,6 +19,17 @@ public class RangesDTO {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
+    public RangesDTO() {
+    }
+
+    public void copyFx(RangesFx rangesFx) {
+        this.id = rangesFx.getId();
+        this.range = rangesFx.getRange();
+        this.rangeAdditional = rangesFx.getRangeAdditional();
+        this.rangeType = rangesFx.getRangeType();
+        this.lastUpdate = rangesFx.getLastUpdate();
+    }
+
     public int getId() {
         return id;
     }

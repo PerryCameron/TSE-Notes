@@ -4,6 +4,7 @@ import atlantafx.base.controls.ToggleSwitch;
 import com.L2.dto.EntitlementDTO;
 import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesDTO;
+import com.L2.dto.global_spares.RangesFx;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
@@ -27,8 +28,14 @@ public class SettingsModel {
     private StringProperty filePath = new SimpleStringProperty();
     private BooleanProperty partsDBAvailable = new SimpleBooleanProperty(false);
     private ObjectProperty<Path> droppedFile = new SimpleObjectProperty<>();
-    ObservableList<RangesDTO> ranges = null;
+    private ObservableList<RangesDTO> ranges = null;
+    public ObjectProperty<RangesFx> boundRangeFxProperty = new SimpleObjectProperty<>(new RangesFx());
     private ObjectProperty<RangesDTO> selectedRange = new SimpleObjectProperty<>();
+    private ObjectProperty<TextArea> modelsTextArea = new SimpleObjectProperty<>();
+    private ObjectProperty<TextField> typeTextField = new SimpleObjectProperty<>();
+
+//    private StringProperty rangeType = new SimpleStringProperty();
+//    private StringProperty models = new SimpleStringProperty();
 
 
 
@@ -76,5 +83,15 @@ public class SettingsModel {
     }
     public ObjectProperty<RangesDTO> selectedRangeProperty() {
         return selectedRange;
+    }
+
+    public ObjectProperty<TextArea> modelsTextAreaProperty() {
+        return modelsTextArea;
+    }
+    public ObjectProperty<TextField> typeTextFieldProperty() {
+        return typeTextField;
+    }
+    public ObjectProperty<RangesFx> boundRangeFxProperty() {
+        return boundRangeFxProperty;
     }
 }

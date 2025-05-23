@@ -1,22 +1,22 @@
 package com.L2.mvci_settings.components;
 
-import com.L2.mvci_note.NoteMessage;
+import com.L2.dto.global_spares.RangesDTO;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import com.L2.static_tools.GraphicFx;
+import com.L2.widgetFx.ButtonFx;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.RadialGradient;
-import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
@@ -46,6 +46,7 @@ public class GlobalSparesMenu implements Builder<Region> {
 //        vbox.setStyle("-fx-background-color: lightblue;");
         vbox.getStyleClass().add("decorative-hbox");
         setPartsAvailabilityListener(vbox);
+
         action.accept(SettingsMessage.VERIFY_PARTS_DATABASE);
         return vbox;
     }
@@ -69,7 +70,66 @@ public class GlobalSparesMenu implements Builder<Region> {
         HBox hbox = new HBox();
         VBox.setVgrow(hbox, Priority.ALWAYS);
         hbox.getChildren().add(rangeSelector());
+        hbox.getChildren().add(attributesBox());
         return hbox;
+    }
+
+    private Node attributesBox() {
+        VBox vbox = new VBox();
+        vbox.setPadding(new Insets(10, 10, 10, 10));
+        vbox.setSpacing(10);
+        vbox.getChildren().add(rangeBox());
+        vbox.getChildren().add(rangeTypeBox());
+        vbox.getChildren().add(modelsBox());
+        vbox.getChildren().add(createButtonRow());
+        return vbox;
+    }
+
+    private Node createButtonRow() {
+        HBox hBox = new HBox(5);
+        Button saveButton = ButtonFx.utilityButton( () -> {
+            action.accept(SettingsMessage.SAVE_RANGES);
+        }, "Save", "/images/save-16.png");
+        Button deleteButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.DELETE_RANGE), "Delete", "/images/delete-16.png");
+        Button newButton = ButtonFx.utilityButton( () -> settingsModel.getRanges().add(new RangesDTO()), "New Range", "/images/create-16.png");
+        hBox.getChildren().addAll(saveButton, deleteButton, newButton);
+        return hBox;
+    }
+
+    private Node modelsBox() {
+        VBox vbox = new VBox();
+        vbox.setSpacing(10);
+        vbox.getChildren().add(new Label("Models and Keywords (Each on a separate line)"));
+        TextArea textArea = new TextArea();
+        textArea.setEditable(true);
+        textArea.setWrapText(false);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        textArea.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().rangeAdditionalProperty());
+        vbox.getChildren().add(textArea);
+        return vbox;
+    }
+
+    private Node rangeBox() {
+        VBox vBox = new VBox(10);
+        TextField textField = new TextField();
+        textField.setMaxWidth(Double.MAX_VALUE);
+        textField.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().rangeProperty());
+        vBox.getChildren().add(new Label("Range type"));
+        vBox.getChildren().add(textField);
+        vBox.setAlignment(Pos.CENTER_LEFT);
+        return vBox;
+    }
+
+    private Node rangeTypeBox() {
+        VBox vBox = new VBox(10);
+        TextField textField = new TextField();
+        textField.setMaxWidth(Double.MAX_VALUE);
+        textField.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().rangeTypeProperty());
+        vBox.getChildren().add(new Label("Range type"));
+        vBox.getChildren().add(textField);
+        vBox.setAlignment(Pos.CENTER_LEFT);
+        return vBox;
     }
 
     public Node rangeSelector() {

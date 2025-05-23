@@ -36,20 +36,42 @@ public class RangesListView implements Builder<ListView<RangesDTO>> {
         });
 
         // Handle selection
+        // I have two objects, RangeDTO which is a POJO and RangeFx with is the same as Range but a JavaFX property object
+        // both objects have copy functions ie..POJO.copyFrom(FX) and FX.copyFrom(POJO) for easy conversion
+        // this is a list of RangeDTO POJOS
         ObservableList<RangesDTO> selectedRanges = FXCollections.observableArrayList();
+        // when I make a new selection I want to save the changes from oldSelection to proper object in list and copy the new seletion to the bound FX object
+        // the bound object is ObjectProperty<RangeFx>, it is bidirectionally bound to a textField and a textArea
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                // Add to selected list if not already present
+                // Add to selectedRanges if not already present
                 if (!selectedRanges.contains(newSelection)) {
                     selectedRanges.add(newSelection);
                 }
-                settingsModel.selectedRangeProperty().setValue(newSelection);
-                System.out.println("Selected Range: " + newSelection.getRange());
-                System.out.println("Current Selected List: " + selectedRanges);
+                // Update the selectedRangeProperty to track the current selection
+                settingsModel.selectedRangeProperty().set(newSelection);
+                if (oldSelection != null) {
+                    // Save changes from the bound RangesFx to the old RangesDTO in rangesList
+                    int oldIndex = selectedRanges.indexOf(oldSelection);
+                    if (oldIndex != -1) {
+                        selectedRanges.get(oldIndex).copyFx(settingsModel.boundRangeFxProperty().get());
+                    }
+                }
+                // Copy the new selection to the bound RangesFx object
+                settingsModel.boundRangeFxProperty().get().copyFrom(newSelection);
+                System.out.println("Selected Range: " + newSelection);
+                System.out.println("Old Selection: " + oldSelection);
             }
         });
         return listView;
     }
 
+    private String colonToNewline(String rangeAdditional) {
+        if (rangeAdditional == null) {
+            return "";
+        }
+        String[] parts = rangeAdditional.split(":");
+        return String.join("\n", parts);
+    }
 
 }
