@@ -1,7 +1,7 @@
 package com.L2.repository.implementations;
 
-import com.L2.dto.PartDTO;
-import com.L2.dto.PartOrderDTO;
+import com.L2.dto.PartFx;
+import com.L2.dto.PartOrderFx;
 import com.L2.repository.interfaces.PartOrderRepository;
 import com.L2.repository.rowmappers.PartOrderRowMapper;
 import com.L2.repository.rowmappers.PartRowMapper;
@@ -28,7 +28,7 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
     }
 
     @Override
-    public int insertPartOrder(PartOrderDTO partOrder) {
+    public int insertPartOrder(PartOrderFx partOrder) {
         String sql = "INSERT INTO PartOrders (noteId, orderNumber, showType) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -46,25 +46,25 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
     }
 
     @Override
-    public List<PartOrderDTO> findAllPartOrdersByNoteId(int noteId) {
+    public List<PartOrderFx> findAllPartOrdersByNoteId(int noteId) {
         String sql = "SELECT * FROM PartOrders WHERE noteId = ?";
         return jdbcTemplate.query(sql, new PartOrderRowMapper(), noteId);
     }
 
     @Override
-    public List<PartOrderDTO> findAllPartOrders() {
+    public List<PartOrderFx> findAllPartOrders() {
         String sql = "SELECT * FROM PartOrders";
         return jdbcTemplate.query(sql, new PartOrderRowMapper());
     }
 
     @Override
-    public int updatePartOrder(PartOrderDTO partOrder) {
+    public int updatePartOrder(PartOrderFx partOrder) {
         String sql = "UPDATE PartOrders SET noteId = ?, orderNumber = ?, showType = ? WHERE id = ?";
         return jdbcTemplate.update(sql, partOrder.getNoteId(), partOrder.getOrderNumber(), partOrder.showTypeProperty().get(), partOrder.getId());
     }
 
     @Override
-    public int deletePartOrder(PartOrderDTO partOrderDTO) {
+    public int deletePartOrder(PartOrderFx partOrderDTO) {
         logger.info("Deleting PartOrder: {}", partOrderDTO);
         String sql = "DELETE FROM PartOrders WHERE id = ?";
         // Execute the update query to delete the PartOrder by its id
@@ -72,7 +72,7 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
     }
 
     @Override
-    public int insertPart(PartDTO partDTO) {
+    public int insertPart(PartFx partDTO) {
         String sql = "INSERT INTO Parts (partOrderId, partNumber, partDescription, partQuantity, serialReplaced, partEditable, lineType) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -95,7 +95,7 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
     }
 
     @Override
-    public int updatePart(PartDTO partDTO) {
+    public int updatePart(PartFx partDTO) {
         String sql = "UPDATE Parts SET partOrderId = ?, partNumber = ?, partDescription = ?, partQuantity = ?, serialReplaced = ?, partEditable = ?, lineType= ?  WHERE id = ?";
         return jdbcTemplate.update(sql,
                 partDTO.getPartOrderId(),
@@ -109,14 +109,14 @@ public class PartOrderRepositoryImpl implements PartOrderRepository {
     }
 
     @Override
-    public int deletePart(PartDTO partDTO) {
+    public int deletePart(PartFx partDTO) {
         logger.info("Deleting part: {}", partDTO.getId());
         String sql = "DELETE FROM Parts WHERE id = ?";
         return jdbcTemplate.update(sql, partDTO.getId());
     }
 
     @Override
-    public List<PartDTO> getPartsByPartOrder(PartOrderDTO partOrderDTO) {
+    public List<PartFx> getPartsByPartOrder(PartOrderFx partOrderDTO) {
         String sql = "SELECT * FROM Parts WHERE partOrderId = ?";
         // Use partOrderDTO to get the partOrderId and pass it to the query
         return jdbcTemplate.query(sql, new PartRowMapper(), partOrderDTO.getId());

@@ -1,27 +1,27 @@
 package com.L2.repository.interfaces;
 
-import com.L2.dto.PartDTO;
-import com.L2.dto.PartOrderDTO;
+import com.L2.dto.PartFx;
+import com.L2.dto.PartOrderFx;
 
 import java.util.List;
 
 public interface PartOrderRepository {
 
-    int insertPartOrder(PartOrderDTO partOrder);
+    int insertPartOrder(PartOrderFx partOrder);
 
-    List<PartOrderDTO> findAllPartOrdersByNoteId(int noteId);
+    List<PartOrderFx> findAllPartOrdersByNoteId(int noteId);
 
-    List<PartOrderDTO> findAllPartOrders();
+    List<PartOrderFx> findAllPartOrders();
 
-    int updatePartOrder(PartOrderDTO partOrder);
+    int updatePartOrder(PartOrderFx partOrder);
 
-    int deletePartOrder(PartOrderDTO partOrderDTO);
+    int deletePartOrder(PartOrderFx partOrderDTO);
 
-    int insertPart(PartDTO partDTO);
+    int insertPart(PartFx partDTO);
 
-    int updatePart(PartDTO partDTO);
+    int updatePart(PartFx partDTO);
 
-    int deletePart(PartDTO partDTO);
+    int deletePart(PartFx partDTO);
 
-    List<PartDTO> getPartsByPartOrder(PartOrderDTO partOrderDTO);
+    List<PartFx> getPartsByPartOrder(PartOrderFx partOrderDTO);
 }

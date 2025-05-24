@@ -1,6 +1,6 @@
 package com.L2.repository.implementations;
 
-import com.L2.dto.EntitlementDTO;
+import com.L2.dto.EntitlementFx;
 import com.L2.repository.interfaces.EntitlementsRepository;
 import com.L2.repository.rowmappers.EntitlementsRowMapper;
 import com.L2.static_tools.DatabaseConnector;
@@ -25,7 +25,7 @@ public class EntitlementsRepositoryImpl implements EntitlementsRepository {
     }
 
     @Override
-    public List<EntitlementDTO> getAllEntitlements() {
+    public List<EntitlementFx> getAllEntitlements() {
         // SQL query to retrieve all entitlements from the entitlements table
         String sql = "SELECT * FROM entitlements";
         return jdbcTemplate.query(sql, new EntitlementsRowMapper());
@@ -33,7 +33,7 @@ public class EntitlementsRepositoryImpl implements EntitlementsRepository {
 
     // Insert a new entitlement row into the database
     @Override
-    public int insertEntitlement(EntitlementDTO entitlement) {
+    public int insertEntitlement(EntitlementFx entitlement) {
         String sql = "INSERT INTO entitlements (name, includes, not_included) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -50,14 +50,14 @@ public class EntitlementsRepositoryImpl implements EntitlementsRepository {
 
     // Update an existing entitlement row based on its id
     @Override
-    public int updateEntitlement(EntitlementDTO entitlement) {
+    public int updateEntitlement(EntitlementFx entitlement) {
         String sql = "UPDATE entitlements SET name = ?, includes = ?, not_included = ? WHERE id = ?";
         return jdbcTemplate.update(sql, entitlement.getName(), entitlement.getIncludes(), entitlement.getNotIncludes(), entitlement.getId());
     }
 
     // Delete an entitlement row based on its id
     @Override
-    public int deleteEntitlement(EntitlementDTO entitlement) {
+    public int deleteEntitlement(EntitlementFx entitlement) {
         String sql = "DELETE FROM entitlements WHERE id = ?";
         return jdbcTemplate.update(sql, entitlement.getId());
     }

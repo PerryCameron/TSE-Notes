@@ -1,6 +1,6 @@
 package com.L2.mvci_note;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesDTO;
 import com.L2.enums.AreaType;
@@ -107,11 +107,11 @@ public class NoteController extends Controller<NoteMessage> {
 
     public UserDTO getUser() { return noteInteractor.getUser(); }
 
-    public ObservableList<NoteDTO> getNotes() {
+    public ObservableList<NoteFx> getNotes() {
         return noteInteractor.getNotes();
     }
 
-    public ObjectProperty<NoteDTO> getBoundNoteProperty() {
+    public ObjectProperty<NoteFx> getBoundNoteProperty() {
         return noteInteractor.getBoundNoteProperty();
     }
 

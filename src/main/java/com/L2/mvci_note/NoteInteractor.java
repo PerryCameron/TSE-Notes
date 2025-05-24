@@ -51,7 +51,7 @@ public class NoteInteractor {
 
     public void loadEntitlements() {
         // Load the entitlements
-        ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList(entitlementsRepo.getAllEntitlements());
+        ObservableList<EntitlementFx> entitlements = FXCollections.observableArrayList(entitlementsRepo.getAllEntitlements());
         noteModel.setEntitlements(entitlements);
         logger.info("Loaded entitlements: {}", entitlements.size());
     }
@@ -59,12 +59,12 @@ public class NoteInteractor {
     // loads notes on start-up
     public void loadNotes() {
         // create and set our bound note
-        NoteDTO boundNote = new NoteDTO();
+        NoteFx boundNote = new NoteFx();
         noteModel.boundNoteProperty().set(boundNote);
         // get all the notes and load them to memory
         noteModel.getNotes().addAll(noteRepo.getPaginatedNotes(noteModel.pageSizeProperty().get(), noteModel.offsetProperty().get()));
         // set notes to the direction we like
-        noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
+        noteModel.getNotes().sort(Comparator.comparing(NoteFx::getTimestamp).reversed());
         // if starting up for first time create first empty note
         if (noteModel.getNotes().isEmpty()) {
 //            NoteDTO noteDTO = new NoteDTO(1, false);
@@ -78,7 +78,7 @@ public class NoteInteractor {
     }
 
     public void setActiveServiceContract() {
-        EntitlementDTO entitlementDTO = noteModel.getEntitlements().stream().filter(DTO -> DTO.getName()
+        EntitlementFx entitlementDTO = noteModel.getEntitlements().stream().filter(DTO -> DTO.getName()
                 .equals(noteModel.boundNoteProperty().get().getActiveServiceContract())).findFirst().orElse(null);
         noteModel.currentEntitlementProperty().set(entitlementDTO);
     }
@@ -405,7 +405,7 @@ public class NoteInteractor {
     public String copyAllPartOrdersToPlainText() {
         if (noteModel.boundNoteProperty().get().getPartOrders().size() > 1) {
             StringBuilder builder = new StringBuilder();
-            for (PartOrderDTO partOrderDTO : noteModel.boundNoteProperty().get().getPartOrders()) {
+            for (PartOrderFx partOrderDTO : noteModel.boundNoteProperty().get().getPartOrders()) {
                 noteModel.selectedPartOrderProperty().set(partOrderDTO);
                 builder.append(buildPartOrderToPlainText());
                 builder.append("\r\n");
@@ -420,7 +420,7 @@ public class NoteInteractor {
     public String copyAllPartOrdersToHTML(boolean includePOHeader) {
         if (noteModel.boundNoteProperty().get().getPartOrders().size() > 1) {
             StringBuilder builder = new StringBuilder();
-            for (PartOrderDTO partOrderDTO : noteModel.boundNoteProperty().get().getPartOrders()) {
+            for (PartOrderFx partOrderDTO : noteModel.boundNoteProperty().get().getPartOrders()) {
                 noteModel.selectedPartOrderProperty().set(partOrderDTO);
                 builder.append(buildPartOrderToHTML(includePOHeader)).append("<br>");
             }
@@ -480,15 +480,15 @@ public class NoteInteractor {
 
     private String buildPartOrderToPlainText() {
         System.out.println("buildPartOrderToPlainText() called");
-        PartOrderDTO partOrderDTO = noteModel.selectedPartOrderProperty().get();
+        PartOrderFx partOrderDTO = noteModel.selectedPartOrderProperty().get();
         StringBuilder stringBuilder = new StringBuilder();
-        ObservableList<PartDTO> parts = partOrderDTO.getParts();
+        ObservableList<PartFx> parts = partOrderDTO.getParts();
         String orderNumber = noteModel.selectedPartOrderProperty().get().getOrderNumber();
         if (orderNumber != null && !orderNumber.isEmpty()) {
             stringBuilder.append("Part Order: ").append(orderNumber).append("\r\n");
         }
         // Build the rows
-        for (PartDTO part : parts) {
+        for (PartFx part : parts) {
             stringBuilder.append(String.format("%-15s", part.getPartNumber()));
             int lineTypeLength = 0;
             if (partOrderDTO.showType()) {
@@ -536,7 +536,7 @@ public class NoteInteractor {
 
     private String shippingInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
-        NoteDTO note = noteModel.boundNoteProperty().get();
+        NoteFx note = noteModel.boundNoteProperty().get();
         if (!note.getContactName().isEmpty()) {
             stringBuilder.append("--- Shipping Contact ---").append("\r\n");
             stringBuilder.append("Name: ").append(note.getContactName()).append("\r\n");
@@ -558,7 +558,7 @@ public class NoteInteractor {
     }
 
     private String shippingInformationToHTML() {
-        NoteDTO note = noteModel.boundNoteProperty().get();
+        NoteFx note = noteModel.boundNoteProperty().get();
         StringBuilder stringBuilder = new StringBuilder();
         if (!note.getContactName().isEmpty()) {
             stringBuilder.append("<b>Shipping Contact</b><br>");
@@ -582,7 +582,7 @@ public class NoteInteractor {
 
     private String basicInformationToPlainText() {
         StringBuilder stringBuilder = new StringBuilder();
-        NoteDTO note = noteModel.boundNoteProperty().get();
+        NoteFx note = noteModel.boundNoteProperty().get();
         stringBuilder.append("--- Customer Provided Information ---").append("\r\n");
         if (!note.getCaseNumber().isEmpty())
             stringBuilder.append("Case");
@@ -631,7 +631,7 @@ public class NoteInteractor {
 
     private String basicInformationToHTML() {
         StringBuilder stringBuilder = new StringBuilder();
-        NoteDTO note = noteModel.boundNoteProperty().get();
+        NoteFx note = noteModel.boundNoteProperty().get();
         stringBuilder.append("<strong>Customer Provided Information</strong><br>");
         stringBuilder.append("<span style=\"color: rgb(0, 101, 105);\">");
         if (!note.getCaseNumber().isEmpty())
@@ -848,9 +848,9 @@ public class NoteInteractor {
     public void createNewNote() {
         // let's update the list note before moving on
         saveOrUpdateNote(); // I feel like this can go
-        NoteDTO noteDTO = noteRepo.insertBlankNote();
+        NoteFx noteDTO = noteRepo.insertBlankNote();
         noteModel.getNotes().add(noteDTO);
-        noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
+        noteModel.getNotes().sort(Comparator.comparing(NoteFx::getTimestamp).reversed());
         noteModel.boundNoteProperty().get().setId(noteDTO.getId());
         noteModel.clearBoundNoteFields();
         noteModel.openNoteTab();
@@ -860,7 +860,7 @@ public class NoteInteractor {
         String answer = DialogueFx.showYesNoCancelDialog();
         if (!answer.equals("cancel")) {
             // create a new note
-            NoteDTO noteDTO = new NoteDTO(0, false);
+            NoteFx noteDTO = new NoteFx(0, false);
             // copy fields from bound note to our new note
             noteDTO.copyFrom(noteModel.boundNoteProperty().get());
             // set the timestamp on our new note
@@ -874,7 +874,7 @@ public class NoteInteractor {
             // add the note to our list of notes
             noteModel.getNotes().add(noteDTO);
             // sort our list so our new note floats to the top
-            noteModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
+            noteModel.getNotes().sort(Comparator.comparing(NoteFx::getTimestamp).reversed());
             // let's make the bound note copy our new note
             noteModel.boundNoteProperty().get().copyFrom(noteDTO);
             // time to add part orders / parts if selected
@@ -889,16 +889,16 @@ public class NoteInteractor {
         }
     }
 
-    private void cloneParts(NoteDTO noteDTO) {
+    private void cloneParts(NoteFx noteDTO) {
         int partOrderId;
-        for (PartOrderDTO partOrderDTO : noteModel.boundNoteProperty().get().getPartOrders()) {
+        for (PartOrderFx partOrderDTO : noteModel.boundNoteProperty().get().getPartOrders()) {
             // create new part order object
-            PartOrderDTO newPartOrderDTO = new PartOrderDTO(noteDTO.getId());
+            PartOrderFx newPartOrderDTO = new PartOrderFx(noteDTO.getId());
             // insert new part order and get id from it.
             partOrderId = partOrderRepo.insertPartOrder(newPartOrderDTO);
             // cycle through parts that were in the original part order
-            for (PartDTO partDTO : partOrderDTO.getParts()) {
-                PartDTO newPartDTO = new PartDTO(partOrderId, partDTO);
+            for (PartFx partDTO : partOrderDTO.getParts()) {
+                PartFx newPartDTO = new PartFx(partOrderId, partDTO);
                 partOrderRepo.insertPart(newPartDTO);
             }
         }
@@ -919,7 +919,7 @@ public class NoteInteractor {
     }
 
     private void checkAndLoadPartOrdersIfNeeded() {
-        NoteDTO noteDTO = noteModel.boundNoteProperty().get();
+        NoteFx noteDTO = noteModel.boundNoteProperty().get();
         if (noteDTO.getPartOrders().isEmpty()) {
             logger.debug("No Part orders found in memory, checking database..");
             noteDTO.setPartOrders(FXCollections.observableArrayList(partOrderRepo.findAllPartOrdersByNoteId(noteDTO.getId())));
@@ -934,14 +934,14 @@ public class NoteInteractor {
     }
 
     private void getAllPartsForEachPartOrder() {
-        for (PartOrderDTO partOrderDTO : noteModel.boundNoteProperty().get().getPartOrders()) {
+        for (PartOrderFx partOrderDTO : noteModel.boundNoteProperty().get().getPartOrders()) {
             partOrderDTO.setParts(FXCollections.observableArrayList(partOrderRepo.getPartsByPartOrder(partOrderDTO)));
         }
     }
 
     // this synchronizes the bound object to the correct object in the list
     public void saveOrUpdateNote() {
-        for (NoteDTO noteDTO : noteModel.getNotes()) {
+        for (NoteFx noteDTO : noteModel.getNotes()) {
             // let's find the correct note in the list
             if (noteDTO.getId() == noteModel.boundNoteProperty().get().getId()) {
                 // compares bound note to matching list note, if there is a change it logs it and copies it.
@@ -961,7 +961,7 @@ public class NoteInteractor {
 
     public void insertPartOrder() {
         int noteId = noteModel.boundNoteProperty().get().getId();
-        PartOrderDTO partOrderDTO = new PartOrderDTO(0, noteId, "", false);
+        PartOrderFx partOrderDTO = new PartOrderFx(0, noteId, "", false);
         System.out.println("showType value: " + partOrderDTO.showTypeProperty().get());
         partOrderDTO.setId(partOrderRepo.insertPartOrder(partOrderDTO));
         noteModel.boundNoteProperty().get().getPartOrders().add(partOrderDTO);
@@ -973,8 +973,8 @@ public class NoteInteractor {
     }
 
     public void deletePart() {
-        PartDTO partDTO = noteModel.selectedPartProperty().get();
-        PartOrderDTO partOrderDTO = noteModel.selectedPartOrderProperty().get();
+        PartFx partDTO = noteModel.selectedPartProperty().get();
+        PartOrderFx partOrderDTO = noteModel.selectedPartOrderProperty().get();
         partOrderRepo.deletePart(partDTO);
         System.out.println("Setting selected part to null");
         noteModel.selectedPartProperty().set(null);
@@ -982,7 +982,7 @@ public class NoteInteractor {
     }
 
     public void insertPart() {
-        PartDTO partDTO = new PartDTO(noteModel.selectedPartOrderProperty().get().getId());
+        PartFx partDTO = new PartFx(noteModel.selectedPartOrderProperty().get().getId());
         // put part in database and retrieve id
         partDTO.setId(partOrderRepo.insertPart(partDTO)); // TODO changes this when hooked to database
         // adding part to part order in FX view
@@ -993,16 +993,16 @@ public class NoteInteractor {
     }
 
     public void updatePart() {
-        PartDTO partDTO = noteModel.selectedPartProperty().get();
+        PartFx partDTO = noteModel.selectedPartProperty().get();
         partOrderRepo.updatePart(partDTO);
         logger.debug("Updated part order: {} part # {}", partDTO.getId(), partDTO.getPartNumber());
     }
 
-    public ObservableList<NoteDTO> getNotes() {
+    public ObservableList<NoteFx> getNotes() {
         return noteModel.getNotes();
     }
 
-    public ObjectProperty<NoteDTO> getBoundNoteProperty() {
+    public ObjectProperty<NoteFx> getBoundNoteProperty() {
         return noteModel.boundNoteProperty();
     }
 
@@ -1018,8 +1018,8 @@ public class NoteInteractor {
         int id = noteModel.boundNoteProperty().get().getId();
 //        System.out.println("deleting note: " + id);
         // deletedNoteDTO will be the reference to the correct NoteDTO in the list
-        NoteDTO deletedNoteDTO = null;
-        for (NoteDTO noteDTO : noteModel.getNotes()) {
+        NoteFx deletedNoteDTO = null;
+        for (NoteFx noteDTO : noteModel.getNotes()) {
             if (noteDTO.idProperty().get() == id) {
                 deletedNoteDTO = noteDTO;
             }
@@ -1036,11 +1036,11 @@ public class NoteInteractor {
         deletePartOrder(noteModel.selectedPartOrderProperty().get());
     }
 
-    public void deletePartOrder(PartOrderDTO partOrderDTO) {
+    public void deletePartOrder(PartOrderFx partOrderDTO) {
         if (!partOrderDTO.getParts().isEmpty()) {
-            Iterator<PartDTO> iterator = partOrderDTO.getParts().iterator();
+            Iterator<PartFx> iterator = partOrderDTO.getParts().iterator();
             while (iterator.hasNext()) {
-                PartDTO partDTO = iterator.next();
+                PartFx partDTO = iterator.next();
                 partOrderRepo.deletePart(partDTO);  // Delete the note from repository
                 iterator.remove();
             }

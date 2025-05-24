@@ -1,8 +1,7 @@
 package com.L2.mvci_main;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import com.L2.repository.implementations.SettingsRepositoryImpl;
-import com.L2.repository.interfaces.SettingsRepository;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ApplicationPaths;
 import javafx.beans.property.BooleanProperty;
@@ -29,7 +28,7 @@ public class MainInteractor implements ApplicationPaths {
         mainModel.statusStringProperty().set(status);
     }
 
-    public void updateNoteTabName(ObjectProperty<NoteDTO> boundNote) {
+    public void updateNoteTabName(ObjectProperty<NoteFx> boundNote) {
         mainModel.noteTabProperty().get().setText("Note " + boundNote.get().getId());
     }
 

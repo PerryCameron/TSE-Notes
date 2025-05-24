@@ -1,22 +1,22 @@
 package com.L2.mvci_notelist;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 
 public class NoteListModel {
     // reference to mainModel notes
-    private ObservableList<NoteDTO> notes;
+    private ObservableList<NoteFx> notes;
     // this is the note that is selected in the TableView
-    private final ObjectProperty<NoteDTO> selectedNote = new SimpleObjectProperty<>();
+    private final ObjectProperty<NoteFx> selectedNote = new SimpleObjectProperty<>();
     // reference to mainModel boundNote;
-    protected ObjectProperty<NoteDTO> boundNote;
+    protected ObjectProperty<NoteFx> boundNote;
     // reference to noteModel --- allow this many records to be displayed
     private IntegerProperty pageSize = null;
     // reference to noteModel --- skip the first N records
     private IntegerProperty offset = null;
-    private final ObjectProperty<TableView<NoteDTO>> noteTable = new SimpleObjectProperty<>();
+    private final ObjectProperty<TableView<NoteFx>> noteTable = new SimpleObjectProperty<>();
     private final BooleanProperty refreshTable = new SimpleBooleanProperty(false);
     private final StringProperty recordNumbers = new SimpleStringProperty();
     private final StringProperty searchParameters = new SimpleStringProperty();
@@ -99,47 +99,47 @@ public class NoteListModel {
         return offset;
     }
 
-    public NoteDTO getBoundNote() {
+    public NoteFx getBoundNote() {
         return boundNote.get();
     }
 
-    public ObjectProperty<NoteDTO> boundNoteProperty() {
+    public ObjectProperty<NoteFx> boundNoteProperty() {
         return boundNote;
     }
 
-    public void setBoundNote(NoteDTO boundNote) {
+    public void setBoundNote(NoteFx boundNote) {
         this.boundNote.set(boundNote);
     }
 
-    public ObservableList<NoteDTO> getNotes() {
+    public ObservableList<NoteFx> getNotes() {
         return notes;
     }
 
-    public void setNotes(ObservableList<NoteDTO> notes) {
+    public void setNotes(ObservableList<NoteFx> notes) {
         this.notes = notes;
     }
 
-    public NoteDTO getSelectedNote() {
+    public NoteFx getSelectedNote() {
         return selectedNote.get();
     }
 
-    public ObjectProperty<NoteDTO> selectedNoteProperty() {
+    public ObjectProperty<NoteFx> selectedNoteProperty() {
         return selectedNote;
     }
 
-    public void setSelectedNote(NoteDTO selectedNote) {
+    public void setSelectedNote(NoteFx selectedNote) {
         this.selectedNote.set(selectedNote);
     }
 
-    public TableView<NoteDTO> getNoteTable() {
+    public TableView<NoteFx> getNoteTable() {
         return noteTable.get();
     }
 
-    public ObjectProperty<TableView<NoteDTO>> noteTableProperty() {
+    public ObjectProperty<TableView<NoteFx>> noteTableProperty() {
         return noteTable;
     }
 
-    public void setNoteTable(TableView<NoteDTO> noteTable) {
+    public void setNoteTable(TableView<NoteFx> noteTable) {
         this.noteTable.set(noteTable);
     }
 

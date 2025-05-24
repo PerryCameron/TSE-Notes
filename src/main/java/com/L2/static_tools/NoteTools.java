@@ -1,6 +1,6 @@
 package com.L2.static_tools;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ public class NoteTools {
 
     private static final Logger logger = LoggerFactory.getLogger(NoteTools.class);
 
-    public static boolean notesAreTheSameAndSync(NoteDTO noteDTO1, NoteDTO noteDTO2) {
+    public static boolean notesAreTheSameAndSync(NoteFx noteDTO1, NoteFx noteDTO2) {
         boolean areSame = true;
 
         if (noteDTO1 == null || noteDTO2 == null) {

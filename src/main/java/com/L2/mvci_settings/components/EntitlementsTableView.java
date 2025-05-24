@@ -1,6 +1,6 @@
 package com.L2.mvci_settings.components;
 
-import com.L2.dto.EntitlementDTO;
+import com.L2.dto.EntitlementFx;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import com.L2.widgetFx.TableColumnFx;
@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.util.Builder;
 
 
-public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>> {
+public class EntitlementsTableView implements Builder<TableView<EntitlementFx>> {
 
     private final SettingsModel settingsModel;
 //    private final Consumer<SettingsMessage> action;
@@ -20,14 +20,14 @@ public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>>
     }
 
     @Override
-    public TableView<EntitlementDTO> build() {
-        TableView<EntitlementDTO> tableView = TableViewFx.of(EntitlementDTO.class);
+    public TableView<EntitlementFx> build() {
+        TableView<EntitlementFx> tableView = TableViewFx.of(EntitlementFx.class);
         settingsModel.entitlementsTableViewProperty().set(tableView);
         tableView.setItems(settingsModel.getEntitlements()); // Set the ObservableList here
         tableView.getColumns().add(col1());
         tableView.setPlaceholder(new Label(""));
         // auto selector
-        TableView.TableViewSelectionModel<EntitlementDTO> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<EntitlementFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) settingsModel.currentEntitlementProperty().set(newSelection);
             settingsModel.entitlementTextFieldProperty().get().setText(newSelection == null ? "" : newSelection.getName());
@@ -37,8 +37,8 @@ public class EntitlementsTableView implements Builder<TableView<EntitlementDTO>>
         return tableView;
     }
 
-    private TableColumn<EntitlementDTO, String> col1() {
-        TableColumn<EntitlementDTO, String> col = TableColumnFx.stringTableColumn(EntitlementDTO::nameProperty,"Entitlements");
+    private TableColumn<EntitlementFx, String> col1() {
+        TableColumn<EntitlementFx, String> col = TableColumnFx.stringTableColumn(EntitlementFx::nameProperty,"Entitlements");
         col.setStyle("-fx-alignment: center");
         return col;
     }

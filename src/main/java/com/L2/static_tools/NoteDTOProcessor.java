@@ -1,6 +1,6 @@
 package com.L2.static_tools;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import com.L2.dto.ResultDTO;
 
 import java.time.LocalDateTime;
@@ -14,12 +14,12 @@ public class NoteDTOProcessor {
         return issue.contains("FSR Request") && issue.contains("Team Name:");
     }
 
-    public static NoteDTO processEmail(String email, int id) {
+    public static NoteFx processEmail(String email, int id) {
         // Split the input string into lines
         String[] lines = email.split("\n");
 
         // Initialize NoteDTO
-        NoteDTO noteDTO = new NoteDTO(id,true);
+        NoteFx noteDTO = new NoteFx(id,true);
         noteDTO.setIssue(email);
         // this is important to save the same note
         noteDTO.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));

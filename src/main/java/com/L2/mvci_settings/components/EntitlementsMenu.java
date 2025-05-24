@@ -1,7 +1,7 @@
 package com.L2.mvci_settings.components;
 
 import atlantafx.base.layout.InputGroup;
-import com.L2.dto.EntitlementDTO;
+import com.L2.dto.EntitlementFx;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
@@ -39,8 +39,8 @@ public class EntitlementsMenu implements Builder<Region> {
         // start with first if they already exist, otherwise start with new one
         if (settingsModel.getEntitlements().isEmpty()) {
             logger.info("No entitlements exist, creating a new one");
-            settingsModel.currentEntitlementProperty().set(new EntitlementDTO());
-        } else settingsModel.currentEntitlementProperty().set(new EntitlementDTO(settingsModel.getEntitlements().getFirst()));
+            settingsModel.currentEntitlementProperty().set(new EntitlementFx());
+        } else settingsModel.currentEntitlementProperty().set(new EntitlementFx(settingsModel.getEntitlements().getFirst()));
     }
 
     @Override

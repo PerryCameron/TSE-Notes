@@ -1,6 +1,6 @@
 package com.L2.repository.rowmappers;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -9,14 +9,14 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class NotesRowMapper implements RowMapper<NoteDTO> {
+public class NotesRowMapper implements RowMapper<NoteFx> {
 
     // Formatter to parse the timestamp from the ResultSet (stored as TEXT)
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm[:ss]");
 
     @Override
-    public NoteDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new NoteDTO(
+    public NoteFx mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new NoteFx(
                 rs.getInt("id"),
                 LocalDateTime.parse(rs.getString("timestamp"), formatter), // this is row 21
                 rs.getString("workOrder"),

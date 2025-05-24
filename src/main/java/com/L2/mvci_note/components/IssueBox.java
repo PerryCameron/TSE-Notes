@@ -1,7 +1,7 @@
 package com.L2.mvci_note.components;
 
 import com.L2.controls.SpellCheckArea;
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import com.L2.enums.AreaType;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
@@ -62,7 +62,7 @@ public class IssueBox implements Component<Region> {
                 if (!noteModel.boundNoteProperty().get().isEmail()) {
                     // Process the text as an email if it matches email format
                     if (NoteDTOProcessor.isEmail(codeArea.getText())) {
-                        NoteDTO noteDTO = NoteDTOProcessor.processEmail(
+                        NoteFx noteDTO = NoteDTOProcessor.processEmail(
                                 codeArea.getText(),
                                 noteModel.boundNoteProperty().get().getId()
                         );

@@ -1,7 +1,7 @@
 package com.L2.mvci_note.components;
 
 import atlantafx.base.controls.ToggleSwitch;
-import com.L2.dto.EntitlementDTO;
+import com.L2.dto.EntitlementFx;
 import com.L2.interfaces.Component;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
@@ -27,7 +27,7 @@ public class BasicInformation implements Component<Region> {
     private final NoteView noteView;
     private final VBox root;
     private final TextField[] textFields = new TextField[7];
-    private final ComboBox<EntitlementDTO> servicePlanComboBox = new ComboBox<>();
+    private final ComboBox<EntitlementFx> servicePlanComboBox = new ComboBox<>();
     private final ComboBox<String> schedulingTermsComboBox = new ComboBox<>();
     private final ComboBox<String> serviceLevelComboBox = new ComboBox<>();
     private final ToggleSwitch toggleSwitch = new ToggleSwitch();
@@ -91,7 +91,7 @@ public class BasicInformation implements Component<Region> {
         servicePlanComboBox.getItems().addAll(noteModel.getEntitlements());
         // Optional: Set a default value if needed
         if (!servicePlanComboBox.getItems().isEmpty()) {
-            for(EntitlementDTO entitlementDTO: servicePlanComboBox.getItems()) {
+            for(EntitlementFx entitlementDTO: servicePlanComboBox.getItems()) {
                 if(entitlementDTO.getName().equals(noteModel.boundNoteProperty().get().getActiveServiceContract())) {
                     servicePlanComboBox.getSelectionModel().select(entitlementDTO);
                 }
@@ -191,7 +191,7 @@ public class BasicInformation implements Component<Region> {
 
     @Override
     public void refreshFields() {
-        for(EntitlementDTO entitlementDTO: servicePlanComboBox.getItems()) {
+        for(EntitlementFx entitlementDTO: servicePlanComboBox.getItems()) {
             if(entitlementDTO.getName().equals(noteModel.boundNoteProperty().get().getActiveServiceContract())) {
                 servicePlanComboBox.getSelectionModel().select(entitlementDTO);
             }

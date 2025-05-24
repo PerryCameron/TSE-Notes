@@ -3,7 +3,7 @@ package com.L2.dto;
 import javafx.beans.property.*;
 
 
-public class PartDTO {
+public class PartFx {
 
     private final IntegerProperty id =  new SimpleIntegerProperty();
     private final IntegerProperty partOrderId =  new SimpleIntegerProperty();
@@ -14,7 +14,7 @@ public class PartDTO {
     private final BooleanProperty partEditable =  new SimpleBooleanProperty();
     private final StringProperty lineType =  new SimpleStringProperty();
 
-    public PartDTO(Integer id, Integer partOrderId, String partNumber, String partDescription, String partQuantity, String serialReplaced, boolean partEditable, String lineType) {
+    public PartFx(Integer id, Integer partOrderId, String partNumber, String partDescription, String partQuantity, String serialReplaced, boolean partEditable, String lineType) {
         this.id.set(id);
         this.partOrderId.set(partOrderId);
         this.partNumber.set(partNumber);
@@ -25,7 +25,7 @@ public class PartDTO {
         this.lineType.set(lineType);
     }
 
-    public PartDTO(int partOrderId) {
+    public PartFx(int partOrderId) {
         this.id.set(0);
         this.partOrderId.set(partOrderId);
         this.partNumber.set("");
@@ -36,7 +36,7 @@ public class PartDTO {
         this.lineType.set("Advanced Exchange");
     }
 
-    public PartDTO(int partOrderId, PartDTO partDTO) {
+    public PartFx(int partOrderId, PartFx partDTO) {
         this.id.set(0);
         this.partOrderId.set(partOrderId);
         this.partNumber.set(partDTO.getPartNumber());

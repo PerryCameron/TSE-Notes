@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class NoteDTO {
+public class NoteFx {
     private final IntegerProperty id = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDateTime> timestamp = new SimpleObjectProperty<>(); // this is the field not updating
     private final StringProperty workOrder = new SimpleStringProperty();
@@ -48,12 +48,12 @@ public class NoteDTO {
     private final StringProperty additionalCorrectiveActionText = new SimpleStringProperty();
     private final StringProperty relatedCaseNumber = new SimpleStringProperty();
     private final StringProperty tAndM = new SimpleStringProperty();
-    private final ListProperty<PartOrderDTO> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<PartOrderFx> partOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-    public NoteDTO() {
+    public NoteFx() {
     }
 
-    public NoteDTO(int id, boolean isEmail) {
+    public NoteFx(int id, boolean isEmail) {
         // Initialize properties with passed values
         this.id.set(id);
         this.timestamp.set(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
@@ -92,15 +92,15 @@ public class NoteDTO {
         this.tAndM.set("");
     }
 
-    public NoteDTO(Integer id, LocalDateTime timestamp, String workOrder, String caseNumber, String serialNumber,
-                   String modelNumber, String callInPerson, String callInPhoneNumber, String callInEmail,
-                   Boolean underWarranty, String activeServiceContract, String serviceLevel, String schedulingTerms,
-                   String upsStatus, Boolean loadSupported, String title, String issue, String contactName,
-                   String contactPhoneNumber, String contactEmail, String street, String installedAt,
-                   String city, String state, String zip, String country,
-                   String createdWorkOrder, String tex, Integer partsOrder,
-                   Boolean completed, Boolean isEmail, String additionalCorrectiveActionText,
-                   String relatedCaseNumber, String tAndM) {
+    public NoteFx(Integer id, LocalDateTime timestamp, String workOrder, String caseNumber, String serialNumber,
+                  String modelNumber, String callInPerson, String callInPhoneNumber, String callInEmail,
+                  Boolean underWarranty, String activeServiceContract, String serviceLevel, String schedulingTerms,
+                  String upsStatus, Boolean loadSupported, String title, String issue, String contactName,
+                  String contactPhoneNumber, String contactEmail, String street, String installedAt,
+                  String city, String state, String zip, String country,
+                  String createdWorkOrder, String tex, Integer partsOrder,
+                  Boolean completed, Boolean isEmail, String additionalCorrectiveActionText,
+                  String relatedCaseNumber, String tAndM) {
         this.id.set(id);
         this.timestamp.set(timestamp);
         this.workOrder.set(workOrder);
@@ -137,7 +137,7 @@ public class NoteDTO {
         this.tAndM.set(tAndM);
     }
 
-    public void copyFrom(NoteDTO noteDTO) {
+    public void copyFrom(NoteFx noteDTO) {
         timestamp.set(noteDTO.getTimestamp());
         workOrder.set(noteDTO.getWorkOrder());
         caseNumber.set(noteDTO.getCaseNumber());
@@ -654,26 +654,26 @@ public class NoteDTO {
         this.partsOrder.set(partsOrder);
     }
 
-    public ObservableList<PartOrderDTO> getPartOrders() {
+    public ObservableList<PartOrderFx> getPartOrders() {
         return partOrders.get();
     }
 
-    public ListProperty<PartOrderDTO> partOrdersProperty() {
+    public ListProperty<PartOrderFx> partOrdersProperty() {
         return partOrders;
     }
 
-    public void setPartOrders(ObservableList<PartOrderDTO> partOrders) {
+    public void setPartOrders(ObservableList<PartOrderFx> partOrders) {
         this.partOrders.set(partOrders);
     }
 
-    private transient ListProperty<PartOrderDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private transient ListProperty<PartOrderFx> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-    public List<PartOrderDTO> getPartsList() {
+    public List<PartOrderFx> getPartsList() {
         return parts.get();
     }
 
 
-    public void setPartsList(List<PartOrderDTO> partsList) {
+    public void setPartsList(List<PartOrderFx> partsList) {
         this.parts.set(FXCollections.observableArrayList(partsList));
     }
 

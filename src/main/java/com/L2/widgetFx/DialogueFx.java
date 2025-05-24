@@ -1,7 +1,7 @@
 package com.L2.widgetFx;
 
 import com.L2.BaseApplication;
-import com.L2.dto.PartDTO;
+import com.L2.dto.PartFx;
 import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci_note.NoteMessage;
@@ -113,7 +113,7 @@ public class DialogueFx {
         return alert;
     }
 
-    public static Alert searchAlert(NoteView noteView, TableView<PartDTO> partsTableView) {
+    public static Alert searchAlert(NoteView noteView, TableView<PartFx> partsTableView) {
         double width = 800;
         final BooleanProperty searchedBefore = new SimpleBooleanProperty(false);
         NoteModel noteModel = noteView.getNoteModel();
@@ -211,7 +211,7 @@ public class DialogueFx {
                     SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
                     if (sparesDTO != null) {
                         noteView.getAction().accept(NoteMessage.INSERT_PART);
-                        PartDTO partDTO = noteModel.selectedPartProperty().get();
+                        PartFx partDTO = noteModel.selectedPartProperty().get();
                         partDTO.setPartNumber(sparesDTO.getSpareItem());
                         partDTO.setPartDescription(sparesDTO.getSpareDescription());
                         // no need to put in part into FX UI here as it is being done elsewhere

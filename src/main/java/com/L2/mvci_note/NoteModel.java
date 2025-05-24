@@ -18,18 +18,18 @@ import org.reactfx.Subscription;
 import java.util.Collection;
 
 public class NoteModel {
-    private ObservableList<NoteDTO> notes = FXCollections.observableArrayList();
+    private ObservableList<NoteFx> notes = FXCollections.observableArrayList();
     // this is a NoteDTO that never moves, it just copies and pastes its values to the real notes
-    private final ObjectProperty<NoteDTO> boundNote = new SimpleObjectProperty<>();
+    private final ObjectProperty<NoteFx> boundNote = new SimpleObjectProperty<>();
     // you can only select one part at a time, so simpler to keep here.
-    private final ObjectProperty<PartDTO> selectedPart = new SimpleObjectProperty<>();
+    private final ObjectProperty<PartFx> selectedPart = new SimpleObjectProperty<>();
     private final ObservableList<SparesDTO> searchedPart = FXCollections.observableArrayList();
     private final ObjectProperty<RangesDTO> selectedRange = new SimpleObjectProperty<>();
     private final ObservableList<RangesDTO> ranges = FXCollections.observableArrayList();
     // you can only have one part order focused at time, so simpler to keep here as well
-    private final ObjectProperty<PartOrderDTO> selectedPartOrder = new SimpleObjectProperty<>();
-    private ObservableList<EntitlementDTO> entitlements = FXCollections.observableArrayList();
-    private final ObjectProperty<EntitlementDTO> currentEntitlement = new SimpleObjectProperty<>();
+    private final ObjectProperty<PartOrderFx> selectedPartOrder = new SimpleObjectProperty<>();
+    private ObservableList<EntitlementFx> entitlements = FXCollections.observableArrayList();
+    private final ObjectProperty<EntitlementFx> currentEntitlement = new SimpleObjectProperty<>();
     private final ObjectProperty<VBox> PlanDetailsBox = new SimpleObjectProperty<>();
     // allow this many records to be displayed
     private final IntegerProperty pageSize = new SimpleIntegerProperty(50);
@@ -70,10 +70,10 @@ public class NoteModel {
     public IntegerProperty offsetProperty() {
         return offset;
     }
-    public ObjectProperty<PartOrderDTO> selectedPartOrderProperty() {
+    public ObjectProperty<PartOrderFx> selectedPartOrderProperty() {
         return selectedPartOrder;
     }
-    public ObjectProperty<PartDTO> selectedPartProperty() {
+    public ObjectProperty<PartFx> selectedPartProperty() {
         return selectedPart;
     }
     public ObservableList<SparesDTO> getSearchedParts() { return searchedPart;}
@@ -83,29 +83,29 @@ public class NoteModel {
     public BooleanProperty clearCalledProperty() {
         return clearCalled;
     }
-    public ObservableList<NoteDTO> getNotes() {
+    public ObservableList<NoteFx> getNotes() {
         return notes;
     }
-    public void setNotes(ObservableList<NoteDTO> notes) { this.notes = notes; }
+    public void setNotes(ObservableList<NoteFx> notes) { this.notes = notes; }
     public ObjectProperty<UserDTO> userProperty() {
         return user;
     }
     public StringProperty statusLabelProperty() {
         return statusLabel;
     }
-    public ObservableList<EntitlementDTO> getEntitlements() {
+    public ObservableList<EntitlementFx> getEntitlements() {
         return entitlements;
     }
-    public void setEntitlements(ObservableList<EntitlementDTO> entitlements) {
+    public void setEntitlements(ObservableList<EntitlementFx> entitlements) {
         this.entitlements = entitlements;
     }
-    public ObjectProperty<NoteDTO> boundNoteProperty() {
+    public ObjectProperty<NoteFx> boundNoteProperty() {
         return boundNote;
     }
     public BooleanProperty refreshEntitlementsProperty() {
         return refreshEntitlements;
     }
-    public ObjectProperty<EntitlementDTO> currentEntitlementProperty() {
+    public ObjectProperty<EntitlementFx> currentEntitlementProperty() {
         return currentEntitlement;
     }
     public ObjectProperty<Hunspell> hunspellProperty() {

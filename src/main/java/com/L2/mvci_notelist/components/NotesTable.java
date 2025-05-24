@@ -1,6 +1,6 @@
 package com.L2.mvci_notelist.components;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import com.L2.interfaces.Component;
 import com.L2.mvci_notelist.NoteListMessage;
 import com.L2.mvci_notelist.NoteListView;
@@ -18,15 +18,15 @@ import java.util.Arrays;
 public class NotesTable implements Component<Region> {
 
     private final NoteListView noteListView;
-    private TableView<NoteDTO> tableView;
+    private TableView<NoteFx> tableView;
 
     public NotesTable(NoteListView noteListView) {
         this.noteListView = noteListView;
     }
 
     @Override
-    public TableView<NoteDTO> build() {
-        this.tableView = TableViewFx.of(NoteDTO.class);
+    public TableView<NoteFx> build() {
+        this.tableView = TableViewFx.of(NoteFx.class);
         noteListView.getNoteListModel().setNoteTable(tableView);
         tableView.setItems(noteListView.getNoteListModel().getNotes()); // Set the ObservableList here
         tableView.setEditable(true);
@@ -34,7 +34,7 @@ public class NotesTable implements Component<Region> {
         tableView.setPlaceholder(new Label(""));
 
         // do not delete this you will be sorry
-        TableView.TableViewSelectionModel<NoteDTO> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<NoteFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 noteListView.getNoteListModel().setSelectedNote(newSelection);
@@ -112,8 +112,8 @@ public class NotesTable implements Component<Region> {
 //        Platform.runLater(() -> actionInProgress = false);
 //    }
 
-    private TableColumn<NoteDTO, String> col0() {
-        TableColumn<NoteDTO, String> col = TableColumnFx.stringTableColumn(NoteDTO::formattedTimestampProperty, "Date/Time");
+    private TableColumn<NoteFx, String> col0() {
+        TableColumn<NoteFx, String> col = TableColumnFx.stringTableColumn(NoteFx::formattedTimestampProperty, "Date/Time");
         col.setStyle("-fx-alignment: center-left");
         col.setPrefWidth(125);
         col.setMinWidth(125);
@@ -121,8 +121,8 @@ public class NotesTable implements Component<Region> {
         return col;
     }
 
-    private TableColumn<NoteDTO, String> col1() {
-        TableColumn<NoteDTO, String> col = TableColumnFx.stringTableColumn(NoteDTO::callInPersonProperty, "Caller");
+    private TableColumn<NoteFx, String> col1() {
+        TableColumn<NoteFx, String> col = TableColumnFx.stringTableColumn(NoteFx::callInPersonProperty, "Caller");
         col.setStyle("-fx-alignment: center-left");
         col.setPrefWidth(150);
         col.setMinWidth(150);
@@ -130,8 +130,8 @@ public class NotesTable implements Component<Region> {
         return col;
     }
 
-    private TableColumn<NoteDTO, String> col3() {
-        TableColumn<NoteDTO, String> col = TableColumnFx.stringTableColumn(NoteDTO::modelNumberProperty, "Model");
+    private TableColumn<NoteFx, String> col3() {
+        TableColumn<NoteFx, String> col = TableColumnFx.stringTableColumn(NoteFx::modelNumberProperty, "Model");
         col.setStyle("-fx-alignment: center-left");
         col.setPrefWidth(150);
         col.setMinWidth(150);
@@ -139,8 +139,8 @@ public class NotesTable implements Component<Region> {
         return col;
     }
 
-    private TableColumn<NoteDTO, String> col2() {
-        TableColumn<NoteDTO, String> col = TableColumnFx.editableStringTableColumn(NoteDTO::titleProperty, "Problem");
+    private TableColumn<NoteFx, String> col2() {
+        TableColumn<NoteFx, String> col = TableColumnFx.editableStringTableColumn(NoteFx::titleProperty, "Problem");
         col.setStyle("-fx-alignment: center-left");
         col.setSortable(false);
         col.setOnEditCommit(event -> {
@@ -152,15 +152,15 @@ public class NotesTable implements Component<Region> {
         return col;
     }
 
-    private TableColumn<NoteDTO, Boolean> mail() {
-        TableColumn<NoteDTO, Boolean> emailCol = new TableColumn<>("");
+    private TableColumn<NoteFx, Boolean> mail() {
+        TableColumn<NoteFx, Boolean> emailCol = new TableColumn<>("");
         emailCol.setPrefWidth(30);
         emailCol.setMaxWidth(30);
         emailCol.setMinWidth(30);
         // Define the cell factory
         emailCol.setCellFactory(new Callback<>() {
             @Override
-            public TableCell<NoteDTO, Boolean> call(TableColumn<NoteDTO, Boolean> param) {
+            public TableCell<NoteFx, Boolean> call(TableColumn<NoteFx, Boolean> param) {
                 return new TableCell<>() {
                     private final ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/mail-16.png")));
 

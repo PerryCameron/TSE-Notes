@@ -5,38 +5,36 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.io.*;
 
-
-public class EntitlementDTO  {
+public class EntitlementFx {
 
     private IntegerProperty id = new SimpleIntegerProperty();
     private StringProperty name = new SimpleStringProperty();
     private StringProperty includes = new SimpleStringProperty();
     private StringProperty notIncludes = new SimpleStringProperty();
 
-    public EntitlementDTO(EntitlementDTO original) {
+    public EntitlementFx(EntitlementFx original) {
         this.id.set(original.getId());
         this.name.set(original.getName());
         this.includes.set(original.getIncludes());
         this.notIncludes.set(original.getNotIncludes());
     }
 
-    public EntitlementDTO(Integer id) {
+    public EntitlementFx(Integer id) {
         this.id.set(id);
         this.name.set("New Entitlement");
         this.includes.set("");
         this.notIncludes.set("");
     }
 
-    public EntitlementDTO() {
+    public EntitlementFx() {
         this.id.set(0);
         this.name.set("");
         this.includes.set("");
         this.notIncludes.set("");
     }
 
-    public EntitlementDTO(Integer id, String name, String includes, String notIncludes) {
+    public EntitlementFx(Integer id, String name, String includes, String notIncludes) {
         this.id.set(id);
         this.name.set(name);
         this.includes.set(includes);
@@ -113,7 +111,7 @@ public class EntitlementDTO  {
         notIncludes.set("");
     }
 
-    public void copy(EntitlementDTO original) {
+    public void copy(EntitlementFx original) {
         id.set(original.getId());
         name.set(original.getName());
         includes.set(original.getIncludes());

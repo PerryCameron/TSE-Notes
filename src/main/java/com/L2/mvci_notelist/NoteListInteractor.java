@@ -1,6 +1,6 @@
 package com.L2.mvci_notelist;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.static_tools.ApplicationPaths;
 import javafx.application.Platform;
@@ -25,11 +25,11 @@ public class NoteListInteractor implements ApplicationPaths {
         this.noteRepo = new NoteRepositoryImpl();
     }
 
-    public void setNotes(ObservableList<NoteDTO> notes) {
+    public void setNotes(ObservableList<NoteFx> notes) {
         noteListModel.setNotes(notes);
     }
 
-    public void setBoundNoteProperty(ObjectProperty<NoteDTO> boundNote) {
+    public void setBoundNoteProperty(ObjectProperty<NoteFx> boundNote) {
         noteListModel.boundNote = boundNote;
     }
 
@@ -47,12 +47,12 @@ public class NoteListInteractor implements ApplicationPaths {
         }
     }
 
-    private void selectTableRow(NoteDTO note) {
+    private void selectTableRow(NoteFx note) {
         noteListModel.getNoteTable().getSelectionModel().select(note);
     }
 
-    private NoteDTO findNoteFromListMatchingBoundNote() {
-        for (NoteDTO noteDTO : noteListModel.getNotes()) {
+    private NoteFx findNoteFromListMatchingBoundNote() {
+        for (NoteFx noteDTO : noteListModel.getNotes()) {
             if (noteListModel.getBoundNote().getId() == noteDTO.getId()) {
                 return noteDTO;
             }
@@ -67,7 +67,7 @@ public class NoteListInteractor implements ApplicationPaths {
     public void displayPreviousNote() {
         int index = getIndexById(noteListModel.getBoundNote().getId());
         if (index < noteListModel.getNotes().size() - 1) {
-            NoteDTO noteDTO = noteListModel.getNotes().get(index + 1);
+            NoteFx noteDTO = noteListModel.getNotes().get(index + 1);
             selectTableRow(noteDTO);
         }
     }
@@ -75,13 +75,13 @@ public class NoteListInteractor implements ApplicationPaths {
     public void displayNextNote() {
         int index = getIndexById(noteListModel.getBoundNote().getId());
         if (index > 0) {
-            NoteDTO noteDTO = noteListModel.getNotes().get(index - 1);
+            NoteFx noteDTO = noteListModel.getNotes().get(index - 1);
             selectTableRow(noteDTO);
         }
     }
 
     public int getIndexById(int id) {
-        for (NoteDTO note : noteListModel.getNotes()) {
+        for (NoteFx note : noteListModel.getNotes()) {
             if (note.getId() == id) {
                 return noteListModel.getNotes().indexOf(note);
             }
@@ -91,7 +91,7 @@ public class NoteListInteractor implements ApplicationPaths {
 
     public void sortTableView() {
         logger.debug("Sorting table view");
-        noteListModel.getNotes().sort(Comparator.comparing(NoteDTO::getTimestamp).reversed());
+        noteListModel.getNotes().sort(Comparator.comparing(NoteFx::getTimestamp).reversed());
     }
 
     public void refreshTableView() {
@@ -107,7 +107,7 @@ public class NoteListInteractor implements ApplicationPaths {
             // If we haven't reached the olded note
             if (!noteRepo.isOldest(noteListModel.getNotes().getLast())) {
                 logger.debug("We have not reached the oldest note");
-                List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
+                List<NoteFx> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
                 logger.debug("We just queried {} notes that are offset by {}", noteListModel.getPageSize(), noteListModel.getOffset());
                 if (!notes.isEmpty()) {
                     logger.debug("We are adding the " + notes.size() + " notes to the bottom of the list");
@@ -141,7 +141,7 @@ public class NoteListInteractor implements ApplicationPaths {
         try {
             if (!noteRepo.isNewest(noteListModel.getNotes().getFirst())) {
                 logger.debug("We have not reached the newest note");
-                List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), newOffset);
+                List<NoteFx> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), newOffset);
                 logger.debug("We just queried {} notes that are offset by {}", noteListModel.getPageSize(), noteListModel.getOffset());
                 // Don't bother to add an empty list
                 if (!notes.isEmpty()) {
@@ -179,11 +179,11 @@ public class NoteListInteractor implements ApplicationPaths {
         noteListModel.getNotes().clear();
         if (noteListModel.getSearchParameters().isEmpty()) {
             noteListModel.setActiveSearch(false);
-            List<NoteDTO> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
+            List<NoteFx> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
             noteListModel.getNotes().addAll(notes);
         } else {
             noteListModel.setActiveSearch(true);
-            List<NoteDTO> notes = noteRepo.searchNotesWithScoring(noteListModel.getSearchParameters());
+            List<NoteFx> notes = noteRepo.searchNotesWithScoring(noteListModel.getSearchParameters());
             noteListModel.getNotes().addAll(notes);
         }
     }

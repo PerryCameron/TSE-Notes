@@ -4,22 +4,22 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class PartOrderDTO {
+public class PartOrderFx {
 
     private final IntegerProperty id = new SimpleIntegerProperty();
     private final IntegerProperty noteId = new SimpleIntegerProperty();
     private final StringProperty orderNumber = new SimpleStringProperty();
     private final BooleanProperty showType = new SimpleBooleanProperty();
-    private final ListProperty<PartDTO> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<PartFx> parts = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-    public PartOrderDTO(Integer id, Integer noteId, String orderNumber, Boolean showType) {
+    public PartOrderFx(Integer id, Integer noteId, String orderNumber, Boolean showType) {
         this.id.set(id);
         this.noteId.set(noteId);
         this.orderNumber.set(orderNumber);
         this.showType.set(showType);
     }
 
-    public PartOrderDTO(int noteId) {
+    public PartOrderFx(int noteId) {
         this.id.set(0);
         this.noteId.set(noteId);
         this.orderNumber.set("");
@@ -38,15 +38,15 @@ public class PartOrderDTO {
         this.orderNumber.set(orderNumber);
     }
 
-    public ObservableList<PartDTO> getParts() {
+    public ObservableList<PartFx> getParts() {
         return parts.get();
     }
 
-    public ListProperty<PartDTO> partsProperty() {
+    public ListProperty<PartFx> partsProperty() {
         return parts;
     }
 
-    public void setParts(ObservableList<PartDTO> parts) {
+    public void setParts(ObservableList<PartFx> parts) {
         this.parts.set(parts);
     }
 

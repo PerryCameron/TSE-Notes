@@ -1,6 +1,6 @@
 package com.L2.repository.implementations;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import com.L2.repository.interfaces.NoteRepository;
 import com.L2.repository.rowmappers.NotesRowMapper;
 import com.L2.static_tools.DatabaseConnector;
@@ -13,8 +13,6 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     @Override
-    public List<NoteDTO> getAllNotes() {
+    public List<NoteFx> getAllNotes() {
         // SQL query to retrieve all notes from the Notes table
         String sql = "SELECT * FROM Notes";
 
@@ -38,13 +36,13 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     @Override
-    public List<NoteDTO> getPaginatedNotes(int pageSize, int offset) {
+    public List<NoteFx> getPaginatedNotes(int pageSize, int offset) {
         String sql = "SELECT * FROM Notes ORDER BY timestamp DESC LIMIT ? OFFSET ?";
         return jdbcTemplate.query(sql, new NotesRowMapper(), pageSize, offset);
     }
 
     @Override
-    public boolean noteExists(NoteDTO note) {
+    public boolean noteExists(NoteFx note) {
         String sql = "SELECT COUNT(*) FROM Notes WHERE id = ?";
         // Extract the id from the NoteDTO object
         int id = note.getId();
@@ -56,7 +54,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     // for creating note that already has a filled out object
     @Override
-    public int insertNote(NoteDTO noteDTO) {
+    public int insertNote(NoteFx noteDTO) {
         String sql = "INSERT INTO Notes (timestamp, workOrder, caseNumber, serialNumber, modelNumber, callInPerson, " +
                 "callInPhoneNumber, callInEmail, underWarranty, activeServiceContract, serviceLevel, schedulingTerms, upsStatus, " +
                 "loadSupported, title, issue, contactName, contactPhoneNumber, contactEmail, street, installedAt, city, state, zip, country, " +
@@ -107,8 +105,8 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     // For creating a blank new note
     @Override
-    public NoteDTO insertBlankNote() {
-        NoteDTO noteDTO = new NoteDTO(0, false);
+    public NoteFx insertBlankNote() {
+        NoteFx noteDTO = new NoteFx(0, false);
         String sql = "INSERT INTO Notes (timestamp, workOrder, caseNumber, serialNumber, modelNumber, callInPerson, " +
                 "callInPhoneNumber, callInEmail, underWarranty, activeServiceContract, serviceLevel, schedulingTerms, upsStatus, " +
                 "loadSupported, title, issue, contactName, contactPhoneNumber, contactEmail, street, installedAt, city, state, zip, country, " +
@@ -161,7 +159,7 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     @Override
-    public void updateNote(NoteDTO note) {
+    public void updateNote(NoteFx note) {
         logger.info("Saving note {} with timestamp: {}", note.getId(), note.getTimestamp().toString());
         String sql = "UPDATE Notes SET " +
                 "timestamp = ?, workOrder = ?, caseNumber = ?, serialNumber = ?, modelNumber = ?, " +
@@ -211,14 +209,14 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     @Override
-    public int deleteNote(NoteDTO noteDTO) {
+    public int deleteNote(NoteFx noteDTO) {
         logger.info("Deleting Note: {}", noteDTO.getId());
         String sql = "DELETE FROM Notes WHERE id = ?";
         return jdbcTemplate.update(sql, noteDTO.getId());
     }
 
     @Override
-    public List<NoteDTO> searchNotesWithScoring(String inputKeywords) {
+    public List<NoteFx> searchNotesWithScoring(String inputKeywords) {
         String[] keywords = inputKeywords.split("\\s+");
         StringBuilder scoreBuilder = new StringBuilder();
         StringBuilder whereBuilder = new StringBuilder();
@@ -296,7 +294,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         }, new NotesRowMapper());
     }
 
-    public boolean isNewest(NoteDTO note) {
+    public boolean isNewest(NoteFx note) {
         String sql = """
                     SELECT COUNT(*) > 0 
                     FROM Notes 
@@ -305,7 +303,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         return jdbcTemplate.queryForObject(sql, Boolean.class, note.getId());
     }
 
-    public boolean isOldest(NoteDTO note) {
+    public boolean isOldest(NoteFx note) {
         String sql = """
                     SELECT COUNT(*) > 0 
                     FROM Notes 

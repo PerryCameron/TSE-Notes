@@ -1,6 +1,6 @@
 package com.L2.mvci_notelist;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import com.L2.mvci_notelist.components.NotesTable;
 import com.L2.widgetFx.HBoxFx;
 import com.L2.widgetFx.TextFieldFx;
@@ -108,7 +108,7 @@ public class NoteListView implements Builder<Region> {
     private Node numberOfRecords() {
         Label label = new Label(String.valueOf(noteListModel.getNotes().size()));
         label.getStyleClass().add("prominent-answer");
-        noteListModel.getNotes().addListener((ListChangeListener<NoteDTO>) change -> label.setText(String.valueOf(noteListModel.getNotes().size())));
+        noteListModel.getNotes().addListener((ListChangeListener<NoteFx>) change -> label.setText(String.valueOf(noteListModel.getNotes().size())));
         return label;
     }
 

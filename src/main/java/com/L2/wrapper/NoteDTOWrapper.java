@@ -1,14 +1,14 @@
 package com.L2.wrapper;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import javafx.beans.value.ChangeListener;
 
 // note sure I want to do this
 public class NoteDTOWrapper {
-    private final NoteDTO note;
+    private final NoteFx note;
     private final ChangeListener<Object> listener;
 
-    public NoteDTOWrapper(NoteDTO note, ChangeListener<Object> listener) {
+    public NoteDTOWrapper(NoteFx note, ChangeListener<Object> listener) {
         this.note = note;
         this.listener = listener;
         monitorAllFields();
@@ -31,7 +31,7 @@ public class NoteDTOWrapper {
     }
 
     // You can add more functionality as needed, or use the note object directly
-    public NoteDTO getNote() {
+    public NoteFx getNote() {
         return note;
     }
 }

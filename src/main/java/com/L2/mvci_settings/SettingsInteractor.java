@@ -1,9 +1,8 @@
 package com.L2.mvci_settings;
 
-import com.L2.dto.EntitlementDTO;
+import com.L2.dto.EntitlementFx;
 import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesDTO;
-import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.repository.implementations.EntitlementsRepositoryImpl;
 import com.L2.repository.implementations.SettingsRepositoryImpl;
@@ -49,11 +48,11 @@ public class SettingsInteractor {
     }
 
     public void createNewEntitlement() {
-        EntitlementDTO entitlementDTO = new EntitlementDTO();
+        EntitlementFx entitlementDTO = new EntitlementFx();
         entitlementDTO.setId(entitlementRepo.insertEntitlement(entitlementDTO));
         settingsModel.getEntitlements().add(entitlementDTO);
         // Automatically select the new entitlement in the TableView
-        TableView<EntitlementDTO> tableView = settingsModel.entitlementsTableViewProperty().get();
+        TableView<EntitlementFx> tableView = settingsModel.entitlementsTableViewProperty().get();
         tableView.getSelectionModel().clearSelection(); // this is settingsInteractor.java:56
         tableView.getSelectionModel().select(entitlementDTO);
         tableView.scrollTo(entitlementDTO); // Optionally scroll to the new item
@@ -68,7 +67,7 @@ public class SettingsInteractor {
 
     public void printEntitlements() {
         System.out.println("Printing Entitlements.....");
-        for (EntitlementDTO entitlementDTO : settingsModel.getEntitlements()) {
+        for (EntitlementFx entitlementDTO : settingsModel.getEntitlements()) {
             System.out.println(entitlementDTO.toFancyString());
         }
     }

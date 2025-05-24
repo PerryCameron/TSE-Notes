@@ -1,15 +1,15 @@
 package com.L2.repository.rowmappers;
 
-import com.L2.dto.EntitlementDTO;
+import com.L2.dto.EntitlementFx;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class EntitlementsRowMapper implements RowMapper<EntitlementDTO> {
+public class EntitlementsRowMapper implements RowMapper<EntitlementFx> {
     @Override
-    public EntitlementDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new EntitlementDTO(
+    public EntitlementFx mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new EntitlementFx(
                 rs.getInt("id"),
                 rs.getString("name"),
                 rs.getString("includes"),

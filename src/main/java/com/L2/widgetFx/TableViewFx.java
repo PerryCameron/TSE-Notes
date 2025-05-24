@@ -1,6 +1,6 @@
 package com.L2.widgetFx;
 
-import com.L2.dto.PartDTO;
+import com.L2.dto.PartFx;
 import javafx.application.Platform;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -30,7 +30,7 @@ public class TableViewFx {
     }
 
 
-    public static void focusOnLastItem(TableView<PartDTO> tableView) {
+    public static void focusOnLastItem(TableView<PartFx> tableView) {
         tableView.layout();
         Platform.runLater(() -> {
             try {
@@ -41,7 +41,7 @@ public class TableViewFx {
                     tableView.getSelectionModel().clearAndSelect(lastRowIndex);
 
                     // Focus the last row and the last column
-                    TableColumn<PartDTO, ?> lastColumn = tableView.getColumns().get(tableView.getColumns().size() - 1);
+                    TableColumn<PartFx, ?> lastColumn = tableView.getColumns().get(tableView.getColumns().size() - 1);
                     tableView.getFocusModel().focus(lastRowIndex, lastColumn);
 
                     // Scroll to the last row to ensure it's visible

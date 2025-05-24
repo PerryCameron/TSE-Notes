@@ -1,6 +1,6 @@
 package com.L2.mvci_main;
 
-import com.L2.dto.NoteDTO;
+import com.L2.dto.NoteFx;
 import com.L2.dto.UserDTO;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_note.NoteController;
@@ -78,11 +78,11 @@ public class MainController extends Controller<MainMessage> {
         return noteController.getUser();
     }
 
-    public ObservableList<NoteDTO> getNotes() {
+    public ObservableList<NoteFx> getNotes() {
         return noteController.getNotes();
     }
 
-    public ObjectProperty<NoteDTO> getBoundNoteProperty() {
+    public ObjectProperty<NoteFx> getBoundNoteProperty() {
         return noteController.getBoundNoteProperty();
     }
 
