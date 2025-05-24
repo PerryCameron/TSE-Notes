@@ -34,7 +34,7 @@ public class RangesFx {
     // this method converts the commas back to returns.
     private String updateAdditionalRange(RangesDTO rangesDTO) {
         String trimmed = rangesDTO.getRangeAdditional().trim();
-        String converted = trimmed.replace(",","\n");
+        String converted = trimmed.replaceAll(",+", "\n");
         return converted;
     }
 

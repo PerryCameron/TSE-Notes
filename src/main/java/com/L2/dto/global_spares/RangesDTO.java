@@ -33,9 +33,9 @@ public class RangesDTO {
 
     // helper method to make DTO correct
     private String updateAdditionalRange(RangesFx rangesFx) {
-            String trimmed = rangesFx.getRangeAdditional().trim();
-            String converted = trimmed.replace("\n",",");
-            return converted;
+        String trimmed = rangesFx.getRangeAdditional().trim();
+        String converted = trimmed.replaceAll("\n+", ","); // Normalize multiple newlines to one
+        return converted;
     }
 
     public int getId() {
