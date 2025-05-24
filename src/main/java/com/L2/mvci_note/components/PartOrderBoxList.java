@@ -66,6 +66,8 @@ public class PartOrderBoxList implements Component<Region> {
         Button searchButton = ButtonFx.utilityButton(() -> {
             Optional<Alert> alert = Optional.ofNullable(DialogueFx.searchAlert(noteView, tableView));
             alert.ifPresent(Dialog::showAndWait);
+            // in case we have changed the ranges in settings, we need to make sure they are fresh
+            noteView.getAction().accept(NoteMessage.GET_RANGES);
         }, "Search", "/images/search-16.png");
         Button addPartButton = ButtonFx.utilityButton(() -> {
             noteView.getAction().accept(NoteMessage.INSERT_PART);
