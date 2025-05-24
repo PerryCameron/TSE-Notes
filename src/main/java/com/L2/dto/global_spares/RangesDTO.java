@@ -22,12 +22,20 @@ public class RangesDTO {
     public RangesDTO() {
     }
 
+    // for updating object in list with bound object
     public void copyFx(RangesFx rangesFx) {
         this.id = rangesFx.getId();
         this.range = rangesFx.getRange();
-        this.rangeAdditional = rangesFx.getRangeAdditional();
+        this.rangeAdditional = updateAdditionalRange(rangesFx); // convert returns to commas
         this.rangeType = rangesFx.getRangeType();
         this.lastUpdate = rangesFx.getLastUpdate();
+    }
+
+    // helper method to make DTO correct
+    private String updateAdditionalRange(RangesFx rangesFx) {
+            String trimmed = rangesFx.getRangeAdditional().trim();
+            String converted = trimmed.replace("\n",",");
+            return converted;
     }
 
     public int getId() {

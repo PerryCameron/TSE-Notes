@@ -25,11 +25,19 @@ public class RangesFx {
     public void copyFrom(RangesDTO rangesDTO) {
         this.id.set(rangesDTO.getId());
         this.range.set(rangesDTO.getRange());
-        this.rangeAdditional.set(rangesDTO.getRangeAdditional());
+        this.rangeAdditional.set(updateAdditionalRange(rangesDTO)); // change commas to returns
         this.rangeType.set(rangesDTO.getRangeType());
         this.lastUpdate.set(rangesDTO.getLastUpdate());
         this.lastUpdatedBy.set(rangesDTO.getLastUpdatedBy());
     }
+
+    // this method converts the commas back to returns.
+    private String updateAdditionalRange(RangesDTO rangesDTO) {
+        String trimmed = rangesDTO.getRangeAdditional().trim();
+        String converted = trimmed.replace(",","\n");
+        return converted;
+    }
+
 
     public RangesFx() {
         this.id = new SimpleIntegerProperty(0);

@@ -213,6 +213,7 @@ public class SettingsInteractor {
         saveRanges();
     }
 
+    // this is important
     public void updateRangeInList() {
         if(settingsModel.getRanges() != null) {
             // get range in list that matches the selected range
@@ -222,4 +223,9 @@ public class SettingsInteractor {
             }
         }
     }
+
+//        String original = range.getRangeAdditional().trim();
+//        String additional = original.replace("\n",",");
+//        range.setRangeAdditional(additional);
+
 }
