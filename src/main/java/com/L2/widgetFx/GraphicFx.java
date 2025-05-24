@@ -1,4 +1,4 @@
-package com.L2.static_tools;
+package com.L2.widgetFx;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;

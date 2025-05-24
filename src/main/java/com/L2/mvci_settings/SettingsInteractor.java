@@ -178,4 +178,17 @@ public class SettingsInteractor {
     public void setRanges(ObservableList<RangesDTO> ranges) {
         settingsModel.setRanges(ranges);
     }
+
+    public void deleteRange() {
+        System.out.print("Deleting Range: ");
+        System.out.println(settingsModel.boundRangeFxProperty().get());
+    }
+
+    public void saveRanges() {
+        System.out.println("Saving Ranges: to database");
+    }
+
+    public void addRange() {
+        System.out.println("Adding Range, I think this is really saving, lol");
+    }
 }

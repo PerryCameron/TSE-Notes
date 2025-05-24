@@ -58,6 +58,9 @@ public class SettingsController extends Controller<SettingsMessage> {
             case INSTALL_PART_DATABASE -> { settingsInteractor.installPartsDatabase(); }
             case GET_RANGES -> mainController.getNoteController().action(NoteMessage.GET_RANGES);
             case GET_RANGES_REFERENCE -> getRangesReference();
+            case DELETE_RANGE -> settingsInteractor.deleteRange();
+            case SAVE_RANGES -> settingsInteractor.saveRanges();
+            case ADD_RANGE -> settingsInteractor.addRange();
         };
     }
 

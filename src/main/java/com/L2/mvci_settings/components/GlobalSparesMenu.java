@@ -4,7 +4,7 @@ import com.L2.dto.global_spares.RangesDTO;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
-import com.L2.static_tools.GraphicFx;
+import com.L2.widgetFx.GraphicFx;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HeaderFx;
 import javafx.beans.binding.Bindings;
@@ -52,7 +52,7 @@ public class GlobalSparesMenu implements Builder<Region> {
 
     private void setPartsAvailabilityListener(VBox vbox) {
         settingsModel.partsDBAvailableProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue) {
+            if (newValue) {
                 vbox.getChildren().clear();
                 vbox.getChildren().addAll(dbStatus(),
                         HeaderFx.withTitle("Range Editor"),
@@ -107,11 +107,16 @@ public class GlobalSparesMenu implements Builder<Region> {
 
     private Node createButtonRow() {
         HBox hBox = new HBox(5);
-        Button saveButton = ButtonFx.utilityButton( () -> {
+        Button saveButton = ButtonFx.utilityButton(() -> {
             action.accept(SettingsMessage.SAVE_RANGES);
         }, "Save", "/images/save-16.png");
-        Button deleteButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.DELETE_RANGE), "Delete", "/images/delete-16.png");
-        Button newButton = ButtonFx.utilityButton( () -> settingsModel.getRanges().add(new RangesDTO()), "New Range", "/images/create-16.png");
+        Button deleteButton = ButtonFx.utilityButton(() -> {
+            action.accept(SettingsMessage.DELETE_RANGE);
+        }, "Delete", "/images/delete-16.png");
+        Button newButton = ButtonFx.utilityButton(() -> {
+            settingsModel.getRanges().add(new RangesDTO());
+            action.accept(SettingsMessage.ADD_RANGE);
+        }, "New Range", "/images/create-16.png");
         hBox.getChildren().addAll(saveButton, deleteButton, newButton);
         return hBox;
     }
@@ -209,12 +214,12 @@ public class GlobalSparesMenu implements Builder<Region> {
             boolean success = false;
             if (dragboard.hasFiles()) {
                 // Get the first file from the dragboard
-                Path droppedFile = dragboard.getFiles().get(0).toPath();
+                Path droppedFile = dragboard.getFiles().getFirst().toPath();
                 String fileName = droppedFile.getFileName().toString();
                 settingsModel.droppedFileProperty().setValue(droppedFile);
                 // Check if the dropped file is named global-spares.db
                 if (fileName.equals("global-spares.db")) {
-                        action.accept(SettingsMessage.INSTALL_PART_DATABASE);
+                    action.accept(SettingsMessage.INSTALL_PART_DATABASE);
                 } else {
                     dropText.setText("Invalid file: Please drop global-spares.db");
                 }
