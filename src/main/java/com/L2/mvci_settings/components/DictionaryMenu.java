@@ -5,6 +5,7 @@ import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import javafx.beans.property.ObjectProperty;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -30,6 +31,8 @@ public class DictionaryMenu implements Builder<Region> {
     @Override
     public Region build() {
         VBox vbox = new VBox();
+        vbox.getStyleClass().add("decorative-hbox");
+        vbox.setPadding(new Insets(10, 10, 10, 10));
         ObjectProperty<ToggleSwitch> toggleSwitch = settingsModel.isSpellCheckProperty();
         settingsModel.isSpellCheckProperty().get().selectedProperty().addListener((obs, oldVal, newVal) -> {
             logger.debug("ToggleSwitch changed from {} to {}", oldVal, newVal);

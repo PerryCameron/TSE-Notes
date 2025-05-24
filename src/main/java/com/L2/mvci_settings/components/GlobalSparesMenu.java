@@ -6,7 +6,7 @@ import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import com.L2.static_tools.GraphicFx;
 import com.L2.widgetFx.ButtonFx;
-import com.L2.widgetFx.VBoxFx;
+import com.L2.widgetFx.HeaderFx;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -54,7 +54,10 @@ public class GlobalSparesMenu implements Builder<Region> {
         settingsModel.partsDBAvailableProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue) {
                 vbox.getChildren().clear();
-                vbox.getChildren().addAll(dbStatus(), header(), description(), rangeEditor());
+                vbox.getChildren().addAll(dbStatus(),
+                        HeaderFx.withTitle("Range Editor"),
+                        description(),
+                        rangeEditor());
                 action.accept(SettingsMessage.GET_RANGES);
             } else {
                 vbox.getChildren().clear();
@@ -72,14 +75,14 @@ public class GlobalSparesMenu implements Builder<Region> {
         return label;
     }
 
-    private Node header() {
-        VBox vBox = VBoxFx.of(true,5.0, new Insets(3, 5, 3, 5));
-        vBox.getStyleClass().add("decorative-header-box");
-        vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().add(new Label("Range Editor"));
-        VBox.setMargin(vBox, new Insets(20, 0, 10, 0));
-        return vBox;
-    }
+//    private Node header() {
+//        VBox vBox = VBoxFx.of(true,5.0, new Insets(3, 5, 3, 5));
+//        vBox.getStyleClass().add("decorative-header-box");
+//        vBox.setAlignment(Pos.CENTER);
+//        vBox.getChildren().add(new Label("Range Editor"));
+//        VBox.setMargin(vBox, new Insets(20, 0, 10, 0));
+//        return vBox;
+//    }
 
     private Node rangeEditor() {
         // get a reference to the list located in noteModel

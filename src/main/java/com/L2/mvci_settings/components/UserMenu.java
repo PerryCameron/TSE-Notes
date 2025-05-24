@@ -4,6 +4,8 @@ import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import com.L2.widgetFx.ButtonFx;
+import com.L2.widgetFx.HeaderFx;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
@@ -28,6 +30,8 @@ public class UserMenu implements Builder<Region> {
             action.accept(SettingsMessage.MAKE_REFERENCE_TO_USER);
         }
         VBox vBox = new VBox(5);
+        vBox.setPadding(new Insets(10,10,10,10));
+        vBox.getStyleClass().add("decorative-hbox");
         TextField tf1 = new TextField();
         tf1.setText(settingsModel.userProperty().get().getFirstName());
         tf1.setPrefSize(200,20);
@@ -79,7 +83,7 @@ public class UserMenu implements Builder<Region> {
         });
 
         Button saveButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.SAVE_USER), "Save", "/images/save-16.png");
-        vBox.getChildren().addAll(tf1, tf2, ef3, tf3, tf4, saveButton);
+        vBox.getChildren().addAll(HeaderFx.withTitle("User Information"), tf1, tf2, ef3, tf3, tf4, saveButton);
         return vBox;
     }
 }
