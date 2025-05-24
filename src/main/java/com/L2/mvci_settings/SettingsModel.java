@@ -29,17 +29,20 @@ public class SettingsModel {
     private BooleanProperty partsDBAvailable = new SimpleBooleanProperty(false);
     private ObjectProperty<Path> droppedFile = new SimpleObjectProperty<>();
     private ObservableList<RangesDTO> ranges = null;
+    // text fields are bound to this object
     public ObjectProperty<RangesFx> boundRangeFxProperty = new SimpleObjectProperty<>(new RangesFx());
     private ObjectProperty<RangesDTO> selectedRange = new SimpleObjectProperty<>();
     private ObjectProperty<TextArea> modelsTextArea = new SimpleObjectProperty<>();
     private ObjectProperty<TextField> typeTextField = new SimpleObjectProperty<>();
 
-//    private StringProperty rangeType = new SimpleStringProperty();
-//    private StringProperty models = new SimpleStringProperty();
-
-
-
-
+    public void updateRangeInList() {
+        if(ranges != null) {
+            RangesDTO rangesDTO = ranges.stream().filter(range -> range.getId() == selectedRange.get().getId()).findFirst().get();
+            if(rangesDTO != null) {
+                rangesDTO.copyFx(boundRangeFxProperty.get());
+            }
+        }
+    }
     public ObjectProperty<UserDTO> userProperty() {
         return user;
     }

@@ -201,10 +201,24 @@ public class SettingsInteractor {
     }
 
     public void saveRanges() {
-        System.out.println("Saving Ranges: to database");
+        try {
+            globalSparesRepo.saveRanges(settingsModel.getRanges());
+        } catch (Exception e) {
+            logger.error("Failed to save ranges: {}", e.getMessage());
+        }
+
     }
 
     public void addRange() {
-        System.out.println("Adding Range, I think this is really saving, lol");
+        saveRanges();
+    }
+
+    public void updateRangeInList() {
+        if(settingsModel.getRanges() != null) {
+            RangesDTO rangesDTO = settingsModel.getRanges().stream().filter(range -> range.getId() == settingsModel.selectedRangeProperty().get().getId()).findFirst().get();
+            if(rangesDTO != null) {
+                rangesDTO.copyFx(settingsModel.boundRangeFxProperty.get());
+            }
+        }
     }
 }

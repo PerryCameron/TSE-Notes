@@ -75,15 +75,6 @@ public class GlobalSparesMenu implements Builder<Region> {
         return label;
     }
 
-//    private Node header() {
-//        VBox vBox = VBoxFx.of(true,5.0, new Insets(3, 5, 3, 5));
-//        vBox.getStyleClass().add("decorative-header-box");
-//        vBox.setAlignment(Pos.CENTER);
-//        vBox.getChildren().add(new Label("Range Editor"));
-//        VBox.setMargin(vBox, new Insets(20, 0, 10, 0));
-//        return vBox;
-//    }
-
     private Node rangeEditor() {
         // get a reference to the list located in noteModel
         action.accept(SettingsMessage.GET_RANGES_REFERENCE);
@@ -130,6 +121,11 @@ public class GlobalSparesMenu implements Builder<Region> {
         textArea.setWrapText(false);
         textArea.setMaxWidth(Double.MAX_VALUE);
         textArea.setMaxHeight(Double.MAX_VALUE);
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null) {
+                action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
+            }
+        });
         textArea.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().rangeAdditionalProperty());
         vbox.getChildren().add(textArea);
         return vbox;

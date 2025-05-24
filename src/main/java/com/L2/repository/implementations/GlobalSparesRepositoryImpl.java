@@ -7,18 +7,17 @@ import com.L2.repository.rowmappers.RangesRowMapper;
 import com.L2.repository.rowmappers.SparesRowMapper;
 import com.L2.static_tools.DatabaseConnector;
 import com.L2.static_tools.NoteTools;
+import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
@@ -526,6 +525,50 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         } catch (Exception e) {
             logger.error("Database error while deleting ranges: {}", e.getMessage());
             return 0;
+        }
+    }
+
+    @Transactional
+    public void saveRanges(ObservableList<RangesDTO> ranges) {
+        // SQL for checking if a record exists
+        String existsSql = "SELECT COUNT(*) FROM ranges WHERE id = ?";
+        // SQL for updating an existing range
+        String updateSql = "UPDATE ranges SET range = ?, range_additional = ?, range_type = ?, last_updated_by = ?, last_update = CURRENT_TIMESTAMP WHERE id = ?";
+        // SQL for inserting a new range
+        String insertSql = "INSERT INTO ranges (range, range_additional, range_type, last_updated_by) VALUES (?, ?, ?, ?)";
+        for (RangesDTO range : ranges) {
+            // Skip null entries
+            if (range == null) {
+                continue;
+            }
+            // Check if the range exists (id > 0 indicates a potential existing record)
+            boolean exists = range.getId() > 0 && jdbcTemplate.queryForObject(existsSql, Integer.class, range.getId()) > 0;
+            if (exists) {
+
+                // Update existing record
+             int success =  jdbcTemplate.update(updateSql,
+                        range.getRange(),
+                        range.getRangeAdditional(),
+                        range.getRangeType(),
+                        range.getLastUpdatedBy(),
+                        range.getId());
+                logger.info("Updating range: {} setting: {} success: {}", range.getRange(), range.getRangeAdditional(), success);
+
+            } else {
+                logger.info("Inserting range: {}", range.getRange());
+                // Insert new record
+                KeyHolder keyHolder = new GeneratedKeyHolder();
+                jdbcTemplate.update(connection -> {
+                    PreparedStatement ps = connection.prepareStatement(insertSql, new String[]{"id"});
+                    ps.setString(1, range.getRange());
+                    ps.setString(2, range.getRangeAdditional());
+                    ps.setString(3, range.getRangeType());
+                    ps.setString(4, range.getLastUpdatedBy());
+                    return ps;
+                }, keyHolder);
+                // Update the DTO with the generated ID
+                range.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+            }
         }
     }
 
