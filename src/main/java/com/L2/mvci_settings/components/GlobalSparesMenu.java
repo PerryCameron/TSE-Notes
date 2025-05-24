@@ -6,6 +6,7 @@ import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import com.L2.static_tools.GraphicFx;
 import com.L2.widgetFx.ButtonFx;
+import com.L2.widgetFx.VBoxFx;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -41,12 +42,10 @@ public class GlobalSparesMenu implements Builder<Region> {
     @Override
     public Region build() {
         VBox vbox = new VBox();
-        VBox.setVgrow(vbox, Priority.ALWAYS);
         vbox.setPadding(new Insets(10, 10, 10, 10));
 //        vbox.setStyle("-fx-background-color: lightblue;");
         vbox.getStyleClass().add("decorative-hbox");
         setPartsAvailabilityListener(vbox);
-
         action.accept(SettingsMessage.VERIFY_PARTS_DATABASE);
         return vbox;
     }
@@ -55,13 +54,31 @@ public class GlobalSparesMenu implements Builder<Region> {
         settingsModel.partsDBAvailableProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue) {
                 vbox.getChildren().clear();
-                vbox.getChildren().addAll(dbStatus(), rangeEditor());
+                vbox.getChildren().addAll(dbStatus(), header(), description(), rangeEditor());
                 action.accept(SettingsMessage.GET_RANGES);
             } else {
                 vbox.getChildren().clear();
                 vbox.getChildren().addAll(dbStatus(), createDropRegion());
             }
         });
+    }
+
+    private Node description() {
+        Label label = new Label("Your ranges allow you to quickly refine the way you search. The keywords are what will be searched for when the range is selected. You can add and delete them as you choose. Only product family and range information will be searched with this.");
+        // Optional: Style the Label (e.g., font, color)
+        label.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
+        label.setWrapText(true);
+        VBox.setMargin(label, new Insets(0, 0, 10, 0));
+        return label;
+    }
+
+    private Node header() {
+        VBox vBox = VBoxFx.of(true,5.0, new Insets(3, 5, 3, 5));
+        vBox.getStyleClass().add("decorative-header-box");
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getChildren().add(new Label("Range Editor"));
+        VBox.setMargin(vBox, new Insets(20, 0, 10, 0));
+        return vBox;
     }
 
     private Node rangeEditor() {
@@ -144,10 +161,8 @@ public class GlobalSparesMenu implements Builder<Region> {
         hbox.setAlignment(Pos.CENTER); // Center the circle in the HBox
         hbox.setPadding(new Insets(5)); // Optional: Add padding for spacing
         Label label = new Label();
-
         Circle circle = new Circle();
         circle.setRadius(10.0);
-
 
         // Bind circle fill to database status
         circle.fillProperty().bind(Bindings.createObjectBinding(() -> {

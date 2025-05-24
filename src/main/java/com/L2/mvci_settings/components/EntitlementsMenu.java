@@ -6,6 +6,7 @@ import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import com.L2.widgetFx.ButtonFx;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -44,6 +45,8 @@ public class EntitlementsMenu implements Builder<Region> {
     @Override
     public Region build() {
         InputGroup inputGroup = new InputGroup(); // extends hbox
+        inputGroup.getStyleClass().add("decorative-hbox");
+        inputGroup.setPadding(new Insets(10, 10, 10, 10));
         inputGroup.setSpacing(10);
         inputGroup.getChildren().addAll(new EntitlementsTableView(view).build(), CreateEditFields());
         return inputGroup;
