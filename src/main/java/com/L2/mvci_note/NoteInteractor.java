@@ -1087,9 +1087,9 @@ public class NoteInteractor {
                 if(noteModel.selectedRangeProperty().get().getRangeAdditional().equals("all")) {
                     System.out.print("Using range? false ->");
                     if (searchParams.length == 1) {
-                        System.out.println("There is only one parameter: " + searchParams[0]);
+                        // System.out.println("There is only one parameter: " + searchParams[0]);
                         if (StringChecker.hasNumbers(searchParams[0])) {
-                            System.out.println("likely a part number: " + searchParams[0]);
+                            // System.out.println("likely a part number: " + searchParams[0]);
                             return globalSparesRepo.searchSparesByPartNumber(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
                         } else {
                             return globalSparesRepo.searchSparesScoring(searchParams);
@@ -1098,7 +1098,7 @@ public class NoteInteractor {
                         return globalSparesRepo.searchSparesScoring(searchParams);
                     }
                 } else { // There is a range in the search
-                    System.out.println("Searching a range");
+                    // System.out.println("Searching a range");
                     return globalSparesRepo.searchSparesWithRange(range, searchParams);
                 }
             }
@@ -1114,7 +1114,6 @@ public class NoteInteractor {
             System.err.println("Search failed: " + ex.getMessage());
             // Optionally notify user via UI
         });
-
         Executors.newCachedThreadPool().execute(searchTask);
     }
 

@@ -215,6 +215,7 @@ public class SettingsInteractor {
 
     public void updateRangeInList() {
         if(settingsModel.getRanges() != null) {
+            // get range in list that matches the selected range
             RangesDTO rangesDTO = settingsModel.getRanges().stream().filter(range -> range.getId() == settingsModel.selectedRangeProperty().get().getId()).findFirst().get();
             if(rangesDTO != null) {
                 rangesDTO.copyFx(settingsModel.boundRangeFxProperty.get());

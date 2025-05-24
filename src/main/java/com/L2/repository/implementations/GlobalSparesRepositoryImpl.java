@@ -540,6 +540,11 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             // Skip null entries
             if (range == null) {
                 continue;
+            } else {
+                // comes delimited by \n so we need to change that to commas
+                String original = range.getRangeAdditional().trim();
+                String additional = original.replace("\n",",");
+                range.setRangeAdditional(additional);
             }
             // Check if the range exists (id > 0 indicates a potential existing record)
             boolean exists = range.getId() > 0 && jdbcTemplate.queryForObject(existsSql, Integer.class, range.getId()) > 0;

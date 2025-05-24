@@ -22,8 +22,7 @@ public class RangesListView implements Builder<ListView<RangesDTO>> {
     @Override
     public ListView<RangesDTO> build() {
         ListView<RangesDTO> listView = new ListView<>(settingsModel.getRanges());
-
-        listView.setCellFactory(param -> new ListCell<RangesDTO>() {
+        listView.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(RangesDTO item, boolean empty) {
                 super.updateItem(item, empty);
@@ -34,16 +33,13 @@ public class RangesListView implements Builder<ListView<RangesDTO>> {
                 }
             }
         });
-
-        // Handle selection
-        // I have two objects, RangeDTO which is a POJO and RangeFx with is the same as Range but a JavaFX property object
-        // both objects have copy functions ie..POJO.copyFrom(FX) and FX.copyFrom(POJO) for easy conversion
-        // this is a list of RangeDTO POJOS
+        // list of all our rangers
         ObservableList<RangesDTO> selectedRanges = FXCollections.observableArrayList();
         // when I make a new selection I want to save the changes from oldSelection to proper object in list and copy the new seletion to the bound FX object
         // the bound object is ObjectProperty<RangeFx>, it is bidirectionally bound to a textField and a textArea
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                newSelection.setRangeAdditional(newSelection.getRangeAdditional().replace(",","\n"));
                 // Add to selectedRanges if not already present
                 if (!selectedRanges.contains(newSelection)) {
                     selectedRanges.add(newSelection);
