@@ -200,8 +200,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         try {
             String sql = "SELECT id, range, range_additional, range_type, last_update, last_updated_by FROM ranges";
             return jdbcTemplate.query(sql, new RangesRowMapper());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return List.of();
@@ -225,9 +224,9 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
      *
      * @param keywords An array of keywords to search for in the spares database. Must not be null or empty.
      * @return A list of {@link SparesDTO} objects representing matching spares records, sorted by match score
-     *         in descending order. Returns an empty list if no matches are found.
+     * in descending order. Returns an empty list if no matches are found.
      * @throws org.springframework.jdbc.BadSqlGrammarException If the generated SQL query is invalid.
-     * @throws // org.springframework.jdbc.JdbcSQLException If a database access error occurs.
+     * @throws //                                              org.springframework.jdbc.JdbcSQLException If a database access error occurs.
      */
     @Override
     public List<SparesDTO> searchSparesScoring(String[] keywords) {
@@ -239,32 +238,32 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
                 whereBuilder.append(" OR ");
             }
             scoreBuilder.append("""
-            (CASE WHEN spare_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN replacement_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN spare_description LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN comments LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN keywords LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END)
-        """);
+                        (CASE WHEN spare_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                        (CASE WHEN replacement_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                        (CASE WHEN standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                        (CASE WHEN spare_description LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                        (CASE WHEN comments LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END) +
+                        (CASE WHEN keywords LIKE '%' || ? || '%' COLLATE NOCASE THEN 1 ELSE 0 END)
+                    """);
             // Remove trailing '+' from scoreBuilder if it's the last keyword
             if (k < keywords.length - 1) {
                 scoreBuilder.append(" + ");
             }
             whereBuilder.append("""
-            spare_item LIKE '%' || ? || '%' COLLATE NOCASE
-            OR replacement_item LIKE '%' || ? || '%' COLLATE NOCASE
-            OR standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE
-            OR spare_description LIKE '%' || ? || '%' COLLATE NOCASE
-            OR comments LIKE '%' || ? || '%' COLLATE NOCASE
-            OR keywords LIKE '%' || ? || '%' COLLATE NOCASE
-        """);
+                        spare_item LIKE '%' || ? || '%' COLLATE NOCASE
+                        OR replacement_item LIKE '%' || ? || '%' COLLATE NOCASE
+                        OR standard_exchange_item LIKE '%' || ? || '%' COLLATE NOCASE
+                        OR spare_description LIKE '%' || ? || '%' COLLATE NOCASE
+                        OR comments LIKE '%' || ? || '%' COLLATE NOCASE
+                        OR keywords LIKE '%' || ? || '%' COLLATE NOCASE
+                    """);
         }
         String sql = String.format("""
-        SELECT *, (%s) AS match_score
-        FROM spares
-        WHERE %s
-        ORDER BY match_score DESC
-    """, scoreBuilder.toString().replaceAll("\\+\\s*$", ""), whereBuilder);
+                    SELECT *, (%s) AS match_score
+                    FROM spares
+                    WHERE %s
+                    ORDER BY match_score DESC
+                """, scoreBuilder.toString().replaceAll("\\+\\s*$", ""), whereBuilder);
         List<Object> params = new ArrayList<>();
         for (String keyword : keywords) {
             String normalizedKeyword = NoteTools.normalizeDate(keyword);
@@ -288,14 +287,14 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     /**
      * Searches the spares database for rows matching at least one range and one keyword.
      * - Ranges are matched against the 'pim' column using case-insensitive substring search
-     *   (e.g., pim LIKE '%Galaxy VX%'). The pim column contains JSON data with 'range' and 'product_families' fields.
+     * (e.g., pim LIKE '%Galaxy VX%'). The pim column contains JSON data with 'range' and 'product_families' fields.
      * - Keywords are matched against fields (spare_item, replacement_item, standard_exchange_item, spare_description, comments, keywords)
-     *   using case-insensitive substring search (e.g., spare_item LIKE '%0J-0360%').
+     * using case-insensitive substring search (e.g., spare_item LIKE '%0J-0360%').
      * - A match_score is calculated based on the number of keyword matches across the fields (1 point per match per field per keyword).
      * - Results are ordered by match_score in descending order, returning all matching rows without a limit.
      * - Debug logs include range match counts, combined range and keyword match counts, and sample matching rows with pim values.
      *
-     * @param ranges Array of range strings to match against the pim column (e.g., ["Galaxy VX", "GVX"]). Leading/trailing spaces are trimmed.
+     * @param ranges   Array of range strings to match against the pim column (e.g., ["Galaxy VX", "GVX"]). Leading/trailing spaces are trimmed.
      * @param keywords Array of keyword strings to match against the specified fields (e.g., ["0J-0360"]).
      * @return List of SparesDTO objects representing matching rows, sorted by match_score DESC.
      */
@@ -360,12 +359,12 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             try {
                 jdbcTemplate.query(debugRowsSql, (rs, rowNum) -> {
                     System.out.println("Debug row - pim: " + rs.getString("pim") +
-                                       ", spare_description: " + rs.getString("spare_description") +
-                                       ", spare_item: " + rs.getString("spare_item") +
-                                       ", replacement_item: " + rs.getString("replacement_item") +
-                                       ", standard_exchange_item: " + rs.getString("standard_exchange_item") +
-                                       ", comments: " + rs.getString("comments") +
-                                       ", keywords: " + rs.getString("keywords"));
+                            ", spare_description: " + rs.getString("spare_description") +
+                            ", spare_item: " + rs.getString("spare_item") +
+                            ", replacement_item: " + rs.getString("replacement_item") +
+                            ", standard_exchange_item: " + rs.getString("standard_exchange_item") +
+                            ", comments: " + rs.getString("comments") +
+                            ", keywords: " + rs.getString("keywords"));
                     return null;
                 });
             } catch (Exception e) {
@@ -426,21 +425,21 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
      * SQL injection.
      * </p>
      *
-     * @param searchTerm The search term to match against {@code spare_item} or {@code replacement_item}. Must not be null.
+     * @param searchTerm  The search term to match against {@code spare_item} or {@code replacement_item}. Must not be null.
      * @param partOrderId The ID of the part order, currently unused but reserved for future functionality.
      * @return A list of {@link SparesDTO} objects representing matching spares records, grouped by {@code spare_item}.
-     *         Returns an empty list if no matches are found or if a database error occurs.
+     * Returns an empty list if no matches are found or if a database error occurs.
      * @throws // org.springframework.jdbc.JdbcSQLException If a database access error occurs (logged and handled by returning an empty list).
      */
     @Override
     public List<SparesDTO> searchSparesByPartNumber(String searchTerm, int partOrderId) {
         try {
             String query = """
-                SELECT *
-                FROM spares
-                WHERE (spare_item LIKE ? OR replacement_item LIKE ?)
-                GROUP BY spare_item;
-                """;
+                    SELECT *
+                    FROM spares
+                    WHERE (spare_item LIKE ? OR replacement_item LIKE ?)
+                    GROUP BY spare_item;
+                    """;
 
             // Use % for partial matching
             String searchPattern = "%" + searchTerm + "%";
@@ -469,8 +468,8 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
      * @param ranges An array of range keywords to search for in the {@code pim} column. Must not be null or empty.
      *               The keyword "all" triggers a count of all tuples in the {@code spares} table.
      * @return An integer representing the total count of matching tuples. If "all" is present, returns the count of all
-     *         tuples in the {@code spares} table. Otherwise, returns the sum of distinct tuples matching each range keyword.
-     *         Returns 0 if no matches are found, the input is invalid, or a database error occurs.
+     * tuples in the {@code spares} table. Otherwise, returns the sum of distinct tuples matching each range keyword.
+     * Returns 0 if no matches are found, the input is invalid, or a database error occurs.
      * @throws // org.springframework.jdbc.JdbcSQLException If a database access error occurs (logged and handled by returning 0).
      */
     @Override
@@ -504,10 +503,10 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             }
 
             String query = String.format("""
-            SELECT COUNT(DISTINCT spare_item) AS range_count
-            FROM spares
-            WHERE %s
-        """, whereBuilder);
+                        SELECT COUNT(DISTINCT spare_item) AS range_count
+                        FROM spares
+                        WHERE %s
+                    """, whereBuilder);
 
             logger.info("Counting spares for ranges: {}", Arrays.toString(ranges));
             Integer result = jdbcTemplate.queryForObject(query, Integer.class, params.toArray());
@@ -518,11 +517,16 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             return 0; // Return 0 on error
         }
     }
-//    C:\Users\sesa91827\IdeaProjects\TSE-Notes\src\main\java\com\L2\repository\implementations\GlobalSparesRepositoryImpl.java:540: warning: [deprecation] <T>queryForObject(String,Object[],Class<T>) in JdbcTemplate has been deprecated
-//    Integer result = jdbcTemplate.queryForObject(query, params.toArray(), Integer.class);
-//                                         ^
-//    where T is a type-variable:
-//    T extends Object declared in method <T>queryForObject(String,Object[],Class<T>)
-//1 warning
+
+    @Override
+    public int deleteRange(RangesFx range) {
+        try {
+        String sql = "DELETE FROM ranges WHERE id = ?";
+        return jdbcTemplate.update(sql, range.getId());
+        } catch (Exception e) {
+            logger.error("Database error while deleting ranges: {}", e.getMessage());
+            return 0;
+        }
+    }
 
 }

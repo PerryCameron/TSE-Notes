@@ -31,4 +31,6 @@ public interface GlobalSparesRepository {
     List<SparesDTO> searchSparesWithRange(String[] keywords1, String[] keywords2);
 
     int countSparesByRanges(String[] ranges);
+
+    int deleteRange(RangesFx range);
 }

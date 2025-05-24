@@ -3,8 +3,10 @@ package com.L2.mvci_settings;
 import com.L2.dto.EntitlementFx;
 import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesDTO;
+import com.L2.dto.global_spares.RangesFx;
 import com.L2.mvci_note.NoteModel;
 import com.L2.repository.implementations.EntitlementsRepositoryImpl;
+import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.repository.implementations.SettingsRepositoryImpl;
 import com.L2.repository.implementations.UserRepositoryImpl;
 import com.L2.static_tools.ApplicationPaths;
@@ -23,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.*;
+import java.util.Optional;
 
 public class SettingsInteractor {
 
@@ -30,12 +33,14 @@ public class SettingsInteractor {
     private final UserRepositoryImpl userRepo;
     private final EntitlementsRepositoryImpl entitlementRepo;
     private final SettingsRepositoryImpl settingsRepo;
+    private final GlobalSparesRepositoryImpl globalSparesRepo;
 
     public SettingsInteractor(SettingsModel settingsModel) {
         this.settingsModel = settingsModel;
         this.userRepo = new UserRepositoryImpl();
         this.entitlementRepo = new EntitlementsRepositoryImpl();
         this.settingsRepo = new SettingsRepositoryImpl();
+        this.globalSparesRepo = new GlobalSparesRepositoryImpl();
     }
 
     private static final Logger logger = LoggerFactory.getLogger(SettingsInteractor.class);
@@ -180,8 +185,19 @@ public class SettingsInteractor {
     }
 
     public void deleteRange() {
-        System.out.print("Deleting Range: ");
-        System.out.println(settingsModel.boundRangeFxProperty().get());
+        RangesFx rangesFx = settingsModel.boundRangeFxProperty().get();
+        if(globalSparesRepo.deleteRange(rangesFx) == 1) {
+            Optional<RangesDTO> deletedRange = Optional.of(settingsModel.getRanges().stream()
+                    .filter(rangesDTO -> rangesDTO.getId() == rangesFx.getId()).findFirst().get());
+            if (deletedRange.isPresent()) {
+                settingsModel.getRanges().remove(deletedRange.get());
+            }
+            if (!settingsModel.getRanges().isEmpty()) {
+                rangesFx.copyFrom(settingsModel.getRanges().getFirst());
+            }
+        } else {
+            logger.error("Failed to delete range: {}", rangesFx);
+        }
     }
 
     public void saveRanges() {
