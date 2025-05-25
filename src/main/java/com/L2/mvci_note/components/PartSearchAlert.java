@@ -1,11 +1,13 @@
 package com.L2.mvci_note.components;
 
 import com.L2.dto.PartFx;
+import com.L2.dto.ProductFamilyFx;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
+import com.L2.static_tools.JsonDeserialize;
 import com.L2.widgetFx.DialogueFx;
 import com.L2.widgetFx.SparesTableViewFx;
 import com.L2.widgetFx.TableViewFx;
@@ -24,6 +26,7 @@ import javafx.util.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class PartSearchAlert implements Builder<Alert> {
@@ -33,7 +36,7 @@ public class PartSearchAlert implements Builder<Alert> {
     private final SimpleBooleanProperty searchedBefore;
     private final NoteView noteView;
     private Alert alert;
-    private double width = 800;
+    private final double width = 800;
     private Label rangeNumberLabel;
     private Label messageLabel;
     private TableView<SparesDTO> sparesTableView;
@@ -63,9 +66,7 @@ public class PartSearchAlert implements Builder<Alert> {
         alert.showingProperty().addListener((obs, wasShowing, isShowing) -> {
             if (isShowing) {
                 Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.setOnCloseRequest(event -> {
-                    cleanAlertClose(noteModel, alert);
-                });
+                stage.setOnCloseRequest(event -> cleanAlertClose(noteModel, alert));
             }
         });
         DialogueFx.getTitleIcon(dialogPane());
@@ -101,7 +102,6 @@ public class PartSearchAlert implements Builder<Alert> {
         // make tableview with new list of parts
         this.sparesTableView = SparesTableViewFx.createTableView(noteModel);
         // add new tableview to dialogue
-//        partContainer.getChildren().add(sparesTableView);
         return partContainer;
     }
 
@@ -136,7 +136,6 @@ public class PartSearchAlert implements Builder<Alert> {
         this.messageLabel = new Label("Part Search");
         this.searchField = new TextField();
         searchField.setPromptText("Search Part Number or description...");
-        Button moreButton = new Button("More");
         content.getChildren().addAll(messageLabel, searchField, buttonBox(), partContainer(), partContainerButtonBox());
         return content;
     }
@@ -178,12 +177,13 @@ public class PartSearchAlert implements Builder<Alert> {
             noteModel.searchWordProperty().set(searchField.getText().trim());
             if (!noteModel.searchWordProperty().get().isEmpty()) { // there are search terms
                 if(partContainer.getChildren().isEmpty())
-                partContainer.getChildren().add(sparesTableView);
+                    partContainer.getChildren().add(sparesTableView);
                 noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
                 // clear everything in part container in case we already made a search
                 if(!searchedBefore.get()) {
                     buttonBox.getChildren().remove(cancelHbox);
-                    partContainerButtonBox.getChildren().addAll(resultsLabelHbox(), partOrderButton(), cancelButton);
+                    partContainerButtonBox.getChildren().addAll(resultsLabelHbox(),
+                            partOrderButton(), moreButton(), cancelButton);
                 }
                 searchedBefore.set(true);
                 dialogPane.requestLayout();
@@ -191,6 +191,23 @@ public class PartSearchAlert implements Builder<Alert> {
             }
         });
         return searchButton;
+    }
+
+    public Control moreButton() {
+        Button moreButton = new Button("More");
+        moreButton.setOnAction(e -> {
+            SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
+            try {
+                List<ProductFamilyFx> productFamilies = JsonDeserialize.deserializeArray(sparesDTO.getPim());
+                productFamilies.forEach(pf -> {
+                    System.out.println("Range: " + pf.getRange());
+                    System.out.println("Product Families: " + pf.getProductFamilies());
+                });
+            } catch (IllegalArgumentException i) {
+                System.err.println("Error: " + i.getMessage());
+            }
+        });
+        return moreButton;
     }
 
     private static Node rangeBox(NoteModel noteModel, NoteView noteView) {
@@ -207,13 +224,11 @@ public class PartSearchAlert implements Builder<Alert> {
         rangeComboBox.getSelectionModel().select("All");
         // sets the range to default so that it will search without looking
         setSelectedRange("All", noteModel);
-
         rangeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             // Assuming noteModel.getRanges() returns a list of RangeDTO objects
             setSelectedRange(newValue, noteModel);
             noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
         });
-
         rangeComboBox.setItems(rangeItems);
         HBox.setHgrow(rangeComboBox, Priority.ALWAYS);
         hBox.getChildren().addAll(rangeLabel, rangeComboBox);
@@ -247,10 +262,8 @@ public class PartSearchAlert implements Builder<Alert> {
             alert.setResult(ButtonType.CANCEL);
             alert.close(); // Use close() instead of hide()
         } catch (Exception e) {
-            System.err.println("Error closing alert: " + e.getMessage());
-            e.printStackTrace(); // Print stack trace for debugging
+            logger.error("Error closing alert: {}", e.getMessage());
             alert.hide();
         }
     }
-
 }

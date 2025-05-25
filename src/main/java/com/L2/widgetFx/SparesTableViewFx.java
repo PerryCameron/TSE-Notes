@@ -56,4 +56,3 @@ public class SparesTableViewFx {
         return col;
     }
 }
-// for some reason col3 isn't displaying its data

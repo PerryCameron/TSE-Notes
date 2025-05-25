@@ -29,7 +29,6 @@ public class TableViewFx {
         return tableView;
     }
 
-
     public static void focusOnLastItem(TableView<PartFx> tableView) {
         tableView.layout();
         Platform.runLater(() -> {
@@ -60,6 +59,4 @@ public class TableViewFx {
             }
         });
     }
-
-
 }
