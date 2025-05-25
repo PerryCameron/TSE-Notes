@@ -6,6 +6,7 @@ import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesFx;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -28,6 +29,12 @@ public class SettingsModel {
     private BooleanProperty partsDBAvailable = new SimpleBooleanProperty(false);
     private ObjectProperty<Path> droppedFile = new SimpleObjectProperty<>();
     private ObservableList<RangesFx> ranges = null;
+    private ObjectProperty<Label> numberOfSparesLabel = new SimpleObjectProperty<>(new Label("Number of Spares in Range: 0"));
+
+
+
+
+
     // text fields are bound to this object
     public ObjectProperty<RangesFx> boundRangeFxProperty = new SimpleObjectProperty<>(new RangesFx());
     private ObjectProperty<RangesFx> selectedRange = new SimpleObjectProperty<>();
@@ -77,7 +84,6 @@ public class SettingsModel {
     public ObjectProperty<RangesFx> selectedRangeProperty() {
         return selectedRange;
     }
-
     public ObjectProperty<TextArea> modelsTextAreaProperty() {
         return modelsTextArea;
     }
@@ -87,4 +93,5 @@ public class SettingsModel {
     public ObjectProperty<RangesFx> boundRangeFxProperty() {
         return boundRangeFxProperty;
     }
+    public ObjectProperty<Label> numberOfSparesLabelProperty() { return numberOfSparesLabel; }
 }

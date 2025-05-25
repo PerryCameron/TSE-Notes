@@ -92,10 +92,19 @@ public class GlobalSparesMenu implements Builder<Region> {
         vbox.setPadding(new Insets(10, 10, 10, 10));
         vbox.setSpacing(10);
         vbox.getChildren().add(rangeBox());
+        vbox.getChildren().add(numberOfSpares());
         vbox.getChildren().add(rangeTypeBox());
         vbox.getChildren().add(modelsBox());
         vbox.getChildren().add(createButtonRow());
         return vbox;
+    }
+
+    private Node numberOfSpares() {
+        HBox hbox = new HBox();
+        hbox.getChildren().add(settingsModel.numberOfSparesLabelProperty().get());
+        hbox.setPadding(new Insets(10, 10, 10, 10));
+        hbox.getStyleClass().add("inner-decorative-hbox");
+        return hbox;
     }
 
     private Node createButtonRow() {
@@ -138,9 +147,13 @@ public class GlobalSparesMenu implements Builder<Region> {
         textArea.setMaxWidth(Double.MAX_VALUE);
         textArea.setMaxHeight(Double.MAX_VALUE);
         textArea.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
+            if(newValue != null) {
+                action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
+                action.accept(SettingsMessage.UPDATE_NUMBER_OF_SPARES);
+            }
         });
         textArea.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().productFamilyProperty());
+        vbox.getStyleClass().add("inner-decorative-hbox");
         vbox.getChildren().add(textArea);
         return vbox;
     }
@@ -155,6 +168,7 @@ public class GlobalSparesMenu implements Builder<Region> {
         });
         vBox.getChildren().add(new Label("Range"));
         vBox.getChildren().add(textField);
+        vBox.getStyleClass().add("inner-decorative-hbox");
         vBox.setAlignment(Pos.CENTER_LEFT);
         return vBox;
     }
@@ -169,6 +183,7 @@ public class GlobalSparesMenu implements Builder<Region> {
         });
         vBox.getChildren().add(new Label("Range type"));
         vBox.getChildren().add(textField);
+        vBox.getStyleClass().add("inner-decorative-hbox");
         vBox.setAlignment(Pos.CENTER_LEFT);
         return vBox;
     }

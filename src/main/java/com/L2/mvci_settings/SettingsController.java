@@ -62,6 +62,7 @@ public class SettingsController extends Controller<SettingsMessage> {
             case SAVE_RANGES -> settingsInteractor.saveRanges();
             case ADD_RANGE -> settingsInteractor.addRange();
             case UPDATE_RANGE_IN_LIST -> settingsInteractor.updateRangeInList();
+            case UPDATE_NUMBER_OF_SPARES -> settingsInteractor.updateNumberOfSpares();
         };
     }
 

@@ -218,4 +218,11 @@ public class SettingsInteractor {
         if(settingsModel.boundRangeFxProperty().get() == null) return;
         settingsModel.selectedRangeProperty().get().copyFromBoundRange(settingsModel.boundRangeFxProperty.get());
     }
+
+    // user has clicked on ListView and selectedRange has been populated
+    public void updateNumberOfSpares() {
+        String[]  keywords = settingsModel.selectedRangeProperty().get().getProductFamily().split(",");
+        int count = globalSparesRepo.countSparesByRanges(keywords);
+        settingsModel.numberOfSparesLabelProperty().get().setText("Number of Spares in Range: " + count);
+    }
 }

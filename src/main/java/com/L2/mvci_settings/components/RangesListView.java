@@ -1,20 +1,23 @@
 package com.L2.mvci_settings.components;
 
 import com.L2.dto.global_spares.RangesFx;
+import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import javafx.scene.control.*;
 import javafx.util.Builder;
 
+import java.util.function.Consumer;
+
 
 public class RangesListView implements Builder<ListView<RangesFx>> {
 
     private final SettingsModel settingsModel;
-//    private final Consumer<SettingsMessage> action;
+    private final Consumer<SettingsMessage> action;
 
     public RangesListView(SettingsView view) {
         this.settingsModel = view.getSettingsModel();
-//        this.action = view.getAction();
+        this.action = view.getAction();
     }
 
     @Override
@@ -34,6 +37,7 @@ public class RangesListView implements Builder<ListView<RangesFx>> {
                 settingsModel.boundRangeFxProperty().get().copyFromSelectedRange(newSelection);
                 // copy the reference from newSelection to selection object
                 settingsModel.selectedRangeProperty().set(newSelection);
+                action.accept(SettingsMessage.UPDATE_NUMBER_OF_SPARES);
             }
         });
 
