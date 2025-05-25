@@ -3,6 +3,7 @@ package com.L2.widgetFx;
 import com.L2.BaseApplication;
 import com.L2.dto.PartFx;
 import com.L2.dto.global_spares.RangesDTO;
+import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
@@ -250,7 +251,7 @@ public class DialogueFx {
     private static Node rangeBox(NoteModel noteModel, NoteView noteView) {
         ObservableList<String> rangeItems = FXCollections.observableArrayList(
                 noteModel.getRanges().stream()
-                        .map(RangesDTO::getRange)
+                        .map(RangesFx::getRange)
                         .collect(Collectors.toList())
         );
         HBox hBox = new HBox(10);
@@ -289,7 +290,7 @@ private static void cleanAlertClose(NoteModel noteModel, Alert alert) {
 }
     // helper method to set range to match what is selected in the combobox
     private static void setSelectedRange(String newValue, NoteModel noteModel) {
-        RangesDTO selectedRange = noteModel.getRanges().stream()
+        RangesFx selectedRange = noteModel.getRanges().stream()
                 .filter(range -> range.getRange().equals(newValue))
                 .findFirst()
                 .orElse(null);

@@ -180,15 +180,15 @@ public class SettingsInteractor {
         new Thread(task).start();
     }
 
-    public void setRanges(ObservableList<RangesDTO> ranges) {
+    public void setRanges(ObservableList<RangesFx> ranges) {
         settingsModel.setRanges(ranges);
     }
 
     public void deleteRange() {
         RangesFx rangesFx = settingsModel.boundRangeFxProperty().get();
         if(globalSparesRepo.deleteRange(rangesFx) == 1) {
-            Optional<RangesDTO> deletedRange = Optional.of(settingsModel.getRanges().stream()
-                    .filter(rangesDTO -> rangesDTO.getId() == rangesFx.getId()).findFirst().get());
+            Optional<RangesFx> deletedRange = Optional.of(settingsModel.getRanges().stream()
+                    .filter(ranges -> ranges.getId() == rangesFx.getId()).findFirst().get());
             if (deletedRange.isPresent()) {
                 settingsModel.getRanges().remove(deletedRange.get());
             }
@@ -217,9 +217,9 @@ public class SettingsInteractor {
     public void updateRangeInList() {
         if(settingsModel.getRanges() != null) {
             // get range in list that matches the selected range
-            RangesDTO rangesDTO = settingsModel.getRanges().stream().filter(range -> range.getId() == settingsModel.selectedRangeProperty().get().getId()).findFirst().get();
-            if(rangesDTO != null) {
-                rangesDTO.copyFx(settingsModel.boundRangeFxProperty.get());
+            RangesFx rangesFx = settingsModel.getRanges().stream().filter(range -> range.getId() == settingsModel.selectedRangeProperty().get().getId()).findFirst().get();
+            if(rangesFx != null) {
+                rangesFx.copyFrom(settingsModel.boundRangeFxProperty.get());
             }
         }
     }

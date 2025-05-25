@@ -1,15 +1,15 @@
 package com.L2.repository.rowmappers;
 
-import com.L2.dto.global_spares.RangesDTO;
+import com.L2.dto.global_spares.RangesFx;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RangesRowMapper implements RowMapper<RangesDTO> {
+public class RangesRowMapper implements RowMapper<RangesFx> {
     @Override
-    public RangesDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new RangesDTO(
+    public RangesFx mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new RangesFx(
                 rs.getInt("id"),
                 rs.getString("range"),
                 rs.getString("range_additional"),

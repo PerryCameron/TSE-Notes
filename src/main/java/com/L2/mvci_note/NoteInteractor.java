@@ -2,6 +2,7 @@ package com.L2.mvci_note;
 
 import com.L2.dto.*;
 import com.L2.dto.global_spares.RangesDTO;
+import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.enums.AreaType;
 import com.L2.repository.implementations.*;
@@ -1191,7 +1192,7 @@ public class NoteInteractor {
         new Thread(countTask).start();
     }
 
-    public ObservableList<RangesDTO> getRangesList() {
+    public ObservableList<RangesFx> getRangesList() {
         return noteModel.getRanges();
     }
 }

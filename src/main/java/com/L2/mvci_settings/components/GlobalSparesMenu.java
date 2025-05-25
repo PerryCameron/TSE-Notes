@@ -1,6 +1,7 @@
 package com.L2.mvci_settings.components;
 
 import com.L2.dto.global_spares.RangesDTO;
+import com.L2.dto.global_spares.RangesFx;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
@@ -105,7 +106,7 @@ public class GlobalSparesMenu implements Builder<Region> {
             action.accept(SettingsMessage.DELETE_RANGE);
         }, "Delete", "/images/delete-16.png");
         Button newButton = ButtonFx.utilityButton(() -> {
-            settingsModel.getRanges().add(new RangesDTO());
+            settingsModel.getRanges().add(new RangesFx());
             action.accept(SettingsMessage.ADD_RANGE);
         }, "New Range", "/images/create-16.png");
         hBox.getChildren().addAll(saveButton, deleteButton, newButton);

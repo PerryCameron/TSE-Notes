@@ -195,7 +195,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     }
 
     @Override
-    public List<RangesDTO> findAllRanges() {
+    public List<RangesFx> findAllRanges() {
         try {
             String sql = "SELECT id, range, range_additional, range_type, last_update, last_updated_by FROM ranges";
             return jdbcTemplate.query(sql, new RangesRowMapper());
@@ -529,14 +529,14 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     }
 
     @Transactional
-    public void saveRanges(ObservableList<RangesDTO> ranges) {
+    public void saveRanges(ObservableList<RangesFx> ranges) {
         // SQL for checking if a record exists
         String existsSql = "SELECT COUNT(*) FROM ranges WHERE id = ?";
         // SQL for updating an existing range
         String updateSql = "UPDATE ranges SET range = ?, range_additional = ?, range_type = ?, last_updated_by = ?, last_update = CURRENT_TIMESTAMP WHERE id = ?";
         // SQL for inserting a new range
         String insertSql = "INSERT INTO ranges (range, range_additional, range_type, last_updated_by) VALUES (?, ?, ?, ?)";
-        for (RangesDTO range : ranges) {
+        for (RangesFx range : ranges) {
             // Skip null entries
             if (range == null) {
                 continue;

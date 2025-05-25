@@ -28,18 +28,18 @@ public class SettingsModel {
     private StringProperty filePath = new SimpleStringProperty();
     private BooleanProperty partsDBAvailable = new SimpleBooleanProperty(false);
     private ObjectProperty<Path> droppedFile = new SimpleObjectProperty<>();
-    private ObservableList<RangesDTO> ranges = null;
+    private ObservableList<RangesFx> ranges = null;
     // text fields are bound to this object
     public ObjectProperty<RangesFx> boundRangeFxProperty = new SimpleObjectProperty<>(new RangesFx());
-    private ObjectProperty<RangesDTO> selectedRange = new SimpleObjectProperty<>();
+    private ObjectProperty<RangesFx> selectedRange = new SimpleObjectProperty<>();
     private ObjectProperty<TextArea> modelsTextArea = new SimpleObjectProperty<>();
     private ObjectProperty<TextField> typeTextField = new SimpleObjectProperty<>();
 
     public void updateRangeInList() {
         if(ranges != null) {
-            RangesDTO rangesDTO = ranges.stream().filter(range -> range.getId() == selectedRange.get().getId()).findFirst().get();
-            if(rangesDTO != null) {
-                rangesDTO.copyFx(boundRangeFxProperty.get());
+            RangesFx rangesFx = ranges.stream().filter(range -> range.getId() == selectedRange.get().getId()).findFirst().get();
+            if(rangesFx != null) {
+                rangesFx.copyFrom(boundRangeFxProperty.get());
             }
         }
     }
@@ -78,13 +78,13 @@ public class SettingsModel {
         partsDBAvailable.set(state);
     }
     public ObjectProperty<Path> droppedFileProperty() { return droppedFile; }
-    public ObservableList<RangesDTO> getRanges() {
+    public ObservableList<RangesFx> getRanges() {
         return ranges;
     }
-    public void setRanges(ObservableList<RangesDTO> ranges) {
+    public void setRanges(ObservableList<RangesFx> ranges) {
         this.ranges = ranges;
     }
-    public ObjectProperty<RangesDTO> selectedRangeProperty() {
+    public ObjectProperty<RangesFx> selectedRangeProperty() {
         return selectedRange;
     }
 

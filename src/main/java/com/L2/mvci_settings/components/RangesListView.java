@@ -1,6 +1,7 @@
 package com.L2.mvci_settings.components;
 
 import com.L2.dto.global_spares.RangesDTO;
+import com.L2.dto.global_spares.RangesFx;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import javafx.collections.FXCollections;
@@ -9,7 +10,7 @@ import javafx.scene.control.*;
 import javafx.util.Builder;
 
 
-public class RangesListView implements Builder<ListView<RangesDTO>> {
+public class RangesListView implements Builder<ListView<RangesFx>> {
 
     private final SettingsModel settingsModel;
 //    private final Consumer<SettingsMessage> action;
@@ -20,11 +21,11 @@ public class RangesListView implements Builder<ListView<RangesDTO>> {
     }
 
     @Override
-    public ListView<RangesDTO> build() {
-        ListView<RangesDTO> listView = new ListView<>(settingsModel.getRanges());
+    public ListView<RangesFx> build() {
+        ListView<RangesFx> listView = new ListView<>(settingsModel.getRanges());
         listView.setCellFactory(param -> new ListCell<>() {
             @Override
-            protected void updateItem(RangesDTO item, boolean empty) {
+            protected void updateItem(RangesFx item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
@@ -34,28 +35,23 @@ public class RangesListView implements Builder<ListView<RangesDTO>> {
             }
         });
         // list of all our rangers
-        ObservableList<RangesDTO> selectedRanges = FXCollections.observableArrayList();
-        // when I make a new selection I want to save the changes from oldSelection to proper object in list and copy the new seletion to the bound FX object
-        // the bound object is ObjectProperty<RangeFx>, it is bidirectionally bound to a textField and a textArea
+        ObservableList<RangesFx> selectedRanges = FXCollections.observableArrayList();
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                // Add to selectedRanges if not already present
                 if (!selectedRanges.contains(newSelection)) {
                     selectedRanges.add(newSelection);
                 }
-                // Update the selectedRangeProperty to track the current selection
                 settingsModel.selectedRangeProperty().set(newSelection);
-                if (oldSelection != null) {
-                    // Save changes from the bound RangesFx to the old RangesDTO in rangesList
+                RangesFx boundRangeFx = settingsModel.boundRangeFxProperty().get();
+                boundRangeFx.copyFrom(newSelection);
+                if (oldSelection != null && oldSelection != newSelection) {
                     int oldIndex = selectedRanges.indexOf(oldSelection);
                     if (oldIndex != -1) {
-                        selectedRanges.get(oldIndex).copyFx(settingsModel.boundRangeFxProperty().get());
+                        RangesFx updatedOldSelection = new RangesFx();
+                        updatedOldSelection.copyFrom(boundRangeFx);
+                        selectedRanges.set(oldIndex, updatedOldSelection);
                     }
                 }
-                // Copy the new selection to the bound RangesFx object
-                settingsModel.boundRangeFxProperty().get().copyFrom(newSelection);
-               //  System.out.println("Selected Range: " + newSelection);
-               //  System.out.println("Old Selection: " + oldSelection);
             }
         });
         return listView;

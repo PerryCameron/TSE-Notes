@@ -2,6 +2,7 @@ package com.L2.mvci_main;
 
 import com.L2.dto.NoteFx;
 import com.L2.dto.global_spares.RangesDTO;
+import com.L2.dto.global_spares.RangesFx;
 import com.L2.repository.implementations.SettingsRepositoryImpl;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ApplicationPaths;
@@ -60,7 +61,7 @@ public class MainInteractor implements ApplicationPaths {
         return mainModel.spellCheckProperty();
     }
 
-    public void printRanges(ObservableList<RangesDTO> ranges) {
+    public void printRanges(ObservableList<RangesFx> ranges) {
         ranges.forEach(System.out::println);
     }
 }

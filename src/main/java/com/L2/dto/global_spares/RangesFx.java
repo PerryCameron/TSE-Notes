@@ -1,5 +1,6 @@
 package com.L2.dto.global_spares;
 
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,12 +24,29 @@ public class RangesFx {
     }
 
     public void copyFrom(RangesDTO rangesDTO) {
-        this.id.set(rangesDTO.getId());
-        this.range.set(rangesDTO.getRange());
-        this.rangeAdditional.set(updateAdditionalRange(rangesDTO)); // change commas to returns
-        this.rangeType.set(rangesDTO.getRangeType());
-        this.lastUpdate.set(rangesDTO.getLastUpdate());
-        this.lastUpdatedBy.set(rangesDTO.getLastUpdatedBy());
+        if (!Platform.isFxApplicationThread()) {
+            Platform.runLater(() -> copyFrom(rangesDTO));
+            return;
+        }
+        // Create a defensive copy of rangesDTO to avoid modifying the original
+        RangesDTO dtoCopy = new RangesDTO(
+                rangesDTO.getId(),
+                rangesDTO.getRange(),
+                rangesDTO.getRangeAdditional(),
+                rangesDTO.getRangeType(),
+                rangesDTO.getLastUpdate(),
+                rangesDTO.getLastUpdatedBy()
+        );
+        String rangeTypeValue = dtoCopy.getRangeType();
+        this.id.set(dtoCopy.getId());
+        this.range.set(dtoCopy.getRange());
+        this.rangeAdditional.set(updateAdditionalRange(dtoCopy));
+        if (this.rangeType.isBound()) {
+            this.rangeType.unbind();
+        }
+        this.rangeType.set(rangeTypeValue != null ? rangeTypeValue : "");
+        this.lastUpdate.set(dtoCopy.getLastUpdate());
+        this.lastUpdatedBy.set(dtoCopy.getLastUpdatedBy());
     }
 
     // this method converts the commas back to returns.
@@ -38,7 +56,6 @@ public class RangesFx {
         return converted;
     }
 
-
     public RangesFx() {
         this.id = new SimpleIntegerProperty(0);
         this.range = new SimpleStringProperty("");
@@ -46,6 +63,15 @@ public class RangesFx {
         this.rangeType = new SimpleStringProperty("");
         this.lastUpdate = new SimpleStringProperty("");
         this.lastUpdatedBy = new SimpleStringProperty("");
+    }
+
+    public void copyFrom(RangesFx rangesFx) {
+        this.id = new SimpleIntegerProperty(rangesFx.id.get());
+        this.range = new SimpleStringProperty(rangesFx.range.get());
+        this.rangeAdditional = new SimpleStringProperty(rangesFx.rangeAdditional.get());
+        this.rangeType = new SimpleStringProperty(rangesFx.rangeType.get());
+        this.lastUpdate = new SimpleStringProperty(rangesFx.lastUpdate.get());
+        this.lastUpdatedBy = new SimpleStringProperty(rangesFx.lastUpdatedBy.get());
     }
 
     public int getId() {

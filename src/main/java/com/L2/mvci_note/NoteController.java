@@ -3,6 +3,7 @@ package com.L2.mvci_note;
 import com.L2.dto.NoteFx;
 import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesDTO;
+import com.L2.dto.global_spares.RangesFx;
 import com.L2.enums.AreaType;
 import com.L2.interfaces.Controller;
 import com.L2.mvci_main.MainController;
@@ -142,7 +143,7 @@ public class NoteController extends Controller<NoteMessage> {
         }
     }
 
-    public ObservableList<RangesDTO> getRanges() {
+    public ObservableList<RangesFx> getRanges() {
         return noteInteractor.getRangesList();
     }
 }

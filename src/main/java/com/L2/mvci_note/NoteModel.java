@@ -2,6 +2,7 @@ package com.L2.mvci_note;
 
 import com.L2.dto.*;
 import com.L2.dto.global_spares.RangesDTO;
+import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.nikialeksey.hunspell.Hunspell;
 import javafx.beans.property.*;
@@ -24,8 +25,8 @@ public class NoteModel {
     // you can only select one part at a time, so simpler to keep here.
     private final ObjectProperty<PartFx> selectedPart = new SimpleObjectProperty<>();
     private final ObservableList<SparesDTO> searchedPart = FXCollections.observableArrayList();
-    private final ObjectProperty<RangesDTO> selectedRange = new SimpleObjectProperty<>();
-    private final ObservableList<RangesDTO> ranges = FXCollections.observableArrayList();
+    private final ObjectProperty<RangesFx> selectedRange = new SimpleObjectProperty<>();
+    private final ObservableList<RangesFx> ranges = FXCollections.observableArrayList();
     // you can only have one part order focused at time, so simpler to keep here as well
     private final ObjectProperty<PartOrderFx> selectedPartOrder = new SimpleObjectProperty<>();
     private ObservableList<EntitlementFx> entitlements = FXCollections.observableArrayList();
@@ -134,8 +135,8 @@ public class NoteModel {
         return noteScrollPane;
     }
     public StringProperty searchWordProperty() { return searchWord; }
-    public ObservableList<RangesDTO> getRanges() { return ranges; }
-    public ObjectProperty<RangesDTO> selectedRangeProperty() { return selectedRange;}
+    public ObservableList<RangesFx> getRanges() { return ranges; }
+    public ObjectProperty<RangesFx> selectedRangeProperty() { return selectedRange;}
     public ObjectProperty<Label> resultsLabelProperty() { return resultsLabel; }
     public IntegerProperty numberInRangeProperty() { return numberInRange; }
 
