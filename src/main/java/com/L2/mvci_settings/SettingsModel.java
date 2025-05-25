@@ -3,7 +3,6 @@ package com.L2.mvci_settings;
 import atlantafx.base.controls.ToggleSwitch;
 import com.L2.dto.EntitlementFx;
 import com.L2.dto.UserDTO;
-import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.RangesFx;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
@@ -34,15 +33,6 @@ public class SettingsModel {
     private ObjectProperty<RangesFx> selectedRange = new SimpleObjectProperty<>();
     private ObjectProperty<TextArea> modelsTextArea = new SimpleObjectProperty<>();
     private ObjectProperty<TextField> typeTextField = new SimpleObjectProperty<>();
-
-    public void updateRangeInList() {
-        if(ranges != null) {
-            RangesFx rangesFx = ranges.stream().filter(range -> range.getId() == selectedRange.get().getId()).findFirst().get();
-            if(rangesFx != null) {
-                rangesFx.copyFrom(boundRangeFxProperty.get());
-            }
-        }
-    }
     public ObjectProperty<UserDTO> userProperty() {
         return user;
     }

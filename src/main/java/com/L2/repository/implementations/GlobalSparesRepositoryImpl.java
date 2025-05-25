@@ -547,11 +547,11 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
                 // Update existing record
              int success =  jdbcTemplate.update(updateSql,
                         range.getRange(),
-                        range.getRangeAdditional(),
+                        range.getProductFamily(),
                         range.getRangeType(),
                         range.getLastUpdatedBy(),
                         range.getId());
-                logger.info("Updating range: {} setting: {} success: {}", range.getRange(), range.getRangeAdditional(), success);
+                logger.info("Updating range: {} setting: {} success: {}", range.getRange(), range.getProductFamily(), success);
 
             } else {
                 logger.info("Inserting range: {}", range.getRange());
@@ -560,7 +560,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
                 jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(insertSql, new String[]{"id"});
                     ps.setString(1, range.getRange());
-                    ps.setString(2, range.getRangeAdditional());
+                    ps.setString(2, range.getProductFamily());
                     ps.setString(3, range.getRangeType());
                     ps.setString(4, range.getLastUpdatedBy());
                     return ps;

@@ -1,7 +1,6 @@
 package com.L2.mvci_note;
 
 import com.L2.dto.*;
-import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.enums.AreaType;
@@ -1068,7 +1067,7 @@ public class NoteInteractor {
     // Experimental
     public void searchParts() {
         String[] searchParams = noteModel.searchWordProperty().get().split(" ");
-        String[] range = noteModel.selectedRangeProperty().get().getRangeAdditional().split(",");
+        String[] range = noteModel.selectedRangeProperty().get().getProductFamily().split(",");
 
         if (searchParams.length == 0) {
             System.out.println("No search parameters entered");
@@ -1085,7 +1084,7 @@ public class NoteInteractor {
             @Override
             protected List<SparesDTO> call() {
                 // we are not searching a range, and there is one keyword, probably a part
-                if(noteModel.selectedRangeProperty().get().getRangeAdditional().equals("all")) {
+                if(noteModel.selectedRangeProperty().get().getProductFamily().equals("all")) {
                     System.out.print("Using range? false ->");
                     if (searchParams.length == 1) {
                         // System.out.println("There is only one parameter: " + searchParams[0]);
@@ -1156,7 +1155,7 @@ public class NoteInteractor {
             DialogueFx.errorAlert("Ranges not found", "It appears that the parts database is not available");
             return;
         }
-        String rangeString = noteModel.selectedRangeProperty().get().getRangeAdditional();
+        String rangeString = noteModel.selectedRangeProperty().get().getProductFamily();
         String[] range = rangeString != null ? rangeString.split(",") : new String[0];
 
         // Create a Task for the database query

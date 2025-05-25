@@ -1,6 +1,5 @@
 package com.L2.mvci_settings.components;
 
-import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
@@ -47,7 +46,11 @@ public class GlobalSparesMenu implements Builder<Region> {
 //        vbox.setStyle("-fx-background-color: lightblue;");
         vbox.getStyleClass().add("decorative-hbox");
         setPartsAvailabilityListener(vbox);
+        // what the fuck does this do?
         action.accept(SettingsMessage.VERIFY_PARTS_DATABASE);
+        settingsModel.boundRangeFxProperty().get().rangeProperty().addListener(range -> System.out.println(range));
+        settingsModel.boundRangeFxProperty().get().rangeTypeProperty().addListener(range -> System.out.println(range));
+        settingsModel.boundRangeFxProperty().get().productFamilyProperty().addListener(range -> System.out.println(range));
         return vbox;
     }
 
@@ -122,12 +125,13 @@ public class GlobalSparesMenu implements Builder<Region> {
         textArea.setWrapText(false);
         textArea.setMaxWidth(Double.MAX_VALUE);
         textArea.setMaxHeight(Double.MAX_VALUE);
-        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) {
-                action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
-            }
-        });
-        textArea.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().rangeAdditionalProperty());
+//        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue != null) {
+//                action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
+//
+//            }
+//        });
+        textArea.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().productFamilyProperty());
         vbox.getChildren().add(textArea);
         return vbox;
     }
@@ -137,7 +141,7 @@ public class GlobalSparesMenu implements Builder<Region> {
         TextField textField = new TextField();
         textField.setMaxWidth(Double.MAX_VALUE);
         textField.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().rangeProperty());
-        vBox.getChildren().add(new Label("Range type"));
+        vBox.getChildren().add(new Label("Range"));
         vBox.getChildren().add(textField);
         vBox.setAlignment(Pos.CENTER_LEFT);
         return vBox;

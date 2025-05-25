@@ -1,6 +1,5 @@
 package com.L2.mvci_settings.components;
 
-import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
@@ -27,33 +26,25 @@ public class RangesListView implements Builder<ListView<RangesFx>> {
             @Override
             protected void updateItem(RangesFx item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getRange());
-                }
+                setText(empty || item == null ? null : item.getRange());
             }
         });
-        // list of all our rangers
-        ObservableList<RangesFx> selectedRanges = FXCollections.observableArrayList();
+
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                if (!selectedRanges.contains(newSelection)) {
-                    selectedRanges.add(newSelection);
-                }
-                settingsModel.selectedRangeProperty().set(newSelection);
-                RangesFx boundRangeFx = settingsModel.boundRangeFxProperty().get();
-                boundRangeFx.copyFrom(newSelection);
-                if (oldSelection != null && oldSelection != newSelection) {
-                    int oldIndex = selectedRanges.indexOf(oldSelection);
-                    if (oldIndex != -1) {
-                        RangesFx updatedOldSelection = new RangesFx();
-                        updatedOldSelection.copyFrom(boundRangeFx);
-                        selectedRanges.set(oldIndex, updatedOldSelection);
-                    }
-                }
+                // Update the selected range
+//                settingsModel.selectedRangeProperty().set(newSelection);
+//                // Update the bound range, which is used for bindings
+                System.out.println("Selected from Ranges: " + newSelection);
+                settingsModel.boundRangeFxProperty().get().copyFrom(newSelection);
+
+            } else {
+                // Clear selection if no item is selected
+//                settingsModel.selectedRangeProperty().set(null);
+//                settingsModel.boundRangeFxProperty().set(null);
             }
         });
+
         return listView;
     }
 }

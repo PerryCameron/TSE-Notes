@@ -1,6 +1,5 @@
 package com.L2.dto.global_spares;
 
-import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,69 +8,55 @@ import javafx.beans.property.StringProperty;
 public class RangesFx {
     IntegerProperty id;
     StringProperty range;
-    StringProperty rangeAdditional;
+    StringProperty productFamily;
     StringProperty rangeType;
     StringProperty lastUpdate;
     StringProperty lastUpdatedBy;
 
-    public RangesFx(Integer id, String range, String rangeAdditional, String rangeType, String lastUpdate, String lastUpdatedBy) {
+    public RangesFx(Integer id, String range, String productFamily, String rangeType, String lastUpdate, String lastUpdatedBy) {
         this.id = new SimpleIntegerProperty(id);
         this.range = new SimpleStringProperty(range);
-        this.rangeAdditional = new SimpleStringProperty(rangeAdditional);
+        this.productFamily = new SimpleStringProperty(productFamily);
         this.rangeType = new SimpleStringProperty(rangeType);
         this.lastUpdate = new SimpleStringProperty(lastUpdate);
         this.lastUpdatedBy = new SimpleStringProperty(lastUpdatedBy);
     }
 
-    public void copyFrom(RangesDTO rangesDTO) {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> copyFrom(rangesDTO));
-            return;
-        }
-        // Create a defensive copy of rangesDTO to avoid modifying the original
-        RangesDTO dtoCopy = new RangesDTO(
-                rangesDTO.getId(),
-                rangesDTO.getRange(),
-                rangesDTO.getRangeAdditional(),
-                rangesDTO.getRangeType(),
-                rangesDTO.getLastUpdate(),
-                rangesDTO.getLastUpdatedBy()
-        );
-        String rangeTypeValue = dtoCopy.getRangeType();
-        this.id.set(dtoCopy.getId());
-        this.range.set(dtoCopy.getRange());
-        this.rangeAdditional.set(updateAdditionalRange(dtoCopy));
-        if (this.rangeType.isBound()) {
-            this.rangeType.unbind();
-        }
-        this.rangeType.set(rangeTypeValue != null ? rangeTypeValue : "");
-        this.lastUpdate.set(dtoCopy.getLastUpdate());
-        this.lastUpdatedBy.set(dtoCopy.getLastUpdatedBy());
-    }
-
-    // this method converts the commas back to returns.
-    private String updateAdditionalRange(RangesDTO rangesDTO) {
-        String trimmed = rangesDTO.getRangeAdditional().trim();
-        String converted = trimmed.replaceAll(",+", "\n");
-        return converted;
-    }
-
     public RangesFx() {
         this.id = new SimpleIntegerProperty(0);
         this.range = new SimpleStringProperty("");
-        this.rangeAdditional = new SimpleStringProperty("");
+        this.productFamily = new SimpleStringProperty("");
         this.rangeType = new SimpleStringProperty("");
         this.lastUpdate = new SimpleStringProperty("");
         this.lastUpdatedBy = new SimpleStringProperty("");
     }
 
     public void copyFrom(RangesFx rangesFx) {
-        this.id = new SimpleIntegerProperty(rangesFx.id.get());
-        this.range = new SimpleStringProperty(rangesFx.range.get());
-        this.rangeAdditional = new SimpleStringProperty(rangesFx.rangeAdditional.get());
-        this.rangeType = new SimpleStringProperty(rangesFx.rangeType.get());
-        this.lastUpdate = new SimpleStringProperty(rangesFx.lastUpdate.get());
-        this.lastUpdatedBy = new SimpleStringProperty(rangesFx.lastUpdatedBy.get());
+        this.id.set(rangesFx.id.get());
+        this.range.set(rangesFx.range.get());
+        this.productFamily.set(filterForDisplay(rangesFx.productFamily.get()));
+        this.rangeType.set(rangesFx.rangeType.get());
+        this.lastUpdate.set(rangesFx.lastUpdate.get());
+        this.lastUpdatedBy.set(rangesFx.lastUpdatedBy.get());
+        printRange(rangesFx);
+    }
+
+    private String filterForDisplay(String input) {
+        String trimmedInput = input.trim();
+        String converted = trimmedInput.replaceAll(",+", "\n");
+        return converted;
+    }
+
+    private void printRange(RangesFx rangesFx) {
+        System.out.println("-------------------------------------------------");
+        System.out.println("boundRangeFx: " + this);
+        System.out.println("Updated with RangeFx: " + rangesFx);
+        System.out.println("this.id=" + rangesFx.getId());
+        System.out.println("this.range=" + rangesFx.getRange());
+        System.out.println("this.rangeAdditional=" + rangesFx.getProductFamily());
+        System.out.println("this.rangeType=" + rangesFx.getRangeType());
+        System.out.println("this.lastUpdate=" + rangesFx.getLastUpdate());
+        System.out.println("this.lastUpdatedBy=" + rangesFx.getLastUpdatedBy());
     }
 
     public int getId() {
@@ -98,16 +83,16 @@ public class RangesFx {
         this.range.set(range);
     }
 
-    public String getRangeAdditional() {
-        return rangeAdditional.get();
+    public String getProductFamily() {
+        return productFamily.get();
     }
 
-    public StringProperty rangeAdditionalProperty() {
-        return rangeAdditional;
+    public StringProperty productFamilyProperty() {
+        return productFamily;
     }
 
-    public void setRangeAdditional(String rangeAdditional) {
-        this.rangeAdditional.set(rangeAdditional);
+    public void setProductFamily(String productFamily) {
+        this.productFamily.set(productFamily);
     }
 
     public String getRangeType() {
@@ -145,4 +130,5 @@ public class RangesFx {
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy.set(lastUpdatedBy);
     }
+
 }
