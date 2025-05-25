@@ -64,7 +64,7 @@ public class PartOrderBoxList implements Component<Region> {
         vBox.setPadding(new Insets(5, 0, 5, 5));
         // parts search dialogue
         Button searchButton = ButtonFx.utilityButton(() -> {
-            Optional<Alert> alert = Optional.ofNullable(DialogueFx.searchAlert(noteView, tableView));
+            Optional<Alert> alert = Optional.ofNullable(new PartSearchAlert(noteView, tableView).build());
             alert.ifPresent(Dialog::showAndWait);
             // in case we have changed the ranges in settings, we need to make sure they are fresh
             noteView.getAction().accept(NoteMessage.GET_RANGES); // why is this not working??

@@ -39,15 +39,12 @@ public class DialogueFx {
         Alert alert = new Alert(type);
         alert.setHeaderText(header); // I would like the header to be a larger font
         alert.setContentText(message);
-
         alert.setTitle("");
-
         Image image = new Image(Objects.requireNonNull(DialogueFx.class.getResourceAsStream("/images/TSELogo-64.png")));
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(64); // Adjust the height as needed
         imageView.setFitWidth(64);  // Adjust the width as needed
         alert.setGraphic(imageView);
-
         // Modify the header text programmatically
         DialogPane dialogPane = alert.getDialogPane();
         getTitleIcon(dialogPane);
@@ -128,180 +125,181 @@ public class DialogueFx {
         return Optional.of(alert);
     }
 
-    public static Alert searchAlert(NoteView noteView, TableView<PartFx> partsTableView) {
-        double width = 800;
-        final BooleanProperty searchedBefore = new SimpleBooleanProperty(false);
-        NoteModel noteModel = noteView.getNoteModel();
-        // Create a custom Alert with no default buttons
-        Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.setTitle("Search spares"); // Set custom title bar text
-        // Create a DialogPane
-        DialogPane dialogPane = new DialogPane();
-        dialogPane.getStylesheets().add("css/light.css");
-        dialogPane.getStyleClass().add("search-dialogue");
-        dialogPane.setPrefWidth(width);
-        dialogPane.setMinWidth(width); // Ensure minimum width is 800
-        // Since AlertType is set to NONE there is no close button which allows the x in the corner to
-        // close the alert window. This listener fixes that.
-        alert.showingProperty().addListener((obs, wasShowing, isShowing) -> {
-            if (isShowing) {
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.setOnCloseRequest(event -> {
-                    cleanAlertClose(noteModel, alert);
-                });
-            }
-        });
-        // Create layout for content
-        VBox content = new VBox(10);
-        content.setPadding(new Insets(10, 10, 10, 10));
-        content.setPrefWidth(width);
-        Label messageLabel = new Label("Part Search");
-        Label rangeNumberLabel = new Label("Spares");
-        rangeNumberLabel.setPadding(new Insets(0, 200, 0, 0));
-        TextField searchField = new TextField();
-        searchField.setPromptText("Search Part Number or description...");
-        // Create buttons
-        Button searchButton = new Button("Search");
-        Button cancelButton = new Button("Cancel");
-        Button partOrderButton = new Button("Add to Part Order");
-        // Spacer Region
-        HBox searchHbox = new HBox();
-        searchHbox.setAlignment(Pos.CENTER_RIGHT);
-        searchHbox.getChildren().addAll(rangeNumberLabel, searchButton);
-        HBox.setHgrow(searchHbox, Priority.ALWAYS); // Spacer grows to push buttons right
-        VBox cancelHbox = new VBox();
-        cancelHbox.setAlignment(Pos.CENTER_RIGHT);
-        cancelHbox.getChildren().add(cancelButton);
-        HBox buttonBox = new HBox(10, rangeBox(noteModel, noteView), searchHbox, cancelHbox);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        // contains the tableview and buttons
-        VBox partContainer = new VBox(10);
-        // contains label for number of results
-        HBox resultsLabelHbox = new HBox();
-        HBox.setHgrow(resultsLabelHbox, Priority.ALWAYS);
-        resultsLabelHbox.setAlignment(Pos.CENTER_LEFT);
-        resultsLabelHbox.getChildren().addAll(noteModel.resultsLabelProperty().get(), messageLabel);
-        // contains buttons
-        HBox partContainerButtonBox = new HBox(5);
-        partContainerButtonBox.setAlignment(Pos.CENTER_RIGHT);
-        // Add components to content
-        content.getChildren().addAll(messageLabel, searchField, buttonBox, partContainer, partContainerButtonBox);
-        dialogPane.setContent(content);
-        // Set DialogPane to Alert
-        alert.setDialogPane(dialogPane);
-        // Handle Search button
-        searchButton.setOnAction(e -> {
-            noteModel.searchWordProperty().set(searchField.getText().trim());
-            if (!noteModel.searchWordProperty().get().isEmpty()) { // there are search terms
-                noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
-                // clear everything in part container in case we already made a search
-                if(!searchedBefore.get()) {
-                    buttonBox.getChildren().remove(cancelHbox);
-                    partContainerButtonBox.getChildren().addAll(resultsLabelHbox, partOrderButton, cancelButton);
-                }
-                searchedBefore.set(true);
-                // clears for new tableview
-                partContainer.getChildren().clear();
-                // make tableview with new list of parts
-                TableView<SparesDTO> sparesTableView = SparesTableViewFx.createTableView(noteModel);
-                // add new tableview to dialogue
-                partContainer.getChildren().add(sparesTableView);
-                partOrderButton.setOnAction(add -> {
-                    SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
-                    if (sparesDTO != null) {
-                        noteView.getAction().accept(NoteMessage.INSERT_PART);
-                        PartFx partDTO = noteModel.selectedPartProperty().get();
-                        partDTO.setPartNumber(sparesDTO.getSpareItem());
-                        partDTO.setPartDescription(sparesDTO.getSpareDescription());
-                        // no need to put in part into FX UI here as it is being done elsewhere
-                        noteView.getAction().accept(NoteMessage.UPDATE_PART);
-                        // Refresh the table view layout and focus
-                        TableViewFx.focusOnLastItem(partsTableView);
-                        // make sure we clear our label out so that we get no memory leaks, the label continues to exist but not the hbox
-                        resultsLabelHbox.getChildren().clear();
-                        cleanAlertClose(noteModel, alert);
-                    }
-                });
-                dialogPane.requestLayout();
-                alert.getDialogPane().getScene().getWindow().sizeToScene();
-            }
-        });
-        noteModel.numberInRangeProperty().addListener(rangeNumber -> rangeNumberLabel.setText("Spares in range: " + noteModel.numberInRangeProperty().get()));
-        // Handle Cancel button
-        cancelButton.setOnAction(e -> cleanAlertClose(noteModel, alert));
-        // put our icon in title bar
-        getTitleIcon(dialogPane);
-        // Tie alert to stage and calculates where to start dialogue location
-        tieAlertToStage(alert, width, 400);
-        noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
-        if(noteModel.selectedRangeProperty().get() != null)
-        return alert;
-        else return null;
-    }
+//    public static Alert searchAlert(NoteView noteView, TableView<PartFx> partsTableView) {
+//        double width = 800;
+//        final BooleanProperty searchedBefore = new SimpleBooleanProperty(false);
+//        NoteModel noteModel = noteView.getNoteModel();
+//        // Create a custom Alert with no default buttons
+//        Alert alert = new Alert(Alert.AlertType.NONE);
+//        alert.setTitle("Search spares"); // Set custom title bar text
+//        // Create a DialogPane
+//        DialogPane dialogPane = new DialogPane();
+//        dialogPane.getStylesheets().add("css/light.css");
+//        dialogPane.getStyleClass().add("search-dialogue");
+//        dialogPane.setPrefWidth(width);
+//        dialogPane.setMinWidth(width); // Ensure minimum width is 800
+//        // Since AlertType is set to NONE there is no close button which allows the x in the corner to
+//        // close the alert window. This listener fixes that.
+//        alert.showingProperty().addListener((obs, wasShowing, isShowing) -> {
+//            if (isShowing) {
+//                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+//                stage.setOnCloseRequest(event -> {
+//                    cleanAlertClose(noteModel, alert);
+//                });
+//            }
+//        });
+//        // Create layout for content
+//        VBox content = new VBox(10);
+//        content.setPadding(new Insets(10, 10, 10, 10));
+//        content.setPrefWidth(width);
+//        Label messageLabel = new Label("Part Search");
+//        Label rangeNumberLabel = new Label("Spares");
+//        rangeNumberLabel.setPadding(new Insets(0, 200, 0, 0));
+//        TextField searchField = new TextField();
+//        searchField.setPromptText("Search Part Number or description...");
+//        // Create buttons
+//        Button searchButton = new Button("Search");
+//        Button cancelButton = new Button("Cancel");
+//        Button partOrderButton = new Button("Add to Part Order");
+//        Button moreButton = new Button("More");
+//        // Spacer Region
+//        HBox searchHbox = new HBox();
+//        searchHbox.setAlignment(Pos.CENTER_RIGHT);
+//        searchHbox.getChildren().addAll(rangeNumberLabel, searchButton);
+//        HBox.setHgrow(searchHbox, Priority.ALWAYS); // Spacer grows to push buttons right
+//        VBox cancelHbox = new VBox();
+//        cancelHbox.setAlignment(Pos.CENTER_RIGHT);
+//        cancelHbox.getChildren().add(cancelButton);
+//        HBox buttonBox = new HBox(10, rangeBox(noteModel, noteView), searchHbox, cancelHbox);
+//        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+//        // contains the tableview and buttons
+//        VBox partContainer = new VBox(10);
+//        // contains label for number of results
+//        HBox resultsLabelHbox = new HBox();
+//        HBox.setHgrow(resultsLabelHbox, Priority.ALWAYS);
+//        resultsLabelHbox.setAlignment(Pos.CENTER_LEFT);
+//        resultsLabelHbox.getChildren().addAll(noteModel.resultsLabelProperty().get(), messageLabel);
+//        // contains buttons
+//        HBox partContainerButtonBox = new HBox(5);
+//        partContainerButtonBox.setAlignment(Pos.CENTER_RIGHT);
+//        // Add components to content
+//        content.getChildren().addAll(messageLabel, searchField, buttonBox, partContainer, partContainerButtonBox);
+//        dialogPane.setContent(content);
+//        // Set DialogPane to Alert
+//        alert.setDialogPane(dialogPane);
+//        // Handle Search button
+//        searchButton.setOnAction(e -> {
+//            noteModel.searchWordProperty().set(searchField.getText().trim());
+//            if (!noteModel.searchWordProperty().get().isEmpty()) { // there are search terms
+//                noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
+//                // clear everything in part container in case we already made a search
+//                if(!searchedBefore.get()) {
+//                    buttonBox.getChildren().remove(cancelHbox);
+//                    partContainerButtonBox.getChildren().addAll(resultsLabelHbox, partOrderButton, cancelButton);
+//                }
+//                searchedBefore.set(true);
+//                // clears for new tableview
+//                partContainer.getChildren().clear();
+//                // make tableview with new list of parts
+//                TableView<SparesDTO> sparesTableView = SparesTableViewFx.createTableView(noteModel);
+//                // add new tableview to dialogue
+//                partContainer.getChildren().add(sparesTableView);
+//                partOrderButton.setOnAction(add -> {
+//                    SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
+//                    if (sparesDTO != null) {
+//                        noteView.getAction().accept(NoteMessage.INSERT_PART);
+//                        PartFx partDTO = noteModel.selectedPartProperty().get();
+//                        partDTO.setPartNumber(sparesDTO.getSpareItem());
+//                        partDTO.setPartDescription(sparesDTO.getSpareDescription());
+//                        // no need to put in part into FX UI here as it is being done elsewhere
+//                        noteView.getAction().accept(NoteMessage.UPDATE_PART);
+//                        // Refresh the table view layout and focus
+//                        TableViewFx.focusOnLastItem(partsTableView);
+//                        // make sure we clear our label out so that we get no memory leaks, the label continues to exist but not the hbox
+//                        resultsLabelHbox.getChildren().clear();
+//                        cleanAlertClose(noteModel, alert);
+//                    }
+//                });
+//                dialogPane.requestLayout();
+//                alert.getDialogPane().getScene().getWindow().sizeToScene();
+//            }
+//        });
+//        noteModel.numberInRangeProperty().addListener(rangeNumber -> rangeNumberLabel.setText("Spares in range: " + noteModel.numberInRangeProperty().get()));
+//        // Handle Cancel button
+//        cancelButton.setOnAction(e -> cleanAlertClose(noteModel, alert));
+//        // put our icon in title bar
+//        getTitleIcon(dialogPane);
+//        // Tie alert to stage and calculates where to start dialogue location
+//        tieAlertToStage(alert, width, 400);
+//        noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
+//        if(noteModel.selectedRangeProperty().get() != null)
+//        return alert;
+//        else return null;
+//    }
 
 
     // helper method to handle the combo box of ranges
-    private static Node rangeBox(NoteModel noteModel, NoteView noteView) {
-        ObservableList<String> rangeItems = FXCollections.observableArrayList(
-                noteModel.getRanges().stream()
-                        .map(RangesFx::getRange)
-                        .collect(Collectors.toList())
-        );
-        HBox hBox = new HBox(10);
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        Label rangeLabel = new Label("Range");
-        // Create ComboBox and set items
-        ComboBox<String> rangeComboBox = new ComboBox<>();
-        rangeComboBox.getSelectionModel().select("All");
-        // sets the range to default so that it will search without looking
-        setSelectedRange("All", noteModel);
+//    private static Node rangeBox(NoteModel noteModel, NoteView noteView) {
+//        ObservableList<String> rangeItems = FXCollections.observableArrayList(
+//                noteModel.getRanges().stream()
+//                        .map(RangesFx::getRange)
+//                        .collect(Collectors.toList())
+//        );
+//        HBox hBox = new HBox(10);
+//        hBox.setAlignment(Pos.CENTER_LEFT);
+//        Label rangeLabel = new Label("Range");
+//        // Create ComboBox and set items
+//        ComboBox<String> rangeComboBox = new ComboBox<>();
+//        rangeComboBox.getSelectionModel().select("All");
+//        // sets the range to default so that it will search without looking
+//        setSelectedRange("All", noteModel);
+//
+//        rangeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+//            // Assuming noteModel.getRanges() returns a list of RangeDTO objects
+//            setSelectedRange(newValue, noteModel);
+//            noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
+//        });
+//
+//        rangeComboBox.setItems(rangeItems);
+//        HBox.setHgrow(rangeComboBox, Priority.ALWAYS);
+//        hBox.getChildren().addAll(rangeLabel, rangeComboBox);
+//        return hBox;
+//    }
 
-        rangeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            // Assuming noteModel.getRanges() returns a list of RangeDTO objects
-            setSelectedRange(newValue, noteModel);
-            noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
-        });
-
-        rangeComboBox.setItems(rangeItems);
-        HBox.setHgrow(rangeComboBox, Priority.ALWAYS);
-        hBox.getChildren().addAll(rangeLabel, rangeComboBox);
-        return hBox;
-    }
-
-private static void cleanAlertClose(NoteModel noteModel, Alert alert) {
-    try {
-        noteModel.searchWordProperty().set("");
-        noteModel.getSearchedParts().clear();
-        noteModel.resultsLabelProperty().get().setText("");
-        alert.setResult(ButtonType.CANCEL);
-        alert.close(); // Use close() instead of hide()
-    } catch (Exception e) {
-        System.err.println("Error closing alert: " + e.getMessage());
-        e.printStackTrace(); // Print stack trace for debugging
-        alert.hide();
-    }
-}
+//private static void cleanAlertClose(NoteModel noteModel, Alert alert) {
+//    try {
+//        noteModel.searchWordProperty().set("");
+//        noteModel.getSearchedParts().clear();
+//        noteModel.resultsLabelProperty().get().setText("");
+//        alert.setResult(ButtonType.CANCEL);
+//        alert.close(); // Use close() instead of hide()
+//    } catch (Exception e) {
+//        System.err.println("Error closing alert: " + e.getMessage());
+//        e.printStackTrace(); // Print stack trace for debugging
+//        alert.hide();
+//    }
+//}
     // helper method to set range to match what is selected in the combobox
-    private static void setSelectedRange(String newValue, NoteModel noteModel) {
-        RangesFx selectedRange = noteModel.getRanges().stream()
-                .filter(range -> range.getRange().equals(newValue))
-                .findFirst()
-                .orElse(null);
-        if (selectedRange != null) {
-            noteModel.selectedRangeProperty().set(selectedRange);
-        } else {
-            logger.error("No matching range found for: {}", newValue);
-            if (!noteModel.getRanges().isEmpty()) {
-                logger.warn("Defaulting to first range");
-                noteModel.selectedRangeProperty().set(noteModel.getRanges().getFirst());
-            } else {
-                logger.error("Ranges list is empty, setting selectedRange to null");
-                noteModel.selectedRangeProperty().set(null);
-            }
-        }
-    }
+//    private static void setSelectedRange(String newValue, NoteModel noteModel) {
+//        RangesFx selectedRange = noteModel.getRanges().stream()
+//                .filter(range -> range.getRange().equals(newValue))
+//                .findFirst()
+//                .orElse(null);
+//        if (selectedRange != null) {
+//            noteModel.selectedRangeProperty().set(selectedRange);
+//        } else {
+//            logger.error("No matching range found for: {}", newValue);
+//            if (!noteModel.getRanges().isEmpty()) {
+//                logger.warn("Defaulting to first range");
+//                noteModel.selectedRangeProperty().set(noteModel.getRanges().getFirst());
+//            } else {
+//                logger.error("Ranges list is empty, setting selectedRange to null");
+//                noteModel.selectedRangeProperty().set(null);
+//            }
+//        }
+//    }
 
-    private static void getTitleIcon(DialogPane dialogPane) {
+    public static void getTitleIcon(DialogPane dialogPane) {
         // Set custom icon for the title bar
         Stage alertStage = (Stage) dialogPane.getScene().getWindow();
         try {
