@@ -69,12 +69,12 @@ public class SettingsInteractor {
         }
     }
 
-    public void printEntitlements() {
-        System.out.println("Printing Entitlements.....");
-        for (EntitlementFx entitlementDTO : settingsModel.getEntitlements()) {
-            System.out.println(entitlementDTO.toFancyString());
-        }
-    }
+//    public void printEntitlements() {
+//        System.out.println("Printing Entitlements.....");
+//        for (EntitlementFx entitlementDTO : settingsModel.getEntitlements()) {
+//            System.out.println(entitlementDTO.toFancyString());
+//        }
+//    }
 
     public void changeMenu(Region userRegion) {
         settingsModel.currentMenuProperty().set(userRegion);

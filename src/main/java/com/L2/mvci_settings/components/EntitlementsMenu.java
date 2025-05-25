@@ -7,6 +7,7 @@ import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HeaderFx;
+import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -45,9 +46,8 @@ public class EntitlementsMenu implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox root = new VBox();
+        VBox root = VBoxFx.of(new Insets(0, 10, 10, 10));
         root.getStyleClass().add("decorative-hbox");
-        root.setPadding(new Insets(10, 10, 10, 10));
         InputGroup inputGroup = new InputGroup(); // extends hbox
         inputGroup.setSpacing(10);
         inputGroup.getChildren().addAll(new EntitlementsTableView(view).build(), CreateEditFields());

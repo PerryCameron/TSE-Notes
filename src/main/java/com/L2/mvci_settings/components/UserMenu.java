@@ -5,6 +5,7 @@ import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HeaderFx;
+import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -29,8 +30,7 @@ public class UserMenu implements Builder<Region> {
         if(settingsModel.userProperty().get() == null) {
             action.accept(SettingsMessage.MAKE_REFERENCE_TO_USER);
         }
-        VBox vBox = new VBox(5);
-        vBox.setPadding(new Insets(10,10,10,10));
+        VBox vBox = VBoxFx.of(5.0, new Insets(0,10,10,10));
         vBox.getStyleClass().add("decorative-hbox");
         TextField tf1 = new TextField();
         tf1.setText(settingsModel.userProperty().get().getFirstName());

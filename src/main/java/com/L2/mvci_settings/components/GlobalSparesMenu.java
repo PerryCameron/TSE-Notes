@@ -4,10 +4,7 @@ import com.L2.dto.global_spares.RangesFx;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
-import com.L2.widgetFx.DialogueFx;
-import com.L2.widgetFx.GraphicFx;
-import com.L2.widgetFx.ButtonFx;
-import com.L2.widgetFx.HeaderFx;
+import com.L2.widgetFx.*;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -40,8 +37,7 @@ public class GlobalSparesMenu implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox vbox = new VBox();
-        vbox.setPadding(new Insets(10, 10, 10, 10));
+        VBox vbox = VBoxFx.of(new Insets(0, 10, 10, 10));
         vbox.getStyleClass().add("decorative-hbox");
         setPartsAvailabilityListener(vbox);
         // made sure database exists and is writable
@@ -56,8 +52,9 @@ public class GlobalSparesMenu implements Builder<Region> {
         settingsModel.partsDBAvailableProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 vbox.getChildren().clear();
-                vbox.getChildren().addAll(dbStatus(),
+                vbox.getChildren().addAll(
                         HeaderFx.withTitle("Range Editor"),
+                        dbStatus(),
                         description(),
                         rangeEditor());
                 action.accept(SettingsMessage.GET_RANGES);
@@ -73,7 +70,7 @@ public class GlobalSparesMenu implements Builder<Region> {
         // Optional: Style the Label (e.g., font, color)
         label.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
         label.setWrapText(true);
-        VBox.setMargin(label, new Insets(0, 0, 10, 0));
+        VBox.setMargin(label, new Insets(10, 0, 10, 0));
         return label;
     }
 

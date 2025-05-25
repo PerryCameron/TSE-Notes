@@ -43,7 +43,7 @@ public class SettingsController extends Controller<SettingsMessage> {
     public void action(SettingsMessage message) {
         switch (message) {
             case SAVE_ENTITLEMENTS -> settingsInteractor.saveEntitlement();
-            case PRINT_ENTITLEMENTS -> settingsInteractor.printEntitlements();
+            // case PRINT_ENTITLEMENTS -> settingsInteractor.printEntitlements();
             case SHOW_USER -> settingsInteractor.changeMenu(new UserMenu(settingsView).build());
             case SHOW_ENTITLEMENTS -> settingsInteractor.changeMenu(new EntitlementsMenu(settingsView).build());
             case SHOW_DICTIONARY -> settingsInteractor.changeMenu(new DictionaryMenu(settingsView).build());
