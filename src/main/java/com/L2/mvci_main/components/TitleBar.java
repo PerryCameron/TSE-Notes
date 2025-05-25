@@ -240,7 +240,8 @@ public class TitleBar implements Builder<Region> {
     private Menu createDebugMenu() {
         Menu menu = new Menu("Debug");
         MenuItem showDebugLog = MenuFx.menuItemOf("Show Log", x -> mainView.getAction().accept(MainMessage.SHOW_LOG), null);
-        menu.getItems().add(showDebugLog);
+        MenuItem testDebug = MenuFx.menuItemOf("Test Debug", x -> mainView.getAction().accept(MainMessage.PRINT_RANGES), null);
+        menu.getItems().addAll(showDebugLog, testDebug);
         return menu;
     }
 

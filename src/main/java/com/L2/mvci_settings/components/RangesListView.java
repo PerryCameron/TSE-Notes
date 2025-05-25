@@ -39,7 +39,6 @@ public class RangesListView implements Builder<ListView<RangesDTO>> {
         // the bound object is ObjectProperty<RangeFx>, it is bidirectionally bound to a textField and a textArea
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-//                newSelection.setRangeAdditional(newSelection.getRangeAdditional().replace(",","\n"));
                 // Add to selectedRanges if not already present
                 if (!selectedRanges.contains(newSelection)) {
                     selectedRanges.add(newSelection);
@@ -55,8 +54,8 @@ public class RangesListView implements Builder<ListView<RangesDTO>> {
                 }
                 // Copy the new selection to the bound RangesFx object
                 settingsModel.boundRangeFxProperty().get().copyFrom(newSelection);
-                System.out.println("Selected Range: " + newSelection);
-                System.out.println("Old Selection: " + oldSelection);
+               //  System.out.println("Selected Range: " + newSelection);
+               //  System.out.println("Old Selection: " + oldSelection);
             }
         });
         return listView;

@@ -29,6 +29,7 @@ public class RangesDTO {
         this.rangeAdditional = updateAdditionalRange(rangesFx); // convert returns to commas
         this.rangeType = rangesFx.getRangeType();
         this.lastUpdate = rangesFx.getLastUpdate();
+        this.lastUpdatedBy = rangesFx.getLastUpdatedBy();
     }
 
     // helper method to make DTO correct

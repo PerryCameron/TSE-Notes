@@ -1,11 +1,13 @@
 package com.L2.mvci_main;
 
 import com.L2.dto.NoteFx;
+import com.L2.dto.global_spares.RangesDTO;
 import com.L2.repository.implementations.SettingsRepositoryImpl;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ApplicationPaths;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,5 +58,9 @@ public class MainInteractor implements ApplicationPaths {
 
     public BooleanProperty isSpellChecked() {
         return mainModel.spellCheckProperty();
+    }
+
+    public void printRanges(ObservableList<RangesDTO> ranges) {
+        ranges.forEach(System.out::println);
     }
 }

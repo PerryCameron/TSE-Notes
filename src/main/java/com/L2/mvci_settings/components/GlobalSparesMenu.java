@@ -115,7 +115,7 @@ public class GlobalSparesMenu implements Builder<Region> {
     private Node modelsBox() {
         VBox vbox = new VBox();
         vbox.setSpacing(10);
-        vbox.getChildren().add(new Label("Models and Keywords (Each on a separate line)"));
+        vbox.getChildren().add(new Label("Product Family and Range Keywords (Each on a separate line)"));
         TextArea textArea = new TextArea();
         textArea.setEditable(true);
         textArea.setWrapText(false);
