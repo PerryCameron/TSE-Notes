@@ -4,6 +4,7 @@ import com.L2.dto.global_spares.RangesFx;
 import com.L2.mvci_settings.SettingsMessage;
 import com.L2.mvci_settings.SettingsModel;
 import com.L2.mvci_settings.SettingsView;
+import com.L2.widgetFx.DialogueFx;
 import com.L2.widgetFx.GraphicFx;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HeaderFx;
@@ -11,10 +12,7 @@ import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
@@ -25,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class GlobalSparesMenu implements Builder<Region> {
@@ -105,7 +104,7 @@ public class GlobalSparesMenu implements Builder<Region> {
             action.accept(SettingsMessage.SAVE_RANGES);
         }, "Save", "/images/save-16.png");
         Button deleteButton = ButtonFx.utilityButton(() -> {
-            action.accept(SettingsMessage.DELETE_RANGE);
+            showConfirmationAlert();
         }, "Delete", "/images/delete-16.png");
         Button newButton = ButtonFx.utilityButton(() -> {
             settingsModel.getRanges().add(new RangesFx());
@@ -113,6 +112,20 @@ public class GlobalSparesMenu implements Builder<Region> {
         }, "New Range", "/images/create-16.png");
         hBox.getChildren().addAll(saveButton, deleteButton, newButton);
         return hBox;
+    }
+
+    private void showConfirmationAlert() {
+        Optional<Alert> alertOpt = DialogueFx.conformationAlert("Delete Range","Are you sure you want to delete this range?");
+        alertOpt.ifPresent(alert -> {
+            Optional<ButtonType> result = alert.showAndWait();
+            result.ifPresent(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    action.accept(SettingsMessage.DELETE_RANGE);
+                } else {
+                    logger.info("Delete Range cancelled");
+                }
+            });
+        });
     }
 
     private Node modelsBox() {

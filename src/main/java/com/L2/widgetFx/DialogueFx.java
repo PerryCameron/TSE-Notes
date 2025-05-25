@@ -114,16 +114,27 @@ public class DialogueFx {
         return alert;
     }
 
+    public static Optional<Alert> conformationAlert(String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        tieAlertToStage(alert, 400, 200);
+        DialogPane dialogPane = alert.getDialogPane();
+        getTitleIcon(dialogPane);
+        dialogPane.getStylesheets().add("css/light.css");
+        dialogPane.getStyleClass().add("myDialog");
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+        return Optional.of(alert);
+    }
+
     public static Alert searchAlert(NoteView noteView, TableView<PartFx> partsTableView) {
         double width = 800;
         final BooleanProperty searchedBefore = new SimpleBooleanProperty(false);
         NoteModel noteModel = noteView.getNoteModel();
-
         // Create a custom Alert with no default buttons
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setTitle("Search spares"); // Set custom title bar text
-
-
         // Create a DialogPane
         DialogPane dialogPane = new DialogPane();
         dialogPane.getStylesheets().add("css/light.css");
@@ -140,7 +151,6 @@ public class DialogueFx {
                 });
             }
         });
-
         // Create layout for content
         VBox content = new VBox(10);
         content.setPadding(new Insets(10, 10, 10, 10));
@@ -150,29 +160,22 @@ public class DialogueFx {
         rangeNumberLabel.setPadding(new Insets(0, 200, 0, 0));
         TextField searchField = new TextField();
         searchField.setPromptText("Search Part Number or description...");
-
         // Create buttons
         Button searchButton = new Button("Search");
         Button cancelButton = new Button("Cancel");
         Button partOrderButton = new Button("Add to Part Order");
-
         // Spacer Region
         HBox searchHbox = new HBox();
         searchHbox.setAlignment(Pos.CENTER_RIGHT);
         searchHbox.getChildren().addAll(rangeNumberLabel, searchButton);
         HBox.setHgrow(searchHbox, Priority.ALWAYS); // Spacer grows to push buttons right
-
         VBox cancelHbox = new VBox();
         cancelHbox.setAlignment(Pos.CENTER_RIGHT);
         cancelHbox.getChildren().add(cancelButton);
-
         HBox buttonBox = new HBox(10, rangeBox(noteModel, noteView), searchHbox, cancelHbox);
-
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
-
         // contains the tableview and buttons
         VBox partContainer = new VBox(10);
-
         // contains label for number of results
         HBox resultsLabelHbox = new HBox();
         HBox.setHgrow(resultsLabelHbox, Priority.ALWAYS);
@@ -181,19 +184,15 @@ public class DialogueFx {
         // contains buttons
         HBox partContainerButtonBox = new HBox(5);
         partContainerButtonBox.setAlignment(Pos.CENTER_RIGHT);
-
         // Add components to content
         content.getChildren().addAll(messageLabel, searchField, buttonBox, partContainer, partContainerButtonBox);
         dialogPane.setContent(content);
-
         // Set DialogPane to Alert
         alert.setDialogPane(dialogPane);
-
         // Handle Search button
         searchButton.setOnAction(e -> {
             noteModel.searchWordProperty().set(searchField.getText().trim());
             if (!noteModel.searchWordProperty().get().isEmpty()) { // there are search terms
-
                 noteView.getAction().accept(NoteMessage.SEARCH_PARTS);
                 // clear everything in part container in case we already made a search
                 if(!searchedBefore.get()) {
@@ -203,7 +202,6 @@ public class DialogueFx {
                 searchedBefore.set(true);
                 // clears for new tableview
                 partContainer.getChildren().clear();
-
                 // make tableview with new list of parts
                 TableView<SparesDTO> sparesTableView = SparesTableViewFx.createTableView(noteModel);
                 // add new tableview to dialogue
@@ -228,18 +226,13 @@ public class DialogueFx {
                 alert.getDialogPane().getScene().getWindow().sizeToScene();
             }
         });
-
         noteModel.numberInRangeProperty().addListener(rangeNumber -> rangeNumberLabel.setText("Spares in range: " + noteModel.numberInRangeProperty().get()));
-
         // Handle Cancel button
         cancelButton.setOnAction(e -> cleanAlertClose(noteModel, alert));
-
         // put our icon in title bar
         getTitleIcon(dialogPane);
-
         // Tie alert to stage and calculates where to start dialogue location
         tieAlertToStage(alert, width, 400);
-
         noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
         if(noteModel.selectedRangeProperty().get() != null)
         return alert;
