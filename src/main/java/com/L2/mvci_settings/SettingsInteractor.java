@@ -2,7 +2,6 @@ package com.L2.mvci_settings;
 
 import com.L2.dto.EntitlementFx;
 import com.L2.dto.UserDTO;
-import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.mvci_note.NoteModel;
 import com.L2.repository.implementations.EntitlementsRepositoryImpl;
@@ -193,7 +192,7 @@ public class SettingsInteractor {
                 settingsModel.getRanges().remove(deletedRange.get());
             }
             if (!settingsModel.getRanges().isEmpty()) {
-                rangesFx.copyFrom(settingsModel.getRanges().getFirst());
+                rangesFx.copyFromSelectedRange(settingsModel.getRanges().getFirst());
             }
         } else {
             logger.error("Failed to delete range: {}", rangesFx);
@@ -215,17 +214,8 @@ public class SettingsInteractor {
 
     // this is important
     public void updateRangeInList() {
-        if(settingsModel.getRanges() != null) {
-            // get range in list that matches the selected range
-            RangesFx rangesFx = settingsModel.getRanges().stream().filter(range -> range.getId() == settingsModel.selectedRangeProperty().get().getId()).findFirst().get();
-            if(rangesFx != null) {
-                rangesFx.copyFrom(settingsModel.boundRangeFxProperty.get());
-            }
-        }
+        if(settingsModel.selectedRangeProperty().get() == null) return;
+        if(settingsModel.boundRangeFxProperty().get() == null) return;
+        settingsModel.selectedRangeProperty().get().copyFromBoundRange(settingsModel.boundRangeFxProperty.get());
     }
-
-//        String original = range.getRangeAdditional().trim();
-//        String additional = original.replace("\n",",");
-//        range.setRangeAdditional(additional);
-
 }

@@ -43,14 +43,13 @@ public class GlobalSparesMenu implements Builder<Region> {
     public Region build() {
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(10, 10, 10, 10));
-//        vbox.setStyle("-fx-background-color: lightblue;");
         vbox.getStyleClass().add("decorative-hbox");
         setPartsAvailabilityListener(vbox);
-        // what the fuck does this do?
+        // made sure database exists and is writable
         action.accept(SettingsMessage.VERIFY_PARTS_DATABASE);
-        settingsModel.boundRangeFxProperty().get().rangeProperty().addListener(range -> System.out.println(range));
-        settingsModel.boundRangeFxProperty().get().rangeTypeProperty().addListener(range -> System.out.println(range));
-        settingsModel.boundRangeFxProperty().get().productFamilyProperty().addListener(range -> System.out.println(range));
+        // settingsModel.boundRangeFxProperty().get().rangeProperty().addListener(range -> System.out.println(range));
+        // settingsModel.boundRangeFxProperty().get().rangeTypeProperty().addListener(range -> System.out.println(range));
+        // settingsModel.boundRangeFxProperty().get().productFamilyProperty().addListener(range -> System.out.println(range));
         return vbox;
     }
 
@@ -125,12 +124,9 @@ public class GlobalSparesMenu implements Builder<Region> {
         textArea.setWrapText(false);
         textArea.setMaxWidth(Double.MAX_VALUE);
         textArea.setMaxHeight(Double.MAX_VALUE);
-//        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue != null) {
-//                action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
-//
-//            }
-//        });
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null) action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
+        });
         textArea.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().productFamilyProperty());
         vbox.getChildren().add(textArea);
         return vbox;
@@ -141,6 +137,9 @@ public class GlobalSparesMenu implements Builder<Region> {
         TextField textField = new TextField();
         textField.setMaxWidth(Double.MAX_VALUE);
         textField.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().rangeProperty());
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null) action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
+        });
         vBox.getChildren().add(new Label("Range"));
         vBox.getChildren().add(textField);
         vBox.setAlignment(Pos.CENTER_LEFT);
@@ -152,6 +151,9 @@ public class GlobalSparesMenu implements Builder<Region> {
         TextField textField = new TextField();
         textField.setMaxWidth(Double.MAX_VALUE);
         textField.textProperty().bindBidirectional(settingsModel.boundRangeFxProperty().get().rangeTypeProperty());
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null) action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
+        });
         vBox.getChildren().add(new Label("Range type"));
         vBox.getChildren().add(textField);
         vBox.setAlignment(Pos.CENTER_LEFT);

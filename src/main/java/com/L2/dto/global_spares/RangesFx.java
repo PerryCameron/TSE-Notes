@@ -31,7 +31,8 @@ public class RangesFx {
         this.lastUpdatedBy = new SimpleStringProperty("");
     }
 
-    public void copyFrom(RangesFx rangesFx) {
+    // copy from list, (selected Range) to bound note
+    public void copyFromSelectedRange(RangesFx rangesFx) {
         this.id.set(rangesFx.id.get());
         this.range.set(rangesFx.range.get());
         this.productFamily.set(filterForDisplay(rangesFx.productFamily.get()));
@@ -41,9 +42,26 @@ public class RangesFx {
         printRange(rangesFx);
     }
 
+    public boolean copyFromBoundRange(RangesFx rangesFx) {
+        if(rangesFx.getId() == this.id.get()) {
+            this.range.set(rangesFx.range.get());
+            this.productFamily.set(filterForDatabase(rangesFx.productFamily.get()));
+            this.rangeType.set(rangesFx.rangeType.get());
+            this.lastUpdate.set(rangesFx.lastUpdate.get());
+            this.lastUpdatedBy.set(rangesFx.lastUpdatedBy.get());
+            return true;
+        } else return false;
+    }
+
     private String filterForDisplay(String input) {
         String trimmedInput = input.trim();
         String converted = trimmedInput.replaceAll(",+", "\n");
+        return converted;
+    }
+
+    private String filterForDatabase(String input) {
+        String trimmedInput = input.trim();
+        String converted = trimmedInput.replaceAll("\n+", ",");
         return converted;
     }
 
@@ -131,4 +149,15 @@ public class RangesFx {
         this.lastUpdatedBy.set(lastUpdatedBy);
     }
 
+    public void printRange() {
+        System.out.println(
+        "RangesFx{" +
+                "id=" + id +
+                ", range=" + range +
+                ", productFamily=" + productFamily +
+                ", rangeType=" + rangeType +
+                ", lastUpdate=" + lastUpdate +
+                ", lastUpdatedBy=" + lastUpdatedBy +
+                '}');
+    }
 }

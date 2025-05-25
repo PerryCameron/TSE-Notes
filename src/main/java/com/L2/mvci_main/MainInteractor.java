@@ -62,6 +62,8 @@ public class MainInteractor implements ApplicationPaths {
     }
 
     public void printRanges(ObservableList<RangesFx> ranges) {
-        ranges.forEach(System.out::println);
+        System.out.println("-------------------Ranges---------------------");
+        System.out.println("Ranges: " + ranges.size());
+        ranges.forEach(rangesFx -> rangesFx.printRange());
     }
 }
