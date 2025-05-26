@@ -1,15 +1,11 @@
 ![JavaFX](https://img.shields.io/badge/JavaFX-Productivity%20App-blue)
 
-<table>
-  <tr>
-    <td>
-      <img src="TSELogo-64.png" alt="TSE Logo" width="64" height="64">
-    </td>
-    <td>
-      <h1>TSE-Notes</h1>
-    </td>
-  </tr>
-</table>
+
+![TSE Logo](src/main/resources/images/Readme.png)   
+
+  
+  
+  
 A specialized JavaFX productivity application designed for technical support engineers to streamline note-taking, manage technical data, and generate formatted outputs for work-related tasks.
 ## Overview
 
