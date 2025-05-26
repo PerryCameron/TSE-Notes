@@ -4,16 +4,21 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 public class ProductFamilyFx {
-    private StringProperty range;
-    private ObservableList<String> productFamilies;
+    private StringProperty range  = new SimpleStringProperty();
+    private ObservableList<String> productFamilies = FXCollections.observableArrayList();
 
     public ProductFamilyFx(String range, List<String> productFamilies) {
         this.range = new SimpleStringProperty(range);
         this.productFamilies = FXCollections.observableList(productFamilies);
+    }
+
+    // used for jackson
+    public ProductFamilyFx() {
     }
 
     public String getRange() {
@@ -32,7 +37,8 @@ public class ProductFamilyFx {
         return productFamilies;
     }
 
-    public void setProductFamilies(ObservableList<String> productFamilies) {
-        this.productFamilies = productFamilies;
+    @JsonProperty("product_families") // Map JSON "product_families" to this setter
+    public void setProductFamilies(List<String> productFamilies) {
+        this.productFamilies.setAll(productFamilies != null ? productFamilies : List.of());
     }
 }

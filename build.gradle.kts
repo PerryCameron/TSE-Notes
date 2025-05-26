@@ -58,6 +58,10 @@ dependencies {
     implementation("org.fxmisc.richtext:richtextfx:0.11.2")
     // dictionary
     implementation("com.nikialeksey:jhunspell:1.0.5")
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.18.3")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.3")
     testImplementation("ch.qos.logback:logback-classic:1.5.6")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")

@@ -8,10 +8,12 @@ import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci_note.NoteMessage;
 import com.L2.mvci_note.NoteModel;
 import com.L2.mvci_note.NoteView;
-import com.L2.static_tools.JsonDeserialize;
 import com.L2.widgetFx.DialogueFx;
 import com.L2.widgetFx.SparesTableViewFx;
 import com.L2.widgetFx.TableViewFx;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -203,10 +205,12 @@ public class PartSearchAlert implements Builder<Alert> {
             if (sparesTableView.getSelectionModel().getSelectedItem() != null) {
                 SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
                 try {
-                    // Deserialize JSON
-                    List<ProductFamilyFx> productFamilies = JsonDeserialize.deserializeArray(sparesDTO.getPim());
-                    System.out.println("Deserialized " + productFamilies.size() + " ProductFamilyFx objects");
-
+                    String jsonResponse = sparesDTO.getPim(); // one column is JSON
+                    List<ProductFamilyFx> productFamilies = noteModel.getObjectMapper().readValue(
+                            jsonResponse,
+                            new TypeReference<>() {
+                            }
+                    );
                     // Create or update TreeView
                     if (moreInfoHbox.getChildren().isEmpty()) {
                         // Initialize TreeView and add to HBox
@@ -225,6 +229,13 @@ public class PartSearchAlert implements Builder<Alert> {
                     }
                 } catch (IllegalArgumentException i) {
                     System.err.println("Error deserializing JSON: " + i.getMessage());
+                    i.printStackTrace();
+                } catch (JsonMappingException ex) {
+                    System.err.println("Error deserializing JSON: " + ex.getMessage());
+                    ex.printStackTrace();
+                } catch (JsonProcessingException ex) {
+                    System.err.println("Error deserializing JSON: " + ex.getMessage());
+                    ex.printStackTrace();
                 }
             } else {
                 System.out.println("No item selected in sparesTableView");

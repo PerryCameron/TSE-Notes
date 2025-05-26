@@ -4,6 +4,7 @@ import com.L2.dto.*;
 import com.L2.dto.global_spares.RangesDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nikialeksey.hunspell.Hunspell;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -60,6 +61,7 @@ public class NoteModel {
     private final StringProperty searchWord = new SimpleStringProperty();
     private final ObjectProperty<Label> resultsLabel = new SimpleObjectProperty<>(new Label("Results"));
     private final IntegerProperty numberInRange = new SimpleIntegerProperty();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
 
 
@@ -139,6 +141,7 @@ public class NoteModel {
     public ObjectProperty<RangesFx> selectedRangeProperty() { return selectedRange;}
     public ObjectProperty<Label> resultsLabelProperty() { return resultsLabel; }
     public IntegerProperty numberInRangeProperty() { return numberInRange; }
+    public ObjectMapper getObjectMapper() { return objectMapper; }
 
 
 
