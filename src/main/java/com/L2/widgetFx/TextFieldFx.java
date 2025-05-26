@@ -1,8 +1,7 @@
 package com.L2.widgetFx;
 
 import com.L2.dto.ResultDTO;
-import com.L2.mvci_note.NoteMessage;
-import com.L2.mvci_note.NoteView;
+import com.L2.mvci.note.NoteView;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;

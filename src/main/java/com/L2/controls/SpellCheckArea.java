@@ -1,9 +1,9 @@
 package com.L2.controls;
 
 import com.L2.enums.AreaType;
-import com.L2.mvci_note.NoteMessage;
-import com.L2.mvci_note.NoteModel;
-import com.L2.mvci_note.NoteView;
+import com.L2.mvci.note.NoteMessage;
+import com.L2.mvci.note.NoteModel;
+import com.L2.mvci.note.NoteView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.ContextMenu;

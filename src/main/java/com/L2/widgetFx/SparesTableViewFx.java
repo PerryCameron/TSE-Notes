@@ -1,8 +1,7 @@
 package com.L2.widgetFx;
 
 import com.L2.dto.global_spares.SparesDTO;
-import com.L2.mvci_note.NoteModel;
-import javafx.collections.ListChangeListener;
+import com.L2.mvci.note.NoteModel;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
