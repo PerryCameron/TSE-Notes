@@ -1,5 +1,6 @@
 package com.L2.mvci_note.components;
 
+import com.L2.BaseApplication;
 import com.L2.dto.PartFx;
 import com.L2.dto.ProductFamilyFx;
 import com.L2.dto.global_spares.RangesFx;
@@ -48,6 +49,8 @@ public class PartSearchAlert implements Builder<Alert> {
     private Button cancelButton;
     private HBox partContainerButtonBox;
     private VBox partContainer;
+    private TreeView<String> treeView;
+    private VBox content;
 
     public PartSearchAlert(NoteView noteView, TableView<PartFx> partsTableView) {
         this.noteView = noteView;
@@ -130,7 +133,7 @@ public class PartSearchAlert implements Builder<Alert> {
     }
 
     private Node contentBox() {
-        VBox content = new VBox(10);
+        this.content = new VBox(10);
         content.setPadding(new Insets(10, 10, 10, 10));
         content.setPrefWidth(width);
         this.messageLabel = new Label("Part Search");
@@ -195,19 +198,75 @@ public class PartSearchAlert implements Builder<Alert> {
 
     public Control moreButton() {
         Button moreButton = new Button("More");
+        HBox moreInfoHbox = new HBox();
         moreButton.setOnAction(e -> {
-            SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
-            try {
-                List<ProductFamilyFx> productFamilies = JsonDeserialize.deserializeArray(sparesDTO.getPim());
-                productFamilies.forEach(pf -> {
-                    System.out.println("Range: " + pf.getRange());
-                    System.out.println("Product Families: " + pf.getProductFamilies());
-                });
-            } catch (IllegalArgumentException i) {
-                System.err.println("Error: " + i.getMessage());
+            if (sparesTableView.getSelectionModel().getSelectedItem() != null) {
+                SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
+                try {
+                    // Deserialize JSON
+                    List<ProductFamilyFx> productFamilies = JsonDeserialize.deserializeArray(sparesDTO.getPim());
+                    System.out.println("Deserialized " + productFamilies.size() + " ProductFamilyFx objects");
+
+                    // Create or update TreeView
+                    if (moreInfoHbox.getChildren().isEmpty()) {
+                        // Initialize TreeView and add to HBox
+                        this.treeView = createProductFamilyTreeView(productFamilies);
+                        this.treeView.setPrefSize(350, 200); // Optional: Set size
+                        alert.getDialogPane().setPrefSize(800, 600); // Set preferred size for DialogPane
+                        alert.getDialogPane().setMinSize(800, 600);  // Optional: Ensure minimum size
+                        moreInfoHbox.getChildren().add(this.treeView);
+                        this.content.getChildren().add(moreInfoHbox);
+                        alert.getDialogPane().getScene().getWindow().sizeToScene();
+                        repositionAlertForNewSize();
+                    } else {
+                        // Update existing TreeView
+                        TreeItem<String> rootItem = createTreeItemRoot(productFamilies);
+                        this.treeView.setRoot(rootItem);
+                    }
+                } catch (IllegalArgumentException i) {
+                    System.err.println("Error deserializing JSON: " + i.getMessage());
+                }
+            } else {
+                System.out.println("No item selected in sparesTableView");
             }
         });
         return moreButton;
+    }
+
+    private void repositionAlertForNewSize() {
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        if (BaseApplication.primaryStage != null) {
+            double primaryX = BaseApplication.primaryStage.getX();
+            double primaryY = BaseApplication.primaryStage.getY();
+            double primaryWidth = BaseApplication.primaryStage.getWidth();
+            double primaryHeight = BaseApplication.primaryStage.getHeight();
+            alertStage.setX(primaryX + (primaryWidth / 2) - (800 / 2));
+            alertStage.setY(primaryY + (primaryHeight / 2) - (600 / 2));
+            System.out.println("Centered Alert at X: " + alertStage.getX() + ", Y: " + alertStage.getY());
+        } else {
+            System.out.println("Warning: primaryStage is null");
+        }
+    }
+
+    private TreeView<String> createProductFamilyTreeView(List<ProductFamilyFx> productFamilies) {
+        TreeItem<String> rootItem = createTreeItemRoot(productFamilies);
+        TreeView<String> treeView = new TreeView<>(rootItem);
+        treeView.setShowRoot(true);
+        return treeView;
+    }
+
+    private TreeItem<String> createTreeItemRoot(List<ProductFamilyFx> productFamilies) {
+        TreeItem<String> rootItem = new TreeItem<>("Product Families");
+        rootItem.setExpanded(true);
+        for (ProductFamilyFx pf : productFamilies) {
+            TreeItem<String> rangeItem = new TreeItem<>(pf.getRange());
+            rangeItem.setExpanded(true);
+            for (String productFamily : pf.getProductFamilies()) {
+                rangeItem.getChildren().add(new TreeItem<>(productFamily));
+            }
+            rootItem.getChildren().add(rangeItem);
+        }
+        return rootItem;
     }
 
     private static Node rangeBox(NoteModel noteModel, NoteView noteView) {
