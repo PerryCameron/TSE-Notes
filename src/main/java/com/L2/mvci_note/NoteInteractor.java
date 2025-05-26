@@ -754,6 +754,7 @@ public class NoteInteractor {
             stringBuilder.append(copyAllPartOrdersToHTML(false)).append("<br>").append("\r\n");
         }
         stringBuilder.append(shippingInformationToHTML()).append("<br>").append("\r\n");
+        System.out.println(stringBuilder.toString());
         return stringBuilder.toString();
     }
 
