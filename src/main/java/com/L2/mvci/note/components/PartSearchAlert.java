@@ -216,6 +216,11 @@ public class PartSearchAlert implements Builder<Alert> {
                 alert.getDialogPane().getScene().getWindow().sizeToScene();
             }
         });
+        // this allows us to search by hitting enter instead of having to click the search button
+        searchField.setOnAction(event -> {  // since searchField is a class field and instantiated already this was easy, I would like it to also select the search button just for consistency
+            searchButton.requestFocus(); // Visually select the button
+            searchButton.fire();
+        });
         return searchButton;
     }
 
@@ -269,7 +274,7 @@ public class PartSearchAlert implements Builder<Alert> {
     private void setSelectedChangeListener() {
         sparesTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                System.out.println("First row selected: " + newSelection);
+                createOrUpdateTreeView(newSelection);
             }
         });
     }
