@@ -40,23 +40,24 @@ public class PartSearchAlert implements Builder<Alert> {
     private final NoteModel noteModel;
     private final SimpleBooleanProperty searchedBefore;
     private final NoteView noteView;
-    private Alert alert;
+    private final Alert alert = new Alert(Alert.AlertType.NONE);
+    private final DialogPane dialogPane = new DialogPane();
     private final double width = 800;
     private Label rangeNumberLabel;
     private Label messageLabel;
     private TableView<SparesDTO> sparesTableView;
-    private HBox resultsLabelHbox;
-    private TextField searchField;
-    private HBox buttonBox;
-    private DialogPane dialogPane;
-    private VBox cancelHbox;
-    private Button cancelButton;
-    private HBox partContainerButtonBox;
-    private VBox partContainer;
     private TreeView<String> treeView;
-    private VBox content;
-    private final BooleanProperty alertExtended = new SimpleBooleanProperty(false);
+    private HBox resultsLabelHbox;
+    private HBox buttonBox;
+    private HBox partContainerButtonBox;
     private HBox moreInfoHbox;
+    private VBox cancelHbox;
+    private VBox partContainer;
+    private VBox content;
+    private TextField searchField;
+    private Button cancelButton;
+    private Button searchButton;
+    private final BooleanProperty alertExtended = new SimpleBooleanProperty(false);
 
     public PartSearchAlert(NoteView noteView, TableView<PartFx> partsTableView) {
         this.noteView = noteView;
@@ -67,8 +68,6 @@ public class PartSearchAlert implements Builder<Alert> {
 
     @Override
     public Alert build() {
-        Alert alert = new Alert(Alert.AlertType.NONE);
-        this.alert = alert;
         alert.setTitle("Search spares"); // Set custom title bar text
         // Since AlertType is set to NONE there is no close button which allows the x in the corner to
         // close the alert window. This listener fixes that.
@@ -88,7 +87,6 @@ public class PartSearchAlert implements Builder<Alert> {
     }
 
     private DialogPane dialogPane() {
-        this.dialogPane = new DialogPane();
         alert.setDialogPane(dialogPane);
         dialogPane.getStylesheets().add("css/light.css");
         dialogPane.getStyleClass().add("search-dialogue");
@@ -198,7 +196,7 @@ public class PartSearchAlert implements Builder<Alert> {
     }
 
     private Control searchButton() {
-        Button searchButton = new Button("Search");
+        this.searchButton = new Button("Search");
         searchButton.setOnAction(e -> {
             noteModel.searchWordProperty().set(searchField.getText().trim());
             if (!noteModel.searchWordProperty().get().isEmpty()) { // there are search terms
@@ -216,8 +214,8 @@ public class PartSearchAlert implements Builder<Alert> {
                 alert.getDialogPane().getScene().getWindow().sizeToScene();
             }
         });
-        // this allows us to search by hitting enter instead of having to click the search button
-        searchField.setOnAction(event -> {  // since searchField is a class field and instantiated already this was easy, I would like it to also select the search button just for consistency
+        // this allows us the option to search by hitting enter instead of having to click the search button
+        searchField.setOnAction(event -> {
             searchButton.requestFocus(); // Visually select the button
             searchButton.fire();
         });
@@ -232,7 +230,6 @@ public class PartSearchAlert implements Builder<Alert> {
             setSelectedChangeListener();
             partContainerButtonBox.getChildren().remove(2);
             SparesDTO sparesDTO = sparesTableView.getSelectionModel().getSelectedItem();
-            // Create or update TreeView
             createOrUpdateTreeView(sparesDTO);
         });
         return moreButton;
@@ -315,7 +312,7 @@ public class PartSearchAlert implements Builder<Alert> {
         return rootItem;
     }
 
-    private static Node rangeBox(NoteModel noteModel, NoteView noteView) {
+    private Node rangeBox(NoteModel noteModel, NoteView noteView) {
         ObservableList<String> rangeItems = FXCollections.observableArrayList(
                 noteModel.getRanges().stream()
                         .map(RangesFx::getRange)
@@ -330,8 +327,11 @@ public class PartSearchAlert implements Builder<Alert> {
         // sets the range to default so that it will search without looking
         setSelectedRange("All", noteModel);
         rangeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            // Assuming noteModel.getRanges() returns a list of RangeDTO objects
+            // apply the range filter
             setSelectedRange(newValue, noteModel);
+            // if we have search terms in the box lets search them
+            if(!this.searchField.textProperty().get().isEmpty()) searchButton.fire();
+            // counts the number of spares with range filter on
             noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
         });
         rangeComboBox.setItems(rangeItems);
