@@ -7,6 +7,7 @@ import com.L2.interfaces.Component;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
 import com.L2.mvci.note.NoteMessage;
+import com.L2.mvci.parts.PartController;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
@@ -64,7 +65,7 @@ public class PartOrderBoxList implements Component<Region> {
         vBox.setPadding(new Insets(5, 0, 5, 5));
         // parts search dialogue
         Button searchButton = ButtonFx.utilityButton(() -> {
-            Optional<Alert> alert = Optional.ofNullable(new PartSearchAlert(noteView, tableView).build());
+            Optional<Alert> alert = Optional.ofNullable(new PartController(noteView, tableView).getView());
             alert.ifPresent(Dialog::showAndWait);
             // in case we have changed the ranges in settings, we need to make sure they are fresh
             noteView.getAction().accept(NoteMessage.GET_RANGES); // why is this not working??

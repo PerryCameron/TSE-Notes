@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
@@ -61,7 +62,7 @@ public class NoteModel {
     private final StringProperty searchWord = new SimpleStringProperty();
     private final ObjectProperty<Label> resultsLabel = new SimpleObjectProperty<>(new Label("Results"));
     private final IntegerProperty numberInRange = new SimpleIntegerProperty();
-    private ObjectMapper objectMapper = new ObjectMapper();
+//    private final ObjectProperty<TableView<PartFx>> partsTableView = new SimpleObjectProperty<>();
 
 
 
@@ -141,7 +142,7 @@ public class NoteModel {
     public ObjectProperty<RangesFx> selectedRangeProperty() { return selectedRange;}
     public ObjectProperty<Label> resultsLabelProperty() { return resultsLabel; }
     public IntegerProperty numberInRangeProperty() { return numberInRange; }
-    public ObjectMapper getObjectMapper() { return objectMapper; }
+
 
 
 
