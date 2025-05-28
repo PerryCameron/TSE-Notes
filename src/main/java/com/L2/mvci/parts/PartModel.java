@@ -1,7 +1,6 @@
 package com.L2.mvci.parts;
 
 import com.L2.dto.PartFx;
-import com.L2.dto.ProductFamilyFx;
 import com.L2.dto.global_spares.ProductFamilyDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
@@ -27,7 +26,7 @@ public class PartModel {
     private Label rangeNumberLabel;
     private Label messageLabel;
     private TableView<SparesDTO> sparesTableView;
-    private TreeView<String> treeView;
+    private TreeView<Object> treeView;
     private HBox resultsLabelHbox;
     private HBox buttonBox;
     private HBox partContainerButtonBox;
@@ -132,11 +131,11 @@ public class PartModel {
         this.sparesTableView = sparesTableView;
     }
 
-    public TreeView<String> getTreeView() {
+    public TreeView<Object> getTreeView() {
         return treeView;
     }
 
-    public void setTreeView(TreeView<String> treeView) {
+    public void setTreeView(TreeView<Object> treeView) {
         this.treeView = treeView;
     }
 

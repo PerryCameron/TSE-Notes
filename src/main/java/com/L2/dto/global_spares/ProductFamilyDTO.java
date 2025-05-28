@@ -38,4 +38,9 @@ public class ProductFamilyDTO {
     public void setProductFamilies(List<String> productFamilies) {
         this.productFamilies = productFamilies;
     }
+
+    @Override
+    public String toString() {
+        return range != null ? range : "Unnamed Range";
+    }
 }

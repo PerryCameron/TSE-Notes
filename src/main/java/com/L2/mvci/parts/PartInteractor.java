@@ -22,13 +22,11 @@ public class PartInteractor {
         try {
             partModel.setProductFamilies(partModel.getObjectMapper().readValue(
                     jsonResponse,
-                    new TypeReference<>() {
-                    }
+                    new TypeReference<>() {}
             ));
         } catch (JsonProcessingException ex) {
             logger.error("Error deserializing JSON: {}", ex.getMessage());
         }
-
     }
 
     public void setSelectedRange() {
