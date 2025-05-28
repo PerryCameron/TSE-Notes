@@ -53,10 +53,6 @@ public class PartModel {
         selectedRange.setValue(range);
     }
 
-//    public RangesFx getSelectedRange() {
-//        return selectedRange.get();
-//    }
-
     public PartModel(NoteModel noteModel, TableView<PartFx> tableView) {
         this.ranges = noteModel.getRanges();
         this.partsTableView = tableView;
@@ -108,8 +104,7 @@ public class PartModel {
     }
 
     public double getWidth() {
-        double width = 800;
-        return width;
+        return 800;
     }
 
     public Label getRangeNumberLabel() {

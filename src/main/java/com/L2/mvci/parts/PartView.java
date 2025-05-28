@@ -2,13 +2,13 @@ package com.L2.mvci.parts;
 
 import com.L2.BaseApplication;
 import com.L2.dto.PartFx;
-import com.L2.dto.ProductFamilyFx;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
 import com.L2.mvci.parts.components.PartNote;
+import com.L2.mvci.parts.components.ProductFamily;
 import com.L2.widgetFx.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,7 +24,6 @@ import javafx.util.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -128,7 +127,6 @@ public class PartView implements Builder<Alert> {
         partModel.setCancelButton(new Button("Cancel"));
         partModel.getCancelHbox().setAlignment(Pos.CENTER_RIGHT);
         partModel.getCancelHbox().getChildren().add(partModel.getCancelButton());
-        // Handle Cancel button
         partModel.getCancelButton().setOnAction(e -> cleanAlertClose());
         return partModel.getCancelHbox();
     }
@@ -137,6 +135,7 @@ public class PartView implements Builder<Alert> {
         partModel.setContent(new VBox(10));
         partModel.getContent().setPadding(new Insets(10, 10, 10, 10));
         partModel.getContent().setPrefWidth(partModel.getWidth());
+
         partModel.setMessageLabel(new Label("Part Search"));
         partModel.setSearchField(new TextField());
         partModel.getSearchField().setPromptText("Search Part Number or description...");
@@ -210,7 +209,7 @@ public class PartView implements Builder<Alert> {
             partModel.alertExtendedProperty().set(true);
             setSelectedChangeListener();
             partModel.getPartContainerButtonBox().getChildren().remove(2);
-            createOrUpdateTreeView();
+            buildExtraSection();
         });
         return moreButton;
     }
@@ -246,30 +245,20 @@ public class PartView implements Builder<Alert> {
         return buttonStack;
     }
 
-    private void createOrUpdateTreeView() {
+    private void buildExtraSection() {
+        // set the selected spare
         partModel.selectedSpareProperty().set(partModel.getSparesTableView().getSelectionModel().getSelectedItem());
+        // map the JSON in pim
         action.accept(PartMessage.JSON_MAP_PRODUCT_FAMILIES);
-        if (partModel.getMoreInfoHbox().getChildren().isEmpty()) {
-            // Initialize TreeView and add to HBox
-            createTreeView();
-        } else {
-            // Update existing TreeView
-            TreeItem<String> rootItem = createTreeItemRoot(partModel.getProductFamilies());
-            partModel.getTreeView().setRoot(rootItem);
-        }
-    }
-
-    private void createTreeView() {
-        // Set the TreeView
-        partModel.setTreeView(createProductFamilyTreeView());
-        partModel.getTreeView().setPrefHeight(200); // Optional: Set size
         // Set up the StackPane
         partModel.setStackPane(new StackPane());
         // Create panes for each button
         Pane keywordPane = new VBox(HBoxFx.testBox("Keyword"));
         Pane infoPane = new VBox(HBoxFx.testBox("Info")); // Pane for infoButton
         // Set up the button stack and toggle group
-        Node buttonStack = buttonStack(partModel.getStackPane(), familyPane(), new PartNote(this).build(), keywordPane, infoPane);
+        Node buttonStack = buttonStack(partModel.getStackPane(),
+                new ProductFamily(this).build(),
+                new PartNote(this).build(), keywordPane, infoPane);
         // Add buttons and StackPane to the HBox
         partModel.getMoreInfoHbox().getChildren().addAll(buttonStack, partModel.getStackPane());
         partModel.getMoreInfoHbox().getStyleClass().add("inner-decorative-hbox");
@@ -283,22 +272,23 @@ public class PartView implements Builder<Alert> {
         repositionAlertForNewSize();
     }
 
-    private Pane familyPane() {
-        HBox hBox = new HBox();
-        hBox.setPrefHeight(200);
-        hBox.getChildren().add(partModel.getTreeView()); // Pane for familyButton
-        return hBox;
-    }
-
     private void setSelectedChangeListener() {
         partModel.getSparesTableView().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                // updates our selected spare to match selected
+                partModel.selectedSpareProperty().set(newSelection);
                 // updates treeView for product families and ranges
-                createOrUpdateTreeView();
+                updateTreeView();
                 // updates the part note for new selection
                 partModel.partNoteProperty().get().setText(newSelection.getComments());
             }
         });
+    }
+
+    private void updateTreeView() {
+        action.accept(PartMessage.JSON_MAP_PRODUCT_FAMILIES);
+        TreeItem<String> rootItem = ProductFamily.createTreeItemRoot(partModel.getProductFamilies());
+        partModel.getTreeView().setRoot(rootItem);
     }
 
     private void repositionAlertForNewSize() {
@@ -313,27 +303,6 @@ public class PartView implements Builder<Alert> {
         } else {
             logger.error("Warning: primaryStage is null");
         }
-    }
-
-    private TreeView<String> createProductFamilyTreeView() {
-        TreeItem<String> rootItem = createTreeItemRoot(partModel.getProductFamilies());
-        TreeView<String> treeView = new TreeView<>(rootItem);
-        treeView.setShowRoot(true);
-        return treeView;
-    }
-
-    private TreeItem<String> createTreeItemRoot(List<ProductFamilyFx> productFamilies) {
-        TreeItem<String> rootItem = new TreeItem<>("Product Families");
-        rootItem.setExpanded(true);
-        for (ProductFamilyFx pf : productFamilies) {
-            TreeItem<String> rangeItem = new TreeItem<>(pf.getRange());
-            rangeItem.setExpanded(true);
-            for (String productFamily : pf.getProductFamilies()) {
-                rangeItem.getChildren().add(new TreeItem<>(productFamily));
-            }
-            rootItem.getChildren().add(rangeItem);
-        }
-        return rootItem;
     }
 
     private Node rangeBox() {
