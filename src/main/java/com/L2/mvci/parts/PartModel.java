@@ -2,6 +2,7 @@ package com.L2.mvci.parts;
 
 import com.L2.dto.PartFx;
 import com.L2.dto.ProductFamilyFx;
+import com.L2.dto.global_spares.ProductFamilyDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteModel;
@@ -38,7 +39,7 @@ public class PartModel {
     private Button cancelButton;
     private Button searchButton;
     private final BooleanProperty alertExtended = new SimpleBooleanProperty(false);
-    private List<ProductFamilyFx> productFamilies = List.of();
+    private List<ProductFamilyDTO> productFamilies = List.of();
     private final ObjectProperty<SparesDTO> selectedSpare = new SimpleObjectProperty<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final StringProperty comboBoxSelectedRange = new SimpleStringProperty();
@@ -227,11 +228,11 @@ public class PartModel {
         return alertExtended;
     }
 
-    public List<ProductFamilyFx> getProductFamilies() {
+    public List<ProductFamilyDTO> getProductFamilies() {
         return productFamilies;
     }
 
-    public void setProductFamilies(List<ProductFamilyFx> productFamilies) {
+    public void setProductFamilies(List<ProductFamilyDTO> productFamilies) {
         this.productFamilies = productFamilies;
     }
 

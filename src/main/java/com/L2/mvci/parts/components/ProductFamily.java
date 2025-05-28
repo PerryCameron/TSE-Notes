@@ -1,6 +1,6 @@
 package com.L2.mvci.parts.components;
 
-import com.L2.dto.ProductFamilyFx;
+import com.L2.dto.global_spares.ProductFamilyDTO;
 import com.L2.mvci.parts.PartModel;
 import com.L2.mvci.parts.PartView;
 import com.L2.widgetFx.ButtonFx;
@@ -69,10 +69,10 @@ public class ProductFamily implements Builder<Pane> {
     }
 
     // static so that it can be used in PartView as well
-    public static TreeItem<String> createTreeItemRoot(List<ProductFamilyFx> productFamilies) {
+    public static TreeItem<String> createTreeItemRoot(List<ProductFamilyDTO> productFamilies) {
         TreeItem<String> rootItem = new TreeItem<>("Product Families");
         rootItem.setExpanded(true);
-        for (ProductFamilyFx pf : productFamilies) {
+        for (ProductFamilyDTO pf : productFamilies) {
             TreeItem<String> rangeItem = new TreeItem<>(pf.getRange());
             rangeItem.setExpanded(true);
             for (String productFamily : pf.getProductFamilies()) {
