@@ -8,9 +8,7 @@ import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
-import com.L2.widgetFx.DialogueFx;
-import com.L2.widgetFx.SparesTableViewFx;
-import com.L2.widgetFx.TableViewFx;
+import com.L2.widgetFx.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -19,9 +17,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.slf4j.Logger;
@@ -57,25 +53,24 @@ public class PartView implements Builder<Alert> {
                 stage.setOnCloseRequest(event -> cleanAlertClose());
             }
         });
-        dialogPane();
+        partModel.getAlert().setDialogPane(createDialogPane());
+        // here is the start of the UI
+        partModel.getDialogPane().setContent(contentBox());
         DialogueFx.getTitleIcon(partModel.getDialogPane());
         DialogueFx.tieAlertToStage(partModel.getAlert(), partModel.getWidth(), 400);
         noteModel.numberInRangeProperty().addListener(rangeNumber -> partModel.getRangeNumberLabel()
                 .setText("Spares in range: " + noteModel.numberInRangeProperty().get()));
         noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
-
         if (noteModel.selectedRangeProperty().get() != null)
             return partModel.getAlert();
         else return null;
     }
 
-    private DialogPane dialogPane() {
-        partModel.getAlert().setDialogPane(partModel.getDialogPane());
+    private DialogPane createDialogPane() {
         partModel.getDialogPane().getStylesheets().add("css/light.css");
-        partModel.getDialogPane().getStyleClass().add("search-dialogue");
+        partModel.getDialogPane().getStyleClass().add("decorative-hbox");
         partModel.getDialogPane().setPrefWidth(partModel.getWidth());
         partModel.getDialogPane().setMinWidth(partModel.getWidth()); // Ensure minimum width is 800
-        partModel.getDialogPane().setContent(contentBox());
         return partModel.getDialogPane();
     }
 
@@ -97,12 +92,13 @@ public class PartView implements Builder<Alert> {
         return partModel.getPartContainer();
     }
 
-    public void initialize() {
+    private void initialize() {
         ChangeListener<SparesDTO> firstSelectionListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends SparesDTO> obs, SparesDTO oldSelection, SparesDTO newSelection) {
                 if (newSelection != null) {
                     // adds more button in the middle
+                    partModel.getPartContainerButtonBox().getChildren().add(1, partOrderButton());
                     partModel.getPartContainerButtonBox().getChildren().add(2, moreButton());
                     // Remove the listener after the first selection
                     partModel.getSparesTableView().getSelectionModel().selectedItemProperty().removeListener(this);
@@ -121,8 +117,7 @@ public class PartView implements Builder<Alert> {
     }
 
     private Node buttonBox() {
-        System.out.println("buttonBox()");
-        partModel.setButtonBox(new HBox(10, rangeBox(noteModel, noteView), searchBox(), cancelBox()));
+        partModel.setButtonBox(new HBox(10, rangeBox(), searchBox(), cancelBox()));
         partModel.getButtonBox().setAlignment(Pos.CENTER_RIGHT);
         return partModel.getButtonBox();
     }
@@ -192,7 +187,7 @@ public class PartView implements Builder<Alert> {
                 if (!partModel.searchedBeforeProperty().get()) {
                     partModel.getButtonBox().getChildren().remove(partModel.getCancelHbox());
                     partModel.getPartContainerButtonBox().getChildren().addAll(resultsLabelHbox(),
-                            partOrderButton(), partModel.getCancelButton());
+                            partModel.getCancelButton());
                 }
                 partModel.searchedBeforeProperty().set(true);
                 partModel.getDialogPane().requestLayout();
@@ -207,9 +202,9 @@ public class PartView implements Builder<Alert> {
         return partModel.getSearchButton();
     }
 
-    public Control moreButton() {
+    private Control moreButton() {
         Button moreButton = new Button("More");
-        partModel.setMoreInfoHbox(new HBox());
+        partModel.setMoreInfoHbox(new HBox(5)); // moreInfoHbox
         moreButton.setOnAction(e -> {
             partModel.alertExtendedProperty().set(true);
             setSelectedChangeListener();
@@ -219,13 +214,50 @@ public class PartView implements Builder<Alert> {
         return moreButton;
     }
 
+    private Node buttonStack(StackPane stackPane, Pane familyPane, Pane notePane, Pane keywordsPane, Pane infoPane) {
+        VBox buttonStack = new VBox();
+        buttonStack.setMinWidth(150);
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        ToggleButton familyButton = ButtonFx.toggleof("Product Families", 150, toggleGroup);
+        ToggleButton noteButton = ButtonFx.toggleof("Note", 150, toggleGroup);
+        ToggleButton keyWordsButton = ButtonFx.toggleof("Keywords", 150, toggleGroup);
+        ToggleButton infoButton = ButtonFx.toggleof("Info", 150, toggleGroup);
+
+        // Add all buttons to the VBox first
+        buttonStack.getChildren().addAll(familyButton, noteButton, keyWordsButton, infoButton);
+
+        // Set default content in the StackPane
+        stackPane.getChildren().setAll(familyPane);
+
+        // Set the default selected button AFTER adding to the scene graph
+        familyButton.setSelected(true);
+
+        toggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            stackPane.getChildren().clear();
+            if (newToggle == null) {
+                stackPane.getChildren().setAll(familyPane);
+            } else if (newToggle == familyButton) {
+                stackPane.getChildren().setAll(familyPane);
+            } else if (newToggle == noteButton) {
+                stackPane.getChildren().setAll(notePane);
+            } else if (newToggle == keyWordsButton) {
+                stackPane.getChildren().setAll(keywordsPane);
+            } else if (newToggle == infoButton) {
+                stackPane.getChildren().setAll(infoPane);
+            }
+        });
+
+        return buttonStack;
+    }
+
+
     private void createOrUpdateTreeView() {
         partModel.selectedSpareProperty().set(partModel.getSparesTableView().getSelectionModel().getSelectedItem());
         action.accept(PartMessage.JSON_MAP_PRODUCT_FAMILIES);
-
         if (partModel.getMoreInfoHbox().getChildren().isEmpty()) {
             // Initialize TreeView and add to HBox
-            createTreeView(partModel.getProductFamilies(), partModel.getMoreInfoHbox());
+            createTreeView();
         } else {
             // Update existing TreeView
             TreeItem<String> rootItem = createTreeItemRoot(partModel.getProductFamilies());
@@ -233,15 +265,74 @@ public class PartView implements Builder<Alert> {
         }
     }
 
-    private void createTreeView(List<ProductFamilyFx> productFamilies, HBox moreInfoHbox) {
-        partModel.setTreeView(createProductFamilyTreeView(productFamilies));
-        partModel.getTreeView().setPrefSize(500, 200); // Optional: Set size
-        partModel.getAlert().getDialogPane().setPrefSize(800, 600); // Set preferred size for DialogPane
-        partModel.getAlert().getDialogPane().setMinSize(800, 600);  // Optional: Ensure minimum size
-        moreInfoHbox.getChildren().add(partModel.getTreeView());
-        partModel.getContent().getChildren().add(3, moreInfoHbox);
+    private void createTreeView() {
+        // Set the TreeView
+        partModel.setTreeView(createProductFamilyTreeView());
+        partModel.getTreeView().setPrefHeight(200); // Optional: Set size
+        // Set up the StackPane
+        partModel.setStackPane(new StackPane());
+        // Create panes for each button
+        Pane keywordPane = new VBox(HBoxFx.testBox("Note"));
+        Pane infoPane = new VBox(HBoxFx.testBox("Info")); // Pane for infoButton
+        // Set up the button stack and toggle group
+        Node buttonStack = buttonStack(partModel.getStackPane(), familyPane(), notePane(), keywordPane, infoPane);
+        // Add buttons and StackPane to the HBox
+        partModel.getMoreInfoHbox().getChildren().addAll(buttonStack, partModel.getStackPane());
+        partModel.getMoreInfoHbox().getStyleClass().add("inner-decorative-hbox");
+        partModel.getMoreInfoHbox().setPadding(new Insets(10, 10, 10, 10));
+        // Add HBox to content
+        partModel.getContent().getChildren().add(3, partModel.getMoreInfoHbox());
+        // Configure the Alert's DialogPane
+        partModel.getAlert().getDialogPane().setPrefSize(800, 600);
+        partModel.getAlert().getDialogPane().setMinSize(800, 600);
         partModel.getAlert().getDialogPane().getScene().getWindow().sizeToScene();
         repositionAlertForNewSize();
+    }
+
+    private Pane familyPane() {
+        HBox hBox = new HBox();
+        hBox.setPrefHeight(200);
+        hBox.getChildren().add(partModel.getTreeView()); // Pane for familyButton
+        return hBox;
+    }
+
+    private Pane notePane() {
+        HBox hBox = new HBox(10);
+        HBox.setHgrow(hBox, Priority.ALWAYS);
+        hBox.setPrefHeight(200);
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.TOP_LEFT);
+        HBox.setHgrow(vBox, Priority.ALWAYS);
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
+        Button saveButton = ButtonFx.utilityButton("/images/save-16.png");
+        Button modifyButton = ButtonFx.utilityButton("/images/modify-16.png");
+        saveButton.setPrefWidth(100);
+        modifyButton.setPrefWidth(100);
+        saveButton.setText("Save");
+        modifyButton.setText("Edit");
+        // Create buttons
+        saveButton.setOnAction(button -> {
+            textArea.setEditable(false);
+            saveButton.setVisible(false);
+            saveButton.setManaged(false);
+            modifyButton.setVisible(true);
+            modifyButton.setManaged(true);
+            action.accept(PartMessage.SAVE_PART_NOTE);
+        });
+        modifyButton.setOnAction(button -> {
+            textArea.setEditable(true);
+            modifyButton.setVisible(false);
+            modifyButton.setManaged(false);
+            saveButton.setVisible(true);
+            saveButton.setManaged(true);
+        });
+        // Initially show only the modify button
+        saveButton.setVisible(false);
+        saveButton.setManaged(false);
+        vBox.getChildren().addAll(modifyButton, saveButton);
+        hBox.getChildren().addAll(textArea, vBox);
+        return hBox;
     }
 
     private void setSelectedChangeListener() {
@@ -261,14 +352,13 @@ public class PartView implements Builder<Alert> {
             double primaryHeight = BaseApplication.primaryStage.getHeight();
             alertStage.setX(primaryX + (primaryWidth / 2) - ((double) 800 / 2));
             alertStage.setY(primaryY + (primaryHeight / 2) - ((double) 600 / 2));
-            System.out.println("Centered Alert at X: " + alertStage.getX() + ", Y: " + alertStage.getY());
         } else {
-            System.out.println("Warning: primaryStage is null");
+            logger.error("Warning: primaryStage is null");
         }
     }
 
-    private TreeView<String> createProductFamilyTreeView(List<ProductFamilyFx> productFamilies) {
-        TreeItem<String> rootItem = createTreeItemRoot(productFamilies);
+    private TreeView<String> createProductFamilyTreeView() {
+        TreeItem<String> rootItem = createTreeItemRoot(partModel.getProductFamilies());
         TreeView<String> treeView = new TreeView<>(rootItem);
         treeView.setShowRoot(true);
         return treeView;
@@ -288,7 +378,7 @@ public class PartView implements Builder<Alert> {
         return rootItem;
     }
 
-    private Node rangeBox(NoteModel noteModel, NoteView noteView) {
+    private Node rangeBox() {
         ObservableList<String> rangeItems = FXCollections.observableArrayList(
                 noteModel.getRanges().stream()
                         .map(RangesFx::getRange)
@@ -318,26 +408,10 @@ public class PartView implements Builder<Alert> {
     }
 
     private void setSelectedRange(String newValue) {
-        System.out.println("Selected Range: " + newValue);
-        partModel.selectedRangeProperty().set(newValue);
-//        action.accept(PartMessage.SET_SELECTED_RANGE);
-
-        RangesFx selectedRange = noteView.getNoteModel().getRanges().stream()
-                .filter(range -> range.getRange().equals(newValue))
-                .findFirst()
-                .orElse(null);
-        if (selectedRange != null) {
-            noteModel.selectedRangeProperty().set(selectedRange);
-        } else {
-            logger.error("No matching range found for: {}", newValue);
-            if (!noteModel.getRanges().isEmpty()) {
-                logger.warn("Defaulting to first range");
-                noteModel.selectedRangeProperty().set(noteModel.getRanges().getFirst());
-            } else {
-                logger.error("Ranges list is empty, setting selectedRange to null");
-                noteModel.selectedRangeProperty().set(null);
-            }
-        }
+        // newValue is string value returned from clicking on the ComboBox for Range
+        logger.info("Selected Range: {}", newValue);
+        partModel.comboBoxSelectedRangeProperty().set(newValue);
+        action.accept(PartMessage.SET_SELECTED_RANGE);
     }
 
     private void cleanAlertClose() {

@@ -5,9 +5,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+
 
 public class HBoxFx {
 
@@ -125,6 +127,16 @@ public class HBoxFx {
         hBox.setPadding(new Insets(0, 10, 0, 0));
         HBox.setHgrow(hBox, Priority.ALWAYS);
 //        hBox.setStyle("-fx-background-color: #4d6955;");
+        return hBox;
+    }
+
+    public static HBox testBox(String label) {
+        HBox hBox = new HBox();
+        Label testLabel = new Label(label);
+        hBox.setPrefSize(500, 200);
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setStyle("-fx-background-color: white;"); // Set background color to white
+        hBox.getChildren().add(testLabel); // This should work as Label is a Node
         return hBox;
     }
 }

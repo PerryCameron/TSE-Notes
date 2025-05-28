@@ -1,5 +1,6 @@
 package com.L2.mvci.parts;
 
+import com.L2.dto.global_spares.RangesFx;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
@@ -27,22 +28,28 @@ public class PartInteractor {
 
     }
 
-//    public void setSelectedRange() {
-//        RangesFx selectedRange = partModel.getRanges().stream()
-//                .filter(range -> range.getRange().equals(newValue))
-//                .findFirst()
-//                .orElse(null);
-//        if (selectedRange != null) {
-//            noteModel.selectedRangeProperty().set(selectedRange);
-//        } else {
-//            logger.error("No matching range found for: {}", newValue);
-//            if (!noteModel.getRanges().isEmpty()) {
-//                logger.warn("Defaulting to first range");
-//                noteModel.selectedRangeProperty().set(noteModel.getRanges().getFirst());
-//            } else {
-//                logger.error("Ranges list is empty, setting selectedRange to null");
-//                noteModel.selectedRangeProperty().set(null);
-//            }
-//        }
-//    }
+    public void setSelectedRange() {
+        String newRange = partModel.comboBoxSelectedRangeProperty().get();
+        System.out.println("newRange: " + newRange);
+        // getting the range from the list that equals what we a clicked on
+        RangesFx selectedRange = partModel.getRanges().stream()
+                .filter(range -> range.getRange().equals(newRange))
+                .findFirst()
+                .orElse(null);
+        System.out.println("selectedRange found from list: " + selectedRange);
+        // if there is a selected range
+        if (selectedRange != null) {
+            partModel.setSelectedRange(selectedRange);
+            System.out.println("selectedRange found from list and referenced to partModel: " + selectedRange);
+        } else {
+            logger.error("No matching range found for: {}", newRange);
+            if (!partModel.getRanges().isEmpty()) {
+                logger.warn("Defaulting to first range");
+                partModel.setSelectedRange(partModel.getRanges().getFirst());
+            } else {
+                logger.error("Ranges list is empty, setting selectedRange to null");
+                partModel.setSelectedRange(null);
+            }
+        }
+    }
 }

@@ -11,21 +11,18 @@ import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class PartModel {
-    private static final Logger logger = LoggerFactory.getLogger(PartModel.class);
     private TableView<PartFx> partsTableView;
     private NoteModel noteModel;
-    private SimpleBooleanProperty searchedBefore = new SimpleBooleanProperty(false);
+    private final SimpleBooleanProperty searchedBefore = new SimpleBooleanProperty(false);
     private NoteView noteView;
     private final Alert alert = new Alert(Alert.AlertType.NONE);
     private final DialogPane dialogPane = new DialogPane();
-    private final double width = 800;
     private Label rangeNumberLabel;
     private Label messageLabel;
     private TableView<SparesDTO> sparesTableView;
@@ -42,16 +39,26 @@ public class PartModel {
     private Button searchButton;
     private final BooleanProperty alertExtended = new SimpleBooleanProperty(false);
     List<ProductFamilyFx> productFamilies = List.of();
-    private ObjectProperty<SparesDTO> selectedSpare = new SimpleObjectProperty<>();
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private StringProperty selectedRange = new SimpleStringProperty();
+    private final ObjectProperty<SparesDTO> selectedSpare = new SimpleObjectProperty<>();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final StringProperty comboBoxSelectedRange = new SimpleStringProperty();
+    private final ObjectProperty<RangesFx> selectedRange;
     private final ObservableList<RangesFx> ranges;
+    private StackPane stackPane;
 
 
+    public void setSelectedRange(RangesFx range) {
+        selectedRange.setValue(range);
+    }
+
+//    public RangesFx getSelectedRange() {
+//        return selectedRange.get();
+//    }
 
     public PartModel(NoteModel noteModel, TableView<PartFx> tableView) {
         this.ranges = noteModel.getRanges();
         this.partsTableView = tableView;
+        this.selectedRange = noteModel.selectedRangeProperty();
     }
 
     public TableView<PartFx> getPartsTableView() {
@@ -99,6 +106,7 @@ public class PartModel {
     }
 
     public double getWidth() {
+        double width = 800;
         return width;
     }
 
@@ -236,9 +244,17 @@ public class PartModel {
 
     public ObjectMapper getObjectMapper() { return objectMapper; }
 
-    public StringProperty selectedRangeProperty() { return selectedRange; }
+    public StringProperty comboBoxSelectedRangeProperty() { return comboBoxSelectedRange; }
 
     public ObservableList<RangesFx> getRanges() {
         return ranges;
+    }
+
+    public StackPane getStackPane() {
+        return stackPane;
+    }
+
+    public void setStackPane(StackPane stackPane) {
+        this.stackPane = stackPane;
     }
 }
