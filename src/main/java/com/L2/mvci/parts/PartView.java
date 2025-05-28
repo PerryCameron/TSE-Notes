@@ -251,7 +251,6 @@ public class PartView implements Builder<Alert> {
         return buttonStack;
     }
 
-
     private void createOrUpdateTreeView() {
         partModel.selectedSpareProperty().set(partModel.getSparesTableView().getSelectionModel().getSelectedItem());
         action.accept(PartMessage.JSON_MAP_PRODUCT_FAMILIES);
@@ -272,7 +271,7 @@ public class PartView implements Builder<Alert> {
         // Set up the StackPane
         partModel.setStackPane(new StackPane());
         // Create panes for each button
-        Pane keywordPane = new VBox(HBoxFx.testBox("Note"));
+        Pane keywordPane = new VBox(HBoxFx.testBox("Keyword"));
         Pane infoPane = new VBox(HBoxFx.testBox("Info")); // Pane for infoButton
         // Set up the button stack and toggle group
         Node buttonStack = buttonStack(partModel.getStackPane(), familyPane(), notePane(), keywordPane, infoPane);
@@ -297,30 +296,16 @@ public class PartView implements Builder<Alert> {
     }
 
     private Pane notePane() {
-        HBox hBox = new HBox(10);
-        HBox.setHgrow(hBox, Priority.ALWAYS);
-        hBox.setPrefHeight(200);
-        VBox vBox = new VBox();
-        vBox.setAlignment(Pos.TOP_LEFT);
-        HBox.setHgrow(vBox, Priority.ALWAYS);
-        TextArea textArea = new TextArea();
+        HBox hBox = HBoxFx.of(200,10);
+        VBox vBox = VBoxFx.of(Pos.TOP_LEFT);
+        TextArea textArea = new TextArea(partModel.selectedSpareProperty().get().getComments());
         textArea.setEditable(false);
         textArea.textProperty().addListener((observable, oldValue, newValue) -> {
             partModel.selectedSpareProperty().get().setComments(newValue);
         });
-        Button saveButton = ButtonFx.utilityButton("/images/save-16.png");
-        Button modifyButton = ButtonFx.utilityButton("/images/modify-16.png");
-        saveButton.setPrefWidth(100);
-        modifyButton.setPrefWidth(100);
-        saveButton.setText("Save");
-        modifyButton.setText("Edit");
-        // Create buttons
+        Button saveButton = ButtonFx.utilityButton("/images/save-16.png","Save", 100);
+        Button modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 100);
         saveButton.setOnAction(button -> {
-            textArea.setEditable(false);
-            saveButton.setVisible(false);
-            saveButton.setManaged(false);
-            modifyButton.setVisible(true);
-            modifyButton.setManaged(true);
             action.accept(PartMessage.SAVE_PART_NOTE);
         });
         modifyButton.setOnAction(button -> {
@@ -333,6 +318,20 @@ public class PartView implements Builder<Alert> {
         // Initially show only the modify button
         saveButton.setVisible(false);
         saveButton.setManaged(false);
+        partModel.getUpdatedNotesProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if(newValue) {
+                    textArea.setEditable(false);
+                    saveButton.setVisible(false);
+                    saveButton.setManaged(false);
+                    modifyButton.setVisible(true);
+                    modifyButton.setManaged(true);
+                } else {
+                    DialogueFx.errorAlert("Update Error", "Unable to save new note");
+                }
+                partModel.getUpdatedNotesProperty().set(false);
+            }
+        });
         vBox.getChildren().addAll(modifyButton, saveButton);
         hBox.getChildren().addAll(textArea, vBox);
         return hBox;

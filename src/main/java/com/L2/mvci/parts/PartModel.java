@@ -45,6 +45,7 @@ public class PartModel {
     private final ObjectProperty<RangesFx> selectedRange;
     private final ObservableList<RangesFx> ranges;
     private StackPane stackPane;
+    private final BooleanProperty updatedNotes = new SimpleBooleanProperty(false);
 
 
     public void setSelectedRange(RangesFx range) {
@@ -256,5 +257,9 @@ public class PartModel {
 
     public void setStackPane(StackPane stackPane) {
         this.stackPane = stackPane;
+    }
+
+    public BooleanProperty getUpdatedNotesProperty() {
+        return updatedNotes;
     }
 }

@@ -120,4 +120,11 @@ import javafx.scene.layout.VBox;
             vBox.setPadding(insets);
             return vBox;
         }
+
+        public static VBox of(Pos position) {
+            VBox vBox = new VBox();
+            vBox.setAlignment(position);
+            HBox.setHgrow(vBox, Priority.ALWAYS);
+            return vBox;
+        }
 }

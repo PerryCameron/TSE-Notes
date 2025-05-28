@@ -67,4 +67,13 @@ public class ButtonFx {
         Button button = ButtonFx.of(imageViewCopy, "invisible-button");
         return button;
     }
+
+    public static Button utilityButton(String image, String text, double width) {
+        Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(image)));
+        ImageView imageViewCopy = new ImageView(copyIcon);
+        Button button = ButtonFx.of(imageViewCopy, "invisible-button");
+        button.setText(text);
+        button.setPrefWidth(width);
+        return button;
+    }
 }

@@ -121,6 +121,14 @@ public class HBoxFx {
         return hBox;
     }
 
+    public static HBox of(double height, double spacing) {
+        HBox hBox = new HBox();
+        hBox.setSpacing(spacing);
+        hBox.setPrefHeight(height);
+        HBox.setHgrow(hBox, Priority.ALWAYS);
+        return hBox;
+    }
+
     public static HBox iconBox(double spacing) {
         HBox hBox = new HBox(spacing);
         hBox.setAlignment(Pos.CENTER_RIGHT);

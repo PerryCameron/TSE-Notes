@@ -57,6 +57,7 @@ public class PartInteractor {
     }
 
     public void savePart() {
-        globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
+        int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
+        partModel.getUpdatedNotesProperty().set(success == 1);
     }
 }
