@@ -8,6 +8,7 @@ import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
+import com.L2.mvci.parts.components.PartNote;
 import com.L2.widgetFx.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -218,21 +219,16 @@ public class PartView implements Builder<Alert> {
         VBox buttonStack = new VBox();
         buttonStack.setMinWidth(150);
         ToggleGroup toggleGroup = new ToggleGroup();
-
         ToggleButton familyButton = ButtonFx.toggleof("Product Families", 150, toggleGroup);
         ToggleButton noteButton = ButtonFx.toggleof("Note", 150, toggleGroup);
         ToggleButton keyWordsButton = ButtonFx.toggleof("Keywords", 150, toggleGroup);
         ToggleButton infoButton = ButtonFx.toggleof("Info", 150, toggleGroup);
-
         // Add all buttons to the VBox first
         buttonStack.getChildren().addAll(familyButton, noteButton, keyWordsButton, infoButton);
-
         // Set default content in the StackPane
         stackPane.getChildren().setAll(familyPane);
-
         // Set the default selected button AFTER adding to the scene graph
         familyButton.setSelected(true);
-
         toggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
             stackPane.getChildren().clear();
             if (newToggle == null) {
@@ -247,7 +243,6 @@ public class PartView implements Builder<Alert> {
                 stackPane.getChildren().setAll(infoPane);
             }
         });
-
         return buttonStack;
     }
 
@@ -274,7 +269,7 @@ public class PartView implements Builder<Alert> {
         Pane keywordPane = new VBox(HBoxFx.testBox("Keyword"));
         Pane infoPane = new VBox(HBoxFx.testBox("Info")); // Pane for infoButton
         // Set up the button stack and toggle group
-        Node buttonStack = buttonStack(partModel.getStackPane(), familyPane(), notePane(), keywordPane, infoPane);
+        Node buttonStack = buttonStack(partModel.getStackPane(), familyPane(), new PartNote(this).build(), keywordPane, infoPane);
         // Add buttons and StackPane to the HBox
         partModel.getMoreInfoHbox().getChildren().addAll(buttonStack, partModel.getStackPane());
         partModel.getMoreInfoHbox().getStyleClass().add("inner-decorative-hbox");
@@ -295,59 +290,13 @@ public class PartView implements Builder<Alert> {
         return hBox;
     }
 
-    private Pane notePane() {
-        HBox hBox = HBoxFx.of(200,10);
-        VBox vBox = VBoxFx.of(10.0, Pos.TOP_LEFT, 150.0);
-        TextArea textArea = new TextArea(partModel.selectedSpareProperty().get().getComments());
-        textArea.setEditable(false);
-        Button saveButton = ButtonFx.utilityButton("/images/save-16.png","Save", 150);
-        Button modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
-        Button cancelButton = ButtonFx.utilityButton("/images/cancel-16.png", "Cancel", 150);
-        saveButton.setOnAction(button -> {
-            partModel.selectedSpareProperty().get().setComments(textArea.getText());
-            action.accept(PartMessage.SAVE_PART_NOTE);
-        });
-        modifyButton.setOnAction(button -> {
-            textArea.setEditable(true);
-            modifyButton.setVisible(false);
-            modifyButton.setManaged(false);
-            saveButton.setVisible(true);
-            saveButton.setManaged(true);
-            cancelButton.setVisible(true);
-            cancelButton.setManaged(true);
-        });
-        cancelButton.setOnAction(button -> {
-            action.accept(PartMessage.CANCEL_NOTE_UPDATE);
-            textArea.setText(partModel.selectedSpareProperty().get().getComments());
-        });
-        // Initially show only the modify button
-        saveButton.setVisible(false);
-        saveButton.setManaged(false);
-        cancelButton.setVisible(false);
-        cancelButton.setManaged(false);
-        partModel.getUpdatedNotesProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                if(newValue) {
-                    textArea.setEditable(false);
-                    saveButton.setVisible(false);
-                    saveButton.setManaged(false);
-                    cancelButton.setVisible(false);
-                    cancelButton.setManaged(false);
-                    modifyButton.setVisible(true);
-                    modifyButton.setManaged(true);
-                }
-                partModel.getUpdatedNotesProperty().set(false);
-            }
-        });
-        vBox.getChildren().addAll(modifyButton, saveButton, cancelButton);
-        hBox.getChildren().addAll(textArea, vBox);
-        return hBox;
-    }
-
     private void setSelectedChangeListener() {
         partModel.getSparesTableView().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                createOrUpdateTreeView();  // I removed new selection
+                // updates treeView for product families and ranges
+                createOrUpdateTreeView();
+                // updates the part note for new selection
+                partModel.partNoteProperty().get().setText(newSelection.getComments());
             }
         });
     }
@@ -430,5 +379,17 @@ public class PartView implements Builder<Alert> {
             partModel.getAlert().setResult(ButtonType.CANCEL);
             partModel.getAlert().close(); // Use close() instead of hide()
             partModel.getAlert().hide();
+    }
+
+    public NoteView getNoteView() {
+        return noteView;
+    }
+
+    public Consumer<PartMessage> getAction() {
+        return action;
+    }
+
+    public PartModel getPartModel() {
+        return partModel;
     }
 }

@@ -1,0 +1,87 @@
+package com.L2.mvci.parts.components;
+
+import com.L2.mvci.parts.PartMessage;
+import com.L2.mvci.parts.PartModel;
+import com.L2.mvci.parts.PartView;
+import com.L2.widgetFx.ButtonFx;
+import com.L2.widgetFx.HBoxFx;
+import com.L2.widgetFx.VBoxFx;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.util.Builder;
+
+import java.util.function.Consumer;
+
+public class PartNote implements Builder<Pane> {
+
+    private final PartModel partModel;
+    private final Consumer<PartMessage> action;
+    private Button saveButton;
+    private Button cancelButton;
+    private Button modifyButton;
+
+    public PartNote(PartView partView) {
+        this.partModel = partView.getPartModel();
+        this.action = partView.getAction();
+    }
+
+    @Override
+    public Pane build() {
+        HBox hBox = HBoxFx.of(200, 10);
+        VBox vBox = VBoxFx.of(10.0, Pos.TOP_LEFT, 150.0);
+        String comments = (partModel != null && partModel.selectedSpareProperty() != null
+                && partModel.selectedSpareProperty().get() != null)
+                ? partModel.selectedSpareProperty().get().getComments() : "";
+        partModel.partNoteProperty().set(new TextArea(comments != null ? comments : ""));
+        partModel.partNoteProperty().get().setEditable(false);
+        this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save", 150);
+        this.modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
+        this.cancelButton = ButtonFx.utilityButton("/images/cancel-16.png", "Cancel", 150);
+        saveButton.setOnAction(button -> {
+            partModel.selectedSpareProperty().get().setComments(partModel.partNoteProperty().get().getText());
+            action.accept(PartMessage.SAVE_PART_NOTE);
+        });
+        modifyButton.setOnAction(button -> showSaveAndCancelButtons());
+        cancelButton.setOnAction(button -> {
+            action.accept(PartMessage.CANCEL_NOTE_UPDATE);
+            partModel.partNoteProperty().get().setText(partModel.selectedSpareProperty().get().getComments());
+        });
+        // Initially show only the modify button
+        showEditButton();
+        partModel.getUpdatedNotesProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (newValue) {
+                    showEditButton();
+                }
+                partModel.getUpdatedNotesProperty().set(false);
+            }
+        });
+        vBox.getChildren().addAll(modifyButton, saveButton, cancelButton);
+        hBox.getChildren().addAll(partModel.partNoteProperty().get(), vBox);
+        return hBox;
+    }
+
+    private void showSaveAndCancelButtons() {
+        partModel.partNoteProperty().get().setEditable(true);
+        modifyButton.setVisible(false);
+        modifyButton.setManaged(false);
+        saveButton.setVisible(true);
+        saveButton.setManaged(true);
+        cancelButton.setVisible(true);
+        cancelButton.setManaged(true);
+    }
+
+    private void showEditButton() {
+        partModel.partNoteProperty().get().setEditable(false);
+        saveButton.setVisible(false);
+        saveButton.setManaged(false);
+        cancelButton.setVisible(false);
+        cancelButton.setManaged(false);
+        modifyButton.setVisible(true);
+        modifyButton.setManaged(true);
+    }
+}

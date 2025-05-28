@@ -38,11 +38,12 @@ public class PartModel {
     private Button cancelButton;
     private Button searchButton;
     private final BooleanProperty alertExtended = new SimpleBooleanProperty(false);
-    List<ProductFamilyFx> productFamilies = List.of();
+    private List<ProductFamilyFx> productFamilies = List.of();
     private final ObjectProperty<SparesDTO> selectedSpare = new SimpleObjectProperty<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final StringProperty comboBoxSelectedRange = new SimpleStringProperty();
     private final ObjectProperty<RangesFx> selectedRange;
+    private final ObjectProperty<TextArea> partNote = new SimpleObjectProperty<>();
     private final ObservableList<RangesFx> ranges;
     private StackPane stackPane;
     private final BooleanProperty updatedNotes = new SimpleBooleanProperty(false);
@@ -261,5 +262,9 @@ public class PartModel {
 
     public BooleanProperty getUpdatedNotesProperty() {
         return updatedNotes;
+    }
+
+    public ObjectProperty<TextArea> partNoteProperty() {
+        return partNote;
     }
 }
