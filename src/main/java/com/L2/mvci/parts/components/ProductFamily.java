@@ -14,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 
-import javax.swing.*;
 import java.util.List;
 
 public class ProductFamily implements Builder<Pane> {
@@ -38,8 +37,6 @@ public class ProductFamily implements Builder<Pane> {
 
         partModel.setTreeView(createProductFamilyTreeView());
         partModel.getTreeView().setPrefHeight(200);
-
-
         hBox.setPrefHeight(200);
         hBox.getChildren().add(partModel.getTreeView());
         partModel.getTreeView().setPrefWidth(500);
