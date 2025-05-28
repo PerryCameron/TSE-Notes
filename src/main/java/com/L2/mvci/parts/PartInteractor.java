@@ -1,6 +1,7 @@
 package com.L2.mvci.parts;
 
 import com.L2.dto.global_spares.RangesFx;
+import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
@@ -9,9 +10,11 @@ import org.slf4j.LoggerFactory;
 public class PartInteractor {
     private static final Logger logger = LoggerFactory.getLogger(PartInteractor.class);
     private final PartModel partModel;
+    private final GlobalSparesRepositoryImpl globalSparesRepo;
 
     public PartInteractor(PartModel partModel) {
     this.partModel = partModel;
+    this.globalSparesRepo = new GlobalSparesRepositoryImpl();
     }
 
     public void mapProductFamiliesJSONtoPOJO() {
@@ -51,5 +54,9 @@ public class PartInteractor {
                 partModel.setSelectedRange(null);
             }
         }
+    }
+
+    public void savePart() {
+        globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
     }
 }

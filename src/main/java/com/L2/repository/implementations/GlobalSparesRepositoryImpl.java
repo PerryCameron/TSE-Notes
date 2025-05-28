@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -514,6 +517,54 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         } catch (Exception e) {
             logger.error("Database error while counting spares by ranges: {}", e.getMessage());
             return 0; // Return 0 on error
+        }
+    }
+
+    @Override
+    public int updateSpare(SparesDTO sparesDTO) {
+        // Using UTC for consistent timestamp across all users
+        String utcTimestamp = ZonedDateTime.now(ZoneId.of("UTC"))
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z"));
+
+        String sql = "UPDATE spares SET " +
+                "pim = ?, " +
+                "spare_item = ?, " +
+                "replacement_item = ?, " +
+                "standard_exchange_item = ?, " +
+                "spare_description = ?, " +
+                "catalogue_version = ?, " +
+                "end_of_service_date = ?, " +
+                "last_update = ?, " +
+                "added_to_catalogue = ?, " +
+                "removed_from_catalogue = ?, " +
+                "comments = ?, " +
+                "keywords = ?, " +
+                "archived = ?, " +
+                "custom_add = ?, " +
+                "last_updated_by = ? " +
+                "WHERE id = ?";
+        try {
+            return jdbcTemplate.update(sql,
+                    sparesDTO.getPim(),
+                    sparesDTO.getSpareItem(),
+                    sparesDTO.getReplacementItem(),
+                    sparesDTO.getStandardExchangeItem(),
+                    sparesDTO.getSpareDescription(),
+                    sparesDTO.getCatalogueVersion(),
+                    sparesDTO.getProductEndOfServiceDate(),
+                    utcTimestamp,
+                    sparesDTO.getAddedToCatalogue(),
+                    sparesDTO.getRemovedFromCatalogue(),
+                    sparesDTO.getComments(),
+                    sparesDTO.getKeywords(),
+                    sparesDTO.getArchived() ? 1 : 0,
+                    sparesDTO.getCustomAdd() ? 1 : 0,
+                    sparesDTO.getLastUpdatedBy(),
+                    sparesDTO.getId()
+            );
+        } catch (Exception e) {
+            logger.error("Database error while updating spare: {}", e.getMessage());
+            return 0;
         }
     }
 

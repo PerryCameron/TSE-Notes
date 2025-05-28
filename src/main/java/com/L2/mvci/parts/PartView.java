@@ -305,6 +305,9 @@ public class PartView implements Builder<Alert> {
         HBox.setHgrow(vBox, Priority.ALWAYS);
         TextArea textArea = new TextArea();
         textArea.setEditable(false);
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            partModel.selectedSpareProperty().get().setComments(newValue);
+        });
         Button saveButton = ButtonFx.utilityButton("/images/save-16.png");
         Button modifyButton = ButtonFx.utilityButton("/images/modify-16.png");
         saveButton.setPrefWidth(100);
