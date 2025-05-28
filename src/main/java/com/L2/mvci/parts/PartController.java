@@ -27,6 +27,7 @@ public class PartController extends AlertController<PartMessage> {
             case JSON_MAP_PRODUCT_FAMILIES -> partInteractor.mapProductFamiliesJSONtoPOJO();
             case SET_SELECTED_RANGE -> partInteractor.setSelectedRange();
             case SAVE_PART_NOTE -> partInteractor.savePart();
+            case CANCEL_NOTE_UPDATE -> partInteractor.cancelNoteUpdate();
         }
     }
 }

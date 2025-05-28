@@ -60,4 +60,8 @@ public class PartInteractor {
         int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
         partModel.getUpdatedNotesProperty().set(success == 1);
     }
+
+    public void cancelNoteUpdate() {
+        partModel.getUpdatedNotesProperty().set(true);
+    }
 }

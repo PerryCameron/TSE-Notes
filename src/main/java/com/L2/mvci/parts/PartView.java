@@ -297,15 +297,14 @@ public class PartView implements Builder<Alert> {
 
     private Pane notePane() {
         HBox hBox = HBoxFx.of(200,10);
-        VBox vBox = VBoxFx.of(Pos.TOP_LEFT);
+        VBox vBox = VBoxFx.of(10.0, Pos.TOP_LEFT, 150.0);
         TextArea textArea = new TextArea(partModel.selectedSpareProperty().get().getComments());
         textArea.setEditable(false);
-        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
-            partModel.selectedSpareProperty().get().setComments(newValue);
-        });
-        Button saveButton = ButtonFx.utilityButton("/images/save-16.png","Save", 100);
-        Button modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 100);
+        Button saveButton = ButtonFx.utilityButton("/images/save-16.png","Save", 150);
+        Button modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
+        Button cancelButton = ButtonFx.utilityButton("/images/cancel-16.png", "Cancel", 150);
         saveButton.setOnAction(button -> {
+            partModel.selectedSpareProperty().get().setComments(textArea.getText());
             action.accept(PartMessage.SAVE_PART_NOTE);
         });
         modifyButton.setOnAction(button -> {
@@ -314,25 +313,33 @@ public class PartView implements Builder<Alert> {
             modifyButton.setManaged(false);
             saveButton.setVisible(true);
             saveButton.setManaged(true);
+            cancelButton.setVisible(true);
+            cancelButton.setManaged(true);
+        });
+        cancelButton.setOnAction(button -> {
+            action.accept(PartMessage.CANCEL_NOTE_UPDATE);
+            textArea.setText(partModel.selectedSpareProperty().get().getComments());
         });
         // Initially show only the modify button
         saveButton.setVisible(false);
         saveButton.setManaged(false);
+        cancelButton.setVisible(false);
+        cancelButton.setManaged(false);
         partModel.getUpdatedNotesProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if(newValue) {
                     textArea.setEditable(false);
                     saveButton.setVisible(false);
                     saveButton.setManaged(false);
+                    cancelButton.setVisible(false);
+                    cancelButton.setManaged(false);
                     modifyButton.setVisible(true);
                     modifyButton.setManaged(true);
-                } else {
-                    DialogueFx.errorAlert("Update Error", "Unable to save new note");
                 }
                 partModel.getUpdatedNotesProperty().set(false);
             }
         });
-        vBox.getChildren().addAll(modifyButton, saveButton);
+        vBox.getChildren().addAll(modifyButton, saveButton, cancelButton);
         hBox.getChildren().addAll(textArea, vBox);
         return hBox;
     }

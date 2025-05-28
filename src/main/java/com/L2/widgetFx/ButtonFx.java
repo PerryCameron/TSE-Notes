@@ -1,6 +1,8 @@
 package com.L2.widgetFx;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -74,6 +76,9 @@ public class ButtonFx {
         Button button = ButtonFx.of(imageViewCopy, "invisible-button");
         button.setText(text);
         button.setPrefWidth(width);
+        button.setContentDisplay(ContentDisplay.LEFT); // Image and text side-by-side, left-aligned
+        button.setAlignment(Pos.CENTER_LEFT); // Align content to the left within the button
+        button.setGraphicTextGap(5.0); // Optional: Adjust gap between image and text
         return button;
     }
 }

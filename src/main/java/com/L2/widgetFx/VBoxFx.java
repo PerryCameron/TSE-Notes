@@ -90,6 +90,13 @@ import javafx.scene.layout.VBox;
             return vBox;
         }
 
+        public static VBox of(Double spacing, Pos pos, Double prefHeight) {
+            VBox vBox = new VBox(spacing);
+            vBox.setAlignment(pos);
+            vBox.setPrefHeight(prefHeight);
+            return vBox;
+        }
+
         public static VBox of(Insets insets, DoubleProperty doubleProperty) {
             VBox vBox = new VBox();
             vBox.setPadding(insets);
