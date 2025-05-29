@@ -6,23 +6,30 @@ import com.L2.mvci.parts.PartModel;
 import com.L2.mvci.parts.PartView;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.VBoxFx;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ProductFamily implements Builder<Pane> {
-
+    private static final Logger logger = LoggerFactory.getLogger(ProductFamily.class);
     private final PartView partView;
     private final PartModel partModel;
     private Button addFamily;
     private Button addProduct;
     private Button editItem;
     private Button saveButton;
+    private Button deleteButton;
+    private BooleanProperty editMade = new SimpleBooleanProperty(false);
+    private Button testButton;
 
     public ProductFamily(PartView partView) {
         this.partView = partView;
@@ -34,6 +41,8 @@ public class ProductFamily implements Builder<Pane> {
         HBox hBox = new HBox();
         VBox vBox = VBoxFx.of(10.0, Pos.TOP_LEFT, 150.0);
 
+        logger.debug("Building TreeView with ProductFamilies: {}", partModel.getProductFamilies());
+
         partModel.setTreeView(createProductFamilyTreeView());
         partModel.getTreeView().setPrefHeight(200);
         hBox.setPrefHeight(200);
@@ -44,10 +53,13 @@ public class ProductFamily implements Builder<Pane> {
         // Explicitly set the cell factory to use EditableTreeCell
         partModel.getTreeView().setCellFactory(param -> new EditableTreeCell());
 
-        this.addFamily = ButtonFx.utilityButton("/images/new-16.png", "Add Family", 150);
-        this.addProduct = ButtonFx.utilityButton("/images/new-16.png", "Add Product", 150);
-        this.editItem = ButtonFx.utilityButton("/images/modify-16.png", "Edit Item ", 150);
-        this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Edit Item ", 150);
+        this.addFamily = ButtonFx.utilityButton("/images/create-16.png", "Add Range", 150);
+        this.addProduct = ButtonFx.utilityButton("/images/create-16.png", "Add Product", 150);
+        this.editItem = ButtonFx.utilityButton("/images/modify-16.png", "Edit Item", 150);
+        this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save Changes", 150);
+        this.deleteButton = ButtonFx.utilityButton("/images/delete-16.png", "Delete Item", 150);
+
+        this.testButton = ButtonFx.utilityButton("/images/test-16.png", "Test Products", 150);
 
         editItem.setOnAction(event -> {
             TreeItem<Object> selected = partModel.getTreeView().getSelectionModel().getSelectedItem();
@@ -57,6 +69,22 @@ public class ProductFamily implements Builder<Pane> {
                 new Alert(Alert.AlertType.WARNING, "Cannot edit the root node.").showAndWait();
             } else {
                 partModel.getTreeView().edit(selected);
+                editMade.set(true);
+            }
+        });
+
+        saveButton.setOnAction(event -> {
+            editMade.set(false);
+        });
+
+        testButton.setOnAction(event -> {
+            if (partModel.getProductFamilies() == null) {
+                System.out.println("Product families is null");
+            } else {
+                System.out.println("There are " + partModel.getProductFamilies().size() + " product families.");
+                partModel.getProductFamilies().forEach(productFamilyDTO ->
+                        System.out.println(productFamilyDTO.testString() + " (instance: " + System.identityHashCode(productFamilyDTO) + ")")
+                );
             }
         });
 
@@ -72,12 +100,26 @@ public class ProductFamily implements Builder<Pane> {
                     case 1 -> setButtonFamily();
                     case 2 -> setButtonProduct();
                 }
-                System.out.println("Selected node: " + newItem.getValue() + " Depth: " + getTreeItemDepth(newItem));
+                String displayText = getDisplayText(newItem);
+                System.out.println("Selected node: " + displayText + " Depth: " + getTreeItemDepth(newItem));
             }
         });
+
+        editMade.addListener((obs, oldItem, newItem) -> {
+            if (newItem != null) {
+                if(newItem) {
+                    saveButton.setVisible(true);
+                    saveButton.setManaged(true);
+                } else {
+                    saveButton.setVisible(false);
+                    saveButton.setManaged(false);
+                }
+            }
+        });
+        editMade.set(false);
         setNonSelected();
         hBox.getChildren().add(vBox);
-        vBox.getChildren().addAll(addFamily, addProduct, editItem);
+        vBox.getChildren().addAll(addFamily, addProduct, editItem, saveButton, deleteButton, testButton);
         return hBox;
     }
 
@@ -103,9 +145,10 @@ public class ProductFamily implements Builder<Pane> {
         TreeItem<Object> rootItem = new TreeItem<>("Product Families");
         rootItem.setExpanded(true);
         for (ProductFamilyDTO pf : productFamilies) {
+            logger.debug("Creating range node for ProductFamilyDTO: {} (instance: {})", pf.getRange(), System.identityHashCode(pf));
             TreeItem<Object> rangeItem = new TreeItem<>(pf);
             rangeItem.setExpanded(true);
-            for (String productFamily : pf.getProductFamilies()) {
+            for (Object productFamily : pf.getProductFamilies() != null ? pf.getProductFamilies() : List.of()) {
                 rangeItem.getChildren().add(new TreeItem<>(productFamily));
             }
             rootItem.getChildren().add(rangeItem);
@@ -130,10 +173,12 @@ public class ProductFamily implements Builder<Pane> {
         addFamily.setManaged(false);
         addProduct.setVisible(false);
         addProduct.setManaged(false);
-        saveButton.setVisible(false);
-        saveButton.setManaged(false);
         editItem.setVisible(false);
         editItem.setManaged(false);
+        deleteButton.setVisible(false);
+        deleteButton.setManaged(false);
+        saveButton.setVisible(false);
+        saveButton.setManaged(false);
     }
 
     private void setTreeTop() {
@@ -141,10 +186,10 @@ public class ProductFamily implements Builder<Pane> {
         addFamily.setManaged(true);
         addProduct.setVisible(false);
         addProduct.setManaged(false);
-        saveButton.setVisible(false);
-        saveButton.setManaged(false);
-        editItem.setVisible(true);
-        editItem.setManaged(true);
+        editItem.setVisible(false);
+        editItem.setManaged(false);
+        deleteButton.setVisible(false);
+        deleteButton.setManaged(false);
     }
 
     private void setButtonFamily() {
@@ -152,10 +197,10 @@ public class ProductFamily implements Builder<Pane> {
         addFamily.setManaged(false);
         addProduct.setVisible(true);
         addProduct.setManaged(true);
-        saveButton.setVisible(false);
-        saveButton.setManaged(false);
         editItem.setVisible(true);
         editItem.setManaged(true);
+        deleteButton.setVisible(false);
+        deleteButton.setManaged(false);
     }
 
     private void setButtonProduct() {
@@ -163,10 +208,10 @@ public class ProductFamily implements Builder<Pane> {
         addFamily.setManaged(false);
         addProduct.setVisible(false);
         addProduct.setManaged(false);
-        saveButton.setVisible(false);
-        saveButton.setManaged(false);
         editItem.setVisible(true);
         editItem.setManaged(true);
+        deleteButton.setVisible(false);
+        deleteButton.setManaged(false);
     }
 
     // Calculate the depth of a TreeItem in the TreeView

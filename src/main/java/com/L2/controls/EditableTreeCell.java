@@ -1,7 +1,7 @@
+// com.L2.controls/EditableTreeCell.java
 package com.L2.controls;
 
 import com.L2.dto.global_spares.ProductFamilyDTO;
-import com.L2.mvci.parts.PartInteractor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -49,12 +49,13 @@ public class EditableTreeCell extends TreeCell<Object> {
             return;
         }
         int depth = getTreeItemDepth(getTreeItem());
+        Object oldValue = getTreeItem().getValue();
         if (depth == 2) {
-            super.commitEdit(newText); // Update TreeItem value for product families (String)
+            super.commitEdit(newText); // Update TreeItem for product families
         } else {
-            super.commitEdit(getTreeItem().getValue()); // Preserve ProductFamilyDTO for ranges
+            super.commitEdit(oldValue); // Preserve ProductFamilyDTO for ranges
         }
-        updateModel(newText);
+        updateModel(newText, oldValue);
         setText(newText);
         setGraphic(null);
     }
@@ -71,7 +72,7 @@ public class EditableTreeCell extends TreeCell<Object> {
         }
     }
 
-    private void updateModel(String newText) {
+    private void updateModel(String newText, Object oldValue) {
         TreeItem<Object> treeItem = getTreeItem();
         if (treeItem == null) {
             logger.warn("No tree item selected for update.");
@@ -79,25 +80,26 @@ public class EditableTreeCell extends TreeCell<Object> {
         }
 
         int depth = getTreeItemDepth(treeItem);
-        Object value = treeItem.getValue();
-        logger.debug("Updating TreeItem at depth {} with value: {}", depth, value);
+        logger.debug("Updating TreeItem at depth {} with old value: {} (instance: {}), new text: {}",
+                depth, oldValue, System.identityHashCode(oldValue), newText);
 
         if (depth == 1) {
-            if (!(value instanceof ProductFamilyDTO)) {
-                logger.error("Expected ProductFamilyDTO at depth 1, but got: {}", value != null ? value.getClass().getName() : "null");
+            if (!(oldValue instanceof ProductFamilyDTO)) {
+                logger.error("Expected ProductFamilyDTO at depth 1, but got: {}", oldValue != null ? oldValue.getClass().getName() : "null");
                 new Alert(Alert.AlertType.ERROR, "Invalid item type for range node.").showAndWait();
                 return;
             }
-            ProductFamilyDTO pf = (ProductFamilyDTO) value;
+            ProductFamilyDTO pf = (ProductFamilyDTO) oldValue;
+            logger.debug("Updating ProductFamilyDTO range from '{}' to '{}' (instance: {})",
+                    pf.getRange(), newText, System.identityHashCode(pf));
             pf.setRange(newText);
-            // No need to set treeItem.setValue(pf), as commitEdit preserves it
         } else if (depth == 2) {
-            if (!(value instanceof String)) {
-                logger.error("Expected String at depth 2, but got: {}", value != null ? value.getClass().getName() : "null");
+            if (!(oldValue instanceof String)) {
+                logger.error("Expected String at depth 2, but got: {}", oldValue != null ? oldValue.getClass().getName() : "null");
                 new Alert(Alert.AlertType.ERROR, "Invalid item type for product family node.").showAndWait();
                 return;
             }
-            String oldValue = (String) value;
+            String oldString = (String) oldValue;
             Object parentValue = treeItem.getParent().getValue();
             if (!(parentValue instanceof ProductFamilyDTO)) {
                 logger.error("Expected ProductFamilyDTO parent, but got: {}", parentValue != null ? parentValue.getClass().getName() : "null");
@@ -105,45 +107,16 @@ public class EditableTreeCell extends TreeCell<Object> {
                 return;
             }
             ProductFamilyDTO pf = (ProductFamilyDTO) parentValue;
-            int index = pf.getProductFamilies().indexOf(oldValue);
+            logger.debug("Updating ProductFamilyDTO product family from '{}' to '{}' (instance: {})",
+                    oldString, newText, System.identityHashCode(pf));
+            int index = pf.getProductFamilies().indexOf(oldString);
             if (index >= 0) {
                 pf.getProductFamilies().set(index, newText);
-                // TreeItem value already set to newText in commitEdit
             } else {
-                logger.warn("Product family '{}' not found in parent.", oldValue);
+                logger.warn("Product family '{}' not found in parent ProductFamilyDTO: {}", oldString, pf.getRange());
             }
         } else {
             logger.warn("Unexpected depth {} for editing.", depth);
         }
     }
 }
-
-//// Placeholder methods (unchanged)
-//private void addNewFamily() {
-//    // Implement as needed
-//}
-//
-//private void addNewProduct() {
-//    // Implement as needed
-//}
-//
-//private void saveToJson() {
-//    // Implement as needed
-//}
-//
-//private void setTreeTop() {
-//    // Implement as needed
-//}
-//
-//private void setButtonFamily() {
-//    // Implement as needed
-//}
-//
-//private void setButtonProduct() {
-//    // Implement as needed
-//}
-//
-//private void setNonSelected() {
-//    // Implement as needed
-//}
-

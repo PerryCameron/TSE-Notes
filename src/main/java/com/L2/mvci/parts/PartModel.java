@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PartModel {
@@ -38,7 +39,7 @@ public class PartModel {
     private Button cancelButton;
     private Button searchButton;
     private final BooleanProperty alertExtended = new SimpleBooleanProperty(false);
-    private List<ProductFamilyDTO> productFamilies = List.of();
+    private List<ProductFamilyDTO> productFamilies = new ArrayList<>();
     private final ObjectProperty<SparesDTO> selectedSpare = new SimpleObjectProperty<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final StringProperty comboBoxSelectedRange = new SimpleStringProperty();
@@ -232,7 +233,7 @@ public class PartModel {
     }
 
     public void setProductFamilies(List<ProductFamilyDTO> productFamilies) {
-        this.productFamilies = productFamilies;
+        this.productFamilies = new ArrayList<>(productFamilies); // Ensure mutable copy
     }
 
     public ObjectProperty<SparesDTO> selectedSpareProperty() {

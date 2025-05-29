@@ -39,6 +39,10 @@ public class ProductFamilyDTO {
         this.productFamilies = productFamilies;
     }
 
+    public String testString() {
+        return "Range: " + (range != null ? range : "null") + ", ProductFamilies: " + (productFamilies != null ? productFamilies : "null");
+    }
+
     @Override
     public String toString() {
         return range != null ? range : "Unnamed Range";
