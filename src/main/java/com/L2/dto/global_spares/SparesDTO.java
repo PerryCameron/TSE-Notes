@@ -170,4 +170,26 @@ public class SparesDTO {
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
     }
+
+    @Override
+    public String toString() {
+        return "SparesDTO{" +
+                "id=" + id +
+                ", pim='" + pim + '\'' +
+                ", spareItem='" + spareItem + '\'' +
+//                ", replacementItem='" + replacementItem + '\'' +
+//                ", standardExchangeItem='" + standardExchangeItem + '\'' +
+//                ", spareDescription='" + spareDescription + '\'' +
+//                ", catalogueVersion='" + catalogueVersion + '\'' +
+//                ", productEndOfServiceDate='" + productEndOfServiceDate + '\'' +
+//                ", lastUpdate='" + lastUpdate + '\'' +
+//                ", addedToCatalogue='" + addedToCatalogue + '\'' +
+//                ", removedFromCatalogue='" + removedFromCatalogue + '\'' +
+                ", comments='" + comments + '\'' +
+                ", keywords='" + keywords + '\'' +
+//                ", archived=" + archived +
+//                ", customAdd=" + customAdd +
+                ", lastUpdatedBy='" + lastUpdatedBy + '\'' +
+                '}';
+    }
 }

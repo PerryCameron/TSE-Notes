@@ -33,10 +33,13 @@ public class PartKeyWords implements Builder<Pane> {
     public Pane build() {
         HBox hBox = HBoxFx.of(200, 10);
         VBox vBox = VBoxFx.of(10.0, Pos.TOP_LEFT, 150.0);
+        vBox.setPrefWidth(200.0);
+
         String keywords = (partModel != null && partModel.selectedSpareProperty() != null
                 && partModel.selectedSpareProperty().get() != null)
                 ? partModel.selectedSpareProperty().get().getKeywords() : "";
         partModel.partKeyWordsProperty().set(new TextArea(keywords != null ? keywords : ""));
+//        partModel.partKeyWordsProperty().get().setPrefWidth(500);
         partModel.partKeyWordsProperty().get().setEditable(false);
         this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save", 150);
         this.modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
@@ -53,6 +56,7 @@ public class PartKeyWords implements Builder<Pane> {
             action.accept(PartMessage.CANCEL_KEYWORD_UPDATE);
             partModel.partKeyWordsProperty().get().setText(partModel.selectedSpareProperty().get().getKeywords());
         });
+
         // Initially show only the modify button
         showEditButton();
         partModel.getUpdatedKeywordsProperty().addListener((observable, oldValue, newValue) -> {

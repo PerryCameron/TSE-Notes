@@ -33,6 +33,7 @@ public class PartNote implements Builder<Pane> {
     public Pane build() {
         HBox hBox = HBoxFx.of(200, 10);
         VBox vBox = VBoxFx.of(10.0, Pos.TOP_LEFT, 150.0);
+        vBox.setPrefWidth(200.0);
         String comments = (partModel != null && partModel.selectedSpareProperty() != null
                 && partModel.selectedSpareProperty().get() != null)
                 ? partModel.selectedSpareProperty().get().getComments() : "";
@@ -41,15 +42,18 @@ public class PartNote implements Builder<Pane> {
         this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save", 150);
         this.modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
         this.cancelButton = ButtonFx.utilityButton("/images/cancel-16.png", "Cancel", 150);
+
         saveButton.setOnAction(button -> {
             partModel.selectedSpareProperty().get().setComments(partModel.partNoteProperty().get().getText());
             action.accept(PartMessage.SAVE_PART_NOTE);
         });
+
         modifyButton.setOnAction(button -> showSaveAndCancelButtons());
         cancelButton.setOnAction(button -> {
             action.accept(PartMessage.CANCEL_NOTE_UPDATE);
             partModel.partNoteProperty().get().setText(partModel.selectedSpareProperty().get().getComments());
         });
+
         // Initially show only the modify button
         showEditButton();
         partModel.updatedNotesProperty().addListener((observable, oldValue, newValue) -> {

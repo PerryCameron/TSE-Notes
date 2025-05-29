@@ -136,7 +136,6 @@ public class PartView implements Builder<Alert> {
         partModel.setContent(new VBox(10));
         partModel.getContent().setPadding(new Insets(10, 10, 10, 10));
         partModel.getContent().setPrefWidth(partModel.getWidth());
-
         partModel.setMessageLabel(new Label("Part Search"));
         partModel.setSearchField(new TextField());
         partModel.getSearchField().setPromptText("Search Part Number or description...");
@@ -284,6 +283,8 @@ public class PartView implements Builder<Alert> {
                 updateTreeView();
                 // updates the part note for new selection
                 partModel.partNoteProperty().get().setText(newSelection.getComments());
+                // update the keywords for new selection
+                partModel.partKeyWordsProperty().get().setText(newSelection.getKeywords());
                 // for the tree view component, if it is in edit mode this will set it back if we select a different part
                 partModel.getTreeView().editableProperty().set(false);
             }
@@ -314,8 +315,7 @@ public class PartView implements Builder<Alert> {
         ObservableList<String> rangeItems = FXCollections.observableArrayList(
                 noteModel.getRanges().stream()
                         .map(RangesFx::getRange)
-                        .collect(Collectors.toList())
-        );
+                        .collect(Collectors.toList()));
         HBox hBox = new HBox(10);
         hBox.setAlignment(Pos.CENTER_LEFT);
         Label rangeLabel = new Label("Range");
