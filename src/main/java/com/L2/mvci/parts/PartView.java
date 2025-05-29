@@ -281,6 +281,8 @@ public class PartView implements Builder<Alert> {
                 updateTreeView();
                 // updates the part note for new selection
                 partModel.partNoteProperty().get().setText(newSelection.getComments());
+                // for the tree view component, if it is in edit mode this will set it back if we select a different part
+                partModel.getTreeView().editableProperty().set(false);
             }
         });
     }

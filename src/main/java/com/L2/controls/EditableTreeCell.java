@@ -2,6 +2,7 @@
 package com.L2.controls;
 
 import com.L2.dto.global_spares.ProductFamilyDTO;
+import com.L2.mvci.parts.components.ProductFamily;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -15,8 +16,10 @@ import static com.L2.mvci.parts.components.ProductFamily.getTreeItemDepth;
 public class EditableTreeCell extends TreeCell<Object> {
     private static final Logger logger = LoggerFactory.getLogger(EditableTreeCell.class);
     private TextField textField;
+    private final ProductFamily productFamily;
 
-    public EditableTreeCell() {
+    public EditableTreeCell(ProductFamily productFamily) {
+        this.productFamily = productFamily;
         textField = new TextField();
         textField.setOnAction(event -> commitEdit(textField.getText()));
     }
@@ -66,54 +69,65 @@ public class EditableTreeCell extends TreeCell<Object> {
         if (empty || item == null) {
             setText(null);
             setGraphic(null);
+            setStyle(null);
         } else {
-            setText(getDisplayText(getTreeItem()));
+            setText(ProductFamily.getDisplayText(getTreeItem()));
             setGraphic(isEditing() ? textField : null);
+            // Apply red style if marked for deletion
+            TreeItem<Object> treeItem = getTreeItem();
+            if (productFamily.isMarkedForDeletion(treeItem)) {
+                setStyle("-fx-text-fill: red;");
+            } else {
+                setStyle(null);
+            }
         }
     }
 
-    private void updateModel(String newText, Object oldValue) {
+    private void updateModel(String text, Object value) {
         TreeItem<Object> treeItem = getTreeItem();
         if (treeItem == null) {
             logger.warn("No tree item selected for update.");
             return;
         }
 
-        int depth = getTreeItemDepth(treeItem);
+        int depth = ProductFamily.getTreeItemDepth(treeItem);
         logger.debug("Updating TreeItem at depth {} with old value: {} (instance: {}), new text: {}",
-                depth, oldValue, System.identityHashCode(oldValue), newText);
+                depth, value, System.identityHashCode(value), text);
 
         if (depth == 1) {
-            if (!(oldValue instanceof ProductFamilyDTO)) {
-                logger.error("Expected ProductFamilyDTO at depth 1, but got: {}", oldValue != null ? oldValue.getClass().getName() : "null");
-                new Alert(Alert.AlertType.ERROR, "Invalid item type for range node.").showAndWait();
+            if (!(value instanceof ProductFamilyDTO)) {
+                logger.error("Expected ProductFamilyDTO at depth 1, but got: {}",
+                        value != null ? value.getClass().getName() : "null");
+                new Alert(Alert.AlertType.ERROR, "Invalid item type.").showAndWait();
                 return;
             }
-            ProductFamilyDTO pf = (ProductFamilyDTO) oldValue;
-            logger.debug("Updating ProductFamilyDTO range from '{}' to '{}' (instance: {})",
-                    pf.getRange(), newText, System.identityHashCode(pf));
-            pf.setRange(newText);
+            ProductFamilyDTO pf = (ProductFamilyDTO) value;
+            logger.debug("Updating ProductFamilyDTO range: {} to {} (item: {})",
+                    pf.getRange(), text, System.identityHashCode(pf));
+            pf.setRange(text);
         } else if (depth == 2) {
-            if (!(oldValue instanceof String)) {
-                logger.error("Expected String at depth 2, but got: {}", oldValue != null ? oldValue.getClass().getName() : "null");
-                new Alert(Alert.AlertType.ERROR, "Invalid item type for product family node.").showAndWait();
+            if (!(value instanceof String)) {
+                logger.error("Expected String at depth 2, but got: {}",
+                        value != null ? value.getClass().getName() : "null");
+                new Alert(Alert.AlertType.ERROR, "Invalid item type.").showAndWait();
                 return;
             }
-            String oldString = (String) oldValue;
+            String oldString = (String) value;
             Object parentValue = treeItem.getParent().getValue();
             if (!(parentValue instanceof ProductFamilyDTO)) {
-                logger.error("Expected ProductFamilyDTO parent, but got: {}", parentValue != null ? parentValue.getClass().getName() : "null");
-                new Alert(Alert.AlertType.ERROR, "Invalid parent type for product family node.").showAndWait();
+                logger.error("Expected ProductFamilyDTO parent, but got: {}",
+                        parentValue != null ? parentValue.getClass().getName() : "null");
+                new Alert(Alert.AlertType.ERROR, "Invalid parent type.").showAndWait();
                 return;
             }
-            ProductFamilyDTO pf = (ProductFamilyDTO) parentValue;
-            logger.debug("Updating ProductFamilyDTO product family from '{}' to '{}' (instance: {})",
-                    oldString, newText, System.identityHashCode(pf));
-            int index = pf.getProductFamilies().indexOf(oldString);
+            ProductFamilyDTO parentDTO = (ProductFamilyDTO) parentValue;
+            logger.debug("Updating ProductFamilyDTO product family: {} to {} (parent: {})",
+                    oldString, text, System.identityHashCode(parentDTO));
+            int index = parentDTO.getProductFamilies().indexOf(oldString);
             if (index >= 0) {
-                pf.getProductFamilies().set(index, newText);
+                parentDTO.getProductFamilies().set(index, text);
             } else {
-                logger.warn("Product family '{}' not found in parent ProductFamilyDTO: {}", oldString, pf.getRange());
+                logger.warn("Product family '{}' not found in parent: {}", oldString, parentDTO.getRange());
             }
         } else {
             logger.warn("Unexpected depth {} for editing.", depth);

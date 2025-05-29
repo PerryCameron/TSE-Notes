@@ -25,7 +25,7 @@ public class PartController extends AlertController<PartMessage> {
     @Override
     public void action(PartMessage message) {
         switch (message) {
-            case JSON_MAP_PRODUCT_FAMILIES -> partInteractor.mapProductFamiliesJSONtoPOJO();
+            case JSON_MAP_PRODUCT_FAMILIES, REFRESH_TREEVIEW -> partInteractor.mapProductFamiliesJSONtoPOJO();
             case SET_SELECTED_RANGE -> partInteractor.setSelectedRange();
             case SAVE_PART_NOTE -> partInteractor.savePart();
             case CANCEL_NOTE_UPDATE -> partInteractor.cancelNoteUpdate();

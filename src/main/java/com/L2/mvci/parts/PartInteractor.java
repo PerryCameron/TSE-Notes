@@ -21,6 +21,7 @@ public class PartInteractor {
 
     public void mapProductFamiliesJSONtoPOJO() {
         String jsonResponse = partModel.selectedSpareProperty().get().getPim();
+        partModel.getProductFamilies().clear();
         try {
             partModel.setProductFamilies(partModel.getObjectMapper().readValue(
                     jsonResponse,
