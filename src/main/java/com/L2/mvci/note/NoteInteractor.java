@@ -955,7 +955,7 @@ public class NoteInteractor {
                         noteDTO.setId(noteRepo.insertNote(noteDTO));
                         logger.debug("Inserted note: {}", noteDTO.getId());
                     }
-                } else logger.debug("No changes have been made to fields, ignoring call to save");
+                }
             }
         }
     }

@@ -52,12 +52,12 @@ public class PartNote implements Builder<Pane> {
         });
         // Initially show only the modify button
         showEditButton();
-        partModel.getUpdatedNotesProperty().addListener((observable, oldValue, newValue) -> {
+        partModel.updatedNotesProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (newValue) {
                     showEditButton();
                 }
-                partModel.getUpdatedNotesProperty().set(false);
+                partModel.updatedNotesProperty().set(false);
             }
         });
         vBox.getChildren().addAll(modifyButton, saveButton, cancelButton);

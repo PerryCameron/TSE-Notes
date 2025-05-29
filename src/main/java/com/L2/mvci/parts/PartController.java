@@ -29,6 +29,7 @@ public class PartController extends AlertController<PartMessage> {
             case SET_SELECTED_RANGE -> partInteractor.setSelectedRange();
             case SAVE_PART_NOTE -> partInteractor.savePart();
             case CANCEL_NOTE_UPDATE -> partInteractor.cancelNoteUpdate();
+            case SAVE_PIM_TO_JSON -> partInteractor.saveToJson();
         }
     }
 }

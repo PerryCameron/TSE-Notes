@@ -2,6 +2,7 @@ package com.L2.mvci.parts.components;
 
 import com.L2.controls.EditableTreeCell;
 import com.L2.dto.global_spares.ProductFamilyDTO;
+import com.L2.mvci.parts.PartMessage;
 import com.L2.mvci.parts.PartModel;
 import com.L2.mvci.parts.PartView;
 import com.L2.widgetFx.ButtonFx;
@@ -22,15 +23,17 @@ import java.util.List;
 
 public class ProductFamily implements Builder<Pane> {
     private static final Logger logger = LoggerFactory.getLogger(ProductFamily.class);
+    private final BooleanProperty editCompleted = new SimpleBooleanProperty(false);
+    private final BooleanProperty editMode = new SimpleBooleanProperty(false);
     private final PartView partView;
     private final PartModel partModel;
-    private Button addFamily;
+    private Button addRange;
     private Button addProduct;
-    private Button editItem;
+    private Button editButton;
     private Button saveButton;
     private Button deleteButton;
-    private BooleanProperty editMade = new SimpleBooleanProperty(false);
-    private Button testButton;
+
+//    private Button testButton;
 
     public ProductFamily(PartView partView) {
         this.partView = partView;
@@ -54,77 +57,66 @@ public class ProductFamily implements Builder<Pane> {
         // Explicitly set the cell factory to use EditableTreeCell
         partModel.getTreeView().setCellFactory(param -> new EditableTreeCell());
 
-        this.addFamily = ButtonFx.utilityButton("/images/create-16.png", "Add Range", 150);
+        this.addRange = ButtonFx.utilityButton("/images/create-16.png", "Add Range", 150);
         this.addProduct = ButtonFx.utilityButton("/images/create-16.png", "Add Product", 150);
-        this.editItem = ButtonFx.utilityButton("/images/modify-16.png", "Edit Item", 150);
-        this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save Changes", 150);
+        this.editButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
+        this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save", 150);
         this.deleteButton = ButtonFx.utilityButton("/images/delete-16.png", "Delete Item", 150);
+//        this.testButton = ButtonFx.utilityButton("/images/test-16.png", "Test Products", 150);
 
-        this.testButton = ButtonFx.utilityButton("/images/test-16.png", "Test Products", 150);
+        editButton.setOnAction(event -> {
+            editMode.set(true);
 
-        editItem.setOnAction(event -> {
-            TreeItem<Object> selected = partModel.getTreeView().getSelectionModel().getSelectedItem();
-            if (selected == null) {
-                new Alert(Alert.AlertType.WARNING, "No item selected.").showAndWait();
-            } else if (getTreeItemDepth(selected) == 0) {
-                new Alert(Alert.AlertType.WARNING, "Cannot edit the root node.").showAndWait();
-            } else {
-                partModel.getTreeView().edit(selected);
-                editMade.set(true);
-            }
-        });
-
-        saveButton.setOnAction(event -> {
-            editMade.set(false);
-        });
-
-        testButton.setOnAction(event -> {
-            if (partModel.getProductFamilies() == null) {
-                System.out.println("Product families is null");
-            } else {
-                System.out.println("There are " + partModel.getProductFamilies().size() + " product families.");
-                partModel.getProductFamilies().forEach(productFamilyDTO ->
-                        System.out.println(productFamilyDTO.testString() + " (instance: " + System.identityHashCode(productFamilyDTO) + ")")
-                );
-            }
         });
 
         // Other button actions (placeholders)
-        addFamily.setOnAction(event -> addNewFamily());
+        addRange.setOnAction(event -> addNewRange());
+
         addProduct.setOnAction(event -> addNewProduct());
-        saveButton.setOnAction(event -> saveToJson());
+
+        saveButton.setOnAction(event -> {
+//            editMode.set(false);
+            partView.getAction().accept(PartMessage.SAVE_PIM_TO_JSON);
+        });
+
+        editMode.addListener((observable, oldValue, newValue) -> {
+            // make button disappear
+            buttonVisible(editButton, oldValue);
+            // save button appears
+            buttonVisible(saveButton, newValue);
+            logger.info("Now in Edit mode{}: ", editMode.get());
+            partModel.getTreeView().setEditable(editMode.get());
+        });
 
         partModel.getTreeView().getSelectionModel().selectedItemProperty().addListener((obs, oldItem, newItem) -> {
             if (newItem != null) {
-                switch (getTreeItemDepth(newItem)) {
-                    case 0 -> setTreeTop();
-                    case 1 -> setButtonFamily();
-                    case 2 -> setButtonProduct();
-                }
+                if (editMode.get())
+                    switch (getTreeItemDepth(newItem)) {
+                        case 0 -> setTreeTop();
+                        case 1 -> setButtonRange();
+                        case 2 -> setButtonProduct();
+                    }
                 String displayText = getDisplayText(newItem);
                 System.out.println("Selected node: " + displayText + " Depth: " + getTreeItemDepth(newItem));
             }
         });
 
-        editMade.addListener((obs, oldItem, newItem) -> {
-            if (newItem != null) {
-                if(newItem) {
-                    saveButton.setVisible(true);
-                    saveButton.setManaged(true);
-                } else {
-                    saveButton.setVisible(false);
-                    saveButton.setManaged(false);
+        partModel.updatedRangeProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Range property is " + newValue);
+            if (newValue != null) {
+                if (newValue) {
+                    editMode.set(false);
+                    partModel.updatedRangeProperty().set(false);
                 }
             }
         });
-        editMade.set(false);
-        setNonSelected();
-        hBox.getChildren().add(vBox);
-        vBox.getChildren().addAll(addFamily, addProduct, editItem, saveButton, deleteButton, testButton);
-        return hBox;
-    }
 
-    private void saveToJson() {
+        setNonSelected();
+        partModel.getTreeView().setEditable(editMode.get());
+        buttonVisible(saveButton,false); // I should not need this
+        hBox.getChildren().add(vBox);
+        vBox.getChildren().addAll(addRange, addProduct, editButton, saveButton, deleteButton);
+        return hBox;
     }
 
     private void addNewProduct() {
@@ -133,24 +125,19 @@ public class ProductFamily implements Builder<Pane> {
             new Alert(Alert.AlertType.WARNING, "Select a range to add a product.").showAndWait();
             return;
         }
-
         ProductFamilyDTO pf = (ProductFamilyDTO) selected.getValue();
-        TreeItem<Object> rangeItem = selected;
-
         String newProduct = "New Product";
         pf.getProductFamilies().add(newProduct);
         logger.debug("Added product '{}' to ProductFamilyDTO: {} (instance: {})", newProduct, pf.getRange(), System.identityHashCode(pf));
-
         TreeItem<Object> newProductItem = new TreeItem<>(newProduct);
-        rangeItem.getChildren().add(newProductItem);
+        selected.getChildren().add(newProductItem);
         partModel.getTreeView().getSelectionModel().select(newProductItem);
     }
 
-    private void addNewFamily() {
+    private void addNewRange() {
         ProductFamilyDTO newFamily = new ProductFamilyDTO("New Range", new ArrayList<>());
         partModel.getProductFamilies().add(newFamily);
         logger.debug("Added new ProductFamilyDTO: {} (instance: {})", newFamily.getRange(), System.identityHashCode(newFamily));
-
         TreeItem<Object> rootItem = partModel.getTreeView().getRoot();
         TreeItem<Object> newRangeItem = new TreeItem<>(newFamily);
         newRangeItem.setExpanded(true);
@@ -193,51 +180,33 @@ public class ProductFamily implements Builder<Pane> {
         return value != null ? value.toString() : "";
     }
 
+    private static void buttonVisible(Button button, boolean value) {
+        button.setVisible(value);
+        button.setManaged(value);
+    }
 
     private void setNonSelected() {
-        addFamily.setVisible(false);
-        addFamily.setManaged(false);
-        addProduct.setVisible(false);
-        addProduct.setManaged(false);
-        editItem.setVisible(false);
-        editItem.setManaged(false);
-        deleteButton.setVisible(false);
-        deleteButton.setManaged(false);
-        saveButton.setVisible(false);
-        saveButton.setManaged(false);
+        buttonVisible(addRange, false);
+        buttonVisible(addProduct, false);
+        buttonVisible(deleteButton, false);
     }
 
     private void setTreeTop() {
-        addFamily.setVisible(true);
-        addFamily.setManaged(true);
-        addProduct.setVisible(false);
-        addProduct.setManaged(false);
-        editItem.setVisible(false);
-        editItem.setManaged(false);
-        deleteButton.setVisible(false);
-        deleteButton.setManaged(false);
+        buttonVisible(addRange, true);
+        buttonVisible(addProduct, false);
+        buttonVisible(deleteButton, false);
     }
 
-    private void setButtonFamily() {
-        addFamily.setVisible(false);
-        addFamily.setManaged(false);
-        addProduct.setVisible(true);
-        addProduct.setManaged(true);
-        editItem.setVisible(true);
-        editItem.setManaged(true);
-        deleteButton.setVisible(false);
-        deleteButton.setManaged(false);
+    private void setButtonRange() {
+        buttonVisible(addRange, false);
+        buttonVisible(addProduct, true);
+        buttonVisible(deleteButton, false);
     }
 
     private void setButtonProduct() {
-        addFamily.setVisible(false);
-        addFamily.setManaged(false);
-        addProduct.setVisible(false);
-        addProduct.setManaged(false);
-        editItem.setVisible(true);
-        editItem.setManaged(true);
-        deleteButton.setVisible(false);
-        deleteButton.setManaged(false);
+        buttonVisible(addRange, false);
+        buttonVisible(addProduct, false);
+        buttonVisible(deleteButton, false);
     }
 
     // Calculate the depth of a TreeItem in the TreeView
@@ -250,5 +219,50 @@ public class ProductFamily implements Builder<Pane> {
         }
         return depth;
     }
+
+
 }
 
+/////////////////////////////
+//            editItem.setOnAction(event -> {
+//            editMode.set(true);
+//            //make button disappear
+//            button(editItem, false);
+//            //save button appears
+//            button(saveButton, true);
+//            logger.info("Now in Edit mode");
+//            TreeItem<Object> selected = partModel.getTreeView().getSelectionModel().getSelectedItem();
+//            if (selected == null) {
+//                new Alert(Alert.AlertType.WARNING, "No item selected.").showAndWait();
+//            } else if (getTreeItemDepth(selected) == 0) {
+//                new Alert(Alert.AlertType.WARNING, "Cannot edit the root node.").showAndWait();
+//            } else {
+//                partModel.getTreeView().edit(selected);
+//                editMade.set(true);
+//                System.out.println("Edit Mode: " + editMade.get());
+//            }
+//        });
+
+//        testButton.setOnAction(event -> {
+//            if (partModel.getProductFamilies() == null) {
+//                System.out.println("Product families is null");
+//            } else {
+//                System.out.println("There are " + partModel.getProductFamilies().size() + " product families.");
+//                partModel.getProductFamilies().forEach(productFamilyDTO ->
+//                        System.out.println(productFamilyDTO.testString() + " (instance: " + System.identityHashCode(productFamilyDTO) + ")")
+//                );
+//            }
+//        });
+
+//        editCompleted.addListener((obs, oldItem, newItem) -> {
+//            if (newItem != null) {
+//                if(newItem) {
+//                    saveButton.setVisible(true);
+//                    saveButton.setManaged(true);
+//                } else {
+//                    saveButton.setVisible(false);
+//                    saveButton.setManaged(false);
+//                }
+//            }
+//        });
+//        editCompleted.set(false);

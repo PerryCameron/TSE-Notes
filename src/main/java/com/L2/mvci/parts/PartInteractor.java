@@ -2,8 +2,10 @@ package com.L2.mvci.parts;
 
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
+import com.L2.widgetFx.DialogueFx;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,10 +58,47 @@ public class PartInteractor {
 
     public void savePart() {
         int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
-        partModel.getUpdatedNotesProperty().set(success == 1);
+        partModel.updatedNotesProperty().set(success == 1);
     }
 
     public void cancelNoteUpdate() {
-        partModel.getUpdatedNotesProperty().set(true);
+        partModel.updatedNotesProperty().set(true);
+    }
+
+    public void saveToJson() {
+        logger.debug("Entering saveToJson, thread: {}", Thread.currentThread().getName());
+        try {
+            logger.debug("Checking PartModel");
+            if (partModel == null) {
+                throw new IllegalStateException("PartModel is null");
+            }
+            logger.debug("Accessing ObjectMapper");
+            var objectMapper = partModel.getObjectMapper();
+            if (objectMapper == null) {
+                throw new IllegalStateException("ObjectMapper is null");
+            }
+            logger.debug("Accessing ProductFamilies");
+            var productFamilies = partModel.getProductFamilies();
+            if (productFamilies == null) {
+                throw new IllegalStateException("ProductFamilies is null");
+            }
+            logger.debug("Serializing ProductFamilies: {}", productFamilies);
+            String updatedJson = objectMapper.writeValueAsString(productFamilies);
+            logger.debug("Accessing selectedSpareProperty");
+            var selectedSpare = partModel.selectedSpareProperty().get();
+            if (selectedSpare == null) {
+                throw new IllegalStateException("Selected spare is null");
+            }
+            logger.debug("Setting PIM with JSON: {}", updatedJson);
+            selectedSpare.setPim(updatedJson);
+            logger.debug("Saved ProductFamilies to JSON: {}", updatedJson);
+
+            int success = globalSparesRepo.updateSpare(selectedSpare);
+            partModel.updatedRangeProperty().set(success == 1);
+        } catch (Throwable t) {
+            logger.error("Error in saveToJson: {}", t.getMessage(), t);
+            Platform.runLater(() ->
+                    DialogueFx.errorAlert("Failed to save", "Error saving JSON: " + t.getMessage()));
+        }
     }
 }
