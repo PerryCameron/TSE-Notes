@@ -91,7 +91,7 @@ public class ProductFamily implements Builder<Pane> {
 
         setButtonVisibility(false,false,false,false);
         partModel.getTreeView().setEditable(false);
-        buttonVisible(saveButton,false); // I should not need this
+        ButtonFx.buttonVisible(saveButton,false); // I should not need this
         hBox.getChildren().add(vBox);
         vBox.getChildren().addAll(addRange, addProduct, editButton, saveButton, deleteButton, cancelButton);
         return hBox;
@@ -101,12 +101,12 @@ public class ProductFamily implements Builder<Pane> {
         partModel.getTreeView().editableProperty().addListener((observable, oldValue, editMode) -> {
             if(editMode) {
                 // we are in edit mode we don't need the edit button
-                buttonVisible(editButton, false);
-                buttonVisible(saveButton, true);
+                ButtonFx.buttonVisible(editButton, false);
+                ButtonFx.buttonVisible(saveButton, true);
                 setBySelection();
             } else {
                 // we are in normal mode
-                buttonVisible(editButton, true);
+                ButtonFx.buttonVisible(editButton, true);
                 cancelEdit();
             }
         });
@@ -118,7 +118,7 @@ public class ProductFamily implements Builder<Pane> {
         partModel.getTreeView().refresh();
         partModel.getTreeView().editableProperty().set(false);
         logger.debug("Cancelled edits and refreshed TreeView");
-        buttonVisible(saveButton, false);
+        ButtonFx.buttonVisible(saveButton, false);
         setButtonVisibility(false,false,false,false); // why did you remove this?
     }
 
@@ -260,16 +260,11 @@ public class ProductFamily implements Builder<Pane> {
         return value != null ? value.toString() : "";
     }
 
-    private static void buttonVisible(Button button, boolean value) {
-        button.setVisible(value);
-        button.setManaged(value);
-    }
-
     private void setButtonVisibility(boolean range, boolean product, boolean family, boolean cancel) {
-        buttonVisible(addRange, range);
-        buttonVisible(addProduct, product);
-        buttonVisible(deleteButton, family);
-        buttonVisible(cancelButton, cancel);
+        ButtonFx.buttonVisible(addRange, range);
+        ButtonFx.buttonVisible(addProduct, product);
+        ButtonFx.buttonVisible(deleteButton, family);
+        ButtonFx.buttonVisible(cancelButton, cancel);
     }
 
     // Calculate the depth of a TreeItem in the TreeView

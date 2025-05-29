@@ -1,4 +1,3 @@
-// com.L2.controls/EditableTreeCell.java
 package com.L2.controls;
 
 import com.L2.dto.global_spares.ProductFamilyDTO;
@@ -15,7 +14,7 @@ import static com.L2.mvci.parts.components.ProductFamily.getTreeItemDepth;
 
 public class EditableTreeCell extends TreeCell<Object> {
     private static final Logger logger = LoggerFactory.getLogger(EditableTreeCell.class);
-    private TextField textField;
+    private final TextField textField;
     private final ProductFamily productFamily;
 
     public EditableTreeCell(ProductFamily productFamily) {

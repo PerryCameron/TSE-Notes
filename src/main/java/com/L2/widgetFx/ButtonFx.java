@@ -81,4 +81,9 @@ public class ButtonFx {
         button.setGraphicTextGap(5.0); // Optional: Adjust gap between image and text
         return button;
     }
+
+    public static void buttonVisible(Button button, boolean value) {
+        button.setVisible(value);
+        button.setManaged(value);
+    }
 }

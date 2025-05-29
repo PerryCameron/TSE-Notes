@@ -16,7 +16,7 @@ import javafx.util.Builder;
 
 import java.util.function.Consumer;
 
-public class PartNote implements Builder<Pane> {
+public class PartKeyWords implements Builder<Pane> {
 
     private final PartModel partModel;
     private final Consumer<PartMessage> action;
@@ -24,7 +24,7 @@ public class PartNote implements Builder<Pane> {
     private Button cancelButton;
     private Button modifyButton;
 
-    public PartNote(PartView partView) {
+    public PartKeyWords(PartView partView) {
         this.partModel = partView.getPartModel();
         this.action = partView.getAction();
     }
