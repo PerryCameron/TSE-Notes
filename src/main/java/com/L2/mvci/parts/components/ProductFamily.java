@@ -17,6 +17,7 @@ import javafx.util.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductFamily implements Builder<Pane> {
@@ -127,9 +128,34 @@ public class ProductFamily implements Builder<Pane> {
     }
 
     private void addNewProduct() {
+        TreeItem<Object> selected = partModel.getTreeView().getSelectionModel().getSelectedItem();
+        if (selected == null || getTreeItemDepth(selected) != 1) {
+            new Alert(Alert.AlertType.WARNING, "Select a range to add a product.").showAndWait();
+            return;
+        }
+
+        ProductFamilyDTO pf = (ProductFamilyDTO) selected.getValue();
+        TreeItem<Object> rangeItem = selected;
+
+        String newProduct = "New Product";
+        pf.getProductFamilies().add(newProduct);
+        logger.debug("Added product '{}' to ProductFamilyDTO: {} (instance: {})", newProduct, pf.getRange(), System.identityHashCode(pf));
+
+        TreeItem<Object> newProductItem = new TreeItem<>(newProduct);
+        rangeItem.getChildren().add(newProductItem);
+        partModel.getTreeView().getSelectionModel().select(newProductItem);
     }
 
     private void addNewFamily() {
+        ProductFamilyDTO newFamily = new ProductFamilyDTO("New Range", new ArrayList<>());
+        partModel.getProductFamilies().add(newFamily);
+        logger.debug("Added new ProductFamilyDTO: {} (instance: {})", newFamily.getRange(), System.identityHashCode(newFamily));
+
+        TreeItem<Object> rootItem = partModel.getTreeView().getRoot();
+        TreeItem<Object> newRangeItem = new TreeItem<>(newFamily);
+        newRangeItem.setExpanded(true);
+        rootItem.getChildren().add(newRangeItem);
+        partModel.getTreeView().getSelectionModel().select(newRangeItem);
     }
 
     // Updated method to create TreeView<Object>
