@@ -7,6 +7,7 @@ import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
+import com.L2.mvci.parts.components.PartKeyWords;
 import com.L2.mvci.parts.components.PartNote;
 import com.L2.mvci.parts.components.ProductFamily;
 import com.L2.widgetFx.*;
@@ -258,7 +259,9 @@ public class PartView implements Builder<Alert> {
         // Set up the button stack and toggle group
         Node buttonStack = buttonStack(partModel.getStackPane(),
                 new ProductFamily(this).build(),
-                new PartNote(this).build(), keywordPane, infoPane);
+                new PartNote(this).build(),
+                new PartKeyWords(this).build(),
+                infoPane);
         // Add buttons and StackPane to the HBox
         partModel.getMoreInfoHbox().getChildren().addAll(buttonStack, partModel.getStackPane());
         partModel.getMoreInfoHbox().getStyleClass().add("inner-decorative-hbox");

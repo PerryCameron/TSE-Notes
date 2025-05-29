@@ -33,47 +33,50 @@ public class PartKeyWords implements Builder<Pane> {
     public Pane build() {
         HBox hBox = HBoxFx.of(200, 10);
         VBox vBox = VBoxFx.of(10.0, Pos.TOP_LEFT, 150.0);
-        String comments = (partModel != null && partModel.selectedSpareProperty() != null
+        String keywords = (partModel != null && partModel.selectedSpareProperty() != null
                 && partModel.selectedSpareProperty().get() != null)
-                ? partModel.selectedSpareProperty().get().getComments() : "";
-        partModel.partNoteProperty().set(new TextArea(comments != null ? comments : ""));
-        partModel.partNoteProperty().get().setEditable(false);
+                ? partModel.selectedSpareProperty().get().getKeywords() : "";
+        partModel.partKeyWordsProperty().set(new TextArea(keywords != null ? keywords : ""));
+        partModel.partKeyWordsProperty().get().setEditable(false);
         this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save", 150);
         this.modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
         this.cancelButton = ButtonFx.utilityButton("/images/cancel-16.png", "Cancel", 150);
+
         saveButton.setOnAction(button -> {
-            partModel.selectedSpareProperty().get().setComments(partModel.partNoteProperty().get().getText());
-            action.accept(PartMessage.SAVE_PART_NOTE);
+            partModel.selectedSpareProperty().get().setKeywords(partModel.partKeyWordsProperty().get().getText());
+            action.accept(PartMessage.SAVE_PART_KEYWORDS);
         });
+
         modifyButton.setOnAction(button -> showSaveAndCancelButtons());
+
         cancelButton.setOnAction(button -> {
-            action.accept(PartMessage.CANCEL_NOTE_UPDATE);
-            partModel.partNoteProperty().get().setText(partModel.selectedSpareProperty().get().getComments());
+            action.accept(PartMessage.CANCEL_KEYWORD_UPDATE);
+            partModel.partKeyWordsProperty().get().setText(partModel.selectedSpareProperty().get().getKeywords());
         });
         // Initially show only the modify button
         showEditButton();
-        partModel.updatedNotesProperty().addListener((observable, oldValue, newValue) -> {
+        partModel.getUpdatedKeywordsProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (newValue) {
                     showEditButton();
                 }
-                partModel.updatedNotesProperty().set(false);
+                partModel.getUpdatedKeywordsProperty().set(false);
             }
         });
         vBox.getChildren().addAll(modifyButton, saveButton, cancelButton);
-        hBox.getChildren().addAll(partModel.partNoteProperty().get(), vBox);
+        hBox.getChildren().addAll(partModel.partKeyWordsProperty().get(), vBox);
         return hBox;
     }
 
     private void showSaveAndCancelButtons() {
-        partModel.partNoteProperty().get().setEditable(true);
+        partModel.partKeyWordsProperty().get().setEditable(true);
         ButtonFx.buttonVisible(saveButton, true);
         ButtonFx.buttonVisible(cancelButton, true);
         ButtonFx.buttonVisible(modifyButton, false);
     }
 
     private void showEditButton() {
-        partModel.partNoteProperty().get().setEditable(false);
+        partModel.partKeyWordsProperty().get().setEditable(false);
         ButtonFx.buttonVisible(saveButton, false);
         ButtonFx.buttonVisible(cancelButton, false);
         ButtonFx.buttonVisible(modifyButton, true);

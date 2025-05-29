@@ -45,10 +45,12 @@ public class PartModel {
     private final StringProperty comboBoxSelectedRange = new SimpleStringProperty();
     private final ObjectProperty<RangesFx> selectedRange;
     private final ObjectProperty<TextArea> partNote = new SimpleObjectProperty<>();
+    private final ObjectProperty<TextArea> partKeyWords = new SimpleObjectProperty<>();
     private final ObservableList<RangesFx> ranges;
     private StackPane stackPane;
     private final BooleanProperty updatedNotes = new SimpleBooleanProperty(false);
     private final BooleanProperty updatedRanges = new SimpleBooleanProperty(false);
+    private final BooleanProperty updatedKeywords = new SimpleBooleanProperty(false);
 
 
     public void setSelectedRange(RangesFx range) {
@@ -265,7 +267,15 @@ public class PartModel {
         return updatedRanges;
     }
 
+    public BooleanProperty getUpdatedKeywordsProperty() {
+        return updatedKeywords;
+    }
+
     public ObjectProperty<TextArea> partNoteProperty() {
         return partNote;
+    }
+
+    public ObjectProperty<TextArea> partKeyWordsProperty() {
+        return partKeyWords;
     }
 }

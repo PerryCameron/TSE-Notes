@@ -102,4 +102,9 @@ public class PartInteractor {
                     DialogueFx.errorAlert("Failed to save", "Error saving JSON: " + t.getMessage()));
         }
     }
+
+    public void savePartKeyWords() {
+        int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
+        partModel.getUpdatedKeywordsProperty().set(success == 1);
+    }
 }
