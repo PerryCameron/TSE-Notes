@@ -2,7 +2,6 @@ package com.L2.mvci.parts;
 
 import com.L2.dto.PartFx;
 import com.L2.interfaces.AlertController;
-import com.L2.mvci.main.MainController;
 import com.L2.mvci.note.NoteView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
