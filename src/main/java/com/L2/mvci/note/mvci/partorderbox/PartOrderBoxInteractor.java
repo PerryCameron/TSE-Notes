@@ -18,4 +18,11 @@ public class PartOrderBoxInteractor {
     public void refreshFields() {
         partOrderBoxModel.refreshFields();
     }
+
+    public void printPartsTableView() {
+        System.out.println("Parts table view ----------------------------");
+        partOrderBoxModel.getTableView().getItems().forEach(item -> {
+            System.out.println(item.toTestString());
+        });
+    }
 }

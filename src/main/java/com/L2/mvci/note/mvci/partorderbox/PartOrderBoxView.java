@@ -66,18 +66,18 @@ public class PartOrderBoxView implements Builder<Region> {
         box.setPadding(new Insets(5, 5, 10, 5));
         HBox hBox = new HBox(5);
         hBox.setPadding(new Insets(0, 5, 0, 0));
-        hBox.getChildren().addAll(menu(partOrderBoxModel.getTableView(), partOrderDTO), partOrderBoxModel.getTableView());
+        hBox.getChildren().addAll(menu(partOrderDTO), partOrderBoxModel.getTableView());
         box.setSpacing(5);
         box.getChildren().addAll(toolbar(partOrderDTO), hBox);
         return box;
     }
 
-    private Node menu(TableView<PartFx> tableView, PartOrderFx partOrderDTO) {
+    private Node menu(PartOrderFx partOrderDTO) {
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(5, 0, 5, 5));
         // parts search dialogue
         Button searchButton = ButtonFx.utilityButton(() -> {
-            Optional<Alert> alert = Optional.ofNullable(new PartController(noteView, tableView).getView());
+            Optional<Alert> alert = Optional.ofNullable(new PartController(noteView, partOrderBoxModel.getTableView()).getView());
             alert.ifPresent(Dialog::showAndWait);
             // in case we have changed the ranges in settings, we need to make sure they are fresh
             noteView.getAction().accept(NoteMessage.GET_RANGES); // why is this not working??
@@ -87,13 +87,13 @@ public class PartOrderBoxView implements Builder<Region> {
             // Sort parts in reverse order
             partOrderDTO.getParts().sort(Comparator.comparing(PartFx::getId).reversed());
             // Refresh the table view layout and focus
-            tableView.layout();
-            tableView.requestFocus();
+            partOrderBoxModel.getTableView().layout();
+            partOrderBoxModel.getTableView().requestFocus();
             // Select row 0 and focus the first column
-            tableView.getSelectionModel().select(0);
-            tableView.getFocusModel().focus(0, tableView.getColumns().getFirst());  // Focus the first column (index 0)
+            partOrderBoxModel.getTableView().getSelectionModel().select(0);
+            partOrderBoxModel.getTableView().getFocusModel().focus(0, partOrderBoxModel.getTableView().getColumns().getFirst());  // Focus the first column (index 0)
             // Edit the first cell in the first row
-            tableView.edit(0, tableView.getColumns().getFirst());  // Edit row 0, first column
+            partOrderBoxModel.getTableView().edit(0, partOrderBoxModel.getTableView().getColumns().getFirst());  // Edit row 0, first column
         }, "Add Part", "/images/create-16.png");
         Button deleteButton = ButtonFx.utilityButton(() -> noteView.getAction().accept(NoteMessage.DELETE_PART), "Delete Part", "/images/delete-16.png");
         // Create the VBox from your method

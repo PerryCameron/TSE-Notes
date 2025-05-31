@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 
 public class NoteController extends Controller<NoteMessage> {
 
-    MainController mainController;
-    NoteInteractor noteInteractor;
-    NoteView noteView;
+    private MainController mainController;
+    private NoteInteractor noteInteractor;
+    private NoteView noteView;
     private static final Logger logger = LoggerFactory.getLogger(NoteController.class);
 
 
@@ -144,5 +144,9 @@ public class NoteController extends Controller<NoteMessage> {
 
     public ObservableList<RangesFx> getRanges() {
         return noteInteractor.getRangesList();
+    }
+
+    public void printPartsTableView() {
+        noteInteractor.printPartsTableView();
     }
 }

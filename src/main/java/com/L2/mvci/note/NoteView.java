@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 public class NoteView implements Builder<Region> {
     private final NoteModel noteModel;
     private final Consumer<NoteMessage> action;
+    // TODO this should all be moved to the model
     private final Subject subject;
     private final BasicInformation basicInformation;
     private final ServicePlanDetails servicePlanDetails;
@@ -24,7 +25,6 @@ public class NoteView implements Builder<Region> {
     private final IssueBox issueBox;
     private final PartOrderHeader partOrderHeader;
     private final FinishBox finishBox;
-    private final PartOrderBoxController partOrderBoxController;
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -37,8 +37,6 @@ public class NoteView implements Builder<Region> {
         this.relatedBox = new RelatedBox(this);
         this.issueBox = new IssueBox(this);
         this.partOrderHeader = new PartOrderHeader(this);
-        // used mvci, because it launches an mvci
-        this.partOrderBoxController = new PartOrderBoxController(this);
         this.finishBox = new FinishBox(this);
     }
 
@@ -51,6 +49,7 @@ public class NoteView implements Builder<Region> {
         contextMenu.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
         noteModel.noteScrollPaneProperty().setValue(scrollPane);
         noteModel.contextMenuProperty().setValue(contextMenu);
+        noteModel.setPartOrderBoxController(new PartOrderBoxController(this));
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(setMainVBox());
         setUpStatusBarCommunication();
@@ -63,7 +62,7 @@ public class NoteView implements Builder<Region> {
     private void refreshBoundNoteListener() {
         noteModel.refreshBoundNoteProperty().addListener((observable, oldValue, newValue) -> {
            if (newValue != true) {
-               partOrderBoxController.refreshFields();
+               noteModel.getPartOrderBoxController().refreshFields();
                dateTimePicker.refreshFields();
                basicInformation.refreshFields();
                issueBox.refreshFields();
@@ -103,7 +102,7 @@ public class NoteView implements Builder<Region> {
                 hBox,
                 issueBox.build(),
                 partOrderHeader.build(),
-                partOrderBoxController.getView(),
+                noteModel.getPartOrderBoxController().getView(),
                 rowThreeBox(),
                 finishBox.build());
         return vBox;
@@ -113,13 +112,13 @@ public class NoteView implements Builder<Region> {
         basicInformation.flash();
         dateTimePicker.flash();
         issueBox.flash();
-        partOrderBoxController.flash();
+        noteModel.getPartOrderBoxController().flash();
         shippingInformation.flash();
     }
 
     public void flashGroupB() {
         relatedBox.flash();
-        partOrderBoxController.flash();
+        noteModel.getPartOrderBoxController().flash();
         finishBox.flash();
     }
 
@@ -127,10 +126,10 @@ public class NoteView implements Builder<Region> {
         basicInformation.flash();
         dateTimePicker.flash();
         issueBox.flash();
-        partOrderBoxController.flash();
+        noteModel.getPartOrderBoxController().flash();
         shippingInformation.flash();
         relatedBox.flash();
-        partOrderBoxController.flash();
+        noteModel.getPartOrderBoxController().flash();
         finishBox.flash();
     }
 
@@ -161,6 +160,6 @@ public class NoteView implements Builder<Region> {
     }
 
     public PartOrderBoxController getPartOrderBoxController() {
-        return partOrderBoxController;
+        return noteModel.getPartOrderBoxController();
     }
 }

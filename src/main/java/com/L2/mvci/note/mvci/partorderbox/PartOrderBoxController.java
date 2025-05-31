@@ -37,4 +37,8 @@ public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
     public void refreshFields() {
         partOrderBoxInteractor.refreshFields();
     }
+
+    public void printPartsTableView() {
+        partOrderBoxInteractor.printPartsTableView();
+    }
 }

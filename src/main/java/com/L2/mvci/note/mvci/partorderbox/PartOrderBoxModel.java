@@ -13,9 +13,9 @@ import java.util.Map;
 public class PartOrderBoxModel {
     private VBox root;
     private final Map<PartOrderFx, VBox> partOrderMap = new HashMap<>();
-    TableView<PartFx> tableView;
-    BooleanProperty flash = new SimpleBooleanProperty(false);
-    BooleanProperty RefreshFields = new SimpleBooleanProperty(false);
+    private TableView<PartFx> tableView;
+    private final BooleanProperty flash = new SimpleBooleanProperty(false);
+    private final BooleanProperty RefreshFields = new SimpleBooleanProperty(false);
 
     public VBox getRoot() {
         return root;

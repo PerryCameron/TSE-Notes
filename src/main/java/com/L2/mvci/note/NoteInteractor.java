@@ -132,8 +132,7 @@ public class NoteInteractor {
             case subject -> noteModel.subjectAreaProperty().get(); // Text from subject area
             case issue -> noteModel.issueAreaProperty().get();     // Text from issue area
             case finish -> noteModel.finishAreaProperty().get();   // Text from finish area
-            default ->
-                    throw new IllegalArgumentException("Unknown area type: " + areaType); // Unreachable with enum, but required for switch exhaustiveness
+            // Unreachable with enum, but required for switch exhaustiveness
         };
 
         // Get the current text length
@@ -142,7 +141,7 @@ public class NoteInteractor {
         // Create a StyleSpans with no styles for the entire text
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
         // Handle empty text
-        spansBuilder.add(Collections.emptyList(), Math.max(textLength, 0));
+        spansBuilder.add(Collections.emptyList(), textLength);
         StyleSpans<Collection<String>> emptySpans = spansBuilder.create();
 
         // Apply the empty spans to clear highlights
@@ -474,7 +473,7 @@ public class NoteInteractor {
             });
             stringBuilder.append("</table>");
         }
-        System.out.println(stringBuilder.toString());
+        System.out.println(stringBuilder);
         return stringBuilder.toString();
     }
 
@@ -754,7 +753,7 @@ public class NoteInteractor {
             stringBuilder.append(copyAllPartOrdersToHTML(false)).append("<br>").append("\r\n");
         }
         stringBuilder.append(shippingInformationToHTML()).append("<br>").append("\r\n");
-        System.out.println(stringBuilder.toString());
+        System.out.println(stringBuilder);
         return stringBuilder.toString();
     }
 
@@ -1145,7 +1144,7 @@ public class NoteInteractor {
      * @throws IllegalStateException if {@code noteModel} or {@code globalSparesRepo} is null
      */
     public void updateRangeCount() {
-        if (noteModel == null || globalSparesRepo == null) {
+        if (noteModel == null) {
             logger.error("Cannot update range count: noteModel or globalSparesRepo is null");
             throw new IllegalStateException("noteModel and globalSparesRepo must not be null");
         }
@@ -1194,5 +1193,9 @@ public class NoteInteractor {
 
     public ObservableList<RangesFx> getRangesList() {
         return noteModel.getRanges();
+    }
+
+    public void printPartsTableView() {
+        noteModel.getPartOrderBoxController().printPartsTableView();
     }
 }
