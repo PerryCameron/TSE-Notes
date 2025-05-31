@@ -24,7 +24,6 @@ public class MainController extends Controller<MainMessage> {
     private final MainView mainView;
     private final MainModel mainModel;
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
-    // sub-controllers
     private NoteController noteController = null;
     private SettingsController settingsController = null;
     private NoteListController noteListController = null;
@@ -119,18 +118,13 @@ public class MainController extends Controller<MainMessage> {
     public NoteController getNoteController() {
         return noteController;
     }
-
     public NoteListController getNoteListController() {
         return noteListController;
     }
-
     public SettingsController getSettingsController() {
         return settingsController;
     }
-
     public MainModel getMainModel() {
         return mainModel;
     }
-
-
 }

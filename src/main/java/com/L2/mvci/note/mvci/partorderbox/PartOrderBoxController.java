@@ -1,12 +1,10 @@
-package com.L2.mvci.note.mvci;
+package com.L2.mvci.note.mvci.partorderbox;
 
 import com.L2.interfaces.Controller;
-import com.L2.mvci.main.MainMessage;
+import com.L2.mvci.note.NoteView;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.function.Consumer;
 
 public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
     private static final Logger logger = LoggerFactory.getLogger(PartOrderBoxController.class);
@@ -14,12 +12,11 @@ public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
     private final PartOrderBoxView partOrderBoxView;
     private final PartOrderBoxInteractor partOrderBoxInteractor;
 
-    public PartOrderBoxController(Consumer<MainMessage> PartOrderBoxModel) {
+    public PartOrderBoxController(NoteView noteView) {
         this.partOrderBoxModel = new PartOrderBoxModel();
         this.partOrderBoxInteractor = new PartOrderBoxInteractor(partOrderBoxModel);
-        this.partOrderBoxView = new PartOrderBoxView(partOrderBoxModel, this::action);
+        this.partOrderBoxView = new PartOrderBoxView(partOrderBoxModel, noteView, this::action);
     }
-
 
     @Override
     public Region getView() {
@@ -28,6 +25,16 @@ public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
 
     @Override
     public void action(PartOrderBoxMessage actionEnum) {
+        switch (actionEnum) {
+            case FLASH -> partOrderBoxInteractor.flash();
+        }
+    }
 
+    public void flash() {
+        partOrderBoxInteractor.flash();
+    }
+
+    public void refreshFields() {
+        partOrderBoxInteractor.refreshFields();
     }
 }

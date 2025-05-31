@@ -1,6 +1,7 @@
 package com.L2.mvci.note;
 
 import com.L2.mvci.note.components.*;
+import com.L2.mvci.note.mvci.partorderbox.PartOrderBoxController;
 import com.L2.widgetFx.*;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -23,7 +24,7 @@ public class NoteView implements Builder<Region> {
     private final IssueBox issueBox;
     private final PartOrderHeader partOrderHeader;
     private final FinishBox finishBox;
-    private final PartOrderBoxList partOrderBoxList;
+    private final PartOrderBoxController partOrderBoxList;
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -36,7 +37,7 @@ public class NoteView implements Builder<Region> {
         this.relatedBox = new RelatedBox(this);
         this.issueBox = new IssueBox(this);
         this.partOrderHeader = new PartOrderHeader(this);
-        this.partOrderBoxList = new PartOrderBoxList(this);
+        this.partOrderBoxList = new PartOrderBoxController(this);
         this.finishBox = new FinishBox(this);
     }
 
@@ -101,7 +102,7 @@ public class NoteView implements Builder<Region> {
                 hBox,
                 issueBox.build(),
                 partOrderHeader.build(),
-                partOrderBoxList.build(),
+                partOrderBoxList.getView(),
                 rowThreeBox(),
                 finishBox.build());
         return vBox;
@@ -158,7 +159,7 @@ public class NoteView implements Builder<Region> {
         return action;
     }
 
-    public PartOrderBoxList getPartOrderBoxList() {
-        return partOrderBoxList;
-    }
+//    public PartOrderBoxList getPartOrderBoxList() {
+//        return partOrderBoxList;
+//    }
 }
