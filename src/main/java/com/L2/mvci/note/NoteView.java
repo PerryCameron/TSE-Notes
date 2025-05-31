@@ -24,7 +24,7 @@ public class NoteView implements Builder<Region> {
     private final IssueBox issueBox;
     private final PartOrderHeader partOrderHeader;
     private final FinishBox finishBox;
-    private final PartOrderBoxController partOrderBoxList;
+    private final PartOrderBoxController partOrderBoxController;
 
     public NoteView(NoteModel noteModel, Consumer<NoteMessage> message) {
         this.noteModel = noteModel;
@@ -37,7 +37,8 @@ public class NoteView implements Builder<Region> {
         this.relatedBox = new RelatedBox(this);
         this.issueBox = new IssueBox(this);
         this.partOrderHeader = new PartOrderHeader(this);
-        this.partOrderBoxList = new PartOrderBoxController(this);
+        // used mvci, because it launches an mvci
+        this.partOrderBoxController = new PartOrderBoxController(this);
         this.finishBox = new FinishBox(this);
     }
 
@@ -62,7 +63,7 @@ public class NoteView implements Builder<Region> {
     private void refreshBoundNoteListener() {
         noteModel.refreshBoundNoteProperty().addListener((observable, oldValue, newValue) -> {
            if (newValue != true) {
-               partOrderBoxList.refreshFields();
+               partOrderBoxController.refreshFields();
                dateTimePicker.refreshFields();
                basicInformation.refreshFields();
                issueBox.refreshFields();
@@ -102,7 +103,7 @@ public class NoteView implements Builder<Region> {
                 hBox,
                 issueBox.build(),
                 partOrderHeader.build(),
-                partOrderBoxList.getView(),
+                partOrderBoxController.getView(),
                 rowThreeBox(),
                 finishBox.build());
         return vBox;
@@ -112,13 +113,13 @@ public class NoteView implements Builder<Region> {
         basicInformation.flash();
         dateTimePicker.flash();
         issueBox.flash();
-        partOrderBoxList.flash();
+        partOrderBoxController.flash();
         shippingInformation.flash();
     }
 
     public void flashGroupB() {
         relatedBox.flash();
-        partOrderBoxList.flash();
+        partOrderBoxController.flash();
         finishBox.flash();
     }
 
@@ -126,10 +127,10 @@ public class NoteView implements Builder<Region> {
         basicInformation.flash();
         dateTimePicker.flash();
         issueBox.flash();
-        partOrderBoxList.flash();
+        partOrderBoxController.flash();
         shippingInformation.flash();
         relatedBox.flash();
-        partOrderBoxList.flash();
+        partOrderBoxController.flash();
         finishBox.flash();
     }
 
@@ -159,7 +160,7 @@ public class NoteView implements Builder<Region> {
         return action;
     }
 
-//    public PartOrderBoxList getPartOrderBoxList() {
-//        return partOrderBoxList;
-//    }
+    public PartOrderBoxController getPartOrderBoxController() {
+        return partOrderBoxController;
+    }
 }

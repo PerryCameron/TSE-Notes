@@ -1,10 +1,10 @@
-package com.L2.mvci.parts.components;
+package com.L2.mvci.note.mvci.partorderbox.mvci.parts.components;
 
 import com.L2.controls.EditableTreeCell;
 import com.L2.dto.global_spares.ProductFamilyDTO;
-import com.L2.mvci.parts.PartMessage;
-import com.L2.mvci.parts.PartModel;
-import com.L2.mvci.parts.PartView;
+import com.L2.mvci.note.mvci.partorderbox.mvci.parts.PartMessage;
+import com.L2.mvci.note.mvci.partorderbox.mvci.parts.PartModel;
+import com.L2.mvci.note.mvci.partorderbox.mvci.parts.PartView;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Pos;

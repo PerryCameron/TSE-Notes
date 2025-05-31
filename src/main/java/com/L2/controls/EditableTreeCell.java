@@ -1,7 +1,7 @@
 package com.L2.controls;
 
 import com.L2.dto.global_spares.ProductFamilyDTO;
-import com.L2.mvci.parts.components.ProductFamily;
+import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.ProductFamily;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -9,8 +9,8 @@ import javafx.scene.control.TreeItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.L2.mvci.parts.components.ProductFamily.getDisplayText;
-import static com.L2.mvci.parts.components.ProductFamily.getTreeItemDepth;
+import static com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.ProductFamily.getDisplayText;
+import static com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.ProductFamily.getTreeItemDepth;
 
 public class EditableTreeCell extends TreeCell<Object> {
     private static final Logger logger = LoggerFactory.getLogger(EditableTreeCell.class);

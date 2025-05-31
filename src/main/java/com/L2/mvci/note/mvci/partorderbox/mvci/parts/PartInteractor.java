@@ -1,4 +1,4 @@
-package com.L2.mvci.parts;
+package com.L2.mvci.note.mvci.partorderbox.mvci.parts;
 
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;

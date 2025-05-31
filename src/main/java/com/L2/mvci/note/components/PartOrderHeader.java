@@ -26,7 +26,7 @@ public class PartOrderHeader implements Builder<Region> {
         root.getStyleClass().add("decorative-header-box");
         Button newButton = ButtonFx.utilityButton( () -> {
             noteView.getAction().accept(NoteMessage.INSERT_PART_ORDER);
-            noteView.getPartOrderBoxList().refreshFields();
+            noteView.getPartOrderBoxController().refreshFields();
         },"New Part Order", "/images/create-16.png");
         newButton.setTooltip(ToolTipFx.of("Create New Part Order"));
         Button[] buttons = new Button[] { newButton };

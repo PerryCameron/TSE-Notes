@@ -1,4 +1,4 @@
-package com.L2.mvci.parts;
+package com.L2.mvci.note.mvci.partorderbox.mvci.parts;
 
 public enum PartMessage {
     SET_SELECTED_RANGE, SAVE_PART_NOTE, CANCEL_NOTE_UPDATE, SAVE_PIM_TO_JSON, REFRESH_TREEVIEW, SAVE_PART_KEYWORDS, CANCEL_KEYWORD_UPDATE, JSON_MAP_PRODUCT_FAMILIES
