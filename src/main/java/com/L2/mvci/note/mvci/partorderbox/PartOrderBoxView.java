@@ -58,6 +58,7 @@ public class PartOrderBoxView implements Builder<Region> {
     public Node createPartOrderBox(PartOrderFx partOrderDTO) {
         VBox box = new VBox(10);
         Map<String, TableColumn<PartFx, String>> tableColumnMap = new HashMap<>();
+        // TableView<PartFx>
         partOrderBoxModel.setTableView(buildTable(partOrderDTO, tableColumnMap));
         box.setOnMouseEntered(event -> noteModel.selectedPartOrderProperty().set(partOrderDTO));
         box.setOnMouseExited(event -> partOrderBoxModel.getTableView().getSelectionModel().clearSelection());
@@ -77,7 +78,8 @@ public class PartOrderBoxView implements Builder<Region> {
         vBox.setPadding(new Insets(5, 0, 5, 5));
         // parts search dialogue
         Button searchButton = ButtonFx.utilityButton(() -> {
-            Optional<Alert> alert = Optional.ofNullable(new PartController(noteView, partOrderBoxModel.getTableView()).getView());
+            partOrderBoxModel.setPartController(new PartController(noteView, partOrderBoxModel.getTableView()));
+            Optional<Alert> alert = Optional.ofNullable(partOrderBoxModel.getPartController().getView());
             alert.ifPresent(Dialog::showAndWait);
             // in case we have changed the ranges in settings, we need to make sure they are fresh
             noteView.getAction().accept(NoteMessage.GET_RANGES); // why is this not working??

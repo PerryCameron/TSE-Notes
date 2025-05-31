@@ -72,6 +72,7 @@ public class MainController extends Controller<MainMessage> {
             case UPDATE_TABLE -> noteListController.action(NoteListMessage.UPDATE_TABLE);
             case PRINT_RANGES -> mainInteractor.printRanges(noteController.getRanges());
             case PRINT_PARTS -> noteController.printPartsTableView();
+            case PRINT_PRODUCT_FAMILIES -> printProductFamilies();
         }
     }
 
@@ -127,5 +128,10 @@ public class MainController extends Controller<MainMessage> {
     }
     public MainModel getMainModel() {
         return mainModel;
+    }
+
+    // sending signal all the way to part mvci
+    public void printProductFamilies() {
+        getNoteController().printProductFamilies();
     }
 }

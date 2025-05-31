@@ -962,7 +962,6 @@ public class NoteInteractor {
     public void insertPartOrder() {
         int noteId = noteModel.boundNoteProperty().get().getId();
         PartOrderFx partOrderDTO = new PartOrderFx(0, noteId, "", false);
-        System.out.println("showType value: " + partOrderDTO.showTypeProperty().get());
         partOrderDTO.setId(partOrderRepo.insertPartOrder(partOrderDTO));
         noteModel.boundNoteProperty().get().getPartOrders().add(partOrderDTO);
         noteModel.selectedPartOrderProperty().set(noteModel.boundNoteProperty().get().getPartOrders().getLast());
@@ -976,7 +975,6 @@ public class NoteInteractor {
         PartFx partDTO = noteModel.selectedPartProperty().get();
         PartOrderFx partOrderDTO = noteModel.selectedPartOrderProperty().get();
         partOrderRepo.deletePart(partDTO);
-        System.out.println("Setting selected part to null");
         noteModel.selectedPartProperty().set(null);
         partOrderDTO.getParts().remove(partDTO);
     }
@@ -988,7 +986,6 @@ public class NoteInteractor {
         // adding part to part order in FX view
         noteModel.selectedPartOrderProperty().get().getParts().add(partDTO);
         // this is only used for saving part used from search dialogue
-        System.out.println("setting selected part property with part from search dialogue,partDTO.ID=" + partDTO.getId());
         noteModel.selectedPartProperty().set(partDTO);  // this may need to be moved
     }
 
@@ -1111,7 +1108,7 @@ public class NoteInteractor {
 
         searchTask.setOnFailed(e -> {
             Throwable ex = e.getSource().getException();
-            System.err.println("Search failed: " + ex.getMessage());
+            logger.error("Search failed: {}", ex.getMessage());
             // Optionally notify user via UI
         });
         Executors.newCachedThreadPool().execute(searchTask);
@@ -1197,5 +1194,10 @@ public class NoteInteractor {
 
     public void printPartsTableView() {
         noteModel.getPartOrderBoxController().printPartsTableView();
+    }
+
+    // sending signal to part mvci
+    public void printProductFamilies() {
+        noteModel.getPartOrderBoxController().printProductFamilies();
     }
 }

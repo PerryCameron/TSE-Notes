@@ -149,4 +149,9 @@ public class NoteController extends Controller<NoteMessage> {
     public void printPartsTableView() {
         noteInteractor.printPartsTableView();
     }
+
+    // sending signal to part mvci
+    public void printProductFamilies() {
+        noteInteractor.printProductFamilies();
+    }
 }

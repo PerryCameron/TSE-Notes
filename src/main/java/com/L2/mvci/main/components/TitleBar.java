@@ -242,7 +242,8 @@ public class TitleBar implements Builder<Region> {
         MenuItem showDebugLog = MenuFx.menuItemOf("Show Log", x -> mainView.getAction().accept(MainMessage.SHOW_LOG), null);
         MenuItem testDebug = MenuFx.menuItemOf("Test Ranges", x -> mainView.getAction().accept(MainMessage.PRINT_RANGES), null);
         MenuItem testDebug2 = MenuFx.menuItemOf("Print Selected Part Order Table", x -> mainView.getAction().accept(MainMessage.PRINT_PARTS), null);
-        menu.getItems().addAll(showDebugLog, testDebug, testDebug2);
+        MenuItem testDebug3 = MenuFx.menuItemOf("Print Selected Part Order Table", x -> mainView.getAction().accept(MainMessage.PRINT_PRODUCT_FAMILIES), null);
+        menu.getItems().addAll(showDebugLog, testDebug, testDebug2, testDebug3);
         return menu;
     }
 

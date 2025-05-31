@@ -2,6 +2,7 @@ package com.L2.mvci.note.mvci.partorderbox;
 
 import com.L2.dto.PartFx;
 import com.L2.dto.PartOrderFx;
+import com.L2.mvci.note.mvci.partorderbox.mvci.parts.PartController;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.TableView;
@@ -16,6 +17,7 @@ public class PartOrderBoxModel {
     private TableView<PartFx> tableView;
     private final BooleanProperty flash = new SimpleBooleanProperty(false);
     private final BooleanProperty RefreshFields = new SimpleBooleanProperty(false);
+    private PartController partController;
 
     public VBox getRoot() {
         return root;
@@ -53,5 +55,13 @@ public class PartOrderBoxModel {
     public void refreshFields() {
         RefreshFields.set(true);
         RefreshFields.set(false);
+    }
+
+    public PartController getPartController() {
+        return partController;
+    }
+
+    public void setPartController(PartController partController) {
+        this.partController = partController;
     }
 }

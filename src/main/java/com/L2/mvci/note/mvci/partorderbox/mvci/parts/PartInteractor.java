@@ -107,4 +107,10 @@ public class PartInteractor {
         int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
         partModel.getUpdatedKeywordsProperty().set(success == 1);
     }
+
+    public void printProductFamilies() {
+        if(partModel.getProductFamilies() == null) System.out.println("ProductFamilies is null");
+        else
+        partModel.getProductFamilies().forEach(System.out::println);
+    }
 }

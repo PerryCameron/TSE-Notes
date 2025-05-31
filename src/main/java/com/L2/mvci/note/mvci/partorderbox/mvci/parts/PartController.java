@@ -33,4 +33,8 @@ public class PartController extends AlertController<PartMessage> {
 
         }
     }
+
+    public void printProductFamilies() {
+        partInteractor.printProductFamilies();
+    }
 }

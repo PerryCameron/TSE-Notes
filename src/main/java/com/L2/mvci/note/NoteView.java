@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 public class NoteView implements Builder<Region> {
     private final NoteModel noteModel;
     private final Consumer<NoteMessage> action;
-    // TODO this should all be moved to the model
+    // TODO below should all be moved to the model
     private final Subject subject;
     private final BasicInformation basicInformation;
     private final ServicePlanDetails servicePlanDetails;

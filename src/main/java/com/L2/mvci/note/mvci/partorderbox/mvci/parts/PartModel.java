@@ -43,14 +43,17 @@ public class PartModel {
     private final ObjectProperty<SparesDTO> selectedSpare = new SimpleObjectProperty<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final StringProperty comboBoxSelectedRange = new SimpleStringProperty();
+    // from noteModel
     private final ObjectProperty<RangesFx> selectedRange;
     private final ObjectProperty<TextArea> partNote = new SimpleObjectProperty<>();
     private final ObjectProperty<TextArea> partKeyWords = new SimpleObjectProperty<>();
+    // from noteModel
     private final ObservableList<RangesFx> ranges;
     private StackPane stackPane;
     private final BooleanProperty updatedNotes = new SimpleBooleanProperty(false);
     private final BooleanProperty updatedRanges = new SimpleBooleanProperty(false);
     private final BooleanProperty updatedKeywords = new SimpleBooleanProperty(false);
+    private PartController partController;
 
 
     public void setSelectedRange(RangesFx range) {
@@ -278,4 +281,5 @@ public class PartModel {
     public ObjectProperty<TextArea> partKeyWordsProperty() {
         return partKeyWords;
     }
+
 }

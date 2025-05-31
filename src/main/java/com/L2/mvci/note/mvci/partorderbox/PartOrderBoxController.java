@@ -41,4 +41,8 @@ public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
     public void printPartsTableView() {
         partOrderBoxInteractor.printPartsTableView();
     }
+
+    public void printProductFamilies() {
+        partOrderBoxInteractor.printProductFamilies();
+    }
 }
