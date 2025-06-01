@@ -11,6 +11,7 @@ import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -39,6 +40,7 @@ public class PartModel {
     private TextField searchField;
     private Button cancelButton;
     private Button searchButton;
+    private ImageView imageView;
     private final BooleanProperty alertExtended = new SimpleBooleanProperty(false);
     private List<ProductFamilyDTO> productFamilies = new ArrayList<>();
     private final ObjectProperty<SparesDTO> selectedSpare = new SimpleObjectProperty<>();
@@ -59,249 +61,198 @@ public class PartModel {
     private ObjectProperty<Image> image = new SimpleObjectProperty<>();
 
 
+
+
+
+
     public void setSelectedRange(RangesFx range) {
         selectedRange.setValue(range);
     }
-
     public PartModel(NoteModel noteModel, TableView<PartFx> tableView) {
         this.ranges = noteModel.getRanges();
         this.partsTableView = tableView;
         this.selectedRange = noteModel.selectedRangeProperty();
     }
-
     public TableView<PartFx> getPartsTableView() {
         return partsTableView;
     }
-
     public void setPartsTableView(TableView<PartFx> partsTableView) {
         this.partsTableView = partsTableView;
     }
-
     public NoteModel getNoteModel() {
         return noteModel;
     }
-
     public void setNoteModel(NoteModel noteModel) {
         this.noteModel = noteModel;
     }
-
     public boolean isSearchedBefore() {
         return searchedBefore.get();
     }
-
     public SimpleBooleanProperty searchedBeforeProperty() {
         return searchedBefore;
     }
-
     public void setSearchedBefore(boolean searchedBefore) {
         this.searchedBefore.set(searchedBefore);
     }
-
     public NoteView getNoteView() {
         return noteView;
     }
-
     public void setNoteView(NoteView noteView) {
         this.noteView = noteView;
     }
-
     public Alert getAlert() {
         return alert;
     }
-
     public DialogPane getDialogPane() {
         return dialogPane;
     }
-
     public double getWidth() {
         return 800;
     }
-
     public Label getRangeNumberLabel() {
         return rangeNumberLabel;
     }
-
     public void setRangeNumberLabel(Label rangeNumberLabel) {
         this.rangeNumberLabel = rangeNumberLabel;
     }
-
     public Label getMessageLabel() {
         return messageLabel;
     }
-
     public void setMessageLabel(Label messageLabel) {
         this.messageLabel = messageLabel;
     }
-
     public TableView<SparesDTO> getSparesTableView() {
         return sparesTableView;
     }
-
     public void setSparesTableView(TableView<SparesDTO> sparesTableView) {
         this.sparesTableView = sparesTableView;
     }
-
     public TreeView<Object> getTreeView() {
         return treeView;
     }
-
     public void setTreeView(TreeView<Object> treeView) {
         this.treeView = treeView;
     }
-
     public HBox getResultsLabelHbox() {
         return resultsLabelHbox;
     }
-
     public void setResultsLabelHbox(HBox resultsLabelHbox) {
         this.resultsLabelHbox = resultsLabelHbox;
     }
-
     public HBox getButtonBox() {
         return buttonBox;
     }
-
     public void setButtonBox(HBox buttonBox) {
         this.buttonBox = buttonBox;
     }
-
     public HBox getPartContainerButtonBox() {
         return partContainerButtonBox;
     }
-
     public void setPartContainerButtonBox(HBox partContainerButtonBox) {
         this.partContainerButtonBox = partContainerButtonBox;
     }
-
     public HBox getMoreInfoHbox() {
         return moreInfoHbox;
     }
-
     public void setMoreInfoHbox(HBox moreInfoHbox) {
         this.moreInfoHbox = moreInfoHbox;
     }
-
     public VBox getCancelHbox() {
         return cancelHbox;
     }
-
     public void setCancelHbox(VBox cancelHbox) {
         this.cancelHbox = cancelHbox;
     }
-
     public VBox getPartContainer() {
         return partContainer;
     }
-
     public void setPartContainer(VBox partContainer) {
         this.partContainer = partContainer;
     }
-
     public VBox getContent() {
         return content;
     }
-
     public void setContent(VBox content) {
         this.content = content;
     }
-
     public TextField getSearchField() {
         return searchField;
     }
-
     public void setSearchField(TextField searchField) {
         this.searchField = searchField;
     }
-
     public Button getCancelButton() {
         return cancelButton;
     }
-
     public void setCancelButton(Button cancelButton) {
         this.cancelButton = cancelButton;
     }
-
     public Button getSearchButton() {
         return searchButton;
     }
-
     public void setSearchButton(Button searchButton) {
         this.searchButton = searchButton;
     }
-
     public boolean isAlertExtended() {
         return alertExtended.get();
     }
-
     public BooleanProperty alertExtendedProperty() {
         return alertExtended;
     }
-
     public List<ProductFamilyDTO> getProductFamilies() {
         return productFamilies;
     }
-
     public void setProductFamilies(List<ProductFamilyDTO> productFamilies) {
         this.productFamilies = new ArrayList<>(productFamilies); // Ensure mutable copy
     }
-
     public ObjectProperty<SparesDTO> selectedSpareProperty() {
         return selectedSpare;
     }
-
     public ObjectMapper getObjectMapper() { return objectMapper; }
-
     public StringProperty comboBoxSelectedRangeProperty() { return comboBoxSelectedRange; }
-
     public ObservableList<RangesFx> getRanges() {
         return ranges;
     }
-
     public StackPane getStackPane() {
         return stackPane;
     }
-
     public void setStackPane(StackPane stackPane) {
         this.stackPane = stackPane;
     }
-
     public BooleanProperty updatedNotesProperty() {
         return updatedNotes;
     }
-
     public BooleanProperty updatedRangeProperty() {
         return updatedRanges;
     }
-
     public BooleanProperty getUpdatedKeywordsProperty() {
         return updatedKeywords;
     }
-
     public ObjectProperty<TextArea> partNoteProperty() {
         return partNote;
     }
-
     public ObjectProperty<TextArea> partKeyWordsProperty() {
         return partKeyWords;
     }
-
     public Byte[] getImageBytes() {
         return imageBytes;
     }
-
     public void setImageBytes(Byte[] imageBytes) {
         this.imageBytes = imageBytes;
     }
-
-    public Image getImage() {
-        return image.get();
+//    public Image getImage() {
+//        return image.get();
+//    }
+//    public ObjectProperty<Image> imageProperty() {
+//        return image;
+//    }
+//    public void setImage(Image image) {
+//        this.image.set(image);
+//    }
+    public ImageView getImageView() {
+        return imageView;
     }
-
-    public ObjectProperty<Image> imageProperty() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image.set(image);
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
     }
 }

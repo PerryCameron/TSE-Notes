@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -140,7 +141,8 @@ public class PartInteractor {
             byte[] imageBytes = convertToPngBytes(resizedImage);
             // Update ImageView
             Image newImage = new Image(new ByteArrayInputStream(imageBytes));
-            partModel.setImage(newImage);
+//            partModel.setImage(newImage);
+            partModel.getImageView().setImage(newImage);
             globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getId(), imageBytes);
         } catch (Exception e) {
             DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
@@ -160,9 +162,9 @@ public class PartInteractor {
 
         // Create resized image
         BufferedImage resized = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
-        java.awt.Graphics2D g2d = resized.createGraphics();
-        g2d.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION,
-                java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        Graphics2D g2d = resized.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2d.drawImage(original, 0, 0, scaledWidth, scaledHeight, null);
         g2d.dispose();
         return resized;
@@ -175,9 +177,16 @@ public class PartInteractor {
     }
 
     public void getImage() {
+        Image image;
         try {
-            Image image = new Image(new ByteArrayInputStream(globalSparesRepo.getImage(partModel.selectedSpareProperty().get().getId())));
-            partModel.setImage(image);
+            byte[] imageAsByte = globalSparesRepo.getImage(partModel.selectedSpareProperty().get().getId());
+            if (imageAsByte != null) {
+                image = new Image(new ByteArrayInputStream(imageAsByte));
+//                partModel.setImage(image);
+                partModel.getImageView().setImage(image);
+            } else {
+                logger.error("Image is null");
+            }
         } catch (Exception e) {
             logger.error("Error in getImage: {}", e.getMessage(), e);
         }

@@ -292,6 +292,9 @@ public class PartView implements Builder<Alert> {
                 partModel.partKeyWordsProperty().get().setText(newSelection.getKeywords());
                 // for the tree view component, if it is in edit mode this will set it back if we select a different part
                 partModel.getTreeView().editableProperty().set(false);
+
+                partModel.getImageView().setImage(null);
+                action.accept(PartMessage.LOAD_IMAGE);
             }
         });
     }
