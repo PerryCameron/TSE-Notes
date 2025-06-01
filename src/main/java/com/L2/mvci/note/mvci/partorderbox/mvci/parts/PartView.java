@@ -273,10 +273,10 @@ public class PartView implements Builder<Alert> {
         // Add HBox to content
         partModel.getContent().getChildren().add(3, partModel.getMoreInfoHbox());
         // Configure the Alert's DialogPane
-        partModel.getAlert().getDialogPane().setPrefSize(800, 600);
-        partModel.getAlert().getDialogPane().setMinSize(800, 600);
+        partModel.getAlert().getDialogPane().setPrefSize(800, 700);
+        partModel.getAlert().getDialogPane().setMinSize(800, 700);
         partModel.getAlert().getDialogPane().getScene().getWindow().sizeToScene();
-        repositionAlertForNewSize();
+        repositionAlertForNewSize(800,700);
     }
 
     private void setSelectedChangeListener() {
@@ -293,7 +293,7 @@ public class PartView implements Builder<Alert> {
                 // for the tree view component, if it is in edit mode this will set it back if we select a different part
                 partModel.getTreeView().editableProperty().set(false);
 
-                partModel.getImageView().setImage(null);
+                partModel.getImageView().setImage(null); // probably don't need this
                 action.accept(PartMessage.LOAD_IMAGE);
             }
         });
@@ -305,15 +305,15 @@ public class PartView implements Builder<Alert> {
         partModel.getTreeView().setRoot(rootItem);
     }
 
-    private void repositionAlertForNewSize() {
+    private void repositionAlertForNewSize(double width, double height) {
         Stage alertStage = (Stage) partModel.getAlert().getDialogPane().getScene().getWindow();
         if (BaseApplication.primaryStage != null) {
             double primaryX = BaseApplication.primaryStage.getX();
             double primaryY = BaseApplication.primaryStage.getY();
             double primaryWidth = BaseApplication.primaryStage.getWidth();
             double primaryHeight = BaseApplication.primaryStage.getHeight();
-            alertStage.setX(primaryX + (primaryWidth / 2) - ((double) 800 / 2));
-            alertStage.setY(primaryY + (primaryHeight / 2) - ((double) 600 / 2));
+            alertStage.setX(primaryX + (primaryWidth / 2) - (width / 2));
+            alertStage.setY(primaryY + (primaryHeight / 2) - (height / 2));
         } else {
             logger.error("Warning: primaryStage is null");
         }

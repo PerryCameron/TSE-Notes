@@ -4,6 +4,7 @@ import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteModel;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 import java.util.Arrays;
 
@@ -26,6 +27,25 @@ public class SparesTableViewFx {
         col.setMinWidth(125);
         col.setPrefWidth(125);
         col.setMaxWidth(125);
+
+        // Set custom cell factory for selectable text
+        col.setCellFactory(column -> new TextFieldTableCell<SparesDTO, String>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    // Use a read-only TextField for selection
+                    setText(item);
+                    setEditable(false); // Ensure no editing
+                    // Optional: Style to match non-editable look
+                    setStyle("-fx-background-color: transparent; -fx-alignment: center-left;");
+                }
+            }
+        });
+
         return col;
     }
 
