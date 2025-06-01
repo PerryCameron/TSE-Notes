@@ -9,6 +9,7 @@ import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
 import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.PartKeyWords;
 import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.PartNote;
+import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.PartPhoto;
 import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.ProductFamily;
 import com.L2.widgetFx.*;
 import javafx.beans.value.ChangeListener;
@@ -214,16 +215,17 @@ public class PartView implements Builder<Alert> {
         return moreButton;
     }
 
-    private Node buttonStack(StackPane stackPane, Pane familyPane, Pane notePane, Pane keywordsPane, Pane infoPane) {
+    private Node buttonStack(StackPane stackPane, Pane familyPane, Pane photoPane, Pane notePane, Pane keywordsPane, Pane infoPane) {
         VBox buttonStack = new VBox();
         buttonStack.setMinWidth(150);
         ToggleGroup toggleGroup = new ToggleGroup();
+        ToggleButton photoButton = ButtonFx.toggleof("Photo", 150, toggleGroup);
         ToggleButton familyButton = ButtonFx.toggleof("Product Families", 150, toggleGroup);
         ToggleButton noteButton = ButtonFx.toggleof("Note", 150, toggleGroup);
         ToggleButton keyWordsButton = ButtonFx.toggleof("Keywords", 150, toggleGroup);
         ToggleButton infoButton = ButtonFx.toggleof("Info", 150, toggleGroup);
         // Add all buttons to the VBox first
-        buttonStack.getChildren().addAll(familyButton, noteButton, keyWordsButton, infoButton);
+        buttonStack.getChildren().addAll(familyButton, photoButton, noteButton, keyWordsButton, infoButton);
         // Set default content in the StackPane
         stackPane.getChildren().setAll(familyPane);
         // Set the default selected button AFTER adding to the scene graph
@@ -240,6 +242,8 @@ public class PartView implements Builder<Alert> {
                 stackPane.getChildren().setAll(keywordsPane);
             } else if (newToggle == infoButton) {
                 stackPane.getChildren().setAll(infoPane);
+            } else if (newToggle == photoButton) {
+                stackPane.getChildren().setAll(photoPane);
             }
         });
         return buttonStack;
@@ -258,6 +262,7 @@ public class PartView implements Builder<Alert> {
         // Set up the button stack and toggle group
         Node buttonStack = buttonStack(partModel.getStackPane(),
                 new ProductFamily(this).build(),
+                new PartPhoto(this).build(),
                 new PartNote(this).build(),
                 new PartKeyWords(this).build(),
                 infoPane);

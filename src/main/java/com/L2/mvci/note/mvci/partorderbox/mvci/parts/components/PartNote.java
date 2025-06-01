@@ -39,6 +39,7 @@ public class PartNote implements Builder<Pane> {
                 ? partModel.selectedSpareProperty().get().getComments() : "";
         partModel.partNoteProperty().set(new TextArea(comments != null ? comments : ""));
         partModel.partNoteProperty().get().setEditable(false);
+        partModel.partNoteProperty().get().setWrapText(true);
         this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save", 150);
         this.modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
         this.cancelButton = ButtonFx.utilityButton("/images/cancel-16.png", "Cancel", 150);

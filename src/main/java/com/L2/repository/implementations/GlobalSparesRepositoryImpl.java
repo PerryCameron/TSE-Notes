@@ -15,7 +15,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -29,172 +31,6 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
 
     public GlobalSparesRepositoryImpl() {
         this.jdbcTemplate = new JdbcTemplate(DatabaseConnector.getGlobalSparesDataSource("Global Spares Repo"));
-    }
-
-    @Override
-    public int insertProductToSpare(ProductToSparesDTO productToSpares) {
-        try {
-            String sql = "INSERT INTO product_to_spares (" +
-                    "pim_range, pim_product_family, spare_item, replacement_item, " +
-                    "standard_exchange_item, spare_description, catalogue_version, " +
-                    "end_of_service_date, last_update, added_to_catalogue, removed_from_catalogue, " +
-                    "comments, keywords, archived, custom_add, last_updated_by) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-
-            jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, productToSpares.getPimRange());
-                ps.setString(2, productToSpares.getPimProductFamily());
-                ps.setString(3, productToSpares.getSpareItem());
-                ps.setString(4, productToSpares.getReplacementItem());
-                ps.setString(5, productToSpares.getStandardExchangeItem());
-                ps.setString(6, productToSpares.getSpareDescription());
-                ps.setString(7, productToSpares.getCatalogueVersion());
-                ps.setString(8, productToSpares.getProductEndOfServiceDate());
-                ps.setString(9, productToSpares.getLastUpdate());
-                ps.setString(10, productToSpares.getAddedToCatalogue());
-                ps.setString(11, productToSpares.getRemovedFromCatalogue());
-                ps.setString(12, productToSpares.getComments());
-                ps.setString(13, productToSpares.getKeywords());
-                ps.setBoolean(14, productToSpares.isArchived());
-                ps.setBoolean(15, productToSpares.isCustomAdd());
-                ps.setString(16, productToSpares.getLastUpdatedBy());
-                return ps;
-            }, keyHolder);
-
-            return keyHolder.getKey().intValue(); // Returns the generated ID
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            logger.error(productToSpares.toString());
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
-    public int insertConsolidatedProductToSpare(ProductToSparesDTO productToSpares) {
-        try {
-            String sql = "INSERT INTO spares (" +
-                    "pim, spare_item, replacement_item, " +
-                    "standard_exchange_item, spare_description, catalogue_version, " +
-                    "end_of_service_date, last_update, added_to_catalogue, removed_from_catalogue, " +
-                    "comments, keywords, archived, custom_add, last_updated_by) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-
-            jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, productToSpares.getPimRange());
-                ps.setString(2, productToSpares.getSpareItem());
-                ps.setString(3, productToSpares.getReplacementItem());
-                ps.setString(4, productToSpares.getStandardExchangeItem());
-                ps.setString(5, productToSpares.getSpareDescription());
-                ps.setString(6, productToSpares.getCatalogueVersion());
-                ps.setString(7, productToSpares.getProductEndOfServiceDate());
-                ps.setString(8, productToSpares.getLastUpdate());
-                ps.setString(9, productToSpares.getAddedToCatalogue());
-                ps.setString(10, productToSpares.getRemovedFromCatalogue());
-                ps.setString(11, productToSpares.getComments());
-                ps.setString(12, productToSpares.getKeywords());
-                ps.setBoolean(13, productToSpares.isArchived());
-                ps.setBoolean(14, productToSpares.isCustomAdd());
-                ps.setString(15, productToSpares.getLastUpdatedBy());
-                return ps;
-            }, keyHolder);
-
-            return keyHolder.getKey().intValue(); // Returns the generated ID
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            logger.error(productToSpares.toString());
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
-    public int insertReplacementCr(ReplacementCrDTO replacementCrDTO) {
-        try {
-            String sql = "INSERT INTO replacement_cr (" +
-                    "item, replacement, comment, old_qty, new_qty)" +
-                    "VALUES (?, ?, ?, ?, ?)";
-
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-
-            jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, replacementCrDTO.getItem());
-                ps.setString(2, replacementCrDTO.getReplacement());
-                ps.setString(3, replacementCrDTO.getComment());
-                ps.setDouble(4, replacementCrDTO.getOld_qty()); // error: incompatible types: int cannot be converted to String
-                ps.setDouble(5, replacementCrDTO.getNew_qty());
-                return ps;
-            }, keyHolder);
-
-            return keyHolder.getKey().intValue(); // Returns the generated ID
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
-    public List<String> getDistinctSpareItems(boolean isArchived) {
-        try {
-            int archived = isArchived ? 1 : 0;
-            String query = "SELECT DISTINCT spare_item FROM product_to_spares WHERE product_to_spares.archived = ? ORDER BY spare_item";
-            List<String> spareItemsList = jdbcTemplate.query(query, (rs, rowNum) -> rs.getString("spare_item"), archived);
-            return spareItemsList;
-        } catch (Exception e) {
-            logger.error("Error querying spare items: {}", e.getMessage(), e);
-            return List.of();
-        }
-    }
-
-    @Override
-    public List<String> getRangesFromSpareItem(String spare, boolean isArchived) {
-        try {
-            int archived = isArchived ? 1 : 0;
-            String query = "SELECT DISTINCT pim_range FROM product_to_spares WHERE spare_item = ? AND product_to_spares.archived = ?";
-            List<String> spareItemsList = jdbcTemplate.query(query, (rs, rowNum) -> rs.getString("pim_range"), spare, archived);
-            return spareItemsList;
-        } catch (Exception e) {
-            logger.error("Error querying spare items: {}", e.getMessage(), e);
-            return List.of();
-        }
-    }
-
-    @Override
-    public List<String> getProductsFromRange(String spare, String range, boolean isArchived) {
-        try {
-            int archived = isArchived ? 1 : 0;
-            String query = "SELECT DISTINCT product_to_spares.pim_product_family from product_to_spares where spare_item = ? and pim_range = ? and product_to_spares.archived = ?";
-            List<String> spareItemsList = jdbcTemplate.query(query, (rs, rowNum) -> rs.getString("pim_product_family"), spare, range, archived);
-            return spareItemsList; // Return the list directly
-        } catch (Exception e) {
-            logger.error("Error querying spare items: {}", e.getMessage(), e);
-            return List.of(); // Return empty list on error
-        }
-    }
-
-    @Override
-    public ProductToSparesDTO getProductToSpares(String spare, boolean isArchived) {
-        try {
-            String query = """
-                    SELECT *
-                    FROM product_to_spares
-                    WHERE spare_item = ? and archived = ?
-                    ORDER BY id
-                    LIMIT 1;
-                    """;
-            return jdbcTemplate.queryForObject(query, new ProductToSparesRowMapper(), spare, isArchived);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-        return null;
     }
 
     @Override
@@ -571,8 +407,8 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     @Override
     public int deleteRange(RangesFx range) {
         try {
-        String sql = "DELETE FROM ranges WHERE id = ?";
-        return jdbcTemplate.update(sql, range.getId());
+            String sql = "DELETE FROM ranges WHERE id = ?";
+            return jdbcTemplate.update(sql, range.getId());
         } catch (Exception e) {
             logger.error("Database error while deleting ranges: {}", e.getMessage());
             return 0;
@@ -596,7 +432,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             boolean exists = range.getId() > 0 && jdbcTemplate.queryForObject(existsSql, Integer.class, range.getId()) > 0;
             if (exists) {
                 // Update existing record
-             int success =  jdbcTemplate.update(updateSql,
+                int success = jdbcTemplate.update(updateSql,
                         range.getRange(),
                         range.getProductFamily(),
                         range.getRangeType(),
@@ -622,4 +458,30 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         }
     }
 
+    public int saveImageToDatabase(int spareId, byte[] imageBytes) throws SQLException {
+        try {
+            // Delete existing image(s) for the spare part
+            String deleteSql = "DELETE FROM spare_pictures WHERE spare_id = ?";
+            jdbcTemplate.update(deleteSql, spareId);
+
+            // Insert new image
+            String insertSql = "INSERT INTO spare_pictures (spare_id, picture) VALUES (?, ?)";
+            return jdbcTemplate.update(insertSql, spareId, imageBytes);
+        } catch (Exception e) {
+            logger.error("Database error while saving image: {}", e.getMessage());
+            return 0;
+        }
+    }
+
+    public byte[] getImage(int spareId) throws SQLException {
+        try {
+            String query = "SELECT picture FROM spare_pictures WHERE spare_id = ?";
+            return jdbcTemplate.queryForObject(query, new Object[]{spareId}, byte[].class);
+        } catch (Exception e) {
+            logger.error("Database error while getting image: {}", e.getMessage());
+            return null;
+        }
+    }
 }
+
+

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -54,6 +55,8 @@ public class PartModel {
     private final BooleanProperty updatedRanges = new SimpleBooleanProperty(false);
     private final BooleanProperty updatedKeywords = new SimpleBooleanProperty(false);
     private PartController partController;
+    private Byte[] imageBytes;
+    private ObjectProperty<Image> image = new SimpleObjectProperty<>();
 
 
     public void setSelectedRange(RangesFx range) {
@@ -282,4 +285,23 @@ public class PartModel {
         return partKeyWords;
     }
 
+    public Byte[] getImageBytes() {
+        return imageBytes;
+    }
+
+    public void setImageBytes(Byte[] imageBytes) {
+        this.imageBytes = imageBytes;
+    }
+
+    public Image getImage() {
+        return image.get();
+    }
+
+    public ObjectProperty<Image> imageProperty() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image.set(image);
+    }
 }

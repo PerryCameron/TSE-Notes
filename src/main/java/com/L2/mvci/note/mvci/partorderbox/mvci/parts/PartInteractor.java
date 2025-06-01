@@ -6,8 +6,17 @@ import com.L2.widgetFx.DialogueFx;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javafx.scene.input.Clipboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.sql.SQLException;
 
 public class PartInteractor {
     private static final Logger logger = LoggerFactory.getLogger(PartInteractor.class);
@@ -15,8 +24,8 @@ public class PartInteractor {
     private final GlobalSparesRepositoryImpl globalSparesRepo;
 
     public PartInteractor(PartModel partModel) {
-    this.partModel = partModel;
-    this.globalSparesRepo = new GlobalSparesRepositoryImpl();
+        this.partModel = partModel;
+        this.globalSparesRepo = new GlobalSparesRepositoryImpl();
     }
 
     public void mapProductFamiliesJSONtoPOJO() {
@@ -25,7 +34,8 @@ public class PartInteractor {
         try {
             partModel.setProductFamilies(partModel.getObjectMapper().readValue(
                     jsonResponse,
-                    new TypeReference<>() {}
+                    new TypeReference<>() {
+                    }
             ));
         } catch (JsonProcessingException ex) {
             logger.error("Error deserializing JSON: {}", ex.getMessage());
@@ -109,8 +119,67 @@ public class PartInteractor {
     }
 
     public void printProductFamilies() {
-        if(partModel.getProductFamilies() == null) System.out.println("ProductFamilies is null");
+        if (partModel.getProductFamilies() == null) System.out.println("ProductFamilies is null");
         else
-        partModel.getProductFamilies().forEach(System.out::println);
+            partModel.getProductFamilies().forEach(System.out::println);
+    }
+
+    public void saveImage() {
+        try {
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            if (!clipboard.hasImage()) {
+                DialogueFx.errorAlert("Error", "No image found in clipboard. Use Windows + Shift + S to capture an image.");
+                return;
+            }
+            // Convert clipboard image to BufferedImage
+            Image fxImage = clipboard.getImage();
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
+            // Resize image to 357x265 pixels
+            BufferedImage resizedImage = resizeImage(bufferedImage, 357, 265);
+            // Convert to PNG bytes (~100 KB)
+            byte[] imageBytes = convertToPngBytes(resizedImage);
+            // Update ImageView
+            Image newImage = new Image(new ByteArrayInputStream(imageBytes));
+            partModel.setImage(newImage);
+            globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getId(), imageBytes);
+        } catch (Exception e) {
+            DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private BufferedImage resizeImage(BufferedImage original, int targetWidth, int targetHeight) {
+        // Calculate scaled dimensions while preserving aspect ratio
+        double aspectRatio = (double) original.getWidth() / original.getHeight();
+        int scaledWidth = targetWidth;
+        int scaledHeight = (int) (targetWidth / aspectRatio);
+        if (scaledHeight > targetHeight) {
+            scaledHeight = targetHeight;
+            scaledWidth = (int) (targetHeight * aspectRatio);
+        }
+
+        // Create resized image
+        BufferedImage resized = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
+        java.awt.Graphics2D g2d = resized.createGraphics();
+        g2d.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION,
+                java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.drawImage(original, 0, 0, scaledWidth, scaledHeight, null);
+        g2d.dispose();
+        return resized;
+    }
+
+    private byte[] convertToPngBytes(BufferedImage image) throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", baos);
+        return baos.toByteArray();
+    }
+
+    public void getImage() {
+        try {
+            Image image = new Image(new ByteArrayInputStream(globalSparesRepo.getImage(partModel.selectedSpareProperty().get().getId())));
+            partModel.setImage(image);
+        } catch (Exception e) {
+            logger.error("Error in getImage: {}", e.getMessage(), e);
+        }
     }
 }
