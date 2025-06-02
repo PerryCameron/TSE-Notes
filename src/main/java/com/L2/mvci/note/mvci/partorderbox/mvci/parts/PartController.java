@@ -6,8 +6,6 @@ import com.L2.mvci.note.NoteView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 
-import java.sql.SQLException;
-
 public class PartController extends AlertController<PartMessage> {
     private final PartInteractor partInteractor;
     private final PartView partView;

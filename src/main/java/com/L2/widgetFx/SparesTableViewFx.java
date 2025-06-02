@@ -2,9 +2,7 @@ package com.L2.widgetFx;
 
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteModel;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.*;
 
 import java.util.Arrays;
 
@@ -24,28 +22,10 @@ public class SparesTableViewFx {
                 "Spare Part"
         );
         col.setStyle("-fx-alignment: center-left");
-        col.setMinWidth(125);
-        col.setPrefWidth(125);
-        col.setMaxWidth(125);
-
-        // Set custom cell factory for selectable text
-        col.setCellFactory(column -> new TextFieldTableCell<SparesDTO, String>() {
-            @Override
-            public void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    // Use a read-only TextField for selection
-                    setText(item);
-                    setEditable(false); // Ensure no editing
-                    // Optional: Style to match non-editable look
-                    setStyle("-fx-background-color: transparent; -fx-alignment: center-left;");
-                }
-            }
-        });
-
+        col.setMinWidth(165);
+        col.setPrefWidth(165);
+        col.setMaxWidth(165);
+        makeTextSelectable(col);
         return col;
     }
 
@@ -56,9 +36,10 @@ public class SparesTableViewFx {
                 "Description"
         );
         col.setStyle("-fx-alignment: center-left");
-        col.setMinWidth(540);
-        col.setPrefWidth(540);
-        col.setMaxWidth(540);
+        col.setMinWidth(500);
+        col.setPrefWidth(500);
+        col.setMaxWidth(500);
+        makeTextSelectable(col);
         return col;
     }
 
@@ -73,5 +54,37 @@ public class SparesTableViewFx {
         col.setPrefWidth(125);
         col.setMaxWidth(125);
         return col;
+    }
+
+    // makes it so you can highlight text and still select the row
+    private static void makeTextSelectable(TableColumn<SparesDTO, String> col) {
+        col.setCellFactory(column -> new TableCell<>() {
+            private final TextField textField = new TextField();
+
+            {
+                textField.setEditable(false);
+                textField.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+                textField.setFocusTraversable(false);
+
+                // Allow row selection by forwarding mouse events
+                textField.setOnMouseClicked(event -> {
+                    TableRow<?> row = getTableRow();
+                    if (row != null && !row.isEmpty()) {
+                        getTableView().getSelectionModel().select(row.getIndex());
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    textField.setText(item);
+                    setGraphic(textField);
+                }
+            }
+        });
     }
 }
