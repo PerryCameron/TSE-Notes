@@ -1117,9 +1117,14 @@ public class NoteInteractor {
         Executors.newCachedThreadPool().execute(searchTask);
     }
 
+    /**
+     * Retrieves all ranges from the repository, clears the existing ranges in the note model,
+     * and populates it with sorted ranges based on the range property.
+     */
     public void getRanges() {
         noteModel.getRanges().clear();
         noteModel.getRanges().addAll(globalSparesRepo.findAllRanges());
+        FXCollections.sort(noteModel.getRanges(), Comparator.comparing(RangesFx::getRange));
     }
 
     // helper method to return appropriate sting

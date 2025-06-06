@@ -154,7 +154,6 @@ public class PartInteractor {
             byte[] imageBytes = convertToPngBytes(resizedImage);
             // Update ImageView
             Image newImage = new Image(new ByteArrayInputStream(imageBytes));
-//            partModel.setImage(newImage);
             partModel.getImageView().setImage(newImage);
             globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getId(), imageBytes);
         } catch (Exception e) {

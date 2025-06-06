@@ -240,15 +240,6 @@ public class PartModel {
     public void setImageBytes(Byte[] imageBytes) {
         this.imageBytes = imageBytes;
     }
-//    public Image getImage() {
-//        return image.get();
-//    }
-//    public ObjectProperty<Image> imageProperty() {
-//        return image;
-//    }
-//    public void setImage(Image image) {
-//        this.image.set(image);
-//    }
     public ImageView getImageView() {
         return imageView;
     }

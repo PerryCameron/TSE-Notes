@@ -232,13 +232,13 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
                     rangeWhereBuilder + " AND " + keywordWhereBuilder;
             try {
                 jdbcTemplate.query(debugRowsSql, (rs, rowNum) -> {
-                    System.out.println("Debug row - pim: " + rs.getString("pim") +
-                            ", spare_description: " + rs.getString("spare_description") +
-                            ", spare_item: " + rs.getString("spare_item") +
-                            ", replacement_item: " + rs.getString("replacement_item") +
-                            ", standard_exchange_item: " + rs.getString("standard_exchange_item") +
-                            ", comments: " + rs.getString("comments") +
-                            ", keywords: " + rs.getString("keywords"));
+//                    System.out.println("Debug row - pim: " + rs.getString("pim") +
+//                            ", spare_description: " + rs.getString("spare_description") +
+//                            ", spare_item: " + rs.getString("spare_item") +
+//                            ", replacement_item: " + rs.getString("replacement_item") +
+//                            ", standard_exchange_item: " + rs.getString("standard_exchange_item") +
+//                            ", comments: " + rs.getString("comments") +
+//                            ", keywords: " + rs.getString("keywords"));
                     return null;
                 });
             } catch (Exception e) {
