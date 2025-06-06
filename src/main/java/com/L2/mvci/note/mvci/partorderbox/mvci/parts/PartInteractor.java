@@ -1,6 +1,8 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.parts;
 
+import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesFx;
+import com.L2.dto.global_spares.SparesDTO;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.widgetFx.DialogueFx;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,7 +19,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.sql.SQLException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class PartInteractor {
     private static final Logger logger = LoggerFactory.getLogger(PartInteractor.class);
@@ -71,6 +75,15 @@ public class PartInteractor {
     public void savePart() {
         int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
         partModel.updatedNotesProperty().set(success == 1);
+    }
+
+    // userDTO.getFullName() will be the name of the person making the edit
+    public void saveEditHistory(UserDTO userDTO) {
+        String utcTimestamp = ZonedDateTime.now(ZoneId.of("UTC"))
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z"));
+        SparesDTO sparesDTO = partModel.selectedSpareProperty().get();
+
+        sparesDTO.setLastUpdate(utcTimestamp);
     }
 
     public void cancelNoteUpdate() {
@@ -185,7 +198,7 @@ public class PartInteractor {
 //                partModel.setImage(image);
                 partModel.getImageView().setImage(image);
             } else {
-                logger.error("Image is null");
+                logger.warn("Image is not available for this spare");
             }
         } catch (Exception e) {
             logger.error("Error in getImage: {}", e.getMessage(), e);

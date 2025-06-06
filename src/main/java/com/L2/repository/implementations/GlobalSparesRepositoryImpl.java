@@ -2,7 +2,6 @@ package com.L2.repository.implementations;
 
 import com.L2.dto.global_spares.*;
 import com.L2.repository.interfaces.GlobalSparesRepository;
-import com.L2.repository.rowmappers.ProductToSparesRowMapper;
 import com.L2.repository.rowmappers.RangesRowMapper;
 import com.L2.repository.rowmappers.SparesRowMapper;
 import com.L2.static_tools.DatabaseConnector;
@@ -15,10 +14,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -118,6 +115,45 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         return jdbcTemplate.query(sql, ps -> {
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i)); // JDBC indices are 1-based
+            }
+        }, new SparesRowMapper());
+    }
+
+    /**
+     * Searches for spares matching a single keyword across multiple columns and scores results based on matches.
+     * The search is case-insensitive and matches the keyword against columns: spare_item, replacement_item,
+     * standard_exchange_item, spare_description, comments, and keywords. Results are ordered by match score
+     * (sum of matches across columns) in descending order.
+     *
+     * @param keyword the single keyword to search for
+     * @return a list of {@link SparesDTO} objects representing matching spares, ordered by match score
+     */
+    @Override
+    public List<SparesDTO> searchSparesScoringSingleKeyword(String keyword) {
+        String sql = """
+        SELECT *, (
+            (CASE WHEN spare_item LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN replacement_item LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN standard_exchange_item LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN spare_description LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN comments LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
+            (CASE WHEN keywords LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END)
+        ) AS match_score
+        FROM spares
+        WHERE spare_item LIKE ? COLLATE NOCASE
+            OR replacement_item LIKE ? COLLATE NOCASE
+            OR standard_exchange_item LIKE ? COLLATE NOCASE
+            OR spare_description LIKE ? COLLATE NOCASE
+            OR comments LIKE ? COLLATE NOCASE
+            OR keywords LIKE ? COLLATE NOCASE
+        ORDER BY match_score DESC
+    """;
+        String normalizedKeyword = NoteTools.normalizeDate(keyword);
+        String likeKeyword = "%" + normalizedKeyword + "%";
+
+        return jdbcTemplate.query(sql, ps -> {
+            for (int i = 1; i <= 12; i++) {
+                ps.setString(i, likeKeyword); // JDBC indices are 1-based
             }
         }, new SparesRowMapper());
     }
@@ -473,12 +509,20 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         }
     }
 
+    /**
+     * Retrieves the image associated with a spare by its ID from the spare_pictures table.
+     *
+     * @param spareId the ID of the spare whose image is to be retrieved
+     * @return a byte array containing the image data, or null if no image is found or an error occurs
+     * @throws SQLException if a database error occurs
+     */
+    @Override
     public byte[] getImage(int spareId) throws SQLException {
         try {
             String query = "SELECT picture FROM spare_pictures WHERE spare_id = ?";
-            return jdbcTemplate.queryForObject(query, new Object[]{spareId}, byte[].class);
+            return jdbcTemplate.queryForObject(query, byte[].class, spareId);
         } catch (Exception e) {
-            logger.error("Database error while getting image: {}", e.getMessage());
+            logger.warn("Database error while getting image: {}", e.getMessage());
             return null;
         }
     }

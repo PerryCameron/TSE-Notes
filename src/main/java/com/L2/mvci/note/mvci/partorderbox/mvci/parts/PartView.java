@@ -257,7 +257,6 @@ public class PartView implements Builder<Alert> {
         // Set up the StackPane
         partModel.setStackPane(new StackPane());
         // Create panes for each button
-        Pane keywordPane = new VBox(HBoxFx.testBox("Keyword"));
         Pane infoPane = new VBox(HBoxFx.testBox("Info")); // Pane for infoButton
         // Set up the button stack and toggle group
         Node buttonStack = buttonStack(partModel.getStackPane(),
@@ -331,7 +330,6 @@ public class PartView implements Builder<Alert> {
         ComboBox<String> rangeComboBox = new ComboBox<>();
         rangeComboBox.getSelectionModel().select("All");
         // sets the range to default so that it will search without looking
-        System.out.println("Setting it here");
         setSelectedRange("All");
         rangeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             // apply the range filter

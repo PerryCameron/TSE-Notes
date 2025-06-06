@@ -1082,12 +1082,15 @@ public class NoteInteractor {
             protected List<SparesDTO> call() {
                 // we are not searching a range, and there is one keyword, probably a part
                 if(noteModel.selectedRangeProperty().get().getProductFamily().equals("all")) {
-                    System.out.print("Using range? false ->");
                     if (searchParams.length == 1) {
                         // System.out.println("There is only one parameter: " + searchParams[0]);
                         if (StringChecker.hasNumbers(searchParams[0])) {
-                            // System.out.println("likely a part number: " + searchParams[0]);
-                            return globalSparesRepo.searchSparesByPartNumber(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
+                            List<SparesDTO> sparesDTOS = globalSparesRepo.searchSparesByPartNumber(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
+                            // looks like either the part we were looking for didn't exist or maybe it wasn't a part number
+                            if (sparesDTOS.isEmpty())
+                            return globalSparesRepo.searchSparesScoringSingleKeyword(searchParams[0]); // TODO change this to a one parameter search
+                            // we got some results off the parts search, hopefully exactly 1
+                            else return sparesDTOS;
                         } else {
                             return globalSparesRepo.searchSparesScoring(searchParams);
                         }

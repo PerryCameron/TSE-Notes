@@ -32,6 +32,7 @@ public class PartController extends AlertController<PartMessage> {
             case SAVE_PART_KEYWORDS -> partInteractor.savePartKeyWords();
             case SAVE_IMAGE_TO_DATABASE -> partInteractor.saveImage();
             case LOAD_IMAGE -> partInteractor.getImage();
+            case SAVE_EDIT_HISTORY -> partInteractor.saveEditHistory(partView.getNoteView().getNoteModel().userProperty().get());
         }
     }
 

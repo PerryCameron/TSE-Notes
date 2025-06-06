@@ -60,12 +60,10 @@ public class SparesTableViewFx {
     private static void makeTextSelectable(TableColumn<SparesDTO, String> col) {
         col.setCellFactory(column -> new TableCell<>() {
             private final TextField textField = new TextField();
-
             {
                 textField.setEditable(false);
                 textField.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
                 textField.setFocusTraversable(false);
-
                 // Allow row selection by forwarding mouse events
                 textField.setOnMouseClicked(event -> {
                     TableRow<?> row = getTableRow();
@@ -74,7 +72,6 @@ public class SparesTableViewFx {
                     }
                 });
             }
-
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
