@@ -26,4 +26,12 @@ public class UpdatedByDTO {
     public void setUpdatedDateTime(String updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
     }
+
+    @Override
+    public String toString() {
+        return "UpdatedByDTO{" +
+                "updatedBy='" + updatedBy + '\'' +
+                ", updatedDateTime='" + updatedDateTime + '\'' +
+                '}';
+    }
 }

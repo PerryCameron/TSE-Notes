@@ -1,6 +1,7 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.parts;
 
 import com.L2.dto.PartFx;
+import com.L2.dto.UpdatedByDTO;
 import com.L2.dto.global_spares.ProductFamilyDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
@@ -10,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -42,6 +42,7 @@ public class PartModel {
     private Button searchButton;
     private ImageView imageView;
     private final BooleanProperty alertExtended = new SimpleBooleanProperty(false);
+    private List<UpdatedByDTO> updatedByDTOs = new ArrayList<>();
     private List<ProductFamilyDTO> productFamilies = new ArrayList<>();
     private final ObjectProperty<SparesDTO> selectedSpare = new SimpleObjectProperty<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -58,21 +59,19 @@ public class PartModel {
     private final BooleanProperty updatedKeywords = new SimpleBooleanProperty(false);
     private PartController partController;
     private Byte[] imageBytes;
-    private ObjectProperty<Image> image = new SimpleObjectProperty<>();
+//    private ObjectProperty<Image> image = new SimpleObjectProperty<>();
 
-
-
-
-
-
-    public void setSelectedRange(RangesFx range) {
-        selectedRange.setValue(range);
-    }
     public PartModel(NoteModel noteModel, TableView<PartFx> tableView) {
         this.ranges = noteModel.getRanges();
         this.partsTableView = tableView;
         this.selectedRange = noteModel.selectedRangeProperty();
+        this.noteModel = noteModel;
     }
+
+    public void setSelectedRange(RangesFx range) {
+        selectedRange.setValue(range);
+    }
+
     public TableView<PartFx> getPartsTableView() {
         return partsTableView;
     }
@@ -245,5 +244,13 @@ public class PartModel {
     }
     public void setImageView(ImageView imageView) {
         this.imageView = imageView;
+    }
+
+    public List<UpdatedByDTO> getUpdatedByDTOs() {
+        return updatedByDTOs;
+    }
+
+    public void setUpdatedByDTOs(List<UpdatedByDTO> updatedByDTOs) {
+        this.updatedByDTOs = updatedByDTOs;
     }
 }

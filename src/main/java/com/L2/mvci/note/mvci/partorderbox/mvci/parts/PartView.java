@@ -63,6 +63,7 @@ public class PartView implements Builder<Alert> {
         noteModel.numberInRangeProperty().addListener(rangeNumber -> partModel.getRangeNumberLabel()
                 .setText("Spares in range: " + noteModel.numberInRangeProperty().get()));
         noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
+        System.out.println("Sent GET_UPDATE_BY_INFORMATION ");
         if (noteModel.selectedRangeProperty().get() != null)
             return partModel.getAlert();
         else return null;
@@ -254,6 +255,8 @@ public class PartView implements Builder<Alert> {
         partModel.selectedSpareProperty().set(partModel.getSparesTableView().getSelectionModel().getSelectedItem());
         // map the JSON in pim
         action.accept(PartMessage.JSON_MAP_PRODUCT_FAMILIES);
+        // map JSON updated_by
+        action.accept(PartMessage.GET_UPDATE_BY_INFORMATION);
         // Set up the StackPane
         partModel.setStackPane(new StackPane());
         // Create panes for each button

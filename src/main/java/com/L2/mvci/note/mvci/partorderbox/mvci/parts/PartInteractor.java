@@ -1,12 +1,17 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.parts;
 
+import com.L2.dto.UpdatedByDTO;
 import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
+import com.L2.enums.SaveType;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.widgetFx.DialogueFx;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -72,9 +77,14 @@ public class PartInteractor {
         }
     }
 
-    public void savePart() {
+    public void savePart(SaveType type) {
+        addCurrentUserUpdateToSpares();
         int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
-        partModel.updatedNotesProperty().set(success == 1);
+        switch (type) {
+            case NOTE -> partModel.updatedNotesProperty().set(success == 1);
+            case IMAGE -> logger.info("New image for {} saved", partModel.selectedSpareProperty().get().getSpareItem());
+            case KEYWORD -> partModel.getUpdatedKeywordsProperty().set(success == 1);
+        }
     }
 
     // userDTO.getFullName() will be the name of the person making the edit
@@ -127,11 +137,6 @@ public class PartInteractor {
         }
     }
 
-    public void savePartKeyWords() {
-        int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
-        partModel.getUpdatedKeywordsProperty().set(success == 1);
-    }
-
     public void printProductFamilies() {
         if (partModel.getProductFamilies() == null) System.out.println("ProductFamilies is null");
         else
@@ -156,6 +161,8 @@ public class PartInteractor {
             Image newImage = new Image(new ByteArrayInputStream(imageBytes));
             partModel.getImageView().setImage(newImage);
             globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getId(), imageBytes);
+            // let's record that we edited the record
+            savePart(SaveType.IMAGE);
         } catch (Exception e) {
             DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
             e.printStackTrace();
@@ -201,6 +208,76 @@ public class PartInteractor {
             }
         } catch (Exception e) {
             logger.error("Error in getImage: {}", e.getMessage(), e);
+        }
+    }
+
+    public void getUpdatedByToPOJO() {
+        if(partModel.selectedSpareProperty().get() == null) {
+            System.out.println("Selected spare is null");
+            return;
+        }
+        if(partModel.selectedSpareProperty().get().getLastUpdatedBy() == null) {
+            System.out.println("LastUpdatedBy is null");
+            return;
+        }
+        System.out.println("It is not null");
+        String lastUpdateJSON = partModel.selectedSpareProperty().get().getLastUpdatedBy();
+        // Clear existing list to avoid duplicates
+        partModel.getUpdatedByDTOs().clear();
+        // Check if JSON is null or empty
+        if (lastUpdateJSON == null || lastUpdateJSON.trim().isEmpty()) {
+            return;
+        }
+        try {
+            ObjectMapper mapper = partModel.getObjectMapper();
+            // Configure ObjectMapper to accept either "updated_by" or "updatedDateTime" as valid field names
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            // Deserialize JSON into List<UpdatedByDTO>
+            java.util.List<UpdatedByDTO> deserializedList = mapper.readValue(lastUpdateJSON,
+                    mapper.getTypeFactory().constructCollectionType(java.util.List.class, UpdatedByDTO.class));
+            // Add deserialized items to the list
+            partModel.getUpdatedByDTOs().addAll(deserializedList);
+            // partModel.setUpdatedBys(updatedByDTOList);
+            partModel.getUpdatedByDTOs().forEach(System.out::println);
+        } catch (JsonProcessingException e) {
+            // Handle deserialization errors (log or throw as needed)
+            e.printStackTrace();
+        }
+    }
+
+    public void addCurrentUserUpdateToSpares() {
+        // Check if selected spare exists
+        if (partModel.selectedSpareProperty().get() == null) {
+            System.out.println("Selected spare is null");
+            return;
+        }
+        // Check if user exists
+        if (partModel.getNoteModel().userProperty().get() == null) {
+            System.out.println("Current user is null");
+            return;
+        }
+        // Create new UpdatedByDTO
+        UpdatedByDTO newUpdate = new UpdatedByDTO();
+        newUpdate.setUpdatedBy(partModel.getNoteModel().userProperty().get().getFullName());
+        // Set current timestamp in UTC with format "yyyy-MM-dd HH:mm:ss UTC"
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss 'UTC'");
+        String timestamp = ZonedDateTime.now(ZoneId.of("UTC")).format(formatter);
+        newUpdate.setUpdatedDateTime(timestamp);
+        // Add new UpdatedByDTO to the existing list
+        java.util.List<UpdatedByDTO> updatedByDTOs = partModel.getUpdatedByDTOs();
+        updatedByDTOs.add(newUpdate);
+        // Serialize the list to JSON
+        try {
+            ObjectMapper mapper = partModel.getObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT); // Optional: for readable JSON
+            String updatedJson = mapper.writeValueAsString(updatedByDTOs);
+            // Set JSON to SparesDTO's lastUpdatedBy field
+            partModel.selectedSpareProperty().get().setLastUpdatedBy(updatedJson);
+            // Optional: Log for debugging
+            System.out.println("Updated JSON: " + updatedJson);
+        } catch (Exception e) {
+            System.err.println("Error serializing UpdatedByDTOs: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
