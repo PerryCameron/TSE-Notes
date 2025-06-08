@@ -222,9 +222,13 @@ public class PartView implements Builder<Alert> {
         ToggleGroup toggleGroup = new ToggleGroup();
         ToggleButton photoButton = ButtonFx.toggleof("Photo", 150, toggleGroup);
         ToggleButton familyButton = ButtonFx.toggleof("Product Families", 150, toggleGroup);
+
         ToggleButton noteButton = ButtonFx.toggleof("Note", 150, toggleGroup);
         ToggleButton keyWordsButton = ButtonFx.toggleof("Keywords", 150, toggleGroup);
         ToggleButton infoButton = ButtonFx.toggleof("Info", 150, toggleGroup);
+        //  grab two buttons for use later
+        partModel.familyButtonProperty().set(familyButton);
+        partModel.imageButtonProperty().set(photoButton);
         // Add all buttons to the VBox first
         buttonStack.getChildren().addAll(familyButton, photoButton, noteButton, keyWordsButton, infoButton);
         // Set default content in the StackPane
@@ -281,6 +285,7 @@ public class PartView implements Builder<Alert> {
         repositionAlertForNewSize(800,700);
     }
 
+    // whenever we change a selection this happens
     private void setSelectedChangeListener() {
         partModel.getSparesTableView().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -294,12 +299,27 @@ public class PartView implements Builder<Alert> {
                 partModel.partKeyWordsProperty().get().setText(newSelection.getKeywords());
                 // for the tree view component, if it is in edit mode this will set it back if we select a different part
                 partModel.getTreeView().editableProperty().set(false);
-
-                partModel.getImageView().setImage(null); // probably don't need this
+                // if there is no image this is needed to clear the old one out
+                partModel.getImageView().setImage(null);
+                // loads the image if available
                 action.accept(PartMessage.LOAD_IMAGE);
+                // if we have an image make image pane default, else make ranges default
+//                selectShownPane();
+                // need to clear updated_by data
+                partModel.getUpdatedByDTOs().clear();
             }
         });
     }
+
+//    private void selectShownPane() {
+//        if(partModel.getImageView() != null) {
+//            System.out.println("Detected image");
+//            partModel.imageButtonProperty().get().fire();
+//        } else {
+//            System.out.println("No image selected");
+//            partModel.familyButtonProperty().get().fire();
+//        }
+//    }
 
     private void updateTreeView() {
         action.accept(PartMessage.JSON_MAP_PRODUCT_FAMILIES);

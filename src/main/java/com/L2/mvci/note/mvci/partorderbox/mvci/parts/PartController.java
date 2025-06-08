@@ -31,13 +31,10 @@ public class PartController extends AlertController<PartMessage> {
             case CANCEL_NOTE_UPDATE -> partInteractor.cancelNoteUpdate();
             case SAVE_PIM_TO_JSON -> partInteractor.saveToJson();
             case SAVE_PART_KEYWORDS -> partInteractor.savePart(SaveType.KEYWORD);
-            case SAVE_IMAGE_TO_DATABASE -> partInteractor.saveImage();
+            case SAVE_IMAGE_TO_DATABASE -> partInteractor.saveImage(SaveType.IMAGE);
             case LOAD_IMAGE -> partInteractor.getImage();
-            case SAVE_EDIT_HISTORY -> partInteractor.saveEditHistory(partView.getNoteView().getNoteModel().userProperty().get());
-            case GET_UPDATE_BY_INFORMATION -> {
-                System.out.println("Got it in the controller!!");
-                partInteractor.getUpdatedByToPOJO();
-            }
+//            case SAVE_EDIT_HISTORY -> partInteractor.saveEditHistory();
+            case GET_UPDATE_BY_INFORMATION -> partInteractor.getUpdatedByToPOJO();
         }
     }
 

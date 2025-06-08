@@ -51,6 +51,8 @@ public class PartModel {
     private final ObjectProperty<RangesFx> selectedRange;
     private final ObjectProperty<TextArea> partNote = new SimpleObjectProperty<>();
     private final ObjectProperty<TextArea> partKeyWords = new SimpleObjectProperty<>();
+    private final ObjectProperty<ToggleButton> imageButton = new SimpleObjectProperty<>();
+    private final ObjectProperty<ToggleButton> familyButton = new SimpleObjectProperty<>();
     // from noteModel
     private final ObservableList<RangesFx> ranges;
     private StackPane stackPane;
@@ -252,5 +254,21 @@ public class PartModel {
 
     public void setUpdatedByDTOs(List<UpdatedByDTO> updatedByDTOs) {
         this.updatedByDTOs = updatedByDTOs;
+    }
+
+    public ToggleButton getImageButton() {
+        return imageButton.get();
+    }
+
+    public ObjectProperty<ToggleButton> imageButtonProperty() {
+        return imageButton;
+    }
+
+    public ToggleButton getFamilyButton() {
+        return familyButton.get();
+    }
+
+    public ObjectProperty<ToggleButton> familyButtonProperty() {
+        return familyButton;
     }
 }

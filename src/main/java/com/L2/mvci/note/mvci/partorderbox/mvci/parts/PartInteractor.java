@@ -1,9 +1,7 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.parts;
 
 import com.L2.dto.UpdatedByDTO;
-import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesFx;
-import com.L2.dto.global_spares.SparesDTO;
 import com.L2.enums.SaveType;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.widgetFx.DialogueFx;
@@ -27,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class PartInteractor {
     private static final Logger logger = LoggerFactory.getLogger(PartInteractor.class);
@@ -54,17 +53,14 @@ public class PartInteractor {
 
     public void setSelectedRange() {
         String newRange = partModel.comboBoxSelectedRangeProperty().get();
-        System.out.println("newRange: " + newRange);
         // getting the range from the list that equals what we a clicked on
         RangesFx selectedRange = partModel.getRanges().stream()
                 .filter(range -> range.getRange().equals(newRange))
                 .findFirst()
                 .orElse(null);
-        System.out.println("selectedRange found from list: " + selectedRange);
         // if there is a selected range
         if (selectedRange != null) {
             partModel.setSelectedRange(selectedRange);
-            System.out.println("selectedRange found from list and referenced to partModel: " + selectedRange);
         } else {
             logger.error("No matching range found for: {}", newRange);
             if (!partModel.getRanges().isEmpty()) {
@@ -78,22 +74,13 @@ public class PartInteractor {
     }
 
     public void savePart(SaveType type) {
-        addCurrentUserUpdateToSpares();
+        saveEditHistory();
         int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
         switch (type) {
             case NOTE -> partModel.updatedNotesProperty().set(success == 1);
             case IMAGE -> logger.info("New image for {} saved", partModel.selectedSpareProperty().get().getSpareItem());
             case KEYWORD -> partModel.getUpdatedKeywordsProperty().set(success == 1);
         }
-    }
-
-    // userDTO.getFullName() will be the name of the person making the edit
-    public void saveEditHistory(UserDTO userDTO) {
-        String utcTimestamp = ZonedDateTime.now(ZoneId.of("UTC"))
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z"));
-        SparesDTO sparesDTO = partModel.selectedSpareProperty().get();
-
-        sparesDTO.setLastUpdate(utcTimestamp);
     }
 
     public void cancelNoteUpdate() {
@@ -143,7 +130,7 @@ public class PartInteractor {
             partModel.getProductFamilies().forEach(System.out::println);
     }
 
-    public void saveImage() {
+    public void saveImage(SaveType type) {
         try {
             Clipboard clipboard = Clipboard.getSystemClipboard();
             if (!clipboard.hasImage()) {
@@ -162,10 +149,9 @@ public class PartInteractor {
             partModel.getImageView().setImage(newImage);
             globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getId(), imageBytes);
             // let's record that we edited the record
-            savePart(SaveType.IMAGE);
+            savePart(type);
         } catch (Exception e) {
             DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -201,26 +187,28 @@ public class PartInteractor {
             byte[] imageAsByte = globalSparesRepo.getImage(partModel.selectedSpareProperty().get().getId());
             if (imageAsByte != null) {
                 image = new Image(new ByteArrayInputStream(imageAsByte));
-//                partModel.setImage(image);
                 partModel.getImageView().setImage(image);
+                // since we have an image lets make image pane default
+                if(partModel.imageButtonProperty().get() != null)
+                partModel.imageButtonProperty().get().setSelected(true);
             } else {
-                logger.warn("Image is not available for this spare");
+                logger.debug("Image is not available for this spare");
+                // there is no image, so let's make product families default
+                if(partModel.familyButtonProperty().get() != null)
+                partModel.familyButtonProperty().get().setSelected(true);
             }
         } catch (Exception e) {
-            logger.error("Error in getImage: {}", e.getMessage(), e);
+            logger.debug("Error in getImage: {}", e.getMessage(), e);
         }
     }
 
     public void getUpdatedByToPOJO() {
-        if(partModel.selectedSpareProperty().get() == null) {
-            System.out.println("Selected spare is null");
+        if (partModel.selectedSpareProperty().get() == null) {
             return;
         }
-        if(partModel.selectedSpareProperty().get().getLastUpdatedBy() == null) {
-            System.out.println("LastUpdatedBy is null");
+        if (partModel.selectedSpareProperty().get().getLastUpdatedBy() == null) {
             return;
         }
-        System.out.println("It is not null");
         String lastUpdateJSON = partModel.selectedSpareProperty().get().getLastUpdatedBy();
         // Clear existing list to avoid duplicates
         partModel.getUpdatedByDTOs().clear();
@@ -240,44 +228,69 @@ public class PartInteractor {
             // partModel.setUpdatedBys(updatedByDTOList);
             partModel.getUpdatedByDTOs().forEach(System.out::println);
         } catch (JsonProcessingException e) {
-            // Handle deserialization errors (log or throw as needed)
-            e.printStackTrace();
+            DialogueFx.errorAlert("Object mapping failed", e.getMessage());
         }
     }
 
-    public void addCurrentUserUpdateToSpares() {
+    public void saveEditHistory() {
         // Check if selected spare exists
         if (partModel.selectedSpareProperty().get() == null) {
-            System.out.println("Selected spare is null");
             return;
         }
         // Check if user exists
         if (partModel.getNoteModel().userProperty().get() == null) {
-            System.out.println("Current user is null");
             return;
         }
-        // Create new UpdatedByDTO
-        UpdatedByDTO newUpdate = new UpdatedByDTO();
-        newUpdate.setUpdatedBy(partModel.getNoteModel().userProperty().get().getFullName());
-        // Set current timestamp in UTC with format "yyyy-MM-dd HH:mm:ss UTC"
+        // Get current user and timestamp
+        String currentUser = partModel.getNoteModel().userProperty().get().getFullName();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss 'UTC'");
-        String timestamp = ZonedDateTime.now(ZoneId.of("UTC")).format(formatter);
-        newUpdate.setUpdatedDateTime(timestamp);
-        // Add new UpdatedByDTO to the existing list
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC"));
+        String currentTimestamp = now.format(formatter);
+        // update lastUpdate field in the currently selected SparesDTO
+        partModel.selectedSpareProperty().get().setLastUpdate(currentTimestamp);
+        // Get the existing list of UpdatedByDTOs
         java.util.List<UpdatedByDTO> updatedByDTOs = partModel.getUpdatedByDTOs();
-        updatedByDTOs.add(newUpdate);
+        // Look for an existing entry by the current user
+        boolean foundRecentEntry = false;
+        for (UpdatedByDTO entry : updatedByDTOs) {
+            if (entry.getUpdatedBy() != null && entry.getUpdatedBy().equals(currentUser)) {
+                // Parse the existing timestamp
+                try {
+                    ZonedDateTime lastUpdateTime = ZonedDateTime.parse(
+                            entry.getUpdatedDateTime(),
+                            formatter.withZone(ZoneId.of("UTC"))
+                    );
+                    // Check if the last update was within 24 hours
+                    long hoursSinceLastUpdate = ChronoUnit.HOURS.between(lastUpdateTime, now);
+                    if (hoursSinceLastUpdate < 24) {
+                        // Update the timestamp of the existing entry
+                        entry.setUpdatedDateTime(currentTimestamp);
+                        foundRecentEntry = true;
+                        break;
+                    }
+                } catch (Exception e) {
+                    logger.error("Error parsing timestamp: {}", entry.getUpdatedDateTime());
+                    // Continue to check other entries or add a new one if parsing fails
+                }
+            }
+        }
+        // If no recent entry was found, add a new UpdatedByDTO
+        if (!foundRecentEntry) {
+            UpdatedByDTO newUpdate = new UpdatedByDTO();
+            newUpdate.setUpdatedBy(currentUser);
+            newUpdate.setUpdatedDateTime(currentTimestamp);
+            updatedByDTOs.add(newUpdate);
+        }
         // Serialize the list to JSON
         try {
             ObjectMapper mapper = partModel.getObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT); // Optional: for readable JSON
             String updatedJson = mapper.writeValueAsString(updatedByDTOs);
+
             // Set JSON to SparesDTO's lastUpdatedBy field
             partModel.selectedSpareProperty().get().setLastUpdatedBy(updatedJson);
-            // Optional: Log for debugging
-            System.out.println("Updated JSON: " + updatedJson);
         } catch (Exception e) {
-            System.err.println("Error serializing UpdatedByDTOs: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error serializing UpdatedByDTOs: {}", e.getMessage());
         }
     }
 }
