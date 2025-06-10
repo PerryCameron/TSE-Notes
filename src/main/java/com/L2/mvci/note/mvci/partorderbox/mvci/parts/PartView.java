@@ -7,10 +7,7 @@ import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
-import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.PartKeyWords;
-import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.PartNote;
-import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.PartPhoto;
-import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.ProductFamily;
+import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.*;
 import com.L2.widgetFx.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -264,14 +261,14 @@ public class PartView implements Builder<Alert> {
         // Set up the StackPane
         partModel.setStackPane(new StackPane());
         // Create panes for each button
-        Pane infoPane = new VBox(HBoxFx.testBox("Info")); // Pane for infoButton
+//        Pane infoPane = new VBox(HBoxFx.testBox("Info")); // Pane for infoButton
         // Set up the button stack and toggle group
         Node buttonStack = buttonStack(partModel.getStackPane(),
                 new ProductFamily(this).build(),
                 new PartPhoto(this).build(),
                 new PartNote(this).build(),
                 new PartKeyWords(this).build(),
-                infoPane);
+                new PartInfo(this).build());
         // Add buttons and StackPane to the HBox
         partModel.getMoreInfoHbox().getChildren().addAll(buttonStack, partModel.getStackPane());
         partModel.getMoreInfoHbox().getStyleClass().add("inner-decorative-hbox");
@@ -303,23 +300,11 @@ public class PartView implements Builder<Alert> {
                 partModel.getImageView().setImage(null);
                 // loads the image if available
                 action.accept(PartMessage.LOAD_IMAGE);
-                // if we have an image make image pane default, else make ranges default
-//                selectShownPane();
                 // need to clear updated_by data
                 partModel.getUpdatedByDTOs().clear();
             }
         });
     }
-
-//    private void selectShownPane() {
-//        if(partModel.getImageView() != null) {
-//            System.out.println("Detected image");
-//            partModel.imageButtonProperty().get().fire();
-//        } else {
-//            System.out.println("No image selected");
-//            partModel.familyButtonProperty().get().fire();
-//        }
-//    }
 
     private void updateTreeView() {
         action.accept(PartMessage.JSON_MAP_PRODUCT_FAMILIES);
