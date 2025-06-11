@@ -263,13 +263,13 @@ public class PartView implements Builder<Alert> {
         // Create panes for each button
 //        Pane infoPane = new VBox(HBoxFx.testBox("Info")); // Pane for infoButton
         // Set up the button stack and toggle group
-        partModel.partInfoProperty().set(new PartInfo(this));
+
         Node buttonStack = buttonStack(partModel.getStackPane(),
                 new ProductFamily(this).build(),
                 new PartPhoto(this).build(),
                 new PartNote(this).build(),
                 new PartKeyWords(this).build(),
-                partModel.partInfoProperty().get().build());
+                new PartInfo(this).build());
         // Add buttons and StackPane to the HBox
         partModel.getMoreInfoHbox().getChildren().addAll(buttonStack, partModel.getStackPane());
         partModel.getMoreInfoHbox().getStyleClass().add("inner-decorative-hbox");

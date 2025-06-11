@@ -54,13 +54,14 @@ public class PartModel {
     private final ObjectProperty<TextArea> partKeyWords = new SimpleObjectProperty<>();
     private final ObjectProperty<ToggleButton> imageButton = new SimpleObjectProperty<>();
     private final ObjectProperty<ToggleButton> familyButton = new SimpleObjectProperty<>();
-    private final ObjectProperty<PartInfo> partInfo = new SimpleObjectProperty<>();
+//    private final ObjectProperty<PartInfo> partInfo = new SimpleObjectProperty<>();
     // from noteModel
     private final ObservableList<RangesFx> ranges;
     private StackPane stackPane;
     private final BooleanProperty updatedNotes = new SimpleBooleanProperty(false);
     private final BooleanProperty updatedRanges = new SimpleBooleanProperty(false);
     private final BooleanProperty updatedKeywords = new SimpleBooleanProperty(false);
+    private final BooleanProperty refreshPartInfo = new SimpleBooleanProperty(false);
     private PartController partController;
     private Byte[] imageBytes;
 //    private ObjectProperty<Image> image = new SimpleObjectProperty<>();
@@ -274,7 +275,16 @@ public class PartModel {
         return familyButton;
     }
 
-    public ObjectProperty<PartInfo> partInfoProperty() {
-        return partInfo;
+    public BooleanProperty refreshPartInfoProperty() {
+        return refreshPartInfo;
     }
+
+    public void refreshPartInfo() {
+        refreshPartInfoProperty().set(true);
+        refreshPartInfoProperty().set(false);
+    }
+
+    //    public ObjectProperty<PartInfo> partInfoProperty() {
+//        return partInfo;
+//    }
 }

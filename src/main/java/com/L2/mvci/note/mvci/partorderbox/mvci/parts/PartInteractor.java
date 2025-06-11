@@ -188,14 +188,6 @@ public class PartInteractor {
             if (imageAsByte != null) {
                 image = new Image(new ByteArrayInputStream(imageAsByte));
                 partModel.getImageView().setImage(image);
-                // since we have an image lets make image pane default
-//                if(partModel.imageButtonProperty().get() != null)
-//                partModel.imageButtonProperty().get().setSelected(true);
-            } else {
-                logger.debug("Image is not available for this spare");
-                // there is no image, so let's make product families default
-//                if(partModel.familyButtonProperty().get() != null)
-//                partModel.familyButtonProperty().get().setSelected(true);
             }
         } catch (Exception e) {
             logger.debug("Error in getImage: {}", e.getMessage(), e);
@@ -297,8 +289,8 @@ public class PartInteractor {
     public void refreshPartInfo() {
         // updates editing data (person - timestamp)
         getUpdatedByToPOJO();
-        // TODO make this a listener?
-        partModel.partInfoProperty().get().refresh();
+        // triggers view refresh
+        partModel.refreshPartInfo();
     }
 
 

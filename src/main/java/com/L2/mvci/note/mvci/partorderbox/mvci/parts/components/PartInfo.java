@@ -24,7 +24,9 @@ public class PartInfo implements Builder<Pane> {
 //        vBox.getChildren().add(new Label("Part is in catalogue: " + partView.getPartModel().selectedSpareProperty().get().getArchived()));
         System.out.println(partView.getPartModel().selectedSpareProperty().get());
         addEditHistory();
-
+        partView.getPartModel().refreshPartInfoProperty().addListener((observable, oldValue, newValue) -> {
+            refresh();
+        });
         return vBox;
     }
 
