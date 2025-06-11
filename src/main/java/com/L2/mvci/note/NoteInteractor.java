@@ -622,7 +622,7 @@ public class NoteInteractor {
         if (!note.getServiceLevel().isEmpty())
             stringBuilder.append("Service Level: ").append(note.getServiceLevel()).append("\r\n");
         if (!note.getUpsStatus().isEmpty())
-            stringBuilder.append("Status of the UPS: ").append(note.getUpsStatus()).append("\r\n");
+            stringBuilder.append("Status of Equipment: ").append(note.getUpsStatus()).append("\r\n");
         // will always be true or false
         stringBuilder.append("Load Supported: ").append(convertBool(note.isLoadSupported())).append("\r\n");
         return stringBuilder.toString();

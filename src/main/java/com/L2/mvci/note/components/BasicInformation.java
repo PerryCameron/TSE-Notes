@@ -137,7 +137,7 @@ public class BasicInformation implements Component<Region> {
 
     private Node setStatusBox() {
         VBox vBox = new VBox(4);
-        Label label = new Label("Status of the UPS:");
+        Label label = new Label("Status of Equipment:");
         statusComboBox.setPrefWidth(200);
         statusComboBox.getItems().addAll("Online", "Bypass", "Start-Up","Assembly", "Offline");
         vBox.getChildren().addAll(label, statusComboBox);

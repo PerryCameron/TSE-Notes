@@ -213,13 +213,12 @@ public class PartView implements Builder<Alert> {
         return moreButton;
     }
 
-    private Node buttonStack(StackPane stackPane, Pane familyPane, Pane photoPane, Pane notePane, Pane keywordsPane, Pane infoPane) {
+    private Node buttonStack(StackPane stackPane, Pane photoPane, Pane familyPane,  Pane notePane, Pane keywordsPane, Pane infoPane) {
         VBox buttonStack = new VBox();
         buttonStack.setMinWidth(150);
         ToggleGroup toggleGroup = new ToggleGroup();
         ToggleButton photoButton = ButtonFx.toggleof("Photo", 150, toggleGroup);
         ToggleButton familyButton = ButtonFx.toggleof("Product Families", 150, toggleGroup);
-
         ToggleButton noteButton = ButtonFx.toggleof("Note", 150, toggleGroup);
         ToggleButton keyWordsButton = ButtonFx.toggleof("Keywords", 150, toggleGroup);
         ToggleButton infoButton = ButtonFx.toggleof("Info", 150, toggleGroup);
@@ -227,25 +226,38 @@ public class PartView implements Builder<Alert> {
         partModel.familyButtonProperty().set(familyButton);
         partModel.imageButtonProperty().set(photoButton);
         // Add all buttons to the VBox first
-        buttonStack.getChildren().addAll(familyButton, photoButton, noteButton, keyWordsButton, infoButton);
+        buttonStack.getChildren().addAll(photoButton, familyButton, noteButton, keyWordsButton, infoButton);
         // Set default content in the StackPane
-        stackPane.getChildren().setAll(familyPane);
+        // Assume familyPane, notePane, keywordsPane, infoPane, photoPane are already created
+        stackPane.getChildren().addAll(photoPane, familyPane, notePane, keywordsPane, infoPane);
+//        stackPane.getChildren().setAll(photoPane);
+        photoPane.setVisible(true);
+        familyPane.setVisible(false);
+        notePane.setVisible(false);
+        keywordsPane.setVisible(false);
+        infoPane.setVisible(false);
+
         // Set the default selected button AFTER adding to the scene graph
-        familyButton.setSelected(true);
+        photoButton.setSelected(true);
         toggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
-            stackPane.getChildren().clear();
-            if (newToggle == null) {
-                stackPane.getChildren().setAll(familyPane);
-            } else if (newToggle == familyButton) {
-                stackPane.getChildren().setAll(familyPane);
+            // Hide all panes
+            familyPane.setVisible(false);
+            notePane.setVisible(false);
+            keywordsPane.setVisible(false);
+            infoPane.setVisible(false);
+            photoPane.setVisible(false);
+
+            // Show the selected pane
+            if (newToggle == null || newToggle == familyButton) {
+                familyPane.setVisible(true);
             } else if (newToggle == noteButton) {
-                stackPane.getChildren().setAll(notePane);
+                notePane.setVisible(true);
             } else if (newToggle == keyWordsButton) {
-                stackPane.getChildren().setAll(keywordsPane);
+                keywordsPane.setVisible(true);
             } else if (newToggle == infoButton) {
-                stackPane.getChildren().setAll(infoPane);
+                infoPane.setVisible(true);
             } else if (newToggle == photoButton) {
-                stackPane.getChildren().setAll(photoPane);
+                photoPane.setVisible(true);
             }
         });
         return buttonStack;
@@ -265,8 +277,8 @@ public class PartView implements Builder<Alert> {
         // Set up the button stack and toggle group
 
         Node buttonStack = buttonStack(partModel.getStackPane(),
-                new ProductFamily(this).build(),
                 new PartPhoto(this).build(),
+                new ProductFamily(this).build(),
                 new PartNote(this).build(),
                 new PartKeyWords(this).build(),
                 new PartInfo(this).build());
