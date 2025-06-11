@@ -175,7 +175,7 @@ public class SparesDTO {
     public String toString() {
         return "SparesDTO{" +
                 "id=" + id +
-                ", pim='" + pim + '\'' +
+//                ", pim='" + pim + '\'' +
                 ", spareItem='" + spareItem + '\'' +
 //                ", replacementItem='" + replacementItem + '\'' +
 //                ", standardExchangeItem='" + standardExchangeItem + '\'' +
@@ -185,11 +185,11 @@ public class SparesDTO {
 //                ", lastUpdate='" + lastUpdate + '\'' +
 //                ", addedToCatalogue='" + addedToCatalogue + '\'' +
 //                ", removedFromCatalogue='" + removedFromCatalogue + '\'' +
-                ", comments='" + comments + '\'' +
-                ", keywords='" + keywords + '\'' +
-//                ", archived=" + archived +
+//                ", comments='" + comments + '\'' +
+//                ", keywords='" + keywords + '\'' +
+                ", archived=" + archived +
 //                ", customAdd=" + customAdd +
-                ", lastUpdatedBy='" + lastUpdatedBy + '\'' +
+//                ", lastUpdatedBy='" + lastUpdatedBy + '\'' +
                 '}';
     }
 }

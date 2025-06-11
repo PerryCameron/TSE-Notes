@@ -189,13 +189,13 @@ public class PartInteractor {
                 image = new Image(new ByteArrayInputStream(imageAsByte));
                 partModel.getImageView().setImage(image);
                 // since we have an image lets make image pane default
-                if(partModel.imageButtonProperty().get() != null)
-                partModel.imageButtonProperty().get().setSelected(true);
+//                if(partModel.imageButtonProperty().get() != null)
+//                partModel.imageButtonProperty().get().setSelected(true);
             } else {
                 logger.debug("Image is not available for this spare");
                 // there is no image, so let's make product families default
-                if(partModel.familyButtonProperty().get() != null)
-                partModel.familyButtonProperty().get().setSelected(true);
+//                if(partModel.familyButtonProperty().get() != null)
+//                partModel.familyButtonProperty().get().setSelected(true);
             }
         } catch (Exception e) {
             logger.debug("Error in getImage: {}", e.getMessage(), e);
@@ -293,4 +293,13 @@ public class PartInteractor {
             logger.error("Error serializing UpdatedByDTOs: {}", e.getMessage());
         }
     }
+
+    public void refreshPartInfo() {
+        // updates editing data (person - timestamp)
+        getUpdatedByToPOJO();
+        // TODO make this a listener?
+        partModel.partInfoProperty().get().refresh();
+    }
+
+
 }

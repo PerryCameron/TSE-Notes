@@ -35,6 +35,7 @@ public class PartController extends AlertController<PartMessage> {
             case LOAD_IMAGE -> partInteractor.getImage();
 //            case SAVE_EDIT_HISTORY -> partInteractor.saveEditHistory();
             case GET_UPDATE_BY_INFORMATION -> partInteractor.getUpdatedByToPOJO();
+            case REFRESH_PART_INFO -> partInteractor.refreshPartInfo();
         }
     }
 

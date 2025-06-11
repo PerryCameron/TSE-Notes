@@ -12,6 +12,7 @@ import javafx.util.Builder;
 public class PartInfo implements Builder<Pane> {
 
     private final PartView partView;
+    private VBox vBox;
 
     public PartInfo(PartView partView) {
         this.partView = partView;
@@ -19,7 +20,15 @@ public class PartInfo implements Builder<Pane> {
 
     @Override
     public Pane build() {
-        VBox vBox = new VBox();
+        this.vBox = new VBox();
+//        vBox.getChildren().add(new Label("Part is in catalogue: " + partView.getPartModel().selectedSpareProperty().get().getArchived()));
+        System.out.println(partView.getPartModel().selectedSpareProperty().get());
+        addEditHistory();
+
+        return vBox;
+    }
+
+    public void addEditHistory() {
         java.util.List<UpdatedByDTO> dtoList = partView.getPartModel().getUpdatedByDTOs();
         if(!partView.getPartModel().getUpdatedByDTOs().isEmpty()) {
             System.out.println("not empty");
@@ -29,6 +38,10 @@ public class PartInfo implements Builder<Pane> {
         } else {
             System.out.println("empty");
         }
-        return vBox;
+    }
+
+    public void refresh() {
+        this.vBox.getChildren().clear();
+        addEditHistory();
     }
 }

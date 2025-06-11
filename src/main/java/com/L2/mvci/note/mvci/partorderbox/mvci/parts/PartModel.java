@@ -7,6 +7,7 @@ import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
+import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.PartInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
@@ -53,6 +54,7 @@ public class PartModel {
     private final ObjectProperty<TextArea> partKeyWords = new SimpleObjectProperty<>();
     private final ObjectProperty<ToggleButton> imageButton = new SimpleObjectProperty<>();
     private final ObjectProperty<ToggleButton> familyButton = new SimpleObjectProperty<>();
+    private final ObjectProperty<PartInfo> partInfo = new SimpleObjectProperty<>();
     // from noteModel
     private final ObservableList<RangesFx> ranges;
     private StackPane stackPane;
@@ -270,5 +272,9 @@ public class PartModel {
 
     public ObjectProperty<ToggleButton> familyButtonProperty() {
         return familyButton;
+    }
+
+    public ObjectProperty<PartInfo> partInfoProperty() {
+        return partInfo;
     }
 }
