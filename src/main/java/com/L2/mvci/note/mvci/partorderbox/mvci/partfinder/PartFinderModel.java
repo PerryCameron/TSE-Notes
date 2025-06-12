@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartModel {
+public class PartFinderModel {
     private TableView<PartFx> partsTableView;
     private NoteModel noteModel;
     private final SimpleBooleanProperty searchedBefore = new SimpleBooleanProperty(false);
@@ -61,11 +61,11 @@ public class PartModel {
     private final BooleanProperty updatedRanges = new SimpleBooleanProperty(false);
     private final BooleanProperty updatedKeywords = new SimpleBooleanProperty(false);
     private final BooleanProperty refreshPartInfo = new SimpleBooleanProperty(false);
-    private PartController partController;
+    private PartFinderController partController;
     private Byte[] imageBytes;
 //    private ObjectProperty<Image> image = new SimpleObjectProperty<>();
 
-    public PartModel(NoteModel noteModel, TableView<PartFx> tableView) {
+    public PartFinderModel(NoteModel noteModel, TableView<PartFx> tableView) {
         this.ranges = noteModel.getRanges();
         this.partsTableView = tableView;
         this.selectedRange = noteModel.selectedRangeProperty();

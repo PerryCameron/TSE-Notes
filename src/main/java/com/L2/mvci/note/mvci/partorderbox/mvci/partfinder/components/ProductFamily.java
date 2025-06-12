@@ -2,9 +2,9 @@ package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components;
 
 import com.L2.controls.EditableTreeCell;
 import com.L2.dto.global_spares.ProductFamilyDTO;
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartMessage;
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartModel;
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartView;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderMessage;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderModel;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Pos;
@@ -23,8 +23,8 @@ import java.util.Set;
 
 public class ProductFamily implements Builder<Pane> {
     private static final Logger logger = LoggerFactory.getLogger(ProductFamily.class);
-    private final PartView partView;
-    private final PartModel partModel;
+    private final PartFinderView partView;
+    private final PartFinderModel partModel;
     private Button addRange;
     private Button addProduct;
     private Button editButton;
@@ -33,7 +33,7 @@ public class ProductFamily implements Builder<Pane> {
     private Button cancelButton;
     private final Set<TreeItem<Object>> markedForDeletion = new HashSet<>();
 
-    public ProductFamily(PartView partView) {
+    public ProductFamily(PartFinderView partView) {
         this.partView = partView;
         this.partModel = partView.getPartModel();
     }
@@ -114,7 +114,7 @@ public class ProductFamily implements Builder<Pane> {
 
     private void cancelEdit() {
         markedForDeletion.clear();
-        partView.getAction().accept(PartMessage.REFRESH_TREEVIEW);
+        partView.getAction().accept(PartFinderMessage.REFRESH_TREEVIEW);
         partModel.getTreeView().refresh();
         partModel.getTreeView().editableProperty().set(false);
         logger.debug("Cancelled edits and refreshed TreeView");
@@ -216,7 +216,7 @@ public class ProductFamily implements Builder<Pane> {
         }
         markedForDeletion.clear();
         partModel.getTreeView().refresh();
-        partView.getAction().accept(PartMessage.SAVE_PIM_TO_JSON);
+        partView.getAction().accept(PartFinderMessage.SAVE_PIM_TO_JSON);
         setButtonVisibility(false,false,false,false);
         logger.debug("Saved changes and cleared deletion marks");
     }

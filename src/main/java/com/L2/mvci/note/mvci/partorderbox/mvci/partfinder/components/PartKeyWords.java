@@ -1,8 +1,8 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components;
 
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartMessage;
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartModel;
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartView;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderMessage;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderModel;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HBoxFx;
 import com.L2.widgetFx.VBoxFx;
@@ -18,13 +18,13 @@ import java.util.function.Consumer;
 
 public class PartKeyWords implements Builder<Pane> {
 
-    private final PartModel partModel;
-    private final Consumer<PartMessage> action;
+    private final PartFinderModel partModel;
+    private final Consumer<PartFinderMessage> action;
     private Button saveButton;
     private Button cancelButton;
     private Button modifyButton;
 
-    public PartKeyWords(PartView partView) {
+    public PartKeyWords(PartFinderView partView) {
         this.partModel = partView.getPartModel();
         this.action = partView.getAction();
     }
@@ -47,13 +47,13 @@ public class PartKeyWords implements Builder<Pane> {
 
         saveButton.setOnAction(button -> {
             partModel.selectedSpareProperty().get().setKeywords(partModel.partKeyWordsProperty().get().getText());
-            action.accept(PartMessage.SAVE_PART_KEYWORDS);
+            action.accept(PartFinderMessage.SAVE_PART_KEYWORDS);
         });
 
         modifyButton.setOnAction(button -> showSaveAndCancelButtons());
 
         cancelButton.setOnAction(button -> {
-            action.accept(PartMessage.CANCEL_KEYWORD_UPDATE);
+            action.accept(PartFinderMessage.CANCEL_KEYWORD_UPDATE);
             partModel.partKeyWordsProperty().get().setText(partModel.selectedSpareProperty().get().getKeywords());
         });
 

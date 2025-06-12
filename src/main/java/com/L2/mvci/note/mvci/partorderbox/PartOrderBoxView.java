@@ -6,7 +6,7 @@ import com.L2.dto.PartOrderFx;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartController;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderController;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
@@ -80,7 +80,7 @@ public class PartOrderBoxView implements Builder<Region> {
         vBox.setPadding(new Insets(5, 0, 5, 5));
         // parts search dialogue
         Button searchButton = ButtonFx.utilityButton(() -> {
-            partOrderBoxModel.setPartController(new PartController(noteView, partOrderBoxModel.getTableView()));
+            partOrderBoxModel.setPartController(new PartFinderController(noteView, partOrderBoxModel.getTableView()));
             Optional<Alert> alert = Optional.ofNullable(partOrderBoxModel.getPartController().getView());
             alert.ifPresent(Dialog::showAndWait);
             // in case we have changed the ranges in settings, we need to make sure they are fresh

@@ -26,15 +26,15 @@ import org.slf4j.LoggerFactory;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class PartView implements Builder<Alert> {
-    private static final Logger logger = LoggerFactory.getLogger(PartView.class);
+public class PartFinderView implements Builder<Alert> {
+    private static final Logger logger = LoggerFactory.getLogger(PartFinderView.class);
 
-    private final Consumer<PartMessage> action;
+    private final Consumer<PartFinderMessage> action;
     private final NoteView noteView;
     private final NoteModel noteModel;
-    private final PartModel partModel;
+    private final PartFinderModel partModel;
 
-    public PartView(NoteView noteView, PartModel partModel,  Consumer<PartMessage> message) {
+    public PartFinderView(NoteView noteView, PartFinderModel partModel, Consumer<PartFinderMessage> message) {
         this.partModel = partModel;
         this.noteView = noteView;
         this.noteModel = noteView.getNoteModel();
@@ -267,9 +267,9 @@ public class PartView implements Builder<Alert> {
         // set the selected spare
         partModel.selectedSpareProperty().set(partModel.getSparesTableView().getSelectionModel().getSelectedItem());
         // map the JSON in pim
-        action.accept(PartMessage.JSON_MAP_PRODUCT_FAMILIES);
+        action.accept(PartFinderMessage.JSON_MAP_PRODUCT_FAMILIES);
         // map JSON updated_by
-        action.accept(PartMessage.GET_UPDATE_BY_INFORMATION);
+        action.accept(PartFinderMessage.GET_UPDATE_BY_INFORMATION);
         // Set up the StackPane
         partModel.setStackPane(new StackPane());
         // Create panes for each button
@@ -312,15 +312,15 @@ public class PartView implements Builder<Alert> {
                 // if there is no image this is needed to clear the old one out
                 partModel.getImageView().setImage(null);
                 // loads the image if available
-                action.accept(PartMessage.LOAD_IMAGE);
+                action.accept(PartFinderMessage.LOAD_IMAGE);
 
-                action.accept(PartMessage.REFRESH_PART_INFO);
+                action.accept(PartFinderMessage.REFRESH_PART_INFO);
             }
         });
     }
 
     private void updateTreeView() {
-        action.accept(PartMessage.JSON_MAP_PRODUCT_FAMILIES);
+        action.accept(PartFinderMessage.JSON_MAP_PRODUCT_FAMILIES);
         TreeItem<Object> rootItem = ProductFamily.createTreeItemRoot(partModel.getProductFamilies());
         partModel.getTreeView().setRoot(rootItem);
     }
@@ -370,7 +370,7 @@ public class PartView implements Builder<Alert> {
         // newValue is string value returned from clicking on the ComboBox for Range
         logger.info("Selected Range: {}", newValue);
         partModel.comboBoxSelectedRangeProperty().set(newValue);
-        action.accept(PartMessage.SET_SELECTED_RANGE);
+        action.accept(PartFinderMessage.SET_SELECTED_RANGE);
     }
 
     private void cleanAlertClose() {
@@ -386,11 +386,11 @@ public class PartView implements Builder<Alert> {
         return noteView;
     }
 
-    public Consumer<PartMessage> getAction() {
+    public Consumer<PartFinderMessage> getAction() {
         return action;
     }
 
-    public PartModel getPartModel() {
+    public PartFinderModel getPartModel() {
         return partModel;
     }
 }

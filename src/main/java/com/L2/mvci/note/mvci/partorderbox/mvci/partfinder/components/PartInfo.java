@@ -1,7 +1,7 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components;
 
 import com.L2.dto.UpdatedByDTO;
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartView;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -11,10 +11,10 @@ import javafx.util.Builder;
 
 public class PartInfo implements Builder<Pane> {
 
-    private final PartView partView;
+    private final PartFinderView partView;
     private VBox vBox;
 
-    public PartInfo(PartView partView) {
+    public PartInfo(PartFinderView partView) {
         this.partView = partView;
     }
 

@@ -27,12 +27,12 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-public class PartInteractor {
-    private static final Logger logger = LoggerFactory.getLogger(PartInteractor.class);
-    private final PartModel partModel;
+public class PartFinderInteractor {
+    private static final Logger logger = LoggerFactory.getLogger(PartFinderInteractor.class);
+    private final PartFinderModel partModel;
     private final GlobalSparesRepositoryImpl globalSparesRepo;
 
-    public PartInteractor(PartModel partModel) {
+    public PartFinderInteractor(PartFinderModel partModel) {
         this.partModel = partModel;
         this.globalSparesRepo = new GlobalSparesRepositoryImpl();
     }

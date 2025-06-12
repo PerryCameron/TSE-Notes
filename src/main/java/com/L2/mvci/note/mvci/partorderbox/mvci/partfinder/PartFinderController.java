@@ -7,14 +7,14 @@ import com.L2.mvci.note.NoteView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 
-public class PartController extends AlertController<PartMessage> {
-    private final PartInteractor partInteractor;
-    private final PartView partView;
+public class PartFinderController extends AlertController<PartFinderMessage> {
+    private final PartFinderInteractor partInteractor;
+    private final PartFinderView partView;
 
-    public PartController(NoteView noteView, TableView<PartFx> tableView) {
-        PartModel partModel = new PartModel(noteView.getNoteModel(), tableView);
-        this.partInteractor = new PartInteractor(partModel);
-        this.partView = new PartView(noteView, partModel, this::action);
+    public PartFinderController(NoteView noteView, TableView<PartFx> tableView) {
+        PartFinderModel partModel = new PartFinderModel(noteView.getNoteModel(), tableView);
+        this.partInteractor = new PartFinderInteractor(partModel);
+        this.partView = new PartFinderView(noteView, partModel, this::action);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class PartController extends AlertController<PartMessage> {
     }
 
     @Override
-    public void action(PartMessage message)  {
+    public void action(PartFinderMessage message)  {
         switch (message) {
             case JSON_MAP_PRODUCT_FAMILIES, REFRESH_TREEVIEW -> partInteractor.mapProductFamiliesJSONtoPOJO();
             case SET_SELECTED_RANGE -> partInteractor.setSelectedRange();

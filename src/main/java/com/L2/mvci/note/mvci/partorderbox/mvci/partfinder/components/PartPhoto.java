@@ -1,7 +1,7 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components;
 
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartMessage;
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartView;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderMessage;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HBoxFx;
 import javafx.geometry.Pos;
@@ -14,8 +14,8 @@ import javafx.util.Builder;
 
 public class PartPhoto implements Builder<Pane> {
 
-    private final PartView partView;
-    public PartPhoto(PartView partView) {
+    private final PartFinderView partView;
+    public PartPhoto(PartFinderView partView) {
         this.partView = partView;
     }
 
@@ -53,11 +53,11 @@ public class PartPhoto implements Builder<Pane> {
     }
 
     private void saveClipboardImage() {
-            partView.getAction().accept(PartMessage.SAVE_IMAGE_TO_DATABASE);
+            partView.getAction().accept(PartFinderMessage.SAVE_IMAGE_TO_DATABASE);
     }
 
     private void loadImageForSelectedSpare() {
-        partView.getAction().accept(PartMessage.LOAD_IMAGE);
+        partView.getAction().accept(PartFinderMessage.LOAD_IMAGE);
     }
 
 }
