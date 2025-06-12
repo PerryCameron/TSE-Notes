@@ -6,7 +6,7 @@ import com.L2.dto.PartOrderFx;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
-import com.L2.mvci.note.mvci.partorderbox.mvci.parts.PartController;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartController;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;

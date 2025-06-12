@@ -1,4 +1,4 @@
-package com.L2.mvci.note.mvci.partorderbox.mvci.parts;
+package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder;
 
 import com.L2.dto.UpdatedByDTO;
 import com.L2.dto.global_spares.RangesFx;

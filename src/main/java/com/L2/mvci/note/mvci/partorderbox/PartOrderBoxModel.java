@@ -4,7 +4,7 @@ import com.L2.dto.PartFx;
 import com.L2.dto.PartOrderFx;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
-import com.L2.mvci.note.mvci.partorderbox.mvci.parts.PartController;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartController;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.TableView;

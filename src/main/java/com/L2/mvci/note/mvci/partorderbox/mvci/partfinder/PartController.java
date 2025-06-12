@@ -1,4 +1,4 @@
-package com.L2.mvci.note.mvci.partorderbox.mvci.parts;
+package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder;
 
 import com.L2.dto.PartFx;
 import com.L2.enums.SaveType;

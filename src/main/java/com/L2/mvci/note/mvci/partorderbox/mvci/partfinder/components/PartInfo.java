@@ -1,7 +1,7 @@
-package com.L2.mvci.note.mvci.partorderbox.mvci.parts.components;
+package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components;
 
 import com.L2.dto.UpdatedByDTO;
-import com.L2.mvci.note.mvci.partorderbox.mvci.parts.PartView;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartView;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;

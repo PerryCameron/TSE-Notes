@@ -1,4 +1,4 @@
-package com.L2.mvci.note.mvci.partorderbox.mvci.parts;
+package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder;
 
 import com.L2.BaseApplication;
 import com.L2.dto.PartFx;
@@ -7,7 +7,7 @@ import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
-import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.*;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components.*;
 import com.L2.widgetFx.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

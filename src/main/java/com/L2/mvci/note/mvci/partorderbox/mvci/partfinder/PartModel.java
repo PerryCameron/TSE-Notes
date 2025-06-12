@@ -1,4 +1,4 @@
-package com.L2.mvci.note.mvci.partorderbox.mvci.parts;
+package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder;
 
 import com.L2.dto.PartFx;
 import com.L2.dto.UpdatedByDTO;
@@ -7,7 +7,6 @@ import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
-import com.L2.mvci.note.mvci.partorderbox.mvci.parts.components.PartInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
