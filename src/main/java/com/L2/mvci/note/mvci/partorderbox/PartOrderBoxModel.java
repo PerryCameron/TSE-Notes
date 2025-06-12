@@ -2,6 +2,8 @@ package com.L2.mvci.note.mvci.partorderbox;
 
 import com.L2.dto.PartFx;
 import com.L2.dto.PartOrderFx;
+import com.L2.mvci.note.NoteModel;
+import com.L2.mvci.note.NoteView;
 import com.L2.mvci.note.mvci.partorderbox.mvci.parts.PartController;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,12 +14,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PartOrderBoxModel {
+    private final NoteModel noteModel;
     private VBox root;
     private final Map<PartOrderFx, VBox> partOrderMap = new HashMap<>();
     private TableView<PartFx> tableView;
     private final BooleanProperty flash = new SimpleBooleanProperty(false);
     private final BooleanProperty RefreshFields = new SimpleBooleanProperty(false);
     private PartController partController;
+
+    public PartOrderBoxModel(NoteView noteView) {
+        this.noteModel = noteView.getNoteModel();
+    }
 
     public VBox getRoot() {
         return root;
@@ -63,5 +70,9 @@ public class PartOrderBoxModel {
 
     public void setPartController(PartController partController) {
         this.partController = partController;
+    }
+
+    public NoteModel getNoteModel() {
+        return noteModel;
     }
 }

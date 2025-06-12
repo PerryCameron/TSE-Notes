@@ -1,5 +1,5 @@
 package com.L2.mvci.note.mvci.partorderbox;
 
 public enum PartOrderBoxMessage {
-    FLASH
+    VIEW_PART_AS_SPARE, FLASH
 }

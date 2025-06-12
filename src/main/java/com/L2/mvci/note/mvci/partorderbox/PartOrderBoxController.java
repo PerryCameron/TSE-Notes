@@ -13,7 +13,7 @@ public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
     private final PartOrderBoxInteractor partOrderBoxInteractor;
 
     public PartOrderBoxController(NoteView noteView) {
-        this.partOrderBoxModel = new PartOrderBoxModel();
+        this.partOrderBoxModel = new PartOrderBoxModel(noteView);
         this.partOrderBoxInteractor = new PartOrderBoxInteractor(partOrderBoxModel);
         this.partOrderBoxView = new PartOrderBoxView(partOrderBoxModel, noteView, this::action);
     }
@@ -27,6 +27,7 @@ public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
     public void action(PartOrderBoxMessage actionEnum) {
         switch (actionEnum) {
             case FLASH -> partOrderBoxInteractor.flash();
+            case VIEW_PART_AS_SPARE -> partOrderBoxInteractor.viewPartAsSpare();
         }
     }
 

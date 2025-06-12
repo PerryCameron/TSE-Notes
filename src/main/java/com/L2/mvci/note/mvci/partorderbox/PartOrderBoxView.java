@@ -13,6 +13,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -265,7 +267,7 @@ public class PartOrderBoxView implements Builder<Region> {
             noteModel.selectedPartProperty().get().setPartDescription(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
-        col.prefWidthProperty().bind(partOrderBoxModel.getTableView().widthProperty().multiply(0.35));
+        col.prefWidthProperty().bind(partOrderBoxModel.getTableView().widthProperty().multiply(0.45));
         return col;
     }
 
@@ -281,33 +283,31 @@ public class PartOrderBoxView implements Builder<Region> {
     }
 
     private TableColumn<PartFx, String> col5() {
-        TableColumn<PartFx, String> col = new TableColumn<>("Action");
-        col.setMinWidth(100);
-        col.setPrefWidth(100);
-        col.setMaxWidth(100);
+        TableColumn<PartFx, String> col = new TableColumn<>("View");
         col.setStyle("-fx-alignment: center");
 
         // Set a cell factory to render a button in each cell
         col.setCellFactory(param -> new TableCell<PartFx, String>() {
-            private final Button button = new Button("Print");
-
+            Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/view-16.png")));
+            ImageView imageViewCopy = new ImageView(copyIcon);
+            Button button = ButtonFx.of(imageViewCopy, "invisible-button");
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    // Get the PartFx object for this row
-                    PartFx part = getTableView().getItems().get(getIndex());
+                    // PartFx part = getTableView().getItems().get(getIndex());
                     button.setOnAction(event -> {
-                        // Print the partNumber when the button is clicked
-                        System.out.println(part.getPartNumber());
+                        // make sure row is selected so we don't get a null on next step
+                        getTableView().getSelectionModel().select(getIndex());
+                        action.accept(PartOrderBoxMessage.VIEW_PART_AS_SPARE);
                     });
                     setGraphic(button);
                 }
             }
         });
-        col.prefWidthProperty().bind(partOrderBoxModel.getTableView().widthProperty().multiply(0.15));
+        col.prefWidthProperty().bind(partOrderBoxModel.getTableView().widthProperty().multiply(0.05));
         return col;
     }
 
