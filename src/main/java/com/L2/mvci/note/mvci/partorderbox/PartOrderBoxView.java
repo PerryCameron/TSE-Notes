@@ -57,9 +57,9 @@ public class PartOrderBoxView implements Builder<Region> {
 
     public Node createPartOrderBox(PartOrderFx partOrderDTO) {
         VBox box = new VBox(10);
-        Map<String, TableColumn<PartFx, String>> tableColumnMap = new HashMap<>();
-        // TableView<PartFx>
-        partOrderBoxModel.setTableView(buildTable(partOrderDTO, tableColumnMap));
+        partOrderBoxModel.setTableView(TableViewFx.of(PartFx.class));
+        buildTable(partOrderDTO);
+
         box.setOnMouseEntered(event -> noteModel.selectedPartOrderProperty().set(partOrderDTO));
         box.setOnMouseExited(event -> partOrderBoxModel.getTableView().getSelectionModel().clearSelection());
         partOrderBoxModel.getPartOrderMap().put(partOrderDTO, box);
@@ -183,14 +183,16 @@ public class PartOrderBoxView implements Builder<Region> {
         return iconBox;
     }
 
-    public TableView<PartFx> buildTable(PartOrderFx partOrderDTO, Map<String, TableColumn<PartFx, String>> map) {
-        TableView<PartFx> tableView = TableViewFx.of(PartFx.class);
+    public TableView<PartFx> buildTable(PartOrderFx partOrderDTO) {
+        TableView<PartFx> tableView = partOrderBoxModel.getTableView();
+        Map<String, TableColumn<PartFx, String>> map = new HashMap<>();
         tableView.setItems(partOrderDTO.getParts()); // Set the ObservableList here
         tableView.setEditable(true);
         map.put("part-number", col1());
         map.put("line-type", col2());
         map.put("description", col3());
         map.put("quantity", col4());
+        map.put("action", col5()); // Add the new button column
         // set lineType visibility for the first time
         lineTypeIsShown(map, partOrderDTO.showTypeProperty().get(), tableView);
         // if showType changes then change visibility of lineType
@@ -205,7 +207,7 @@ public class PartOrderBoxView implements Builder<Region> {
         TableView.TableViewSelectionModel<PartFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                System.out.println("setting selected part property with new part");
+               // System.out.println("setting selected part property with new part");
                 noteModel.selectedPartProperty().set(newSelection);
             }
         });
@@ -217,10 +219,11 @@ public class PartOrderBoxView implements Builder<Region> {
         TableColumn<PartFx, String> col2 = map.get("line-type");
         TableColumn<PartFx, String> col3 = map.get("description");
         TableColumn<PartFx, String> col4 = map.get("quantity");
+        TableColumn<PartFx, String> col5 = map.get("action"); // Include the button column
         if (showType) {
-            tableView.getColumns().addAll(Arrays.asList(col1, col2, col3, col4));
+            tableView.getColumns().addAll(Arrays.asList(col1, col2, col3, col4, col5));
         } else {
-            tableView.getColumns().addAll(Arrays.asList(col1, col3, col4));
+            tableView.getColumns().addAll(Arrays.asList(col1, col3, col4, col5));
         }
     }
 
@@ -231,9 +234,8 @@ public class PartOrderBoxView implements Builder<Region> {
             noteModel.selectedPartProperty().get().setPartNumber(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
-        col.setMinWidth(150);
-        col.setPrefWidth(150);
-        col.setMaxWidth(150);
+        // Bind width to 20% of TableView width
+        col.prefWidthProperty().bind(partOrderBoxModel.getTableView().widthProperty().multiply(0.20));
         return col;
     }
 
@@ -252,9 +254,7 @@ public class PartOrderBoxView implements Builder<Region> {
             noteModel.selectedPartProperty().get().setLineType(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
-        col.setMinWidth(175);
-        col.setPrefWidth(175);
-        col.setMaxWidth(175);
+        col.prefWidthProperty().bind(partOrderBoxModel.getTableView().widthProperty().multiply(0.20));
         return col;
     }
 
@@ -265,6 +265,7 @@ public class PartOrderBoxView implements Builder<Region> {
             noteModel.selectedPartProperty().get().setPartDescription(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
+        col.prefWidthProperty().bind(partOrderBoxModel.getTableView().widthProperty().multiply(0.35));
         return col;
     }
 
@@ -275,9 +276,38 @@ public class PartOrderBoxView implements Builder<Region> {
             noteModel.selectedPartProperty().get().setPartQuantity(event.getNewValue());
             noteView.getAction().accept(NoteMessage.UPDATE_PART);
         });
-        col.setMinWidth(70.0);
-        col.setPrefWidth(70.0);
-        col.setMaxWidth(70.0);
+        col.prefWidthProperty().bind(partOrderBoxModel.getTableView().widthProperty().multiply(0.10));
+        return col;
+    }
+
+    private TableColumn<PartFx, String> col5() {
+        TableColumn<PartFx, String> col = new TableColumn<>("Action");
+        col.setMinWidth(100);
+        col.setPrefWidth(100);
+        col.setMaxWidth(100);
+        col.setStyle("-fx-alignment: center");
+
+        // Set a cell factory to render a button in each cell
+        col.setCellFactory(param -> new TableCell<PartFx, String>() {
+            private final Button button = new Button("Print");
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    // Get the PartFx object for this row
+                    PartFx part = getTableView().getItems().get(getIndex());
+                    button.setOnAction(event -> {
+                        // Print the partNumber when the button is clicked
+                        System.out.println(part.getPartNumber());
+                    });
+                    setGraphic(button);
+                }
+            }
+        });
+        col.prefWidthProperty().bind(partOrderBoxModel.getTableView().widthProperty().multiply(0.15));
         return col;
     }
 
@@ -295,4 +325,6 @@ public class PartOrderBoxView implements Builder<Region> {
         partOrderBoxModel.getRoot().getChildren().clear();
         noteModel.boundNoteProperty().get().getPartOrders().forEach((partOrderDTO) -> partOrderBoxModel.getRoot().getChildren().add(createPartOrderBox(partOrderDTO)));
     }
+
+
 }

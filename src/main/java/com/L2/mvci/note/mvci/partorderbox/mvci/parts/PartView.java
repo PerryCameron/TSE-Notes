@@ -319,7 +319,6 @@ public class PartView implements Builder<Alert> {
         });
     }
 
-
     private void updateTreeView() {
         action.accept(PartMessage.JSON_MAP_PRODUCT_FAMILIES);
         TreeItem<Object> rootItem = ProductFamily.createTreeItemRoot(partModel.getProductFamilies());
