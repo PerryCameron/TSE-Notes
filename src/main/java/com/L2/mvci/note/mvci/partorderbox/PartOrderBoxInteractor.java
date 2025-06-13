@@ -1,14 +1,18 @@
 package com.L2.mvci.note.mvci.partorderbox;
 
+import com.L2.dto.global_spares.SparesDTO;
+import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PartOrderBoxInteractor {
     private static final Logger logger = LoggerFactory.getLogger(PartOrderBoxInteractor.class);
     private final PartOrderBoxModel partOrderBoxModel;
+    private final GlobalSparesRepositoryImpl globalSparesRepo;
 
     public PartOrderBoxInteractor(PartOrderBoxModel partOrderBoxModel) {
         this.partOrderBoxModel = partOrderBoxModel;
+        this.globalSparesRepo = new GlobalSparesRepositoryImpl();
     }
 
     public void flash() {
@@ -35,6 +39,17 @@ public class PartOrderBoxInteractor {
     }
 
     public void viewPartAsSpare() {
-        System.out.println(partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartNumber());
+        SparesDTO sparesDTO = globalSparesRepo.findBySpareItem(partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartNumber());
+        if (sparesDTO == null) {
+            // is a new part
+            partOrderBoxModel.setMessage(PartOrderBoxMessage.NEW_PART);
+        } else {
+            partOrderBoxModel.setMessage(PartOrderBoxMessage.PART_EXISTS);
+            partOrderBoxModel.setSpare(sparesDTO);
+        }
+    }
+
+    public void resetPartListener() {
+        partOrderBoxModel.setMessage(PartOrderBoxMessage.NONE);
     }
 }

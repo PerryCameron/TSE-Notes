@@ -53,7 +53,7 @@ public class PartFinderView implements Builder<Alert> {
             }
         });
         partModel.getAlert().setDialogPane(createDialogPane());
-        // here is the start of the UI
+        // here is the start of the UI for search
         partModel.getDialogPane().setContent(contentBox());
         DialogueFx.getTitleIcon(partModel.getDialogPane());
         DialogueFx.tieAlertToStage(partModel.getAlert(), partModel.getWidth(), 400);

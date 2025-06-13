@@ -1,6 +1,5 @@
 package com.L2.repository.rowmappers;
 
-import com.L2.dto.global_spares.ProductToSparesDTO;
 import com.L2.dto.global_spares.SparesDTO;
 import org.springframework.jdbc.core.RowMapper;
 

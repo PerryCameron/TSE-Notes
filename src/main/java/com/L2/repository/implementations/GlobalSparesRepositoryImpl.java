@@ -9,13 +9,13 @@ import com.L2.static_tools.NoteTools;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -195,9 +195,8 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         int rangeMatchCount;
         try {
             rangeMatchCount = jdbcTemplate.queryForObject(rangeCountSql, Integer.class);
-            System.out.println("Range match count: " + rangeMatchCount + " rows for ranges: " + Arrays.toString(cleanedRanges));
         } catch (Exception e) {
-            System.err.println("Range count query failed: " + e.getMessage());
+            logger.error("Range count query failed: {}", e.getMessage());
         }
 
         // Build WHERE clause for keyword filter (at least one match)
@@ -217,11 +216,10 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         keywordWhereBuilder.append(")");
 
         // Debug: Count rows matching both range and keyword conditions
-        String debugCountSql = "SELECT COUNT(*) FROM spares WHERE " + rangeWhereBuilder.toString() + " AND " + keywordWhereBuilder;
+        String debugCountSql = "SELECT COUNT(*) FROM spares WHERE " + rangeWhereBuilder + " AND " + keywordWhereBuilder;
         int debugCount = 0;
         try {
             debugCount = jdbcTemplate.queryForObject(debugCountSql, Integer.class);
-            System.out.println("Debug count: " + debugCount + " rows for ranges: " + Arrays.toString(cleanedRanges) + ", keywords: " + Arrays.toString(keywords));
         } catch (Exception e) {
             System.err.println("Debug count query failed: " + e.getMessage());
         }
@@ -231,16 +229,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             String debugRowsSql = "SELECT spare_description, pim, spare_item, replacement_item, standard_exchange_item, comments, keywords FROM spares WHERE " +
                     rangeWhereBuilder + " AND " + keywordWhereBuilder;
             try {
-                jdbcTemplate.query(debugRowsSql, (rs, rowNum) -> {
-//                    System.out.println("Debug row - pim: " + rs.getString("pim") +
-//                            ", spare_description: " + rs.getString("spare_description") +
-//                            ", spare_item: " + rs.getString("spare_item") +
-//                            ", replacement_item: " + rs.getString("replacement_item") +
-//                            ", standard_exchange_item: " + rs.getString("standard_exchange_item") +
-//                            ", comments: " + rs.getString("comments") +
-//                            ", keywords: " + rs.getString("keywords"));
-                    return null;
-                });
+                jdbcTemplate.query(debugRowsSql, (rs, rowNum) -> null);
             } catch (Exception e) {
                 System.err.println("Debug rows query failed: " + e.getMessage());
             }
@@ -267,21 +256,13 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         mainSql.append(" ORDER BY match_score DESC");
 
         // Log
-        System.out.println("SQL: " + mainSql);
-        System.out.println("Ranges: " + Arrays.toString(cleanedRanges));
-        System.out.println("Keywords: " + Arrays.toString(keywords));
+//        System.out.println("SQL: " + mainSql);
+//        System.out.println("Ranges: " + Arrays.toString(cleanedRanges));
+//        System.out.println("Keywords: " + Arrays.toString(keywords));
 
         // Execute main query
         try {
-            List<SparesDTO> results = jdbcTemplate.query(mainSql.toString(), (rs, rowNum) -> {
-                //                System.out.println("Matched row - pim: " + rs.getString("pim") +
-//                                   ", spare_description: " + dto.getSpareDescription() +
-//                                   ", match_score: " + rs.getInt("match_score") +
-//                                   ", isArchived: " + dto.isArchived());
-                return new SparesRowMapper().mapRow(rs, rowNum);
-            });
-            System.out.println("Results count: " + results.size());
-            return results;
+            return jdbcTemplate.query(mainSql.toString(), (rs, rowNum) -> new SparesRowMapper().mapRow(rs, rowNum));
         } catch (Exception e) {
             System.err.println("Query failed: " + e.getMessage());
             return Collections.emptyList();
@@ -494,7 +475,7 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         }
     }
 
-    public int saveImageToDatabase(int spareId, byte[] imageBytes) throws SQLException {
+    public int saveImageToDatabase(int spareId, byte[] imageBytes) {
         try {
             // Delete existing image(s) for the spare part
             String deleteSql = "DELETE FROM spare_pictures WHERE spare_id = ?";
@@ -514,15 +495,25 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
      *
      * @param spareId the ID of the spare whose image is to be retrieved
      * @return a byte array containing the image data, or null if no image is found or an error occurs
-     * @throws SQLException if a database error occurs
      */
     @Override
-    public byte[] getImage(int spareId) throws SQLException {
+    public byte[] getImage(int spareId) {
         try {
             String query = "SELECT picture FROM spare_pictures WHERE spare_id = ?";
             return jdbcTemplate.queryForObject(query, byte[].class, spareId);
         } catch (Exception e) {
             logger.warn("Database error while getting image: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public SparesDTO findBySpareItem(String spareItem) {
+        String sql = "SELECT * FROM spares WHERE spare_item = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new SparesRowMapper(), spareItem);
+        } catch (EmptyResultDataAccessException e) {
+            logger.warn("Database error while finding spare item: {} reason: {}", spareItem, e.getMessage());
             return null;
         }
     }

@@ -28,6 +28,7 @@ public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
         switch (actionEnum) {
             case FLASH -> partOrderBoxInteractor.flash();
             case VIEW_PART_AS_SPARE -> partOrderBoxInteractor.viewPartAsSpare();
+            case RESET_PART_LISTENER -> partOrderBoxInteractor.resetPartListener();
         }
     }
 

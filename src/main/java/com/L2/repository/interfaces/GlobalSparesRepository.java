@@ -20,4 +20,6 @@ public interface GlobalSparesRepository {
     int deleteRange(RangesFx range);
 
     byte[] getImage(int spareId) throws SQLException;
+
+    SparesDTO findBySpareItem(String spareItem);
 }

@@ -6,6 +6,7 @@ import com.L2.dto.PartOrderFx;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
+import com.L2.mvci.note.mvci.partorderbox.mvci.parteditor.PartEditorController;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderController;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
@@ -25,16 +26,16 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class PartOrderBoxView implements Builder<Region> {
-        private final PartOrderBoxModel partOrderBoxModel;
-        private final NoteModel noteModel;
-        private final NoteView noteView;
-        Consumer<PartOrderBoxMessage> action;
+    private final PartOrderBoxModel partOrderBoxModel;
+    private final NoteModel noteModel;
+    private final NoteView noteView;
+    Consumer<PartOrderBoxMessage> action;
 
     public PartOrderBoxView(PartOrderBoxModel partOrderBoxModel, NoteView noteView, Consumer<PartOrderBoxMessage> action) {
-            this.partOrderBoxModel = partOrderBoxModel;
-            this.noteView = noteView;
-            this.noteModel = noteView.getNoteModel();
-            this.action = action;
+        this.partOrderBoxModel = partOrderBoxModel;
+        this.noteView = noteView;
+        this.noteModel = noteView.getNoteModel();
+        this.action = action;
     }
 
     @Override
@@ -54,7 +55,18 @@ public class PartOrderBoxView implements Builder<Region> {
                 flash();
             }
         });
+        setNewPartListener();
         return partOrderBoxModel.getRoot();
+    }
+
+    private void setNewPartListener() {
+        partOrderBoxModel.messageProperty().addListener((observable, oldValue, newValue) -> {
+            switch (newValue) {
+                case NEW_PART -> System.out.println("This is a new part");
+                case PART_EXISTS -> launchPartEditor();
+            }
+            action.accept(PartOrderBoxMessage.RESET_PART_LISTENER);
+        });
     }
 
     public Node createPartOrderBox(PartOrderFx partOrderDTO) {
@@ -73,6 +85,11 @@ public class PartOrderBoxView implements Builder<Region> {
         box.setSpacing(5);
         box.getChildren().addAll(toolbar(partOrderDTO), hBox);
         return box;
+    }
+
+    private void launchPartEditor() {
+        Optional<Alert> alert = Optional.ofNullable(new PartEditorController(this).getView());
+        alert.ifPresent(Dialog::showAndWait);
     }
 
     private Node menu(PartOrderFx partOrderDTO) {
@@ -209,7 +226,7 @@ public class PartOrderBoxView implements Builder<Region> {
         TableView.TableViewSelectionModel<PartFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-               // System.out.println("setting selected part property with new part");
+                // System.out.println("setting selected part property with new part");
                 noteModel.selectedPartProperty().set(newSelection);
             }
         });
@@ -291,6 +308,7 @@ public class PartOrderBoxView implements Builder<Region> {
             Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/view-16.png")));
             ImageView imageViewCopy = new ImageView(copyIcon);
             Button button = ButtonFx.of(imageViewCopy, "invisible-button");
+
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -326,5 +344,7 @@ public class PartOrderBoxView implements Builder<Region> {
         noteModel.boundNoteProperty().get().getPartOrders().forEach((partOrderDTO) -> partOrderBoxModel.getRoot().getChildren().add(createPartOrderBox(partOrderDTO)));
     }
 
-
+    public NoteView getNoteView() {
+        return noteView;
+    }
 }
