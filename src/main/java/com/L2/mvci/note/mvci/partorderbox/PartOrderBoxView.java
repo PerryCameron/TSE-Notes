@@ -347,4 +347,8 @@ public class PartOrderBoxView implements Builder<Region> {
     public NoteView getNoteView() {
         return noteView;
     }
+
+    public PartOrderBoxModel getPartOrderBoxModel() {
+        return partOrderBoxModel;
+    }
 }

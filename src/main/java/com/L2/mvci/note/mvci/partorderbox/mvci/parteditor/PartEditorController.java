@@ -10,7 +10,7 @@ public class PartEditorController extends AlertController<PartEditorMessage> {
     private final PartEditorView partEditorView;
 
     public PartEditorController(PartOrderBoxView partOrderBoxView) {
-        PartEditorModel partEditorModel = new PartEditorModel(partOrderBoxView.getNoteView());
+        PartEditorModel partEditorModel = new PartEditorModel(partOrderBoxView);
         this.partEditorInteractor = new PartEditorInteractor(partEditorModel);
         this.partEditorView = new PartEditorView(partEditorModel, this::action);
     }
@@ -23,7 +23,6 @@ public class PartEditorController extends AlertController<PartEditorMessage> {
     @Override
     public void action(PartEditorMessage message) {
         switch (message) {
-
         }
     }
 }

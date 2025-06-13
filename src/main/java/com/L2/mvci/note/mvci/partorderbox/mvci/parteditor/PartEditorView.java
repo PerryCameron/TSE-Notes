@@ -3,10 +3,8 @@ package com.L2.mvci.note.mvci.partorderbox.mvci.parteditor;
 
 import com.L2.mvci.note.NoteView;
 import com.L2.widgetFx.DialogueFx;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Builder;
@@ -19,11 +17,9 @@ public class PartEditorView implements Builder<Alert> {
     private static final Logger logger = LoggerFactory.getLogger(PartEditorView.class);
 
     private Consumer<PartEditorMessage> action;
-    private NoteView noteView;
     private PartEditorModel partEditorModel;
 
     public PartEditorView(PartEditorModel partEditorModel, Consumer<PartEditorMessage> message) {
-        this.noteView = partEditorModel.getNoteView();
         this.partEditorModel = partEditorModel;
         this.action = message;
     }

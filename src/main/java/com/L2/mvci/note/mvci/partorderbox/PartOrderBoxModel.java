@@ -26,6 +26,7 @@ public class PartOrderBoxModel {
     private final BooleanProperty RefreshFields = new SimpleBooleanProperty(false);
     private final ObjectProperty<PartOrderBoxMessage> message = new SimpleObjectProperty<>(PartOrderBoxMessage.NONE);
     private PartFinderController partController;
+    // this is used for the Part Finder MVCI
     private SparesDTO spare;
 
     public PartOrderBoxModel(NoteView noteView) {
