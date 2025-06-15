@@ -147,7 +147,7 @@ public class PartFinderInteractor {
             // Update ImageView
             Image newImage = new Image(new ByteArrayInputStream(imageBytes));
             partModel.getImageView().setImage(newImage);
-            globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getId(), imageBytes);
+            globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getSpareItem(), imageBytes);
             // let's record that we edited the record
             savePart(type);
         } catch (Exception e) {
@@ -184,7 +184,7 @@ public class PartFinderInteractor {
     public void getImage() {
         Image image;
         try {
-            byte[] imageAsByte = globalSparesRepo.getImage(partModel.selectedSpareProperty().get().getId());
+            byte[] imageAsByte = globalSparesRepo.getImage(partModel.selectedSpareProperty().get().getSpareItem());
             if (imageAsByte != null) {
                 image = new Image(new ByteArrayInputStream(imageAsByte));
                 partModel.getImageView().setImage(image);

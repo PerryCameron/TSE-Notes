@@ -21,15 +21,11 @@ create table spares
     check (custom_add IN (0, 1))
 );
 
-create table spare_pictures
-(
-    id       INTEGER
-        primary key autoincrement,
-    spare_id INTEGER not null
-        unique
-        references spares
-            on delete cascade,
-    picture  BLOB    not null
+CREATE TABLE spare_pictures (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    spare_name TEXT NOT NULL UNIQUE,
+    picture BLOB NOT NULL,
+    FOREIGN KEY (spare_name) REFERENCES spares(spare_item) ON DELETE CASCADE
 );
 
 create table ranges

@@ -1,8 +1,7 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.parteditor;
 
-
-import com.L2.mvci.note.NoteView;
 import com.L2.widgetFx.DialogueFx;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -26,7 +25,7 @@ public class PartEditorView implements Builder<Alert> {
 
     @Override
     public Alert build() {
-            partEditorModel.getAlert().setTitle("Search spares");
+            partEditorModel.getAlert().setTitle("Part Editor");
             // close the alert window. This listener fixes that.
             partEditorModel.getAlert().showingProperty().addListener((obs, wasShowing, isShowing) -> {
                 if (isShowing) {
@@ -57,6 +56,11 @@ public class PartEditorView implements Builder<Alert> {
     }
 
     private Node contentBox() {
-        return new VBox();
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(10, 10, 10, 10));
+        System.out.println(partEditorModel.getSparesDTO().getSpareItem()); // this properly prints out the part number
+        Label partNumber = new Label("Part Number: " + partEditorModel.getSparesDTO().getSpareItem());
+        vBox.getChildren().add(partNumber);  // I can't see this label
+        return vBox;
     }
 }

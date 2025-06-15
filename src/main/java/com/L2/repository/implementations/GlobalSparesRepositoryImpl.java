@@ -475,15 +475,15 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         }
     }
 
-    public int saveImageToDatabase(int spareId, byte[] imageBytes) {
+    public int saveImageToDatabase(String spareItem, byte[] imageBytes) {
         try {
             // Delete existing image(s) for the spare part
-            String deleteSql = "DELETE FROM spare_pictures WHERE spare_id = ?";
-            jdbcTemplate.update(deleteSql, spareId);
+            String deleteSql = "DELETE FROM spare_pictures WHERE spare_name = ?";
+            jdbcTemplate.update(deleteSql, spareItem);
 
             // Insert new image
-            String insertSql = "INSERT INTO spare_pictures (spare_id, picture) VALUES (?, ?)";
-            return jdbcTemplate.update(insertSql, spareId, imageBytes);
+            String insertSql = "INSERT INTO spare_pictures (spare_name, picture) VALUES (?, ?)";
+            return jdbcTemplate.update(insertSql, spareItem, imageBytes);
         } catch (Exception e) {
             logger.error("Database error while saving image: {}", e.getMessage());
             return 0;
@@ -493,14 +493,14 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     /**
      * Retrieves the image associated with a spare by its ID from the spare_pictures table.
      *
-     * @param spareId the ID of the spare whose image is to be retrieved
+     * @param spareItem the part number of the spare whose image is to be retrieved
      * @return a byte array containing the image data, or null if no image is found or an error occurs
      */
     @Override
-    public byte[] getImage(int spareId) {
+    public byte[] getImage(String spareItem) {
         try {
-            String query = "SELECT picture FROM spare_pictures WHERE spare_id = ?";
-            return jdbcTemplate.queryForObject(query, byte[].class, spareId);
+            String query = "SELECT picture FROM spare_pictures WHERE spare_name = ?";
+            return jdbcTemplate.queryForObject(query, byte[].class, spareItem);
         } catch (Exception e) {
             logger.warn("Database error while getting image: {}", e.getMessage());
             return null;
@@ -518,5 +518,3 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         }
     }
 }
-
-

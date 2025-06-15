@@ -44,8 +44,8 @@ public class PartOrderBoxInteractor {
             // is a new part
             partOrderBoxModel.setMessage(PartOrderBoxMessage.NEW_PART);
         } else {
-            partOrderBoxModel.setMessage(PartOrderBoxMessage.PART_EXISTS);
             partOrderBoxModel.setSpare(sparesDTO);
+            partOrderBoxModel.setMessage(PartOrderBoxMessage.PART_EXISTS);
         }
     }
 
