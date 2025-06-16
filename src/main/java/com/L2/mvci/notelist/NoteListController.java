@@ -50,7 +50,7 @@ public class NoteListController extends Controller<NoteListMessage> {
             case SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT -> noteListInteractor.selectNote();
             case ADD_TO_BOTTOM_OF_LIST -> noteListInteractor.addToBottomOfList(mainController.getExecutorService());
             case ADD_TO_TOP_OF_LIST -> noteListInteractor.addToTopOfList(mainController.getExecutorService());
-            case SEARCH -> noteListInteractor.searchParameters();
+            case SEARCH -> noteListInteractor.searchParameters(mainController.getExecutorService());
             case UPDATE_RANGE_LABEL -> noteListInteractor.updateRange();
             case UPDATE_TABLE -> noteListInteractor.updateTable();
             case NO_ACTION_TAKEN_FOR_SCROLL -> noteListInteractor.logNoActionForScroll();

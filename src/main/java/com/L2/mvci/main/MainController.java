@@ -74,7 +74,7 @@ public class MainController extends Controller<MainMessage> {
             case PRINT_RANGES -> mainInteractor.printRanges(noteController.getRanges());
             case PRINT_PARTS -> noteController.printPartsTableView();
             case PRINT_PRODUCT_FAMILIES -> printProductFamilies();
-            case SHUTDOWN_EXECUTOR_SERVICE -> mainInteractor.getExecutorService().shutdown();
+            case SHUTDOWN_EXECUTOR_SERVICE -> mainInteractor.shutDownExecutorService();
         }
     }
 

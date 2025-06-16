@@ -68,7 +68,12 @@ public class MainInteractor implements ApplicationPaths {
     }
 
     public ExecutorService getExecutorService() {
-        logger.info("Shutting down executor service...");
+        logger.info("Getting executor service...");
         return mainModel.getExecutor();
+    }
+
+    public void shutDownExecutorService() {
+        logger.info("Shutting down executor service...");
+        mainModel.getExecutor().shutdown();
     }
 }

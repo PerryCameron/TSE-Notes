@@ -269,17 +269,46 @@ public class NoteListInteractor implements ApplicationPaths {
         executorService.submit(addToTopTask);
     }
 
-    public void searchParameters() {
+    /**
+     * Performs a search for notes based on the provided search parameters or retrieves paginated notes if no search parameters are specified.
+     * The method clears the current note list and executes the operation asynchronously using the provided {@link ExecutorService} to avoid
+     * blocking the JavaFX Application Thread. If search parameters are present, it activates search mode and queries notes with scoring;
+     * otherwise, it deactivates search mode and fetches paginated notes using the current page size and offset.
+     * <p>
+     * The results are added to the {@code noteListModel}'s note list on the JavaFX Application Thread upon successful completion.
+     * Errors during execution are logged, ensuring the application remains responsive. This method is typically used to update the note
+     * list in response to user search input or to reset to a paginated view when the search is cleared.
+     * </p>
+     *
+     * @param executorService the {@link ExecutorService} used to execute the search or fetch task asynchronously.
+     *                       Must not be {@code null} and should be properly managed to ensure shutdown on application close.
+     * @throws IllegalStateException if the {@code noteListModel} or {@code noteRepo} is not properly initialized
+     * @throws NullPointerException if {@code executorService} is {@code null}
+     * @see NoteListModel
+     * @see NoteRepositoryImpl
+     * @see ExecutorService
+     */
+    public void searchParameters(ExecutorService executorService) {
         noteListModel.getNotes().clear();
-        if (noteListModel.getSearchParameters().isEmpty()) {
-            noteListModel.setActiveSearch(false);
-            List<NoteFx> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
-            noteListModel.getNotes().addAll(notes);
-        } else {
-            noteListModel.setActiveSearch(true);
-            List<NoteFx> notes = noteRepo.searchNotesWithScoring(noteListModel.getSearchParameters());
-            noteListModel.getNotes().addAll(notes);
-        }
+        if (noteListModel.getSearchParameters().isEmpty()) noteListModel.setActiveSearch(false);
+        else noteListModel.setActiveSearch(true);
+        Task<List<NoteFx>> searchTask = new Task<>() {
+            @Override
+            protected List<NoteFx> call() {
+                if (noteListModel.isActiveSearch()) {
+                    return noteRepo.searchNotesWithScoring(noteListModel.getSearchParameters());
+                } else {
+                    return noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
+                }
+            }
+        };
+        searchTask.setOnSucceeded(event -> {
+            noteListModel.getNotes().addAll(searchTask.getValue());
+        });
+        searchTask.setOnFailed(event -> {
+            logger.error("Failed to search because: {}", searchTask.getException().getMessage());
+        });
+        executorService.submit(searchTask);
     }
 
     // shouldn't need this but unfortunately we do
