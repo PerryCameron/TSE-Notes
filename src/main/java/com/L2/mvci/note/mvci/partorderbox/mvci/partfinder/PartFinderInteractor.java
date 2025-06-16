@@ -20,21 +20,14 @@ import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Iterator;
 import java.util.Objects;
 
 public class PartFinderInteractor {
@@ -141,33 +134,47 @@ public class PartFinderInteractor {
     }
 
     public void saveImage(SaveType type) {
-        // Early exit if no selected spare
         if (partModel.selectedSpareProperty().get() == null) {
             DialogueFx.errorAlert("Error", "No spare item selected.");
             return;
         }
-        try {
-            Clipboard clipboard = Clipboard.getSystemClipboard();
-            if (!clipboard.hasImage()) {
-                DialogueFx.errorAlert("Error", "No image found in clipboard. Use Windows + Shift + S to capture an image.");
-                return;
-            }
-            // Convert clipboard image to BufferedImage
-            Image fxImage = clipboard.getImage();
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
-            // Resize image to 357x265 pixels
-            BufferedImage resizedImage = resizeImage(bufferedImage, 357, 265);
-            // Convert to PNG bytes (~100 KB)
-            byte[] imageBytes = convertToPngBytes(resizedImage);
-            // Update ImageView
-            Image newImage = new Image(new ByteArrayInputStream(imageBytes));
-            partModel.getImageView().setImage(newImage);
-            globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getSpareItem(), imageBytes);
-            // let's record that we edited the record
-            savePart(type);
-        } catch (Exception e) {
-            DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        if (!clipboard.hasImage()) {
+            DialogueFx.errorAlert("Error", "No image found in clipboard. Use Windows + Shift + S to capture an image.");
+            return;
         }
+        Image fxImage = clipboard.getImage();
+        // Convert clipboard image to BufferedImage
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
+        Task<Image> saveImageTask = new Task<>() {
+            @Override
+            protected Image call() {
+                try {
+                    // Resize image to 357x265 pixels
+                    BufferedImage resizedImage = resizeImage(bufferedImage, 357, 265);
+                    // Convert to PNG bytes (~100 KB)
+                    byte[] imageBytes = convertToPngBytes(resizedImage);
+                    // Update ImageView
+                    Image newImage = new Image(new ByteArrayInputStream(imageBytes));
+                    globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getSpareItem(), imageBytes);
+                    return newImage;
+                } catch (Exception e) {
+                    DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
+                }
+                return null;
+            }
+        };
+        saveImageTask.setOnSucceeded(event -> {
+            partModel.getImageView().setImage(saveImageTask.getValue());
+            savePart(type);
+        });
+        saveImageTask.setOnFailed(event -> {
+            Throwable e = saveImageTask.getException();
+            logger.error("Failed to save image: {}", e.getMessage(), e);
+            DialogueFx.errorAlert("Error", "Failed to save image: " + e.getMessage());
+        });
+        // Start the task on a background thread
+        new Thread(saveImageTask).start();
     }
 
     private BufferedImage resizeImage(BufferedImage original, int targetWidth, int targetHeight) {
