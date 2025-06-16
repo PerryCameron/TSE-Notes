@@ -9,6 +9,7 @@ import com.L2.static_tools.NoteTools;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -131,23 +132,23 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
     @Override
     public List<SparesDTO> searchSparesScoringSingleKeyword(String keyword) {
         String sql = """
-        SELECT *, (
-            (CASE WHEN spare_item LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN replacement_item LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN standard_exchange_item LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN spare_description LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN comments LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
-            (CASE WHEN keywords LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END)
-        ) AS match_score
-        FROM spares
-        WHERE spare_item LIKE ? COLLATE NOCASE
-            OR replacement_item LIKE ? COLLATE NOCASE
-            OR standard_exchange_item LIKE ? COLLATE NOCASE
-            OR spare_description LIKE ? COLLATE NOCASE
-            OR comments LIKE ? COLLATE NOCASE
-            OR keywords LIKE ? COLLATE NOCASE
-        ORDER BY match_score DESC
-    """;
+                    SELECT *, (
+                        (CASE WHEN spare_item LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
+                        (CASE WHEN replacement_item LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
+                        (CASE WHEN standard_exchange_item LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
+                        (CASE WHEN spare_description LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
+                        (CASE WHEN comments LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END) +
+                        (CASE WHEN keywords LIKE ? COLLATE NOCASE THEN 1 ELSE 0 END)
+                    ) AS match_score
+                    FROM spares
+                    WHERE spare_item LIKE ? COLLATE NOCASE
+                        OR replacement_item LIKE ? COLLATE NOCASE
+                        OR standard_exchange_item LIKE ? COLLATE NOCASE
+                        OR spare_description LIKE ? COLLATE NOCASE
+                        OR comments LIKE ? COLLATE NOCASE
+                        OR keywords LIKE ? COLLATE NOCASE
+                    ORDER BY match_score DESC
+                """;
         String normalizedKeyword = NoteTools.normalizeDate(keyword);
         String likeKeyword = "%" + normalizedKeyword + "%";
 
@@ -477,15 +478,26 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
 
     public int saveImageToDatabase(String spareItem, byte[] imageBytes) {
         try {
-            // Delete existing image(s) for the spare part
-            String deleteSql = "DELETE FROM spare_pictures WHERE spare_name = ?";
-            jdbcTemplate.update(deleteSql, spareItem);
+            if (spareItem == null || imageBytes == null) {
+                logger.error("Invalid input: spareItem or imageBytes is null");
+                return 0;
+            }
 
-            // Insert new image
-            String insertSql = "INSERT INTO spare_pictures (spare_name, picture) VALUES (?, ?)";
-            return jdbcTemplate.update(insertSql, spareItem, imageBytes);
-        } catch (Exception e) {
-            logger.error("Database error while saving image: {}", e.getMessage());
+            // Check if a record exists for the spare part
+            String checkSql = "SELECT COUNT(*) FROM spare_pictures WHERE spare_name = ?";
+            Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, spareItem);
+
+            if (count != null && count > 0) {
+                // Update existing image
+                String updateSql = "UPDATE spare_pictures SET picture = ? WHERE spare_name = ?";
+                return jdbcTemplate.update(updateSql, imageBytes, spareItem);
+            } else {
+                // Insert new image
+                String insertSql = "INSERT INTO spare_pictures (spare_name, picture) VALUES (?, ?)";
+                return jdbcTemplate.update(insertSql, spareItem, imageBytes);
+            }
+        } catch (DataAccessException e) {
+            logger.error("Database error while saving image: {}", e.getMessage(), e);
             return 0;
         }
     }

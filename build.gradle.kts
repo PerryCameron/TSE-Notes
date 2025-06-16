@@ -38,6 +38,8 @@ repositories {
 val appVersion: String by project
 
 dependencies {
+    // for scaling images
+    implementation("org.imgscalr:imgscalr-lib:4.2")
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     implementation("org.xerial:sqlite-jdbc:3.46.1.0")
     // https://mvnrepository.com/artifact/org.springframework/spring-jdbc

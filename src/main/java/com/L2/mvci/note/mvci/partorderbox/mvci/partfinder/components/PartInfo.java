@@ -33,12 +33,9 @@ public class PartInfo implements Builder<Pane> {
     public void addEditHistory() {
         java.util.List<UpdatedByDTO> dtoList = partView.getPartModel().getUpdatedByDTOs();
         if(!partView.getPartModel().getUpdatedByDTOs().isEmpty()) {
-            System.out.println("not empty");
             for (UpdatedByDTO dto : dtoList) {
                 vBox.getChildren().add(new Label(dto.getUpdatedBy() + " " + dto.getUpdatedDateTime()));
             }
-        } else {
-            System.out.println("empty");
         }
     }
 

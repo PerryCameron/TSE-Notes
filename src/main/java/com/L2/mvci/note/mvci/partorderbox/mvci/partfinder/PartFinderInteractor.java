@@ -12,21 +12,29 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
+import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import java.awt.*;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class PartFinderInteractor {
@@ -133,6 +141,11 @@ public class PartFinderInteractor {
     }
 
     public void saveImage(SaveType type) {
+        // Early exit if no selected spare
+        if (partModel.selectedSpareProperty().get() == null) {
+            DialogueFx.errorAlert("Error", "No spare item selected.");
+            return;
+        }
         try {
             Clipboard clipboard = Clipboard.getSystemClipboard();
             if (!clipboard.hasImage()) {
@@ -158,23 +171,14 @@ public class PartFinderInteractor {
     }
 
     private BufferedImage resizeImage(BufferedImage original, int targetWidth, int targetHeight) {
-        // Calculate scaled dimensions while preserving aspect ratio
-        double aspectRatio = (double) original.getWidth() / original.getHeight();
-        int scaledWidth = targetWidth;
-        int scaledHeight = (int) (targetWidth / aspectRatio);
-        if (scaledHeight > targetHeight) {
-            scaledHeight = targetHeight;
-            scaledWidth = (int) (targetHeight * aspectRatio);
+        // Skip resizing if original is smaller
+        if (original.getWidth() <= targetWidth && original.getHeight() <= targetHeight) {
+            logger.info("No resize is needed");
+            return original;
         }
-
-        // Create resized image
-        BufferedImage resized = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = resized.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2d.drawImage(original, 0, 0, scaledWidth, scaledHeight, null);
-        g2d.dispose();
-        return resized;
+        // Resize with Imgscalr, preserving aspect ratio
+        return Scalr.resize(original, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.AUTOMATIC,
+                targetWidth, targetHeight);
     }
 
     private byte[] convertToPngBytes(BufferedImage image) throws Exception {
@@ -183,32 +187,92 @@ public class PartFinderInteractor {
         return baos.toByteArray();
     }
 
+    /**
+     * Loads an image for the currently selected spare item and displays it in the associated ImageView.
+     * <p>
+     * This method retrieves image data from the {@code globalSparesRepo} for the spare item obtained
+     * from {@code partModel.selectedSpareProperty().get().getSpareItem()}. The image loading operation
+     * is performed on a background thread to prevent blocking the JavaFX Application Thread, ensuring
+     * a responsive UI. If the image data is available, it is converted to an {@code Image} and displayed
+     * in the {@code ImageView} obtained from {@code partModel.getImageView()}. If no image data is
+     * available or an error occurs, a fallback image ("/images/no-image357x265.png") is displayed instead.
+     * </p>
+     * <p>
+     * The method uses a JavaFX {@code Task} to handle the asynchronous loading, with UI updates
+     * performed on the JavaFX Application Thread via the task's {@code setOnSucceeded} and
+     * {@code setOnFailed} handlers. Errors during image loading are logged, and the fallback image
+     * is set to ensure the {@code ImageView} remains in a valid state.
+     * </p>
+     * <p>
+     * <b>Note:</b> This method assumes that {@code globalSparesRepo.getImage()} is thread-safe and
+     * that accessing {@code partModel.selectedSpareProperty().get().getSpareItem()} is safe off the
+     * JavaFX Application Thread. If the latter involves UI-related objects, the spare item should be
+     * retrieved on the JavaFX Application Thread before starting the task.
+     * </p>
+     */
     public void getImage() {
-        Image image;
-        try {
-            byte[] imageAsByte = globalSparesRepo.getImage(partModel.selectedSpareProperty().get().getSpareItem());
-            if (imageAsByte != null) {
-                image = new Image(new ByteArrayInputStream(imageAsByte));
-            } else {
-                image = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/no-image357x265.png")));
+        Task<Image> loadImageTask = new Task<>() {
+            @Override
+            protected Image call() throws Exception {
+                // Perform potentially blocking operation off the FX thread
+                byte[] imageAsByte = globalSparesRepo.getImage(partModel.selectedSpareProperty().get().getSpareItem());
+                if (imageAsByte != null) {
+                    return new Image(new ByteArrayInputStream(imageAsByte));
+                } else {
+                    // Load fallback image
+                    return new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/no-image357x265.png")));
+                }
             }
-            partModel.getImageView().setImage(image);
-        } catch (Exception e) {
-            logger.debug("Error in getImage: {}", e.getMessage(), e);
-        }
+        };
+        loadImageTask.setOnSucceeded(event -> {
+            // Update ImageView on the FX thread
+                Image image = loadImageTask.getValue();
+                partModel.getImageView().setImage(image);
+        });
+        loadImageTask.setOnFailed(event -> {
+            // Handle errors on the FX thread
+                logger.debug("Error in getImage: {}", loadImageTask.getException().getMessage(), loadImageTask.getException());
+                // Optionally set fallback image on error
+                Image fallbackImage = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/no-image357x265.png")));
+                partModel.getImageView().setImage(fallbackImage);
+        });
+        // Start the task on a background thread
+        new Thread(loadImageTask).start();
     }
 
+    /**
+     * Deserializes a small JSON string containing update history into a list of {@code UpdatedByDTO} objects
+     * and updates the model's observable list.
+     * <p>
+     * This method retrieves the JSON string from the {@code lastUpdatedBy} field of the currently
+     * selected spare item in {@code partModel.selectedSpareProperty()}. The JSON data is expected to be
+     * small (no more than 200 characters) and stored in memory, making deserialization fast enough to
+     * perform on the JavaFX Application Thread without impacting UI responsiveness. The deserialized
+     * {@code List<UpdatedByDTO>} is added to the {@code partModel.getUpdatedByDTOs()} observable list,
+     * which is cleared beforehand to avoid duplicates. If deserialization fails, an error alert is
+     * displayed using {@code DialogueFx.errorAlert()}.
+     * </p>
+     * <p>
+     * If the selected spare item or its {@code lastUpdatedBy} field is null, or if the JSON string is
+     * empty, the method exits early without modifying the observable list. All operations, including
+     * JSON deserialization and UI updates, are performed on the JavaFX Application Thread, as the
+     * lightweight nature of the data does not warrant background processing.
+     * </p>
+     * <p>
+     * <b>Note:</b> This method assumes that {@code partModel.getObjectMapper()} returns a thread-safe
+     * {@code ObjectMapper} instance and that the JSON data is small and in-memory. For larger JSON
+     * payloads, consider using a {@code javafx.concurrent.Task} to offload deserialization to a
+     * background thread.
+     * </p>
+     */
     public void getUpdatedByToPOJO() {
-        if (partModel.selectedSpareProperty().get() == null) {
-            return;
-        }
-        if (partModel.selectedSpareProperty().get().getLastUpdatedBy() == null) {
+        // Early exit if no selected spare or no lastUpdatedBy data
+        if (partModel.selectedSpareProperty().get() == null ||
+                partModel.selectedSpareProperty().get().getLastUpdatedBy() == null) {
             return;
         }
         String lastUpdateJSON = partModel.selectedSpareProperty().get().getLastUpdatedBy();
-        // Clear existing list to avoid duplicates
-        partModel.getUpdatedByDTOs().clear();
-        // Check if JSON is null or empty
+        // Early exit if JSON is null or empty
         if (lastUpdateJSON == null || lastUpdateJSON.trim().isEmpty()) {
             return;
         }
@@ -219,10 +283,10 @@ public class PartFinderInteractor {
             // Deserialize JSON into List<UpdatedByDTO>
             java.util.List<UpdatedByDTO> deserializedList = mapper.readValue(lastUpdateJSON,
                     mapper.getTypeFactory().constructCollectionType(java.util.List.class, UpdatedByDTO.class));
+            // Clear existing list to avoid duplicates
+            partModel.getUpdatedByDTOs().clear();
             // Add deserialized items to the list
             partModel.getUpdatedByDTOs().addAll(deserializedList);
-            // partModel.setUpdatedBys(updatedByDTOList);
-            partModel.getUpdatedByDTOs().forEach(System.out::println);
         } catch (JsonProcessingException e) {
             DialogueFx.errorAlert("Object mapping failed", e.getMessage());
         }
@@ -282,7 +346,6 @@ public class PartFinderInteractor {
             ObjectMapper mapper = partModel.getObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT); // Optional: for readable JSON
             String updatedJson = mapper.writeValueAsString(updatedByDTOs);
-
             // Set JSON to SparesDTO's lastUpdatedBy field
             partModel.selectedSpareProperty().get().setLastUpdatedBy(updatedJson);
         } catch (Exception e) {
