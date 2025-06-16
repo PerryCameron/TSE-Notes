@@ -4,6 +4,7 @@ import com.L2.dto.UpdatedByDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.enums.SaveType;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
+import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.DialogueFx;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,6 +27,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 public class PartFinderInteractor {
     private static final Logger logger = LoggerFactory.getLogger(PartFinderInteractor.class);
@@ -187,8 +189,10 @@ public class PartFinderInteractor {
             byte[] imageAsByte = globalSparesRepo.getImage(partModel.selectedSpareProperty().get().getSpareItem());
             if (imageAsByte != null) {
                 image = new Image(new ByteArrayInputStream(imageAsByte));
-                partModel.getImageView().setImage(image);
+            } else {
+                image = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/no-image357x265.png")));
             }
+            partModel.getImageView().setImage(image);
         } catch (Exception e) {
             logger.debug("Error in getImage: {}", e.getMessage(), e);
         }
@@ -292,6 +296,4 @@ public class PartFinderInteractor {
         // triggers view refresh
         partModel.refreshPartInfo();
     }
-
-
 }
