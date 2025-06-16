@@ -56,6 +56,7 @@ public class NoteListController extends Controller<NoteListMessage> {
             case NO_ACTION_TAKEN_FOR_SCROLL -> noteListInteractor.logNoActionForScroll();
             case NO_ACTION_TAKEN_FOR_SEARCH -> noteListInteractor.logNoActionForSearch();
             case NO_ACTION_TAKEN_FOR_KEY_PRESS -> noteListInteractor.logNoActionForKeyPress();
+            case SHUT_DOWN_EXECUTOR -> noteListInteractor.shutdown();
         }
     }
 }

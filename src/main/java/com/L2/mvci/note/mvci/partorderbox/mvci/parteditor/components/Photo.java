@@ -39,7 +39,6 @@ public class Photo implements Builder<Pane> {
         // Button to save clipboard image
 
         Button saveButton = ButtonFx.utilityButton("/images/paste-16.png", "Paste Clipboard Image", 200);
-//        Button saveButton = new Button("Save Clipboard Image");
         saveButton.setOnAction(event -> saveClipboardImage());
         // Load initial image for the selected spare
         loadImageForSelectedSpare();

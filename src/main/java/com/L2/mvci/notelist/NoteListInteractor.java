@@ -3,14 +3,18 @@ package com.L2.mvci.notelist;
 import com.L2.dto.NoteFx;
 import com.L2.repository.implementations.NoteRepositoryImpl;
 import com.L2.static_tools.ApplicationPaths;
+import com.L2.widgetFx.DialogueFx;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -60,11 +64,11 @@ public class NoteListInteractor implements ApplicationPaths {
         return null;
     }
 
-    public void selectNote() {
+    protected void selectNote() {
         selectTableRow(findNoteFromListMatchingBoundNote());
     }
 
-    public void displayPreviousNote() {
+    protected void displayPreviousNote() {
         int index = getIndexById(noteListModel.getBoundNote().getId());
         if (index < noteListModel.getNotes().size() - 1) {
             NoteFx noteDTO = noteListModel.getNotes().get(index + 1);
@@ -72,7 +76,7 @@ public class NoteListInteractor implements ApplicationPaths {
         }
     }
 
-    public void displayNextNote() {
+    protected void displayNextNote() {
         int index = getIndexById(noteListModel.getBoundNote().getId());
         if (index > 0) {
             NoteFx noteDTO = noteListModel.getNotes().get(index - 1);
@@ -80,7 +84,7 @@ public class NoteListInteractor implements ApplicationPaths {
         }
     }
 
-    public int getIndexById(int id) {
+    private int getIndexById(int id) {
         for (NoteFx note : noteListModel.getNotes()) {
             if (note.getId() == id) {
                 return noteListModel.getNotes().indexOf(note);
@@ -89,90 +93,180 @@ public class NoteListInteractor implements ApplicationPaths {
         return -1;
     }
 
-    public void sortTableView() {
+    protected void sortTableView() {
         logger.debug("Sorting table view");
         noteListModel.getNotes().sort(Comparator.comparing(NoteFx::getTimestamp).reversed());
     }
 
-    public void refreshTableView() {
+    protected void refreshTableView() {
         logger.debug("Refreshing table view");
         noteListModel.refreshTable();
     }
 
-    public void addToBottomOfList() {
-        int originalOffset = noteListModel.getOffset();
-        int newOffset = noteListModel.getOffset() + noteListModel.getNotes().size();
-        noteListModel.offsetProperty().set(newOffset);
-        try {
-            // If we haven't reached the olded note
-            if (!noteRepo.isOldest(noteListModel.getNotes().getLast())) {
-                logger.debug("We have not reached the oldest note");
-                List<NoteFx> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), noteListModel.getOffset());
-                logger.debug("We just queried {} notes that are offset by {}", noteListModel.getPageSize(), noteListModel.getOffset());
-                if (!notes.isEmpty()) {
-                    logger.debug("We are adding the " + notes.size() + " notes to the bottom of the list");
-                    noteListModel.getNotes().addAll(notes);
-                    // this helped a lot by moving the scroll bar to the middle
-                    ScrollBar verticalScrollBar = (ScrollBar) noteListModel.getNoteTable().lookup(".scroll-bar");
-                    if (verticalScrollBar != null) {
-                        Platform.runLater(() -> verticalScrollBar.setValue(0.5));
-                    }
-                }
-                else {
-                    logger.debug("the notes list is empty, we are setting the offset to " + originalOffset);
-                    noteListModel.offsetProperty().set(originalOffset); // Restore offset
-                }
-                if (noteListModel.getNotes().size() > 100) {
-                    // Remove excess records from the top
-                    noteListModel.getNotes().remove(0, noteListModel.getNotes().size() - 100); // Trim from top
-                    logger.debug("We just removed 100 notes from the top");
-                }
-                updateRange();
-            } else logger.debug("We have reached the oldest note");
-        } catch (Exception e) {
-            logger.debug("Error fetching bottom notes: {}", e.getMessage());
-            noteListModel.offsetProperty().set(originalOffset); // Restore offset on failure
-        }
+    protected void updateRange() {
+        noteListModel.setRecordNumbers(noteListModel.getNotes().getLast().prettyDate() + " - " + noteListModel.getNotes().getFirst().prettyDate());
     }
 
-    public void addToTopOfList() {
-        int newOffset = Math.max(0, noteListModel.getOffset() - noteListModel.getPageSize());
-        noteListModel.offsetProperty().set(newOffset);
-        try {
-            if (!noteRepo.isNewest(noteListModel.getNotes().getFirst())) {
-                logger.debug("We have not reached the newest note");
-                List<NoteFx> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), newOffset);
-                logger.debug("We just queried {} notes that are offset by {}", noteListModel.getPageSize(), noteListModel.getOffset());
-                // Don't bother to add an empty list
-                if (!notes.isEmpty()) {
-                    logger.debug("We are adding the " + notes.size() + " notes to the top of the list");
-                    noteListModel.getNotes().addAll(0, notes); // Add the new records at the top
-                    // this helped a lot by moving the scroll bar to the middle
-                    ScrollBar verticalScrollBar = (ScrollBar) noteListModel.getNoteTable().lookup(".scroll-bar");
-                    if (verticalScrollBar != null) {
-                        Platform.runLater(() -> verticalScrollBar.setValue(0.5));
+    /**
+     * Adds a new set of notes to the bottom of the paginated note list by fetching later notes
+     * based on the current offset and page size. The method operates asynchronously using a
+     * background task to avoid blocking the JavaFX Application Thread. If the oldest note is
+     * reached, no new notes are added. The list is trimmed to maintain a maximum size, and the
+     * scrollbar is adjusted to keep the view centered after adding notes.
+     * <p>
+     * This method updates the {@code noteListModel}'s offset and notes list, ensuring thread-safe
+     * modifications on the JavaFX Application Thread. Errors during note retrieval are logged and
+     * displayed to the user via an error dialog, with the offset restored to its previous value.
+     * </p>
+     *
+     * @throws IllegalStateException if the note list model or note repository is not properly initialized
+     * @see NoteListModel
+     * @see NoteRepositoryImpl
+     */
+    public void addToBottomOfList() {
+        if (noteListModel.getIsLoading().getAndSet(true)) {
+            logger.debug("Skipping addToBottomOfList: another load is in progress");
+            return;
+        }
+        int originalOffset = noteListModel.getOffset();
+        int newOffset = originalOffset + noteListModel.getPageSize(); // Use pageSize for consistent pagination
+        Task<List<NoteFx>> addToBottomTask = new Task<>() {
+            @Override
+            protected List<NoteFx> call() {
+                try {
+                    if (!noteRepo.isOldest(noteListModel.getNotes().getLast())) {
+                        logger.debug("Fetching {} notes at offset {}", noteListModel.getPageSize(), newOffset);
+                        List<NoteFx> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), newOffset);
+                        return notes.isEmpty() ? Collections.emptyList() : notes;
+                    } else {
+                        logger.debug("Reached oldest note");
+                        return Collections.emptyList();
                     }
-                }
-                if (noteListModel.getNotes().size() > 100)
-                    // Remove excess records from the bottom
-                    logger.debug("We just removed 100 notes from the bottom");
-                    noteListModel.getNotes().remove(100, noteListModel.getNotes().size());
-                updateRange();
-            }  else {  logger.debug("We have reached the newest note");
-                // we have reached the top lets take it back to 50
-                if(noteListModel.getNotes().size() > 60) {
-                    noteListModel.getNotes().clear();
-                    noteListModel.getNotes().addAll(noteRepo.getPaginatedNotes(50, 0));
-                    logger.debug("Stacking 50");
+                } catch (Exception e) {
+                    logger.error("Error fetching bottom notes: {}", e.getMessage(), e);
+                    throw new RuntimeException(e);
                 }
             }
-        } catch (Exception e) {
-            logger.error("Error fetching top notes: {}", e.getMessage());
-        }
+        };
+        addToBottomTask.setOnSucceeded(event -> {
+            try {
+                List<NoteFx> notes = addToBottomTask.getValue();
+                if (!notes.isEmpty()) {
+                    noteListModel.offsetProperty().set(newOffset);
+                    ObservableList<NoteFx> currentNotes = noteListModel.getNotes();
+                    currentNotes.addAll(notes);
+                    // Adjust scrollbar
+                    ScrollBar verticalScrollBar = (ScrollBar) noteListModel.getNoteTable().lookup(".scroll-bar");
+                    if (verticalScrollBar != null) {
+                        verticalScrollBar.setValue(noteListModel.getSCROLLBAR_MIDDLE());
+                    }
+                    // Trim excess notes from top
+                    if (currentNotes.size() > noteListModel.getMAX_NOTES()) {
+                        currentNotes.remove(0, currentNotes.size() - noteListModel.getMAX_NOTES());
+                        logger.debug("Removed {} excess notes from top", currentNotes.size() - noteListModel.getMAX_NOTES());
+                    }
+                    updateRange();
+                } else {
+                    logger.debug("No new notes to add at offset {}", newOffset);
+                }
+            } finally {
+                noteListModel.getIsLoading().set(false);
+            }
+        });
+        addToBottomTask.setOnFailed(event -> {
+            try {
+                noteListModel.offsetProperty().set(originalOffset);
+                DialogueFx.errorAlert("Error fetching records", addToBottomTask.getException().getMessage());
+            } finally {
+                noteListModel.getIsLoading().set(false);
+            }
+        });
+        noteListModel.getExecutor().submit(addToBottomTask);
     }
 
-    public void updateRange() {
-        noteListModel.setRecordNumbers(noteListModel.getNotes().getLast().prettyDate() + " - " + noteListModel.getNotes().getFirst().prettyDate());
+    /**
+     * Adds a new set of notes to the top of the paginated note list by fetching earlier notes
+     * based on the current offset and page size. The method operates asynchronously using a
+     * background task to avoid blocking the JavaFX Application Thread. If the newest note is
+     * reached, the list is reset to a default set of notes. The list is trimmed to maintain a
+     * maximum size, and the scrollbar is adjusted to keep the view centered after adding notes.
+     * <p>
+     * This method updates the {@code noteListModel}'s offset and notes list, ensuring thread-safe
+     * modifications on the JavaFX Application Thread. Errors during note retrieval are logged and
+     * displayed to the user via an error dialog, with the offset restored to its previous value.
+     * </p>
+     *
+     * @throws IllegalStateException if the note list model or note repository is not properly initialized
+     * @see NoteListModel
+     * @see NoteRepositoryImpl
+     */
+    public void addToTopOfList() {
+        if (noteListModel.getIsLoading().getAndSet(true)) {
+            logger.debug("Skipping addToTopOfList: another load is in progress");
+            return;
+        }
+        int originalOffset = noteListModel.getOffset();
+        int newOffset = Math.max(0, noteListModel.getOffset() - noteListModel.getPageSize());
+        Task<List<NoteFx>> addToTopTask = new Task<>() {
+            @Override
+            protected List<NoteFx> call() {
+                try {
+                    if (!noteRepo.isNewest(noteListModel.getNotes().getFirst())) {
+                        logger.debug("Fetching {} notes at offset {}", noteListModel.getPageSize(), newOffset);
+                        List<NoteFx> notes = noteRepo.getPaginatedNotes(noteListModel.getPageSize(), newOffset);
+                        return notes.isEmpty() ? Collections.emptyList() : notes;
+                    } else {
+                        logger.debug("Reached newest note");
+                        Platform.runLater(() -> {
+                            ObservableList<NoteFx> notes = noteListModel.getNotes();
+                            if (notes.size() > noteListModel.getTRIM_THRESHOLD()) {
+                                notes.clear();
+                                notes.addAll(noteRepo.getPaginatedNotes(noteListModel.getDEFAULT_PAGE_SIZE(), 0));
+                                logger.debug("Reset to {} notes", noteListModel.getDEFAULT_PAGE_SIZE());
+                            }
+                        });
+                        return Collections.emptyList();
+                    }
+                } catch (Exception e) {
+                    logger.error("Error fetching top notes: {}", e.getMessage(), e);
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+        addToTopTask.setOnSucceeded(event -> {
+            try {
+                List<NoteFx> notes = addToTopTask.getValue();
+                if (!notes.isEmpty()) {
+                    noteListModel.offsetProperty().set(newOffset);
+                    ObservableList<NoteFx> currentNotes = noteListModel.getNotes();
+                    currentNotes.addAll(0, notes);
+                    // Adjust scrollbar
+                    ScrollBar verticalScrollBar = (ScrollBar) noteListModel.getNoteTable().lookup(".scroll-bar");
+                    if (verticalScrollBar != null) {
+                        verticalScrollBar.setValue(noteListModel.getSCROLLBAR_MIDDLE());
+                    }
+                    // Trim excess notes
+                    if (currentNotes.size() > noteListModel.getMAX_NOTES()) {
+                        currentNotes.remove(noteListModel.getMAX_NOTES(), currentNotes.size());
+                        logger.debug("Removed {} excess notes from bottom", currentNotes.size() - noteListModel.getMAX_NOTES());
+                    }
+                    updateRange();
+                } else {
+                    logger.debug("No new notes to add at offset {}", newOffset);
+                }
+            } finally {
+                noteListModel.getIsLoading().set(false);
+            }
+        });
+        addToTopTask.setOnFailed(event -> {
+            try {
+                noteListModel.offsetProperty().set(originalOffset);
+                DialogueFx.errorAlert("Error fetching records", addToTopTask.getException().getMessage());
+            } finally {
+                noteListModel.getIsLoading().set(false);
+            }
+        });
+        noteListModel.getExecutor().submit(addToTopTask);
     }
 
     public void searchParameters() {
@@ -203,5 +297,10 @@ public class NoteListInteractor implements ApplicationPaths {
 
     public void logNoActionForKeyPress() {
         logger.warn("No action taken for this key press");
+    }
+
+    // good practice to shut down executor when closing app
+    public void shutdown() {
+        noteListModel.getExecutor().shutdown();
     }
 }

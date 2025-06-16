@@ -80,9 +80,13 @@ public class PartFinderInteractor {
         saveEditHistory();
         int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
         switch (type) {
-            case NOTE -> partModel.updatedNotesProperty().set(success == 1);
+            case NOTE -> Platform.runLater(() -> {
+                partModel.updatedNotesProperty().set(success == 1);
+            });
             case IMAGE -> logger.info("New image for {} saved", partModel.selectedSpareProperty().get().getSpareItem());
-            case KEYWORD -> partModel.getUpdatedKeywordsProperty().set(success == 1);
+            case KEYWORD -> Platform.runLater(() -> {
+                partModel.getUpdatedKeywordsProperty().set(success == 1);
+            });
         }
     }
 
@@ -157,6 +161,7 @@ public class PartFinderInteractor {
                     // Update ImageView
                     Image newImage = new Image(new ByteArrayInputStream(imageBytes));
                     globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getSpareItem(), imageBytes);
+                    savePart(type);
                     return newImage;
                 } catch (Exception e) {
                     DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
@@ -166,7 +171,6 @@ public class PartFinderInteractor {
         };
         saveImageTask.setOnSucceeded(event -> {
             partModel.getImageView().setImage(saveImageTask.getValue());
-            savePart(type);
         });
         saveImageTask.setOnFailed(event -> {
             Throwable e = saveImageTask.getException();
@@ -314,7 +318,9 @@ public class PartFinderInteractor {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC"));
         String currentTimestamp = now.format(formatter);
         // update lastUpdate field in the currently selected SparesDTO
-        partModel.selectedSpareProperty().get().setLastUpdate(currentTimestamp);
+        Platform.runLater(() -> {
+            partModel.selectedSpareProperty().get().setLastUpdate(currentTimestamp);
+        });
         // Get the existing list of UpdatedByDTOs
         java.util.List<UpdatedByDTO> updatedByDTOs = partModel.getUpdatedByDTOs();
         // Look for an existing entry by the current user
@@ -354,7 +360,9 @@ public class PartFinderInteractor {
             mapper.enable(SerializationFeature.INDENT_OUTPUT); // Optional: for readable JSON
             String updatedJson = mapper.writeValueAsString(updatedByDTOs);
             // Set JSON to SparesDTO's lastUpdatedBy field
-            partModel.selectedSpareProperty().get().setLastUpdatedBy(updatedJson);
+            Platform.runLater(() -> {
+                partModel.selectedSpareProperty().get().setLastUpdatedBy(updatedJson);
+            });
         } catch (Exception e) {
             logger.error("Error serializing UpdatedByDTOs: {}", e.getMessage());
         }
