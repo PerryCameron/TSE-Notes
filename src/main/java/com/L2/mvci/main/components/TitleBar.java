@@ -217,7 +217,10 @@ public class TitleBar implements Builder<Region> {
         closeButton.getStyleClass().add("custom-close-button");
 
         // Set button action
-        closeButton.setOnAction(e -> primaryStage.close());
+        closeButton.setOnAction(e -> {
+            mainView.getAction().accept(MainMessage.SHUTDOWN_EXECUTOR_SERVICE);
+            primaryStage.close();
+        });
 
         return closeButton;
     }

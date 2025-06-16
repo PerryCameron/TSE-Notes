@@ -10,13 +10,13 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.control.ScrollBar;
-import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class NoteListInteractor implements ApplicationPaths {
 
@@ -123,7 +123,7 @@ public class NoteListInteractor implements ApplicationPaths {
      * @see NoteListModel
      * @see NoteRepositoryImpl
      */
-    public void addToBottomOfList() {
+    public void addToBottomOfList(ExecutorService executorService) {
         if (noteListModel.getIsLoading().getAndSet(true)) {
             logger.debug("Skipping addToBottomOfList: another load is in progress");
             return;
@@ -181,7 +181,7 @@ public class NoteListInteractor implements ApplicationPaths {
                 noteListModel.getIsLoading().set(false);
             }
         });
-        noteListModel.getExecutor().submit(addToBottomTask);
+        executorService.submit(addToBottomTask);
     }
 
     /**
@@ -200,7 +200,7 @@ public class NoteListInteractor implements ApplicationPaths {
      * @see NoteListModel
      * @see NoteRepositoryImpl
      */
-    public void addToTopOfList() {
+    public void addToTopOfList(ExecutorService executorService) {
         if (noteListModel.getIsLoading().getAndSet(true)) {
             logger.debug("Skipping addToTopOfList: another load is in progress");
             return;
@@ -266,7 +266,7 @@ public class NoteListInteractor implements ApplicationPaths {
                 noteListModel.getIsLoading().set(false);
             }
         });
-        noteListModel.getExecutor().submit(addToTopTask);
+        executorService.submit(addToTopTask);
     }
 
     public void searchParameters() {
@@ -299,8 +299,4 @@ public class NoteListInteractor implements ApplicationPaths {
         logger.warn("No action taken for this key press");
     }
 
-    // good practice to shut down executor when closing app
-    public void shutdown() {
-        noteListModel.getExecutor().shutdown();
-    }
 }

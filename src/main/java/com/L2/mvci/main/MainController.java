@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
 
 public class MainController extends Controller<MainMessage> {
 
@@ -73,6 +74,7 @@ public class MainController extends Controller<MainMessage> {
             case PRINT_RANGES -> mainInteractor.printRanges(noteController.getRanges());
             case PRINT_PARTS -> noteController.printPartsTableView();
             case PRINT_PRODUCT_FAMILIES -> printProductFamilies();
+            case SHUTDOWN_EXECUTOR_SERVICE -> mainInteractor.getExecutorService().shutdown();
         }
     }
 
@@ -129,6 +131,7 @@ public class MainController extends Controller<MainMessage> {
     public MainModel getMainModel() {
         return mainModel;
     }
+    public ExecutorService getExecutorService() { return mainInteractor.getExecutorService(); }
 
     // sending signal all the way to part mvci
     public void printProductFamilies() {

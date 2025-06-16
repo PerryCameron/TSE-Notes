@@ -31,7 +31,6 @@ public class NoteListModel {
     private final int DEFAULT_PAGE_SIZE = 50;
     private final int TRIM_THRESHOLD = 60;
     private final double SCROLLBAR_MIDDLE = 0.5;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final AtomicBoolean isLoading = new AtomicBoolean(false);
 
 
@@ -152,11 +151,9 @@ public class NoteListModel {
         return SCROLLBAR_MIDDLE;
     }
 
-    public ExecutorService getExecutor() {
-        return executor;
-    }
-
     public AtomicBoolean getIsLoading() {
         return isLoading;
     }
+
+
 }

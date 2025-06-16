@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 
 public class MainInteractor implements ApplicationPaths {
 
@@ -64,5 +65,10 @@ public class MainInteractor implements ApplicationPaths {
         System.out.println("-------------------Ranges---------------------");
         System.out.println("Ranges: " + ranges.size());
         ranges.forEach(rangesFx -> rangesFx.printRange());
+    }
+
+    public ExecutorService getExecutorService() {
+        logger.info("Shutting down executor service...");
+        return mainModel.getExecutor();
     }
 }
