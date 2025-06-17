@@ -119,7 +119,7 @@ public class PartOrderBoxView implements Builder<Region> {
         }, "Add Part", "/images/create-16.png");
         Button deleteButton = ButtonFx.utilityButton(() -> {
             PartFx selectedPart = partOrderBoxModel.getTableView().getSelectionModel().getSelectedItem();
-            if (selectedPart == null)  DialogueFx.errorAlert("Unable to delete","You must first select a part");
+            if (selectedPart == null) DialogueFx.errorAlert("Unable to delete", "You must first select a part");
             else {
                 Optional<Alert> alertOpt = DialogueFx.conformationAlert("Delete Part# " + selectedPart.getPartNumber(),
                         "Are you sure you want to delete " + selectedPart.getPartDescription() + "?");
@@ -201,11 +201,20 @@ public class PartOrderBoxView implements Builder<Region> {
     private Node createButtons(PartOrderFx partOrderDTO) {
         HBox iconBox = HBoxFx.iconBox(10);
         Button deleteButton = ButtonFx.utilityButton(() -> {
-            noteView.getAction().accept(NoteMessage.DELETE_PART_ORDER);
-            noteModel.boundNoteProperty().get().getPartOrders().remove(partOrderDTO);
-            partOrderBoxModel.getRoot().getChildren().remove(partOrderBoxModel.getPartOrderMap().get(partOrderDTO));
-        }, "Delete PO", "/images/delete-16.png");
+            Optional<Alert> alertOpt = DialogueFx.conformationAlert("Delete Part Order?",
+                    "Are you sure you want to delete this part order?");
+            alertOpt.ifPresent(alert -> {
+                Optional<ButtonType> result = alert.showAndWait();
+                result.ifPresent(buttonType -> {
+                    if (buttonType == ButtonType.YES) {
+                        noteView.getAction().accept(NoteMessage.DELETE_PART_ORDER);
+                        noteModel.boundNoteProperty().get().getPartOrders().remove(partOrderDTO);
+                        partOrderBoxModel.getRoot().getChildren().remove(partOrderBoxModel.getPartOrderMap().get(partOrderDTO));
+                    }
+                });
+            });
 
+        }, "Delete PO", "/images/delete-16.png");
         Button copyButton = ButtonFx.utilityButton(() -> {
             noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
             VBox vBox = partOrderBoxModel.getPartOrderMap().get(partOrderDTO);
