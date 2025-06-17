@@ -8,6 +8,7 @@ import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
 import com.L2.mvci.note.mvci.partorderbox.mvci.parteditor.PartEditorController;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderController;
+import com.L2.mvci.settings.SettingsMessage;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
@@ -116,7 +117,22 @@ public class PartOrderBoxView implements Builder<Region> {
             // Edit the first cell in the first row
             partOrderBoxModel.getTableView().edit(0, partOrderBoxModel.getTableView().getColumns().getFirst());  // Edit row 0, first column
         }, "Add Part", "/images/create-16.png");
-        Button deleteButton = ButtonFx.utilityButton(() -> noteView.getAction().accept(NoteMessage.DELETE_PART), "Delete Part", "/images/delete-16.png");
+        Button deleteButton = ButtonFx.utilityButton(() -> {
+            PartFx selectedPart = partOrderBoxModel.getTableView().getSelectionModel().getSelectedItem();
+            if (selectedPart == null)  DialogueFx.errorAlert("Unable to delete","You must first select a part");
+            else {
+                Optional<Alert> alertOpt = DialogueFx.conformationAlert("Delete Part# " + selectedPart.getPartNumber(),
+                        "Are you sure you want to delete " + selectedPart.getPartDescription() + "?");
+                alertOpt.ifPresent(alert -> {
+                    Optional<ButtonType> result = alert.showAndWait();
+                    result.ifPresent(buttonType -> {
+                        if (buttonType == ButtonType.YES) {
+                            noteView.getAction().accept(NoteMessage.DELETE_PART);
+                        }
+                    });
+                });
+            }
+        }, "Delete Part", "/images/delete-16.png");
         // Create the VBox from your method
         HBox lineTypeBox = lineTypeToggle(partOrderDTO);
         // Set a top margin (e.g., 10 pixels) on lineTypeBox
