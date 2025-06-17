@@ -3,6 +3,7 @@ package com.L2.mvci.note;
 import com.L2.dto.*;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
+import com.L2.mvci.main.MainController;
 import com.L2.mvci.note.mvci.partorderbox.PartOrderBoxController;
 import com.nikialeksey.hunspell.Hunspell;
 import javafx.beans.property.*;
@@ -54,6 +55,8 @@ public class NoteModel {
     private final BooleanProperty refreshBoundNote = new SimpleBooleanProperty(false);
     private final BooleanProperty refreshEntitlements = new SimpleBooleanProperty(false);
     private final BooleanProperty openNoteTab = new SimpleBooleanProperty(false);
+    private MainController mainController = null;
+
 
 
     public ObjectProperty<PartOrderFx> selectedPartOrderProperty() {
@@ -150,12 +153,18 @@ public class NoteModel {
         refreshBoundNote.set(true);
         refreshBoundNote.set(false);
     }
-
     public PartOrderBoxController getPartOrderBoxController() {
         return partOrderBoxController;
     }
-
     public void setPartOrderBoxController(PartOrderBoxController partOrderBoxController) {
         this.partOrderBoxController = partOrderBoxController;
+    }
+
+    public MainController getMainController() {
+        return mainController;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 }

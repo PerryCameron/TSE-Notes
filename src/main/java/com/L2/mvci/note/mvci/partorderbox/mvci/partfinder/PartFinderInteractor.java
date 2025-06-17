@@ -29,6 +29,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 public class PartFinderInteractor {
     private static final Logger logger = LoggerFactory.getLogger(PartFinderInteractor.class);
@@ -221,7 +222,7 @@ public class PartFinderInteractor {
      * retrieved on the JavaFX Application Thread before starting the task.
      * </p>
      */
-    public void getImage() {
+    public void getImage(ExecutorService executorService) {
         Task<Image> loadImageTask = new Task<>() {
             @Override
             protected Image call() throws Exception {
@@ -248,7 +249,7 @@ public class PartFinderInteractor {
                 partModel.getImageView().setImage(fallbackImage);
         });
         // Start the task on a background thread
-        new Thread(loadImageTask).start();
+        executorService.submit(loadImageTask);
     }
 
     /**

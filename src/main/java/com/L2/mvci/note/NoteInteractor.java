@@ -4,6 +4,7 @@ import com.L2.dto.*;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.enums.AreaType;
+import com.L2.mvci.main.MainController;
 import com.L2.repository.implementations.*;
 import com.L2.repository.interfaces.*;
 import com.L2.static_tools.*;
@@ -1207,5 +1208,9 @@ public class NoteInteractor {
     // sending signal to part mvci
     public void printProductFamilies() {
         noteModel.getPartOrderBoxController().printProductFamilies();
+    }
+
+    public void setMainController(MainController mainController) {
+        noteModel.setMainController(mainController);
     }
 }

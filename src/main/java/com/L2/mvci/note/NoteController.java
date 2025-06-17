@@ -27,7 +27,6 @@ public class NoteController extends Controller<NoteMessage> {
         NoteModel noteModel = new NoteModel();
         this.noteInteractor = new NoteInteractor(noteModel);
         this.noteView = new NoteView(noteModel, this::action);
-        logger.info("NoteController loaded");
     }
 
     @Override
@@ -37,12 +36,14 @@ public class NoteController extends Controller<NoteMessage> {
         noteInteractor.setActiveServiceContract();
         action(NoteMessage.LOAD_USER);
         action(NoteMessage.GET_RANGES);
+        action(NoteMessage.ADD_MAIN_CONTROLLER_REFERENCE_TO_MODEL);
         return noteView.build();
     }
 
     @Override
     public void action(NoteMessage message) {
         switch (message) {
+            case ADD_MAIN_CONTROLLER_REFERENCE_TO_MODEL -> setMainController();
             case ADD_WORD_TO_DICT -> noteInteractor.appendToCustomDictionary();
             case LOAD_USER -> noteInteractor.loadUser();
             case UPDATE_STATUSBAR -> mainController.setStatusBar(noteInteractor.getStatus());
@@ -103,6 +104,10 @@ public class NoteController extends Controller<NoteMessage> {
         } else {
             mainController.action(MainMessage.ENABLE_NEXT_BUTTON);
         }
+    }
+
+    private void setMainController() {
+        noteInteractor.setMainController(mainController);
     }
 
     public UserDTO getUser() { return noteInteractor.getUser(); }
