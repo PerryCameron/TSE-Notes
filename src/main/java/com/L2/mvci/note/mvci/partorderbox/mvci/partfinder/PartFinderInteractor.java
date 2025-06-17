@@ -133,7 +133,6 @@ public class PartFinderInteractor {
         }
     }
 
-
     // TODO get rid of this when no longer needed
     public void printProductFamilies() {
         if (partModel.getProductFamilies() == null) System.out.println("ProductFamilies is null");

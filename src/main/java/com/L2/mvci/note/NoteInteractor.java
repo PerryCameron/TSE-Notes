@@ -16,6 +16,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.image.Image;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -28,6 +29,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
@@ -381,25 +383,32 @@ public class NoteInteractor {
         return tempFile;
     }
 
-    public void appendToCustomDictionary() {
+    public void appendToCustomDictionary(ExecutorService executorService) {
         String word = noteModel.newWordProperty().get();
         File customDictFile = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic");
-        try {
-            List<String> lines = customDictFile.exists() ? Files.readAllLines(customDictFile.toPath()) : new ArrayList<>();
-            int count = lines.isEmpty() || !lines.getFirst().matches("\\d+") ? 0 : Integer.parseInt(lines.getFirst());
-
-            List<String> newLines = new ArrayList<>();
-            newLines.add(String.valueOf(count + 1));
-            if (count > 0) {
-                newLines.addAll(lines.subList(1, lines.size()));
+        Task<Void> writetoCustomDictTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                List<String> lines = customDictFile.exists() ? Files.readAllLines(customDictFile.toPath()) : new ArrayList<>();
+                int count = lines.isEmpty() || !lines.getFirst().matches("\\d+") ? 0 : Integer.parseInt(lines.getFirst());
+                List<String> newLines = new ArrayList<>();
+                newLines.add(String.valueOf(count + 1));
+                if (count > 0) {
+                    newLines.addAll(lines.subList(1, lines.size()));
+                }
+                newLines.add(word);
+                Files.write(customDictFile.toPath(), newLines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                logger.info("Appended '{}' to custom dictionary, new count: {}", word, count + 1);
+                return null;
             }
-            newLines.add(word); // Already cleanWord
-
-            Files.write(customDictFile.toPath(), newLines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-            logger.info("Appended '{}' to custom dictionary, new count: {}", word, count + 1);
-        } catch (IOException e) {
+        };
+        writetoCustomDictTask.setOnFailed(event -> {
+            Throwable e = writetoCustomDictTask.getException();
             logger.error("Failed to append '{}' to custom dictionary", word, e);
-        }
+            DialogueFx.errorAlert("Unable to add entry to custom dictionary","Failed to add "
+                    + word + " to custom dictionary " + e.getMessage());
+        });
+        executorService.submit(writetoCustomDictTask);
     }
 
     public String copyAllPartOrdersToPlainText() {
