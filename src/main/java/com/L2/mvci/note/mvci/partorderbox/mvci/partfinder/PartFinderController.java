@@ -34,7 +34,7 @@ public class PartFinderController extends AlertController<PartFinderMessage> {
             case CANCEL_NOTE_UPDATE -> partInteractor.cancelNoteUpdate();
             case SAVE_PIM_TO_JSON -> partInteractor.saveToJson();
             case SAVE_PART_KEYWORDS -> partInteractor.savePart(SaveType.KEYWORD);
-            case SAVE_IMAGE_TO_DATABASE -> partInteractor.saveImage(SaveType.IMAGE);
+            case SAVE_IMAGE_TO_DATABASE -> partInteractor.saveImage(SaveType.IMAGE, mainController.getExecutorService());
             case LOAD_IMAGE -> partInteractor.getImage(mainController.getExecutorService());
 //            case SAVE_EDIT_HISTORY -> partInteractor.saveEditHistory();
             case GET_UPDATE_BY_INFORMATION -> partInteractor.getUpdatedByToPOJO();

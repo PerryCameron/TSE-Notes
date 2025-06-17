@@ -122,8 +122,6 @@ public class NoteModel {
     public ObjectProperty<StyleSpans<Collection<String>>> finishSpansProperty() {
         return finishSpansProperty;
     }
-
-
     public StringProperty newWordProperty() {
         return newWord;
     }
@@ -159,11 +157,9 @@ public class NoteModel {
     public void setPartOrderBoxController(PartOrderBoxController partOrderBoxController) {
         this.partOrderBoxController = partOrderBoxController;
     }
-
     public MainController getMainController() {
         return mainController;
     }
-
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }

@@ -28,6 +28,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
@@ -132,13 +133,15 @@ public class PartFinderInteractor {
         }
     }
 
+
+    // TODO get rid of this when no longer needed
     public void printProductFamilies() {
         if (partModel.getProductFamilies() == null) System.out.println("ProductFamilies is null");
         else
             partModel.getProductFamilies().forEach(System.out::println);
     }
 
-    public void saveImage(SaveType type) {
+    public void saveImage(SaveType type, ExecutorService executorService) {
         if (partModel.selectedSpareProperty().get() == null) {
             DialogueFx.errorAlert("Error", "No spare item selected.");
             return;
@@ -162,7 +165,7 @@ public class PartFinderInteractor {
                     // Update ImageView
                     Image newImage = new Image(new ByteArrayInputStream(imageBytes));
                     globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getSpareItem(), imageBytes);
-                    savePart(type);
+                    saveEditHistory();
                     return newImage;
                 } catch (Exception e) {
                     DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
@@ -171,6 +174,7 @@ public class PartFinderInteractor {
             }
         };
         saveImageTask.setOnSucceeded(event -> {
+            globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
             partModel.getImageView().setImage(saveImageTask.getValue());
         });
         saveImageTask.setOnFailed(event -> {
@@ -179,9 +183,10 @@ public class PartFinderInteractor {
             DialogueFx.errorAlert("Error", "Failed to save image: " + e.getMessage());
         });
         // Start the task on a background thread
-        new Thread(saveImageTask).start();
+        executorService.submit(saveImageTask);
     }
 
+    // run on non-FX thread
     private BufferedImage resizeImage(BufferedImage original, int targetWidth, int targetHeight) {
         // Skip resizing if original is smaller
         if (original.getWidth() <= targetWidth && original.getHeight() <= targetHeight) {
@@ -193,6 +198,7 @@ public class PartFinderInteractor {
                 targetWidth, targetHeight);
     }
 
+    // run on non-FX thread
     private byte[] convertToPngBytes(BufferedImage image) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, "png", baos);
@@ -293,8 +299,8 @@ public class PartFinderInteractor {
             // Configure ObjectMapper to accept either "updated_by" or "updatedDateTime" as valid field names
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             // Deserialize JSON into List<UpdatedByDTO>
-            java.util.List<UpdatedByDTO> deserializedList = mapper.readValue(lastUpdateJSON,
-                    mapper.getTypeFactory().constructCollectionType(java.util.List.class, UpdatedByDTO.class));
+            List<UpdatedByDTO> deserializedList = mapper.readValue(lastUpdateJSON,
+                    mapper.getTypeFactory().constructCollectionType(List.class, UpdatedByDTO.class));
             // Clear existing list to avoid duplicates
             partModel.getUpdatedByDTOs().clear();
             // Add deserialized items to the list
@@ -304,6 +310,7 @@ public class PartFinderInteractor {
         }
     }
 
+    // runs on non-FX thread
     public void saveEditHistory() {
         // Check if selected spare exists
         if (partModel.selectedSpareProperty().get() == null) {
@@ -323,7 +330,7 @@ public class PartFinderInteractor {
             partModel.selectedSpareProperty().get().setLastUpdate(currentTimestamp);
         });
         // Get the existing list of UpdatedByDTOs
-        java.util.List<UpdatedByDTO> updatedByDTOs = partModel.getUpdatedByDTOs();
+        List<UpdatedByDTO> updatedByDTOs = partModel.getUpdatedByDTOs();
         // Look for an existing entry by the current user
         boolean foundRecentEntry = false;
         for (UpdatedByDTO entry : updatedByDTOs) {
@@ -364,6 +371,7 @@ public class PartFinderInteractor {
             Platform.runLater(() -> {
                 partModel.selectedSpareProperty().get().setLastUpdatedBy(updatedJson);
             });
+            logger.info("Added JSON: {}", updatedJson);
         } catch (Exception e) {
             logger.error("Error serializing UpdatedByDTOs: {}", e.getMessage());
         }
