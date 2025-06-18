@@ -16,7 +16,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.scene.image.Image;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -70,8 +69,6 @@ public class NoteInteractor {
         noteModel.getNotes().sort(Comparator.comparing(NoteFx::getTimestamp).reversed());
         // if starting up for first time create first empty note
         if (noteModel.getNotes().isEmpty()) {
-//            NoteDTO noteDTO = new NoteDTO(1, false);
-//            noteModel.getNotes().add(new NoteDTO(1, false));
             noteModel.getNotes().add(noteRepo.insertBlankNote());
         }
         // set bound note to copy information from latest note
@@ -267,6 +264,7 @@ public class NoteInteractor {
     }
 
     private void updateSpans(AreaType areaType, StyleSpans<Collection<String>> spans) {
+        logger.info("I am testing what thread this is on");
         Platform.runLater(() -> {
             switch (areaType) {
                 case subject -> {
@@ -286,58 +284,62 @@ public class NoteInteractor {
     }
 
     public void initializeDictionary() {
-        try {
-            // Extract and load hunspell.dll
-            String dllPathInJar = "/win32-x86-64/hunspell.dll"; // Matches your JAR structure
-            File tempDll = extractNativeLibrary(dllPathInJar);
-            logger.debug("Extracted hunspell.dll to: {}", tempDll.getAbsolutePath());
-            System.load(tempDll.getAbsolutePath());
-            logger.info("Loaded hunspell.dll successfully");
+                try {
+                    // Extract and load hunspell.dll
+                    String dllPathInJar = "/win32-x86-64/hunspell.dll"; // Matches your JAR structure
+                    long startTime = System.nanoTime();
+                    File tempDll = extractNativeLibrary(dllPathInJar);
+                    logger.debug("Extracted hunspell.dll to: {}", tempDll.getAbsolutePath());
+                    System.load(tempDll.getAbsolutePath());
+                    long dllLoadTime = System.nanoTime();
+                    logger.info("Loaded hunspell.dll successfully");
 
-            // Dictionary paths
-            String dictResourcePath = "/dictionary/en_US.dic";
-            String affResourcePath = "/dictionary/en_US.aff";
-            File dictFile = extractResourceToTemp(dictResourcePath, "en_US.dic");
-            File affFile = extractResourceToTemp(affResourcePath, "en_US.aff");
-            String dictPath = dictFile.getAbsolutePath();
-            String affPath = affFile.getAbsolutePath();
-            String customDictFullPath = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic").getAbsolutePath();
+                    // Dictionary paths
+                    String dictResourcePath = "/dictionary/en_US.dic";
+                    String affResourcePath = "/dictionary/en_US.aff";
+                    File dictFile = extractResourceToTemp(dictResourcePath, "en_US.dic");
+                    File affFile = extractResourceToTemp(affResourcePath, "en_US.aff");
+                    String dictPath = dictFile.getAbsolutePath();
+                    String affPath = affFile.getAbsolutePath();
+                    String customDictFullPath = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic").getAbsolutePath();
 
-            logger.info("Loading Hunspell with aff: {}, dict: {}, custom: {}", affPath, dictPath, customDictFullPath);
-            logger.info("aff exists: {}, size: {} bytes", affFile.exists(), affFile.length());
-            logger.info("dict exists: {}, size: {} bytes", dictFile.exists(), dictFile.length());
-            logger.info("custom exists: {}, size: {} bytes", new File(customDictFullPath).exists(), new File(customDictFullPath).length());
+                    logger.info("Loading Hunspell with aff: {}, dict: {}, custom: {}", affPath, dictPath, customDictFullPath);
+                    logger.info("aff exists: {}, size: {} bytes", affFile.exists(), affFile.length());
+                    logger.info("dict exists: {}, size: {} bytes", dictFile.exists(), dictFile.length());
+                    logger.info("custom exists: {}, size: {} bytes", new File(customDictFullPath).exists(), new File(customDictFullPath).length());
 
-            noteModel.hunspellProperty().setValue(new Hunspell(dictPath, affPath));
-
-            logger.info("Test 'hello': {}", noteModel.hunspellProperty().get().spell("hello"));
-            logger.info("Test 'xyzzy': {}", noteModel.hunspellProperty().get().spell("xyzzy"));
-            if (!noteModel.hunspellProperty().get().spell("hello")) {
-                logger.error("Hunspell failed basic test - base dictionary not working");
-            }
-
-            File customDictFile = new File(customDictFullPath);
-            if (customDictFile.exists() && customDictFile.length() > 2) {
-                noteModel.hunspellProperty().get().addDic(customDictFullPath);
-                logger.info("Added custom dictionary from {}", customDictFullPath);
-                logger.info("Testing custom dict - TCP/IP: {}, S/N: {}",
-                        noteModel.hunspellProperty().get().spell("TCP/IP"),
-                        noteModel.hunspellProperty().get().spell("S/N"));
-            } else if (!customDictFile.exists()) {
-                if (customDictFile.getParentFile().mkdirs() || customDictFile.createNewFile()) {
-                    try (FileWriter writer = new FileWriter(customDictFile)) {
-                        writer.write("0\n");
+                    noteModel.hunspellProperty().setValue(new Hunspell(dictPath, affPath));
+                    long initTime = System.nanoTime();
+                    logger.info("DLL load time: {} ms", (dllLoadTime - startTime) / 1_000_000.0);
+                    logger.info("Hunspell init time: {} ms", (initTime - dllLoadTime) / 1_000_000.0);
+                    logger.info("Test 'hello': {}", noteModel.hunspellProperty().get().spell("hello"));
+                    logger.info("Test 'xyzzy': {}", noteModel.hunspellProperty().get().spell("xyzzy"));
+                    if (!noteModel.hunspellProperty().get().spell("hello")) {
+                        logger.error("Hunspell failed basic test - base dictionary not working");
                     }
-                    logger.info("Created new custom dictionary file: {}", customDictFullPath);
+
+                    File customDictFile = new File(customDictFullPath);
+                    if (customDictFile.exists() && customDictFile.length() > 2) {
+                        noteModel.hunspellProperty().get().addDic(customDictFullPath);
+                        logger.info("Added custom dictionary from {}", customDictFullPath);
+                        logger.info("Testing custom dict - TCP/IP: {}, S/N: {}",
+                                noteModel.hunspellProperty().get().spell("TCP/IP"),
+                                noteModel.hunspellProperty().get().spell("S/N"));
+                    } else if (!customDictFile.exists()) {
+                        if (customDictFile.getParentFile().mkdirs() || customDictFile.createNewFile()) {
+                            try (FileWriter writer = new FileWriter(customDictFile)) {
+                                writer.write("0\n");
+                            }
+                            logger.info("Created new custom dictionary file: {}", customDictFullPath);
+                        }
+                    }
+                } catch (UnsatisfiedLinkError e) {
+                    logger.error("Failed to load hunspell.dll", e);
+                } catch (IOException e) {
+                    logger.error("IO error during Hunspell setup", e);
+                } catch (Exception e) {
+                    logger.error("Unexpected error initializing Hunspell", e);
                 }
-            }
-        } catch (UnsatisfiedLinkError e) {
-            logger.error("Failed to load hunspell.dll", e);
-        } catch (IOException e) {
-            logger.error("IO error during Hunspell setup", e);
-        } catch (Exception e) {
-            logger.error("Unexpected error initializing Hunspell", e);
-        }
     }
 
 
