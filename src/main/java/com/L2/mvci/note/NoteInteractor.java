@@ -134,16 +134,13 @@ public class NoteInteractor {
             case finish -> noteModel.finishAreaProperty().get();   // Text from finish area
             // Unreachable with enum, but required for switch exhaustiveness
         };
-
         // Get the current text length
         int textLength = codeArea.getText().length();
-
         // Create a StyleSpans with no styles for the entire text
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
         // Handle empty text
         spansBuilder.add(Collections.emptyList(), textLength);
         StyleSpans<Collection<String>> emptySpans = spansBuilder.create();
-
         // Apply the empty spans to clear highlights
         codeArea.setStyleSpans(0, emptySpans);
     }

@@ -1,4 +1,4 @@
-package com.L2.mvci.note.mvci.partorderbox.mvci.parteditor.components;
+package com.L2.mvci.note.mvci.partorderbox.mvci.partviewer.components;
 
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderMessage;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;

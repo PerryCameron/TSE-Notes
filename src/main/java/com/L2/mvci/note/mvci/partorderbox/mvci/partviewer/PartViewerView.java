@@ -1,4 +1,4 @@
-package com.L2.mvci.note.mvci.partorderbox.mvci.parteditor;
+package com.L2.mvci.note.mvci.partorderbox.mvci.partviewer;
 
 import com.L2.widgetFx.DialogueFx;
 import javafx.geometry.Insets;
@@ -12,13 +12,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;
 
-public class PartEditorView implements Builder<Alert> {
-    private static final Logger logger = LoggerFactory.getLogger(PartEditorView.class);
+public class PartViewerView implements Builder<Alert> {
+    private static final Logger logger = LoggerFactory.getLogger(PartViewerView.class);
 
-    private Consumer<PartEditorMessage> action;
-    private PartEditorModel partEditorModel;
+    private Consumer<PartViewerMessage> action;
+    private PartViewerModel partEditorModel;
 
-    public PartEditorView(PartEditorModel partEditorModel, Consumer<PartEditorMessage> message) {
+    public PartViewerView(PartViewerModel partEditorModel, Consumer<PartViewerMessage> message) {
         this.partEditorModel = partEditorModel;
         this.action = message;
     }

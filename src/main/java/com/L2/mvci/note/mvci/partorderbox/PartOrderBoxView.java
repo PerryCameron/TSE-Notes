@@ -6,9 +6,8 @@ import com.L2.dto.PartOrderFx;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
-import com.L2.mvci.note.mvci.partorderbox.mvci.parteditor.PartEditorController;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partviewer.PartViewerController;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderController;
-import com.L2.mvci.settings.SettingsMessage;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
@@ -89,7 +88,7 @@ public class PartOrderBoxView implements Builder<Region> {
     }
 
     private void launchPartEditor() {
-        Optional<Alert> alert = Optional.ofNullable(new PartEditorController(this).getView());
+        Optional<Alert> alert = Optional.ofNullable(new PartViewerController(this).getView());
         alert.ifPresent(Dialog::showAndWait);
     }
 
