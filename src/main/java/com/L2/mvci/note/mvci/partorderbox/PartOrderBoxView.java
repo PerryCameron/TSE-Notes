@@ -62,8 +62,25 @@ public class PartOrderBoxView implements Builder<Region> {
     private void setNewPartListener() {
         partOrderBoxModel.messageProperty().addListener((observable, oldValue, newValue) -> {
             switch (newValue) {
-                case NEW_PART -> System.out.println("This is a new part");
-                case PART_EXISTS -> launchPartEditor();
+                case NEW_PART -> {
+                    Optional<Alert> alertOpt = DialogueFx.conformationAlert("Part not available in database ",
+                            "Would you like to add this part to the database?");
+                    alertOpt.ifPresent(alert -> {
+                        Optional<ButtonType> result = alert.showAndWait();
+                        result.ifPresent(buttonType -> {
+                            if (buttonType == ButtonType.YES) {
+                                if (partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartNumber().isEmpty()) {
+                                    DialogueFx.errorAlert("Can not view part", "There is no part number to view");
+                                } else if (partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartDescription().isEmpty()) {
+                                    DialogueFx.errorAlert("Can not add part", "There is no part description. Please add it first.");
+                                } else {
+                                    action.accept(PartOrderBoxMessage.ADD_PART_TO_DATABASE);
+                                }
+                            }
+                        });
+                    });
+                }
+                case PART_EXISTS -> launchPartViewer();
             }
             action.accept(PartOrderBoxMessage.RESET_PART_LISTENER);
         });
@@ -73,7 +90,6 @@ public class PartOrderBoxView implements Builder<Region> {
         VBox box = new VBox(10);
         partOrderBoxModel.setTableView(TableViewFx.of(PartFx.class));
         buildTable(partOrderDTO);
-
         box.setOnMouseEntered(event -> noteModel.selectedPartOrderProperty().set(partOrderDTO));
         box.setOnMouseExited(event -> partOrderBoxModel.getTableView().getSelectionModel().clearSelection());
         partOrderBoxModel.getPartOrderMap().put(partOrderDTO, box);
@@ -87,7 +103,7 @@ public class PartOrderBoxView implements Builder<Region> {
         return box;
     }
 
-    private void launchPartEditor() {
+    private void launchPartViewer() {
         Optional<Alert> alert = Optional.ofNullable(new PartViewerController(this).getView());
         alert.ifPresent(Dialog::showAndWait);
     }

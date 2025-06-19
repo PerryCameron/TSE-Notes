@@ -29,6 +29,7 @@ public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
             case FLASH -> partOrderBoxInteractor.flash();
             case VIEW_PART_AS_SPARE -> partOrderBoxInteractor.viewPartAsSpare();
             case RESET_PART_LISTENER -> partOrderBoxInteractor.resetPartListener();
+            case ADD_PART_TO_DATABASE -> partOrderBoxInteractor.addPartToDb();
         }
     }
 

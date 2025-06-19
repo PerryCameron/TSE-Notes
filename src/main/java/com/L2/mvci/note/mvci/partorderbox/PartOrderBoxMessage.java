@@ -5,5 +5,6 @@ public enum PartOrderBoxMessage {
     PART_EXISTS,
     RESET_PART_LISTENER,
     NEW_PART,
-    NONE
+    NONE,
+    ADD_PART_TO_DATABASE
 }

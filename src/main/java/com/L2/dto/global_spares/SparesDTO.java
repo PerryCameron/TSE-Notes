@@ -37,6 +37,25 @@ public class SparesDTO {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
+    public SparesDTO(String spareItem, String spareDescription) {
+        this.id = 0;
+        this.pim = "";
+        this.spareItem = spareItem;
+        this.replacementItem = "";
+        this.standardExchangeItem = "";
+        this.spareDescription = spareDescription;
+        this.catalogueVersion = "";
+        this.productEndOfServiceDate = "";
+        this.lastUpdate = "";
+        this.addedToCatalogue = "";
+        this.removedFromCatalogue = "";
+        this.comments = "";
+        this.keywords = "";
+        this.archived = true;
+        this.customAdd = true;
+        this.lastUpdatedBy = "";
+    }
+
     public int getId() {
         return id;
     }

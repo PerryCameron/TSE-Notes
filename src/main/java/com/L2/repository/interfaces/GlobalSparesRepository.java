@@ -15,4 +15,6 @@ public interface GlobalSparesRepository {
     int deleteRange(RangesFx range);
     byte[] getImage(String spareItem);
     SparesDTO findBySpareItem(String spareItem);
+
+    int insertSpare(SparesDTO sparesDTO);
 }

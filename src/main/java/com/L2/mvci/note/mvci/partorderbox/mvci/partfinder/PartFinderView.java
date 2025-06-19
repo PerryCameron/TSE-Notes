@@ -299,6 +299,7 @@ public class PartFinderView implements Builder<Alert> {
     private void setSelectedChangeListener() {
         partModel.getSparesTableView().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                System.out.println("---- " + newSelection + " ----");
                 // updates our selected spare to match selected
                 partModel.selectedSpareProperty().set(newSelection);
                 // updates treeView for product families and ranges

@@ -52,4 +52,17 @@ public class PartOrderBoxInteractor {
     public void resetPartListener() {
         partOrderBoxModel.setMessage(PartOrderBoxMessage.NONE);
     }
+
+    /**
+     * Adds a new part to the database if it does not already exist.
+     * Uses the part number and part description from the selected part in the partOrderBoxModel.
+     * If the part is successfully inserted, updates the partOrderBoxModel message to indicate the part exists.
+     */
+    public void addPartToDb() {
+        if(globalSparesRepo.insertSpare(new SparesDTO(
+                partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartNumber(),
+                partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartDescription())) == 1) {
+            partOrderBoxModel.setMessage(PartOrderBoxMessage.PART_EXISTS);
+        }
+    }
 }
