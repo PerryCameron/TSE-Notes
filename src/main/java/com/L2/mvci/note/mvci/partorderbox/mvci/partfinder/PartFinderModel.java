@@ -53,7 +53,6 @@ public class PartFinderModel {
     private final ObjectProperty<TextArea> partKeyWords = new SimpleObjectProperty<>();
     private final ObjectProperty<ToggleButton> imageButton = new SimpleObjectProperty<>();
     private final ObjectProperty<ToggleButton> familyButton = new SimpleObjectProperty<>();
-//    private final ObjectProperty<PartInfo> partInfo = new SimpleObjectProperty<>();
     // from noteModel
     private final ObservableList<RangesFx> ranges;
     private StackPane stackPane;

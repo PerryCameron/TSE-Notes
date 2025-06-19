@@ -1,9 +1,13 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.partviewer;
 
+import com.L2.mvci.note.NoteView;
 import com.L2.widgetFx.DialogueFx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Builder;
@@ -25,7 +29,7 @@ public class PartViewerView implements Builder<Alert> {
 
     @Override
     public Alert build() {
-            partEditorModel.getAlert().setTitle("Part Editor");
+            partEditorModel.getAlert().setTitle("Part Viewer");
             // close the alert window. This listener fixes that.
             partEditorModel.getAlert().showingProperty().addListener((obs, wasShowing, isShowing) -> {
                 if (isShowing) {
@@ -56,11 +60,28 @@ public class PartViewerView implements Builder<Alert> {
     }
 
     private Node contentBox() {
-        VBox vBox = new VBox();
-        vBox.setPadding(new Insets(10, 10, 10, 10));
+        HBox hBox = new HBox();
+        hBox.setSpacing(10);
+        hBox.setPrefHeight(400.0);
+        hBox.setPadding(new Insets(10, 10, 10, 10));
+        hBox.getChildren().addAll(mainInfo(), image());
+        return hBox;
+    }
+
+    private Node image() {
+        partEditorModel.setImageView(new ImageView());
+        action.accept(PartViewerMessage.LOAD_IMAGE);
+        return partEditorModel.getImageView();
+    }
+
+    private Node mainInfo() {
+        VBox vBox = new VBox(10);
+        HBox.setHgrow(vBox, Priority.ALWAYS);
+        // vBox.setPadding(new Insets(10, 10, 10, 10));
         System.out.println(partEditorModel.getSparesDTO().getSpareItem()); // this properly prints out the part number
         Label partNumber = new Label("Part Number: " + partEditorModel.getSparesDTO().getSpareItem());
-        vBox.getChildren().add(partNumber);  // I can't see this label
+        Label partDescription = new Label("Description: " + partEditorModel.getSparesDTO().getSpareDescription());
+        vBox.getChildren().addAll(partNumber, partDescription);  // I can't see this label
         return vBox;
     }
 }

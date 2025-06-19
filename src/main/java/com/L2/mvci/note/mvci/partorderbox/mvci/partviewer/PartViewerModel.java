@@ -6,6 +6,7 @@ import com.L2.mvci.note.mvci.partorderbox.PartOrderBoxModel;
 import com.L2.mvci.note.mvci.partorderbox.PartOrderBoxView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
+import javafx.scene.image.ImageView;
 
 public class PartViewerModel {
     
@@ -15,6 +16,8 @@ public class PartViewerModel {
     private final PartOrderBoxModel partOrderBoxModel;
     private final SparesDTO sparesDTO;
     private final PartOrderBoxView partOrderBoxView;
+    private ImageView imageView;
+
 
     public PartViewerModel(PartOrderBoxView partOrderBoxView) {
         this.partOrderBoxView = partOrderBoxView;
@@ -43,5 +46,12 @@ public class PartViewerModel {
     }
     public PartOrderBoxView getPartOrderBoxView() {
         return partOrderBoxView;
+    }
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
     }
 }

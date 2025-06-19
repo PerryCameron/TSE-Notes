@@ -63,26 +63,30 @@ public class PartOrderBoxView implements Builder<Region> {
         partOrderBoxModel.messageProperty().addListener((observable, oldValue, newValue) -> {
             switch (newValue) {
                 case NEW_PART -> {
-                    Optional<Alert> alertOpt = DialogueFx.conformationAlert("Part not available in database ",
-                            "Would you like to add this part to the database?");
-                    alertOpt.ifPresent(alert -> {
-                        Optional<ButtonType> result = alert.showAndWait();
-                        result.ifPresent(buttonType -> {
-                            if (buttonType == ButtonType.YES) {
-                                if (partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartNumber().isEmpty()) {
-                                    DialogueFx.errorAlert("Can not view part", "There is no part number to view");
-                                } else if (partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartDescription().isEmpty()) {
-                                    DialogueFx.errorAlert("Can not add part", "There is no part description. Please add it first.");
-                                } else {
-                                    action.accept(PartOrderBoxMessage.ADD_PART_TO_DATABASE);
-                                }
-                            }
-                        });
-                    });
+                    newPart();
                 }
                 case PART_EXISTS -> launchPartViewer();
             }
             action.accept(PartOrderBoxMessage.RESET_PART_LISTENER);
+        });
+    }
+
+    private void newPart() {  // I feel like newPart is a terrible name for this method
+        Optional<Alert> alertOpt = DialogueFx.conformationAlert("Part not available in database ",
+                "Would you like to add this part to the database?");
+        alertOpt.ifPresent(alert -> {
+            Optional<ButtonType> result = alert.showAndWait();
+            result.ifPresent(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    if (partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartNumber().isEmpty()) {
+                        DialogueFx.errorAlert("Can not view part", "There is no part number to view");
+                    } else if (partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartDescription().isEmpty()) {
+                        DialogueFx.errorAlert("Can not add part", "There is no part description. Please add it first.");
+                    } else {
+                        action.accept(PartOrderBoxMessage.ADD_PART_TO_DATABASE); // the method this message calls in the interactor will send the PART_EXISTS message back if the repo successfully adds the part
+                    }
+                }
+            });
         });
     }
 
