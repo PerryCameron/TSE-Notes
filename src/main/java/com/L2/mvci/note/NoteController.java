@@ -95,7 +95,7 @@ public class NoteController extends Controller<NoteMessage> {
     }
 
     private void computeHighlighting(AreaType issue) {
-        if (mainController.isSpellCheckedProperty().get()) noteInteractor.computeHighlighting(issue);
+        if (mainController.isSpellCheckedProperty().get()) noteInteractor.computeHighlighting(issue, mainController.getExecutorService());
     }
 
     private void checkButtonEnable() {
@@ -136,9 +136,9 @@ public class NoteController extends Controller<NoteMessage> {
         // we have turned it on
         if(mainController.isSpellCheckedProperty().get()) {
             noteInteractor.initializeDictionary();
-            noteInteractor.computeHighlighting(AreaType.subject);
-            noteInteractor.computeHighlighting(AreaType.issue);
-            noteInteractor.computeHighlighting(AreaType.finish);
+            noteInteractor.computeHighlighting(AreaType.subject, mainController.getExecutorService());
+            noteInteractor.computeHighlighting(AreaType.issue, mainController.getExecutorService());
+            noteInteractor.computeHighlighting(AreaType.finish, mainController.getExecutorService());
         } else { // we have turned if off
             noteInteractor.clearHighlights(AreaType.subject);
             noteInteractor.clearHighlights(AreaType.issue);
