@@ -214,6 +214,11 @@
     -fx-font-weight: bold;
 }
 
+.semi-prominent-label {
+    -fx-font-size: 14 !important;
+    -fx-font-weight: bold;
+}
+
 .prominent-answer {
     -fx-font-size: 16 !important;         /* Ensures font size is 16 */
     -fx-font-weight: bold;     /* Ensures bold font */
@@ -262,4 +267,10 @@
 
 .search-dialogue {
     -fx-background-color: #efeded;
+}
+
+
+/* Added to get rid of Labels turning red when you hover over them */
+.label:hover {
+    -fx-text-fill: inherit !important;
 }
