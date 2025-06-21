@@ -21,42 +21,42 @@ public class PartViewerView implements Builder<Alert> {
     private static final Logger logger = LoggerFactory.getLogger(PartViewerView.class);
 
     private Consumer<PartViewerMessage> action;
-    private PartViewerModel partEditorModel;
+    private PartViewerModel partViewerModel;
 
     public PartViewerView(PartViewerModel partEditorModel, Consumer<PartViewerMessage> message) {
-        this.partEditorModel = partEditorModel;
+        this.partViewerModel = partEditorModel;
         this.action = message;
     }
 
     @Override
     public Alert build() {
-            partEditorModel.getAlert().setTitle("Part Viewer");
+            partViewerModel.getAlert().setTitle("Part Viewer");
             // close the alert window. This listener fixes that.
-            partEditorModel.getAlert().showingProperty().addListener((obs, wasShowing, isShowing) -> {
+            partViewerModel.getAlert().showingProperty().addListener((obs, wasShowing, isShowing) -> {
                 if (isShowing) {
-                    Stage stage = (Stage) partEditorModel.getAlert().getDialogPane().getScene().getWindow();
+                    Stage stage = (Stage) partViewerModel.getAlert().getDialogPane().getScene().getWindow();
                     stage.setOnCloseRequest(event -> cleanAlertClose());
                 }
             });
-            partEditorModel.getAlert().setDialogPane(createDialogPane());
+            partViewerModel.getAlert().setDialogPane(createDialogPane());
             // here is the start of the UI
-            partEditorModel.getAlert().getDialogPane().setContent(contentBox());
-            DialogueFx.getTitleIcon(partEditorModel.getDialogPane());
-            DialogueFx.tieAlertToStage(partEditorModel.getAlert(), partEditorModel.getWidth(), 400);
-            return partEditorModel.getAlert();
+            partViewerModel.getAlert().getDialogPane().setContent(contentBox());
+            DialogueFx.getTitleIcon(partViewerModel.getDialogPane());
+            DialogueFx.tieAlertToStage(partViewerModel.getAlert(), partViewerModel.getWidth(), 400);
+            return partViewerModel.getAlert();
     }
 
     private DialogPane createDialogPane() {
-        partEditorModel.getDialogPane().getStylesheets().add("css/light.css");
-        partEditorModel.getDialogPane().getStyleClass().add("decorative-hbox");
-        partEditorModel.getDialogPane().setPrefWidth(partEditorModel.getWidth());
-        partEditorModel.getDialogPane().setMinWidth(partEditorModel.getWidth()); // Ensure minimum width is 800
-        return partEditorModel.getDialogPane();
+        partViewerModel.getDialogPane().getStylesheets().add("css/light.css");
+        partViewerModel.getDialogPane().getStyleClass().add("decorative-hbox");
+        partViewerModel.getDialogPane().setPrefWidth(partViewerModel.getWidth());
+        partViewerModel.getDialogPane().setMinWidth(partViewerModel.getWidth()); // Ensure minimum width is 800
+        return partViewerModel.getDialogPane();
     }
 
     private void cleanAlertClose() {
-        partEditorModel.getAlert().setResult(ButtonType.CANCEL);
-        partEditorModel.getAlert().close(); // Use close() instead of hide()
+        partViewerModel.getAlert().setResult(ButtonType.CANCEL);
+        partViewerModel.getAlert().close(); // Use close() instead of hide()
     }
 
     private Node contentBox() {
@@ -78,7 +78,7 @@ public class PartViewerView implements Builder<Alert> {
         imageView.setFitWidth(357); // Adjust as needed
         imageView.setFitHeight(265);
         imageView.setPreserveRatio(true); // Maintain aspect ratio
-        partEditorModel.setImageView(imageView);
+        partViewerModel.setImageView(imageView);
         action.accept(PartViewerMessage.LOAD_IMAGE);
         return imageView;
     }
@@ -87,16 +87,17 @@ public class PartViewerView implements Builder<Alert> {
         VBox vBox = new VBox(10);
         HBox.setHgrow(vBox, Priority.ALWAYS);
         // vBox.setPadding(new Insets(10, 10, 10, 10));
-        System.out.println(partEditorModel.getSparesDTO().getSpareItem()); // this properly prints out the part number
-        Node titledLabel = LabelFx.titledLabel("Part Number: ",partEditorModel.getSparesDTO().getSpareItem());
-        Node titledDescription = LabelFx.titledLabel("Description: ",partEditorModel.getSparesDTO().getSpareDescription());
-        Node inCatalogue = LabelFx.titledGraphicBoolean("In Catalogue: ", partEditorModel.getSparesDTO().getArchived());
-        Label notes = new Label(partEditorModel.getSparesDTO().getComments());
+        // we need to make sure spare item is set
+        System.out.println(partViewerModel.getSparesDTO().getSpareItem()); // getting null here after adding new part to database
+        Node titledLabel = LabelFx.titledLabel("Part Number: ", partViewerModel.getSparesDTO().getSpareItem());
+        Node titledDescription = LabelFx.titledLabel("Description: ", partViewerModel.getSparesDTO().getSpareDescription());
+        Node inCatalogue = LabelFx.titledGraphicBoolean("In Catalogue: ", partViewerModel.getSparesDTO().getArchived());
+        Label notes = new Label(partViewerModel.getSparesDTO().getComments());
         notes.setWrapText(true);
         notes.setPrefWidth(350);
         vBox.getChildren().addAll(titledLabel, titledDescription, inCatalogue);  // I can't see this label
-        if(partEditorModel.getSparesDTO().getSpareItem() != null) {
-            vBox.getChildren().add(LabelFx.titledParagraph("Notes:", partEditorModel.getSparesDTO().getComments(), 350));
+        if(partViewerModel.getSparesDTO().getSpareItem() != null) {
+            vBox.getChildren().add(LabelFx.titledParagraph("Notes:", partViewerModel.getSparesDTO().getComments(), 350));
         }
         return vBox;
     }

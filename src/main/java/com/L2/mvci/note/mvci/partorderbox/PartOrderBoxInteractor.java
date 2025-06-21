@@ -5,6 +5,10 @@ import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class PartOrderBoxInteractor {
     private static final Logger logger = LoggerFactory.getLogger(PartOrderBoxInteractor.class);
     private final PartOrderBoxModel partOrderBoxModel;
@@ -56,12 +60,24 @@ public class PartOrderBoxInteractor {
     /**
      * Adds a new part to the database if it does not already exist.
      * Uses the part number and part description from the selected part in the partOrderBoxModel.
+     * creates a timestamp and records person who created the part
      * If the part is successfully inserted, updates the partOrderBoxModel message to indicate the part exists.
      */
-    public void addPartToDb() {
-        if(globalSparesRepo.insertSpare(new SparesDTO(
+    public void addPartToDb(String fullName) {
+        SparesDTO sparesDTO = new SparesDTO(
                 partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartNumber(),
-                partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartDescription())) == 1) {
+                partOrderBoxModel.getNoteModel().selectedPartProperty().get().getPartDescription());
+        String timestamp = ZonedDateTime.now(ZoneId.of("UTC"))
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss 'UTC'"));
+        String updatedBy = "[ {\n" +
+                "  \"updated_by\" : \"" + fullName + "\",\n" +
+                "  \"updated_date_time\" : \"" + timestamp + "\"\n" +
+                "  \"change_made\" : \"Added Part\"\n" +
+                "} ]";
+        sparesDTO.setLastUpdatedBy(updatedBy);
+        if(globalSparesRepo.insertSpare(sparesDTO) == 1) {
+            // need to  add spare here: partViewerModel.getSparesDTO().getSpareItem()
+            partOrderBoxModel.setSpare(sparesDTO);
             partOrderBoxModel.setMessage(PartOrderBoxMessage.PART_EXISTS);
         }
     }

@@ -11,11 +11,13 @@ public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
     private final PartOrderBoxModel partOrderBoxModel;
     private final PartOrderBoxView partOrderBoxView;
     private final PartOrderBoxInteractor partOrderBoxInteractor;
+    private final NoteView noteView;
 
     public PartOrderBoxController(NoteView noteView) {
         this.partOrderBoxModel = new PartOrderBoxModel(noteView);
         this.partOrderBoxInteractor = new PartOrderBoxInteractor(partOrderBoxModel);
         this.partOrderBoxView = new PartOrderBoxView(partOrderBoxModel, noteView, this::action);
+        this.noteView = noteView;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class PartOrderBoxController extends Controller<PartOrderBoxMessage> {
             case FLASH -> partOrderBoxInteractor.flash();
             case VIEW_PART_AS_SPARE -> partOrderBoxInteractor.viewPartAsSpare();
             case RESET_PART_LISTENER -> partOrderBoxInteractor.resetPartListener();
-            case ADD_PART_TO_DATABASE -> partOrderBoxInteractor.addPartToDb();
+            case ADD_PART_TO_DATABASE -> partOrderBoxInteractor.addPartToDb(noteView.getNoteModel().userProperty().get().getFullName());
         }
     }
 

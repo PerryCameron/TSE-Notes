@@ -24,6 +24,7 @@ public class PartOrderBoxModel {
     private TableView<PartFx> tableView;
     private final BooleanProperty flash = new SimpleBooleanProperty(false);
     private final BooleanProperty RefreshFields = new SimpleBooleanProperty(false);
+    // this is a returning message to the view via the interactor
     private final ObjectProperty<PartOrderBoxMessage> message = new SimpleObjectProperty<>(PartOrderBoxMessage.NONE);
     private PartFinderController partController;
     // this is used for the Part Finder MVCI
