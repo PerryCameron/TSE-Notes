@@ -45,6 +45,12 @@ public class PartFinderInteractor {
     public void mapProductFamiliesJSONtoPOJO() {
         String jsonResponse = partModel.selectedSpareProperty().get().getPim();
         partModel.getProductFamilies().clear();
+
+        if(jsonResponse.isEmpty()) {
+            logger.warn("No product families found");
+            return;
+        }
+
         try {
             partModel.setProductFamilies(partModel.getObjectMapper().readValue(
                     jsonResponse,
@@ -53,6 +59,7 @@ public class PartFinderInteractor {
             ));
         } catch (JsonProcessingException ex) {
             logger.error("Error deserializing JSON: {}", ex.getMessage());
+            logger.info("The JSON: {}", jsonResponse);
         }
     }
 

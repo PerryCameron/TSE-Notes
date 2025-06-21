@@ -36,7 +36,8 @@ public class PartInfo implements Builder<Pane> {
         if(!partView.getPartModel().getUpdatedByDTOs().isEmpty()) {
             System.out.println("list size is " + dtoList.size());
             for (UpdatedByDTO dto : dtoList) {
-                vBox.getChildren().add(new Label(dto.getUpdatedBy() + " " + dto.getUpdatedDateTime()));
+                String changes = dto.getChangeMade() == null ? "" : " Changes: " + dto.getChangeMade();
+                vBox.getChildren().add(new Label(dto.getUpdatedBy() + " " + dto.getUpdatedDateTime() + changes));
             }
         } else {
             System.out.println("No updated by");
