@@ -86,7 +86,7 @@ public class PartFinderInteractor {
     }
 
     public void savePart(SaveType type) {
-        saveEditHistory();
+        saveEditHistory(type);
         int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
         switch (type) {
             case NOTE -> Platform.runLater(() -> {
@@ -171,7 +171,7 @@ public class PartFinderInteractor {
                     // Update ImageView
                     Image newImage = new Image(new ByteArrayInputStream(imageBytes));
                     globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getSpareItem(), imageBytes);
-                    saveEditHistory();
+                    saveEditHistory(type);
                     return newImage;
                 } catch (Exception e) {
                     DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
@@ -317,7 +317,7 @@ public class PartFinderInteractor {
     }
 
     // runs on non-FX thread
-    public void saveEditHistory() {
+    public void saveEditHistory(SaveType saveType) {
         // Check if selected spare exists
         if (partModel.selectedSpareProperty().get() == null) {
             return;
@@ -364,6 +364,7 @@ public class PartFinderInteractor {
         // If no recent entry was found, add a new UpdatedByDTO
         if (!foundRecentEntry) {
             UpdatedByDTO newUpdate = new UpdatedByDTO();
+            newUpdate.setChangeMade(saveType.name());
             newUpdate.setUpdatedBy(currentUser);
             newUpdate.setUpdatedDateTime(currentTimestamp);
             updatedByDTOs.add(newUpdate);
