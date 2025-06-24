@@ -150,7 +150,7 @@ public static void copyHtmlToClipboard(String html, String plainText) {
             User32.INSTANCE.CloseClipboard();
         }
     } catch (Exception e) {
-        logger.error("Failed to copy to clipboard: " + e.getMessage(), e);
+        logger.error("Failed to copy to clipboard: {}", e.getMessage(), e);
         throw new RuntimeException("Clipboard copy failed", e);
     }
 }

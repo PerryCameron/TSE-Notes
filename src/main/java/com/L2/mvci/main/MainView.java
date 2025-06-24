@@ -85,7 +85,7 @@ public class MainView implements Builder<Region> {
         action.accept(MainMessage.OPEN_NOTESLIST_TAB);
         action.accept(MainMessage.SELECT_NOTE_TAB);
         // this is a message for the tableView to select the correct row to match selected NoteDTO
-        action.accept(MainMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);
+        //action.accept(MainMessage.SELECT_NOTE_IN_LIST_AND_SELECT_TABLEROW_WITH_IT);  // TODO // this is what caused the bug where my part order would not be present at the start. I am not sure if I need if for anything so I will comment it out and see if something is missing
         // obviously to put the correct number on the tab
         action.accept(MainMessage.UPDATE_NOTE_TAB_NAME);
         action.accept(MainMessage.UPDATE_STATUSBAR_WITH_STRING);
