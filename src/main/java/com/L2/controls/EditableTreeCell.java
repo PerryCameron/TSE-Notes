@@ -1,6 +1,7 @@
 package com.L2.controls;
 
 import com.L2.dto.global_spares.ProductFamilyDTO;
+import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderModel;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components.ProductFamily;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -9,6 +10,9 @@ import javafx.scene.control.TreeItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components.ProductFamily.getDisplayText;
 import static com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components.ProductFamily.getTreeItemDepth;
 
@@ -16,16 +20,23 @@ public class EditableTreeCell extends TreeCell<Object> {
     private static final Logger logger = LoggerFactory.getLogger(EditableTreeCell.class);
     private final TextField textField;
     private final ProductFamily productFamily;
+    private final PartFinderModel partFinderModel; // Add PartModel field
 
-    public EditableTreeCell(ProductFamily productFamily) {
+    public EditableTreeCell(ProductFamily productFamily, PartFinderModel partFinderModel) {
         this.productFamily = productFamily;
+        this.partFinderModel = partFinderModel;
         textField = new TextField();
-        textField.setOnAction(event -> commitEdit(textField.getText()));
+        textField.setOnAction(event -> {
+            logger.debug("Enter pressed for TreeItem at depth {}, text: {}",
+                    getTreeItem() != null ? getTreeItemDepth(getTreeItem()) : -1, textField.getText());
+            commitEdit(textField.getText());
+        });
     }
 
     @Override
     public void startEdit() {
         if (getTreeItem() == null || getTreeItemDepth(getTreeItem()) == 0) {
+            logger.warn("Cannot edit: TreeItem is null or root (depth 0)");
             cancelEdit();
             return;
         }
@@ -34,6 +45,8 @@ public class EditableTreeCell extends TreeCell<Object> {
         setText(null);
         setGraphic(textField);
         textField.requestFocus();
+        logger.debug("Started editing TreeItem at depth {}, value: {}",
+                getTreeItemDepth(getTreeItem()), getTreeItem().getValue());
     }
 
     @Override
@@ -41,25 +54,51 @@ public class EditableTreeCell extends TreeCell<Object> {
         super.cancelEdit();
         setText(getDisplayText(getTreeItem()));
         setGraphic(null);
+        logger.debug("Cancelled edit for TreeItem at depth {}, value: {}",
+                getTreeItem() != null ? getTreeItemDepth(getTreeItem()) : -1,
+                getTreeItem() != null ? getTreeItem().getValue() : null);
     }
 
     @Override
     public void commitEdit(Object newValue) {
         if (!(newValue instanceof String newText) || newText.trim().isEmpty()) {
+            logger.warn("Commit failed: New value is empty or not a String: {}", newValue);
             cancelEdit();
             new Alert(Alert.AlertType.WARNING, "Value cannot be empty.").showAndWait();
             return;
         }
-        int depth = getTreeItemDepth(getTreeItem());
-        Object oldValue = getTreeItem().getValue();
+
+        TreeItem<Object> treeItem = getTreeItem();
+        if (treeItem == null) {
+            logger.error("Commit failed: TreeItem is null");
+            cancelEdit();
+            return;
+        }
+
+        int depth = getTreeItemDepth(treeItem);
+        Object oldValue = treeItem.getValue();
+        logger.debug("Committing edit at depth {}, oldValue: {} (instance: {}), newText: {}",
+                depth, oldValue, System.identityHashCode(oldValue), newText);
+
+        // Update TreeItem value
         if (depth == 2) {
             super.commitEdit(newText); // Update TreeItem for product families
         } else {
             super.commitEdit(oldValue); // Preserve ProductFamilyDTO for ranges
         }
-        updateModel(newText, oldValue);
+
+        // Update the model and verify changes
+        boolean updateSuccess = updateModel(newText, oldValue);
+        if (!updateSuccess) {
+            logger.error("Model update failed for TreeItem at depth {}, reverting to old value", depth);
+            cancelEdit();
+            new Alert(Alert.AlertType.ERROR, "Failed to update model. Changes not saved.").showAndWait();
+            return;
+        }
+
         setText(newText);
         setGraphic(null);
+        logger.debug("Committed edit successfully for TreeItem at depth {}, newText: {}", depth, newText);
     }
 
     @Override
@@ -72,7 +111,6 @@ public class EditableTreeCell extends TreeCell<Object> {
         } else {
             setText(ProductFamily.getDisplayText(getTreeItem()));
             setGraphic(isEditing() ? textField : null);
-            // Apply red style if marked for deletion
             TreeItem<Object> treeItem = getTreeItem();
             if (productFamily.isMarkedForDeletion(treeItem)) {
                 setStyle("-fx-text-fill: red;");
@@ -82,54 +120,106 @@ public class EditableTreeCell extends TreeCell<Object> {
         }
     }
 
-    private void updateModel(String text, Object value) {
+    private boolean updateModel(String newText, Object oldValue) {
         TreeItem<Object> treeItem = getTreeItem();
         if (treeItem == null) {
-            logger.warn("No tree item selected for update.");
-            return;
+            logger.error("UpdateModel failed: TreeItem is null");
+            return false;
         }
 
-        int depth = ProductFamily.getTreeItemDepth(treeItem);
-        logger.debug("Updating TreeItem at depth {} with old value: {} (instance: {}), new text: {}",
-                depth, value, System.identityHashCode(value), text);
+        int depth = getTreeItemDepth(treeItem);
+        logger.debug("Updating model at depth {}, oldValue: {} (instance: {}), newText: {}",
+                depth, oldValue, System.identityHashCode(oldValue), newText);
+
+        List<ProductFamilyDTO> modelFamilies = partFinderModel.getProductFamilies();
+        logger.debug("partModel ProductFamilies before update: {}",
+                modelFamilies.stream()
+                        .map(pf -> pf.getRange() + " -> " + pf.getProductFamilies() + " (instance: " + System.identityHashCode(pf) + ")")
+                        .collect(Collectors.toList()));
 
         if (depth == 1) {
-            if (!(value instanceof ProductFamilyDTO)) {
+            if (!(oldValue instanceof ProductFamilyDTO pf)) {
                 logger.error("Expected ProductFamilyDTO at depth 1, but got: {}",
-                        value != null ? value.getClass().getName() : "null");
+                        oldValue != null ? oldValue.getClass().getName() : "null");
                 new Alert(Alert.AlertType.ERROR, "Invalid item type.").showAndWait();
-                return;
+                return false;
             }
-            ProductFamilyDTO pf = (ProductFamilyDTO) value;
-            logger.debug("Updating ProductFamilyDTO range: {} to {} (item: {})",
-                    pf.getRange(), text, System.identityHashCode(pf));
-            pf.setRange(text);
+            logger.debug("Before update: ProductFamilyDTO range: {} (instance: {})",
+                    pf.getRange(), System.identityHashCode(pf));
+            // Find matching DTO in model by range
+            ProductFamilyDTO modelPf = modelFamilies.stream()
+                    .filter(dto -> dto.getRange().equals(pf.getRange()))
+                    .findFirst()
+                    .orElse(null);
+            if (modelPf == null) {
+                logger.warn("ProductFamilyDTO with range '{}' not found in partModel, adding new", pf.getRange());
+                modelFamilies.add(pf);
+                modelPf = pf;
+            }
+            modelPf.setRange(newText);
+            logger.debug("After update: ProductFamilyDTO range: {} (instance: {})",
+                    modelPf.getRange(), System.identityHashCode(modelPf));
+            if (!newText.equals(modelPf.getRange())) {
+                logger.error("Failed to update ProductFamilyDTO range: expected {}, got {}",
+                        newText, modelPf.getRange());
+                return false;
+            }
         } else if (depth == 2) {
-            if (!(value instanceof String)) {
+            if (!(oldValue instanceof String oldString)) {
                 logger.error("Expected String at depth 2, but got: {}",
-                        value != null ? value.getClass().getName() : "null");
+                        oldValue != null ? oldValue.getClass().getName() : "null");
                 new Alert(Alert.AlertType.ERROR, "Invalid item type.").showAndWait();
-                return;
+                return false;
             }
-            String oldString = (String) value;
             Object parentValue = treeItem.getParent().getValue();
-            if (!(parentValue instanceof ProductFamilyDTO)) {
+            if (!(parentValue instanceof ProductFamilyDTO parentDTO)) {
                 logger.error("Expected ProductFamilyDTO parent, but got: {}",
                         parentValue != null ? parentValue.getClass().getName() : "null");
                 new Alert(Alert.AlertType.ERROR, "Invalid parent type.").showAndWait();
-                return;
+                return false;
             }
-            ProductFamilyDTO parentDTO = (ProductFamilyDTO) parentValue;
-            logger.debug("Updating ProductFamilyDTO product family: {} to {} (parent: {})",
-                    oldString, text, System.identityHashCode(parentDTO));
-            int index = parentDTO.getProductFamilies().indexOf(oldString);
+            logger.debug("Before update: ProductFamilyDTO productFamilies: {} (instance: {})",
+                    parentDTO.getProductFamilies(), System.identityHashCode(parentDTO));
+            // Find matching DTO in model by range
+            ProductFamilyDTO modelPf = modelFamilies.stream()
+                    .filter(dto -> dto.getRange().equals(parentDTO.getRange()))
+                    .findFirst()
+                    .orElse(null);
+            if (modelPf == null) {
+                logger.warn("Parent ProductFamilyDTO with range '{}' not found in partModel, adding new", parentDTO.getRange());
+                modelFamilies.add(parentDTO);
+                modelPf = parentDTO;
+            }
+            logger.debug("Updating modelPf: {} (instance: {})",
+                    modelPf.getRange(), System.identityHashCode(modelPf));
+            int index = modelPf.getProductFamilies().indexOf(oldString);
             if (index >= 0) {
-                parentDTO.getProductFamilies().set(index, text);
+                modelPf.getProductFamilies().set(index, newText);
+                logger.debug("After update: ProductFamilyDTO productFamilies: {} (instance: {})",
+                        modelPf.getProductFamilies(), System.identityHashCode(modelPf));
+                if (!modelPf.getProductFamilies().contains(newText)) {
+                    logger.error("Failed to update product family: expected {} not found in {}",
+                            newText, modelPf.getProductFamilies());
+                    return false;
+                }
             } else {
-                logger.warn("Product family '{}' not found in parent: {}", oldString, parentDTO.getRange());
+                logger.warn("Product family '{}' not found in parent: {}, adding new entry",
+                        oldString, modelPf.getRange());
+                modelPf.getProductFamilies().add(newText);
+                if (!modelPf.getProductFamilies().contains(newText)) {
+                    logger.error("Failed to add product family: {}", newText);
+                    return false;
+                }
             }
         } else {
-            logger.warn("Unexpected depth {} for editing.", depth);
+            logger.warn("Unexpected depth {} for editing", depth);
+            return false;
         }
+
+        logger.debug("partModel ProductFamilies after update: {}",
+                modelFamilies.stream()
+                        .map(pf -> pf.getRange() + " -> " + pf.getProductFamilies() + " (instance: " + System.identityHashCode(pf) + ")")
+                        .collect(Collectors.toList()));
+        return true;
     }
 }

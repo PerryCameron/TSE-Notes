@@ -20,11 +20,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ProductFamily implements Builder<Pane> {
     private static final Logger logger = LoggerFactory.getLogger(ProductFamily.class);
     private final PartFinderView partView;
-    private final PartFinderModel partModel;
+    private final PartFinderModel partFinderModel;
     private Button addRange;
     private Button addProduct;
     private Button editButton;
@@ -32,10 +33,11 @@ public class ProductFamily implements Builder<Pane> {
     private Button deleteButton;
     private Button cancelButton;
     private final Set<TreeItem<Object>> markedForDeletion = new HashSet<>();
+    private Button testButton;
 
     public ProductFamily(PartFinderView partView) {
         this.partView = partView;
-        this.partModel = partView.getPartModel();
+        this.partFinderModel = partView.getPartModel();
     }
 
     @Override
@@ -43,16 +45,16 @@ public class ProductFamily implements Builder<Pane> {
         HBox hBox = new HBox();
         VBox vBox = VBoxFx.of(10.0, Pos.TOP_LEFT, 150.0);
 
-        logger.debug("Building TreeView with ProductFamilies: {}", partModel.getProductFamilies());
-        partModel.setTreeView(createProductFamilyTreeView());
-        partModel.getTreeView().setPrefHeight(200);
+        logger.debug("Building TreeView with ProductFamilies: {}", partFinderModel.getProductFamilies());
+        partFinderModel.setTreeView(createProductFamilyTreeView());
+        partFinderModel.getTreeView().setPrefHeight(200);
 
         hBox.setPrefHeight(200);
-        hBox.getChildren().add(partModel.getTreeView());
-        partModel.getTreeView().setPrefWidth(500);
-        partModel.getTreeView().setEditable(true);
+        hBox.getChildren().add(partFinderModel.getTreeView());
+        partFinderModel.getTreeView().setPrefWidth(500);
+        partFinderModel.getTreeView().setEditable(true);
         // Explicitly set the cell factory to use EditableTreeCell
-        partModel.getTreeView().setCellFactory(param -> new EditableTreeCell(this));
+        partFinderModel.getTreeView().setCellFactory(param -> new EditableTreeCell(this, partFinderModel));
 
         this.addRange = ButtonFx.utilityButton("/images/create-16.png", "Add Range", 150);
         this.addProduct = ButtonFx.utilityButton("/images/create-16.png", "Add Product", 150);
@@ -60,46 +62,51 @@ public class ProductFamily implements Builder<Pane> {
         this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save Changes", 150);
         this.deleteButton = ButtonFx.utilityButton("/images/delete-16.png", "Delete Item", 150);
         this.cancelButton = ButtonFx.utilityButton("/images/cancel-16.png", "Cancel Edit", 150);
+        this.testButton = ButtonFx.utilityButton("/images/person-16.png", "view DTO's", 150);
 
-        editButton.setOnAction(event -> partModel.getTreeView().editableProperty().set(true));
+        editButton.setOnAction(event -> partFinderModel.getTreeView().editableProperty().set(true));
         addRange.setOnAction(event -> addNewRange());
         addProduct.setOnAction(event -> addNewProduct());
         deleteButton.setOnAction(event -> markForDeletion());
         saveButton.setOnAction(event -> saveChanges());
         cancelButton.setOnAction(event -> cancelEdit());
+        testButton.setOnAction(event -> test());
 
         // we use the editable property in treeView to make an (edit mode)
         setModeListener();
 
-
-        partModel.getTreeView().getSelectionModel().selectedItemProperty().addListener((obs, oldItem, newItem) -> {
+        partFinderModel.getTreeView().getSelectionModel().selectedItemProperty().addListener((obs, oldItem, newItem) -> {
             if (newItem != null) {
-                if (partModel.getTreeView().editableProperty().get())
+                if (partFinderModel.getTreeView().editableProperty().get())
                     setBySelection();
                 String displayText = getDisplayText(newItem);
                 logger.debug("Selected node: {} Depth: {}", displayText, getTreeItemDepth(newItem));
             }
         });
 
-        partModel.updatedRangeProperty().addListener((observable, oldValue, newValue) -> {
+        partFinderModel.updatedRangeProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && newValue) {
-                partModel.getTreeView().editableProperty().set(false);
-                partModel.updatedRangeProperty().set(false);
+                partFinderModel.getTreeView().editableProperty().set(false);
+                partFinderModel.updatedRangeProperty().set(false);
                 setBySelection();
             }
         });
 
-        setButtonVisibility(false,false,false,false);
-        partModel.getTreeView().setEditable(false);
-        ButtonFx.buttonVisible(saveButton,false); // I should not need this
+        setButtonVisibility(false, false, false, false);
+        partFinderModel.getTreeView().setEditable(false);
+        ButtonFx.buttonVisible(saveButton, false); // I should not need this
         hBox.getChildren().add(vBox);
-        vBox.getChildren().addAll(addRange, addProduct, editButton, saveButton, deleteButton, cancelButton);
+        vBox.getChildren().addAll(addRange, addProduct, editButton, saveButton, deleteButton, cancelButton, testButton);
         return hBox;
     }
 
+    private void test() {
+        partFinderModel.getProductFamilies().forEach(productFamilyDTO -> productFamilyDTO.toFullString());
+    }
+
     private void setModeListener() {
-        partModel.getTreeView().editableProperty().addListener((observable, oldValue, editMode) -> {
-            if(editMode) {
+        partFinderModel.getTreeView().editableProperty().addListener((observable, oldValue, editMode) -> {
+            if (editMode) {
                 // we are in edit mode we don't need the edit button
                 ButtonFx.buttonVisible(editButton, false);
                 ButtonFx.buttonVisible(saveButton, true);
@@ -115,42 +122,42 @@ public class ProductFamily implements Builder<Pane> {
     private void cancelEdit() {
         markedForDeletion.clear();
         partView.getAction().accept(PartFinderMessage.REFRESH_TREEVIEW);
-        partModel.getTreeView().refresh();
-        partModel.getTreeView().editableProperty().set(false);
+        partFinderModel.getTreeView().refresh();
+        partFinderModel.getTreeView().editableProperty().set(false);
         logger.debug("Cancelled edits and refreshed TreeView");
         ButtonFx.buttonVisible(saveButton, false);
-        setButtonVisibility(false,false,false,false); // why did you remove this?
+        setButtonVisibility(false, false, false, false); // why did you remove this?
     }
 
     private void setBySelection() {
-        if(partModel.getTreeView().getSelectionModel().selectedItemProperty().get() == null) {
+        if (partFinderModel.getTreeView().getSelectionModel().selectedItemProperty().get() == null) {
             logger.warn("None of the treeView items are selected");
             //                range, product, delete, cancel
-            setButtonVisibility(false,false,false,true);
+            setButtonVisibility(false, false, false, true);
             return;
         }
-        int selection = getTreeItemDepth(partModel.getTreeView().getSelectionModel().getSelectedItem());
+        int selection = getTreeItemDepth(partFinderModel.getTreeView().getSelectionModel().getSelectedItem());
         switch (selection) {
             //                          add range, add product, delete item, cancel edit
-            case 0 -> setButtonVisibility(true,false,false,true);
-            case 1 -> setButtonVisibility(false,true,true,true);
-            case 2 -> setButtonVisibility(false,false,true,true);
+            case 0 -> setButtonVisibility(true, false, false, true);
+            case 1 -> setButtonVisibility(false, true, true, true);
+            case 2 -> setButtonVisibility(false, false, true, true);
         }
     }
 
     private void addNewRange() {
         ProductFamilyDTO newFamily = new ProductFamilyDTO("New Range", new ArrayList<>());
-        partModel.getProductFamilies().add(newFamily);
+        partFinderModel.getProductFamilies().add(newFamily);
         logger.debug("Added new ProductFamilyDTO: {} (instance: {})", newFamily.getRange(), System.identityHashCode(newFamily));
-        TreeItem<Object> rootItem = partModel.getTreeView().getRoot();
+        TreeItem<Object> rootItem = partFinderModel.getTreeView().getRoot();
         TreeItem<Object> newRangeItem = new TreeItem<>(newFamily);
         newRangeItem.setExpanded(true);
         rootItem.getChildren().add(newRangeItem);
-        partModel.getTreeView().getSelectionModel().select(newRangeItem);
+        partFinderModel.getTreeView().getSelectionModel().select(newRangeItem);
     }
 
     private void addNewProduct() {
-        TreeItem<Object> selected = partModel.getTreeView().getSelectionModel().getSelectedItem();
+        TreeItem<Object> selected = partFinderModel.getTreeView().getSelectionModel().getSelectedItem();
         if (selected == null || getTreeItemDepth(selected) != 1) {
             new Alert(Alert.AlertType.WARNING, "Select a range to add a product.").showAndWait();
             return;
@@ -161,11 +168,11 @@ public class ProductFamily implements Builder<Pane> {
         logger.debug("Added product '{}' to ProductFamilyDTO: {} (instance: {})", newProduct, pf.getRange(), System.identityHashCode(pf));
         TreeItem<Object> newProductItem = new TreeItem<>(newProduct);
         selected.getChildren().add(newProductItem);
-        partModel.getTreeView().getSelectionModel().select(newProductItem);
+        partFinderModel.getTreeView().getSelectionModel().select(newProductItem);
     }
 
     private void markForDeletion() {
-        TreeItem<Object> selected = partModel.getTreeView().getSelectionModel().getSelectedItem();
+        TreeItem<Object> selected = partFinderModel.getTreeView().getSelectionModel().getSelectedItem();
         if (selected == null) {
             new Alert(Alert.AlertType.WARNING, "No item selected.").showAndWait();
             return;
@@ -186,68 +193,100 @@ public class ProductFamily implements Builder<Pane> {
             logger.debug("Marked product '{}' for deletion in range '{}'",
                     getDisplayText(selected), getDisplayText(selected.getParent()));
         }
-        partModel.getTreeView().refresh();
+        partFinderModel.getTreeView().refresh();
     }
 
     private void saveChanges() {
+        TreeView<Object> treeView = partFinderModel.getTreeView();
+        logger.debug("Before saveChanges: ProductFamilies: {}",
+                partFinderModel.getProductFamilies().stream()
+                        .map(pf -> pf.getRange() + " -> " + pf.getProductFamilies())
+                        .collect(Collectors.toList()));
+
         List<TreeItem<Object>> toRemove = new ArrayList<>(markedForDeletion);
         for (TreeItem<Object> item : toRemove) {
             int depth = getTreeItemDepth(item);
             TreeItem<Object> parent = item.getParent();
             if (depth == 1) {
                 ProductFamilyDTO pf = (ProductFamilyDTO) item.getValue();
-                if (partModel.getProductFamilies().remove(pf)) {
+                logger.debug("Attempting to remove range: {} (instance: {})",
+                        pf.getRange(), System.identityHashCode(pf));
+                if (partFinderModel.getProductFamilies().remove(pf)) {
                     parent.getChildren().remove(item);
                     logger.debug("Removed range '{}' (instance: {})", pf.getRange(), System.identityHashCode(pf));
                 } else {
-                    logger.warn("Failed to remove range '{}' from ProductFamilies", pf.getRange());
+                    logger.warn("Failed to remove range '{}' from ProductFamilies (instance: {})",
+                            pf.getRange(), System.identityHashCode(pf));
                 }
             } else if (depth == 2) {
                 String product = (String) item.getValue();
                 ProductFamilyDTO pf = (ProductFamilyDTO) parent.getValue();
+                logger.debug("Attempting to remove product: {} from ProductFamilyDTO: {} (instance: {})",
+                        product, pf.getRange(), System.identityHashCode(pf));
                 if (pf.getProductFamilies().remove(product)) {
                     parent.getChildren().remove(item);
                     logger.debug("Removed product '{}' from ProductFamilyDTO: {} (instance: {})",
                             product, pf.getRange(), System.identityHashCode(pf));
                 } else {
-                    logger.warn("Failed to remove product '{}' from ProductFamilyDTO: {}", product, pf.getRange());
+                    logger.warn("Failed to remove product '{}' from ProductFamilyDTO: {} (instance: {})",
+                            product, pf.getRange(), System.identityHashCode(pf));
                 }
             }
         }
         markedForDeletion.clear();
-        partModel.getTreeView().refresh();
+        treeView.refresh();
+        logger.debug("After deletions: ProductFamilies: {}",
+                partFinderModel.getProductFamilies().stream()
+                        .map(pf -> pf.getRange() + " -> " + pf.getProductFamilies())
+                        .collect(Collectors.toList()));
         partView.getAction().accept(PartFinderMessage.SAVE_PIM_TO_JSON);
-        setButtonVisibility(false,false,false,false);
+        setButtonVisibility(false, false, false, false);
+        logger.debug("After saveChanges: ProductFamilies: {}",
+                partFinderModel.getProductFamilies().stream()
+                        .map(pf -> pf.getRange() + " -> " + pf.getProductFamilies())
+                        .collect(Collectors.toList()));
         logger.debug("Saved changes and cleared deletion marks");
     }
+
 
     public boolean isMarkedForDeletion(TreeItem<Object> item) {
         return item != null && markedForDeletion.contains(item);
     }
 
-    // Updated method to create TreeView<Object>
     private TreeView<Object> createProductFamilyTreeView() {
-        TreeItem<Object> rootItem = createTreeItemRoot(partModel.getProductFamilies());
+        List<ProductFamilyDTO> productFamilies = partFinderModel.getProductFamilies();
+        logger.debug("Creating TreeView with ProductFamilies: {}",
+                productFamilies.stream()
+                        .map(pf -> pf.getRange() + " -> " + pf.getProductFamilies() + " (instance: " + System.identityHashCode(pf) + ")")
+                        .collect(Collectors.toList()));
+        TreeItem<Object> rootItem = createTreeItemRoot(productFamilies);
         TreeView<Object> treeView = new TreeView<>(rootItem);
         treeView.setShowRoot(true);
         return treeView;
     }
 
-    // Updated static method to create TreeItem<Object> root
     public static TreeItem<Object> createTreeItemRoot(List<ProductFamilyDTO> productFamilies) {
         TreeItem<Object> rootItem = new TreeItem<>("Ranges");
         rootItem.setExpanded(true);
+        logger.debug("Building tree with ProductFamilies: {}",
+                productFamilies.stream()
+                        .map(pf -> pf.getRange() + " -> " + pf.getProductFamilies() + " (instance: " + System.identityHashCode(pf) + ")")
+                        .collect(Collectors.toList()));
         for (ProductFamilyDTO pf : productFamilies) {
-            logger.debug("Creating range node for ProductFamilyDTO: {} (instance: {})", pf.getRange(), System.identityHashCode(pf));
+            logger.debug("Creating range node for ProductFamilyDTO: {} (instance: {})",
+                    pf.getRange(), System.identityHashCode(pf));
             TreeItem<Object> rangeItem = new TreeItem<>(pf);
             rangeItem.setExpanded(true);
             for (Object productFamily : pf.getProductFamilies() != null ? pf.getProductFamilies() : List.of()) {
+                logger.debug("Creating product node: {} (instance: {})",
+                        productFamily, System.identityHashCode(productFamily));
                 rangeItem.getChildren().add(new TreeItem<>(productFamily));
             }
             rootItem.getChildren().add(rangeItem);
         }
         return rootItem;
     }
+
 
     public static String getDisplayText(TreeItem<Object> item) {
         if (item == null) return "";

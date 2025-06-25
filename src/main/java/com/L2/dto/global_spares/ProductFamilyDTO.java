@@ -47,4 +47,9 @@ public class ProductFamilyDTO {
     public String toString() {
         return range != null ? range : "Unnamed Range";
     }
+
+    public void toFullString() {
+       System.out.println("ProductFamilyDTO: range='" + range + '\'' + " Instance: " +System.identityHashCode(this));
+       productFamilies.forEach(family -> System.out.println(family + " instance: " + System.identityHashCode(family)));
+    }
 }
