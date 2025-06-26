@@ -68,7 +68,7 @@ public class SparesTableViewFx {
                 if (empty || isArchived == null) {
                     setGraphic(null); // No image if empty or null
                 } else {
-                    imageView.setImage(isArchived ? ImageResources.NO_IMAGE : ImageResources.YES_IMAGE);
+                    imageView.setImage(isArchived ? ImageResources.NO : ImageResources.YES);
                     imageView.setFitWidth(16);
                     imageView.setFitHeight(16);
                     setGraphic(imageView); // Display the appropriate icon

@@ -3,6 +3,7 @@ package com.L2.mvci.settings.components;
 import com.L2.mvci.settings.SettingsMessage;
 import com.L2.mvci.settings.SettingsModel;
 import com.L2.mvci.settings.SettingsView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HeaderFx;
 import com.L2.widgetFx.VBoxFx;
@@ -82,7 +83,7 @@ public class UserMenu implements Builder<Region> {
             }
         });
 
-        Button saveButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.SAVE_USER), "Save", "/images/save-16.png");
+        Button saveButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.SAVE_USER), ImageResources.SAVE, "Save");
         vBox.getChildren().addAll(HeaderFx.withTitle("User Information"), tf1, tf2, ef3, tf3, tf4, saveButton);
         return vBox;
     }

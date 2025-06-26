@@ -3,6 +3,7 @@ package com.L2.mvci.note.components;
 import com.L2.interfaces.Component;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
@@ -62,7 +63,7 @@ public class DateTimePicker implements Component<Region> {
         Button copyButton = ButtonFx.utilityButton(() -> {
             flash();
             noteView.getAction().accept(NoteMessage.COPY_NAME_DATE);
-        }, "Copy", "/images/copy-16.png");
+        }, ImageResources.COPY, "Copy");
         copyButton.setTooltip(ToolTipFx.of("Copy User and Date/Time"));
         return copyButton;
     }
@@ -74,7 +75,7 @@ public class DateTimePicker implements Component<Region> {
             setDateTime(now);
             // Explicitly update the note model with the seconds-precision time
             noteView.getNoteModel().boundNoteProperty().get().timestampProperty().set(now);
-        }, "Sync", "/images/sync-16.png");
+        }, ImageResources.SYNC, "Sync");
         syncButton.setTooltip(ToolTipFx.of("Refresh date/time to now()"));
         return syncButton;
     }

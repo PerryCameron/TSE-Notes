@@ -3,6 +3,7 @@ package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderMessage;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderModel;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HBoxFx;
 import com.L2.widgetFx.VBoxFx;
@@ -39,11 +40,10 @@ public class PartKeyWords implements Builder<Pane> {
                 && partModel.selectedSpareProperty().get() != null)
                 ? partModel.selectedSpareProperty().get().getKeywords() : "";
         partModel.partKeyWordsProperty().set(new TextArea(keywords != null ? keywords : ""));
-//        partModel.partKeyWordsProperty().get().setPrefWidth(500);
         partModel.partKeyWordsProperty().get().setEditable(false);
-        this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save", 150);
-        this.modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
-        this.cancelButton = ButtonFx.utilityButton("/images/cancel-16.png", "Cancel", 150);
+        this.saveButton = ButtonFx.utilityButton(ImageResources.SAVE, "Save", 150);
+        this.modifyButton = ButtonFx.utilityButton(ImageResources.EDIT, "Edit", 150);
+        this.cancelButton = ButtonFx.utilityButton(ImageResources.CANCEL, "Cancel", 150);
 
         saveButton.setOnAction(button -> {
             partModel.selectedSpareProperty().get().setKeywords(partModel.partKeyWordsProperty().get().getText());

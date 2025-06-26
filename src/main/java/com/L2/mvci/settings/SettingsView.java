@@ -1,6 +1,7 @@
 package com.L2.mvci.settings;
 
 import com.L2.mvci.settings.components.EntitlementsMenu;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Insets;
@@ -30,10 +31,10 @@ public class SettingsView implements Builder<Region> {
 
     private Node setMenu() {
         VBox vBox = VBoxFx.of(150.0, 10.0, new Insets(30, 0, 0, 10));
-        Button userButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_USER), "User", "/images/person-16.png");
-        Button entitlementsButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_ENTITLEMENTS), "Entitlements", "/images/help-16.png");
-        Button dictButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_DICTIONARY), "Dictionary", "/images/dictionary-16.png");
-        Button globalSparesButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_GLOBAL_SPARES), "Global Spares", "/images/table-16.png");
+        Button userButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_USER), ImageResources.PERSON, "User");
+        Button entitlementsButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_ENTITLEMENTS), ImageResources.HELP, "Entitlements");
+        Button dictButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_DICTIONARY), ImageResources.DICTIONARY, "Dictionary");
+        Button globalSparesButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SHOW_GLOBAL_SPARES), ImageResources.TABLE, "Global Spares");
         vBox.getChildren().addAll(userButton, entitlementsButton, dictButton, globalSparesButton);
         return vBox;
     }

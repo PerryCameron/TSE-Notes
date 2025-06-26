@@ -5,6 +5,7 @@ import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
 import com.L2.static_tools.CopyPastaParser;
+import com.L2.static_tools.ImageResources;
 import com.L2.static_tools.StringChecker;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
@@ -42,7 +43,7 @@ public class ShippingInformation implements Component<Region> {
         Button copyButton = ButtonFx.utilityButton(() -> {
             flash();
             noteView.getAction().accept(NoteMessage.SHIPPING_INFORMATION);
-        }, "Copy", "/images/copy-16.png");
+        }, ImageResources.COPY, "Copy");
         copyButton.setTooltip(ToolTipFx.of("Copy Shipping Information"));
         Button[] buttons = new Button[]{copyButton};
         root.getChildren().addAll(TitleBarFx.of("Shipping Information", buttons), hBox);
@@ -65,7 +66,7 @@ public class ShippingInformation implements Component<Region> {
             noteModel.boundNoteProperty().get().setContactName(contactInfo[0]);
             noteModel.boundNoteProperty().get().setContactPhoneNumber(contactInfo[1]);
             noteModel.boundNoteProperty().get().setContactEmail(contactInfo[2]);
-        }, "Paste", "/images/paste-16.png");
+        }, ImageResources.PASTE, "Paste");
         pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Contact Information"));
 
         Button[] buttons = new Button[]{pasteButton};
@@ -93,7 +94,7 @@ public class ShippingInformation implements Component<Region> {
             aTextFields[2].textProperty().set(addressInfo[3]);
             aTextFields[3].textProperty().set(addressInfo[4]);
             aTextFields[4].textProperty().set(addressInfo[5]);
-        }, "Paste", "/images/paste-16.png");
+        }, ImageResources.PASTE, "Paste");
         pasteButton.setTooltip(ToolTipFx.of("Paste Shipping Address Information"));
         Button[] buttons = new Button[]{pasteButton};
         hBox.getChildren().addAll(aTextFields[1], aTextFields[2], aTextFields[3]);

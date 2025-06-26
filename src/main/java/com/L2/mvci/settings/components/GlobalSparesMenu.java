@@ -4,6 +4,7 @@ import com.L2.dto.global_spares.RangesFx;
 import com.L2.mvci.settings.SettingsMessage;
 import com.L2.mvci.settings.SettingsModel;
 import com.L2.mvci.settings.SettingsView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.*;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
@@ -108,14 +109,14 @@ public class GlobalSparesMenu implements Builder<Region> {
         HBox hBox = new HBox(5);
         Button saveButton = ButtonFx.utilityButton(() -> {
             action.accept(SettingsMessage.SAVE_RANGES);
-        }, "Save", "/images/save-16.png");
+        }, ImageResources.SAVE, "Save");
         Button deleteButton = ButtonFx.utilityButton(() -> {
             showConfirmationAlert();
-        }, "Delete", "/images/delete-16.png");
+        }, ImageResources.DELETE, "Delete");
         Button newButton = ButtonFx.utilityButton(() -> {
             settingsModel.getRanges().add(new RangesFx());
             action.accept(SettingsMessage.ADD_RANGE);
-        }, "New Range", "/images/create-16.png");
+        }, ImageResources.NEW, "New Range");
         hBox.getChildren().addAll(saveButton, deleteButton, newButton);
         return hBox;
     }

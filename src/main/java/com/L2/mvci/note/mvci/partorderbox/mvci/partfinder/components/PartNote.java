@@ -3,6 +3,7 @@ package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderMessage;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderModel;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HBoxFx;
 import com.L2.widgetFx.VBoxFx;
@@ -40,9 +41,9 @@ public class PartNote implements Builder<Pane> {
         partModel.partNoteProperty().set(new TextArea(comments != null ? comments : ""));
         partModel.partNoteProperty().get().setEditable(false);
         partModel.partNoteProperty().get().setWrapText(true);
-        this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save", 150);
-        this.modifyButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
-        this.cancelButton = ButtonFx.utilityButton("/images/cancel-16.png", "Cancel", 150);
+        this.saveButton = ButtonFx.utilityButton(ImageResources.SAVE, "Save", 150);
+        this.modifyButton = ButtonFx.utilityButton(ImageResources.EDIT, "Edit", 150);
+        this.cancelButton = ButtonFx.utilityButton(ImageResources.CANCEL, "Cancel", 150);
 
         saveButton.setOnAction(button -> {
             partModel.selectedSpareProperty().get().setComments(partModel.partNoteProperty().get().getText());

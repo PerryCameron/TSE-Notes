@@ -120,7 +120,7 @@ public class PartOrderBoxView implements Builder<Region> {
             alert.ifPresent(Dialog::showAndWait);
             // in case we have changed the ranges in settings, we need to make sure they are fresh
             noteView.getAction().accept(NoteMessage.GET_RANGES); // why is this not working??
-        }, "Search", "/images/search-16.png");
+        }, ImageResources.SEARCH, "Search");
         Button addPartButton = ButtonFx.utilityButton(() -> {
             noteView.getAction().accept(NoteMessage.INSERT_PART);
             // Sort parts in reverse order
@@ -133,7 +133,7 @@ public class PartOrderBoxView implements Builder<Region> {
             partOrderBoxModel.getTableView().getFocusModel().focus(0, partOrderBoxModel.getTableView().getColumns().getFirst());  // Focus the first column (index 0)
             // Edit the first cell in the first row
             partOrderBoxModel.getTableView().edit(0, partOrderBoxModel.getTableView().getColumns().getFirst());  // Edit row 0, first column
-        }, "Add Part", "/images/create-16.png");
+        }, ImageResources.NEW, "Add Part");
         Button deleteButton = ButtonFx.utilityButton(() -> {
             PartFx selectedPart = partOrderBoxModel.getTableView().getSelectionModel().getSelectedItem();
             if (selectedPart == null) DialogueFx.errorAlert("Unable to delete", "You must first select a part");
@@ -149,7 +149,7 @@ public class PartOrderBoxView implements Builder<Region> {
                     });
                 });
             }
-        }, "Delete Part", "/images/delete-16.png");
+        },ImageResources.DELETE, "Delete Part");
         // Create the VBox from your method
         HBox lineTypeBox = lineTypeToggle(partOrderDTO);
         // Set a top margin (e.g., 10 pixels) on lineTypeBox
@@ -231,7 +231,7 @@ public class PartOrderBoxView implements Builder<Region> {
                 });
             });
 
-        }, "Delete PO", "/images/delete-16.png");
+        }, ImageResources.DELETE, "Delete PO");
         Button copyButton = ButtonFx.utilityButton(() -> {
             noteView.getAction().accept(NoteMessage.COPY_PART_ORDER);
             VBox vBox = partOrderBoxModel.getPartOrderMap().get(partOrderDTO);
@@ -239,7 +239,7 @@ public class PartOrderBoxView implements Builder<Region> {
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> vBox.setStyle("")); // Reset the style
             pause.play();
-        }, "Copy", "/images/copy-16.png");
+        },ImageResources.COPY, "Copy");
         iconBox.getChildren().addAll(copyButton, deleteButton);
         return iconBox;
     }

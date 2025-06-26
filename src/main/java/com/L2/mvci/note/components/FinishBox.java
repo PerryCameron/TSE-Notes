@@ -6,6 +6,7 @@ import com.L2.interfaces.Component;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.VBoxFx;
@@ -69,17 +70,17 @@ public class FinishBox implements Component<Region> {
         Button customerRequestButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupA();
             noteView.getAction().accept(NoteMessage.COPY_CUSTOMER_REQUEST);
-        }, "Customer Request", "/images/question-16.png");
+        }, ImageResources.COPY_CUSTOMER_REQUEST, "Customer Request");
 
         Button correctiveActionButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupB();
             noteView.getAction().accept(NoteMessage.COPY_ANSWER_TO_CUSTOMER);
-        }, "Answer to Customer", "/images/smile-16.png");
+        }, ImageResources.COPY_ANSWER_TO_CUSTOMER, "Answer to Customer");
 
         Button logCallActionButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupC();
             noteView.getAction().accept(NoteMessage.COPY_LOGGED_CALL);
-        }, "Log Call", "/images/call-16.png");
+        }, ImageResources.COPY_LOGGED_CALL, "Log Call");
 
         vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, logCallActionButton);
         return vBox;

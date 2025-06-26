@@ -2,6 +2,7 @@ package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components;
 
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderMessage;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HBoxFx;
 import javafx.geometry.Pos;
@@ -38,15 +39,15 @@ public class PartPhoto implements Builder<Pane> {
         partView.getPartModel().getImageView().setPreserveRatio(true);
         // Button to save clipboard image
 
-        Button saveButton = ButtonFx.utilityButton("/images/paste-16.png", "Paste Clipboard Image", 200);
+        Button pasteButton = ButtonFx.utilityButton(ImageResources.PASTE, "Paste Clipboard Image", 200);
 //        Button saveButton = new Button("Save Clipboard Image");
-        saveButton.setOnAction(event -> saveClipboardImage());
+        pasteButton.setOnAction(event -> saveClipboardImage());
         // Load initial image for the selected spare
         loadImageForSelectedSpare();
         // Listen for changes to the selected spare
         partView.getPartModel().selectedSpareProperty().addListener((obs, oldSpare, newSpare) -> loadImageForSelectedSpare());
         imageContainer.getChildren().addAll(partView.getPartModel().getImageView());
-        buttonContainer.getChildren().add(saveButton);
+        buttonContainer.getChildren().add(pasteButton);
         // Add components to HBox
         hBox.getChildren().addAll(imageContainer, buttonContainer);
         return hBox;

@@ -5,6 +5,7 @@ import com.L2.dto.EntitlementFx;
 import com.L2.mvci.settings.SettingsMessage;
 import com.L2.mvci.settings.SettingsModel;
 import com.L2.mvci.settings.SettingsView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HeaderFx;
 import com.L2.widgetFx.VBoxFx;
@@ -75,9 +76,9 @@ public class EntitlementsMenu implements Builder<Region> {
         Button saveButton = ButtonFx.utilityButton( () -> {
             action.accept(SettingsMessage.SAVE_ENTITLEMENTS);
             action.accept(SettingsMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
-        }, "Save", "/images/save-16.png");
-        Button deleteButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.DELETE_ENTITLEMENT), "Delete", "/images/delete-16.png");
-        Button newButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.NEW_ENTITLEMENT), "New Entitlement", "/images/create-16.png");
+        }, ImageResources.SAVE, "Save");
+        Button deleteButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.DELETE_ENTITLEMENT), ImageResources.DELETE, "Delete");
+        Button newButton = ButtonFx.utilityButton( () -> action.accept(SettingsMessage.NEW_ENTITLEMENT), ImageResources.NEW, "New Entitlement");
         hBox.getChildren().addAll(saveButton, deleteButton, newButton);
         return hBox;
     }

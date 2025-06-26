@@ -5,6 +5,7 @@ import com.L2.dto.global_spares.ProductFamilyDTO;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderMessage;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderModel;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Pos;
@@ -33,7 +34,7 @@ public class ProductFamily implements Builder<Pane> {
     private Button deleteButton;
     private Button cancelButton;
     private final Set<TreeItem<Object>> markedForDeletion = new HashSet<>();
-    private Button testButton;
+//    private Button testButton;
 
     public ProductFamily(PartFinderView partView) {
         this.partView = partView;
@@ -56,13 +57,13 @@ public class ProductFamily implements Builder<Pane> {
         // Explicitly set the cell factory to use EditableTreeCell
         partFinderModel.getTreeView().setCellFactory(param -> new EditableTreeCell(this, partFinderModel));
 
-        this.addRange = ButtonFx.utilityButton("/images/create-16.png", "Add Range", 150);
-        this.addProduct = ButtonFx.utilityButton("/images/create-16.png", "Add Product", 150);
-        this.editButton = ButtonFx.utilityButton("/images/modify-16.png", "Edit", 150);
-        this.saveButton = ButtonFx.utilityButton("/images/save-16.png", "Save Changes", 150);
-        this.deleteButton = ButtonFx.utilityButton("/images/delete-16.png", "Delete Item", 150);
-        this.cancelButton = ButtonFx.utilityButton("/images/cancel-16.png", "Cancel Edit", 150);
-        this.testButton = ButtonFx.utilityButton("/images/person-16.png", "view DTO's", 150);
+        this.addRange = ButtonFx.utilityButton(ImageResources.NEW, "Add Range", 150);
+        this.addProduct = ButtonFx.utilityButton(ImageResources.NEW, "Add Product", 150);
+        this.editButton = ButtonFx.utilityButton(ImageResources.EDIT, "Edit", 150);
+        this.saveButton = ButtonFx.utilityButton(ImageResources.SAVE, "Save Changes", 150);
+        this.deleteButton = ButtonFx.utilityButton(ImageResources.DELETE, "Delete Item", 150);
+        this.cancelButton = ButtonFx.utilityButton(ImageResources.CANCEL, "Cancel Edit", 150);
+//        this.testButton = ButtonFx.utilityButton("/images/person-16.png", "view DTO's", 150);
 
         editButton.setOnAction(event -> partFinderModel.getTreeView().editableProperty().set(true));
         addRange.setOnAction(event -> addNewRange());
@@ -70,7 +71,7 @@ public class ProductFamily implements Builder<Pane> {
         deleteButton.setOnAction(event -> markForDeletion());
         saveButton.setOnAction(event -> saveChanges());
         cancelButton.setOnAction(event -> cancelEdit());
-        testButton.setOnAction(event -> test());
+//        testButton.setOnAction(event -> test());
 
         // we use the editable property in treeView to make an (edit mode)
         setModeListener();
@@ -96,7 +97,7 @@ public class ProductFamily implements Builder<Pane> {
         partFinderModel.getTreeView().setEditable(false);
         ButtonFx.buttonVisible(saveButton, false); // I should not need this
         hBox.getChildren().add(vBox);
-        vBox.getChildren().addAll(addRange, addProduct, editButton, saveButton, deleteButton, cancelButton, testButton);
+        vBox.getChildren().addAll(addRange, addProduct, editButton, saveButton, deleteButton, cancelButton);
         return hBox;
     }
 

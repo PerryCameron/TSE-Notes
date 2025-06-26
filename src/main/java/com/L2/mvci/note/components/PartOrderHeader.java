@@ -2,6 +2,7 @@ package com.L2.mvci.note.components;
 
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.ToolTipFx;
@@ -27,7 +28,7 @@ public class PartOrderHeader implements Builder<Region> {
         Button newButton = ButtonFx.utilityButton( () -> {
             noteView.getAction().accept(NoteMessage.INSERT_PART_ORDER);
             noteView.getPartOrderBoxController().refreshFields();
-        },"New Part Order", "/images/create-16.png");
+        }, ImageResources.NEW, "New Part Order");
         newButton.setTooltip(ToolTipFx.of("Create New Part Order"));
         Button[] buttons = new Button[] { newButton };
         root.getChildren().addAll(TitleBarFx.of("Part Orders", buttons));

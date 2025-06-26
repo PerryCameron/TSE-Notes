@@ -6,6 +6,7 @@ import com.L2.interfaces.Component;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.ToolTipFx;
@@ -51,7 +52,7 @@ public class Subject implements Component<Region> {
         Button copyButton = ButtonFx.utilityButton(() -> {
             flash();
             noteView.getAction().accept(NoteMessage.COPY_SUBJECT);
-        }, "Copy", "/images/copy-16.png");
+        }, ImageResources.COPY, "Copy");
         copyButton.setTooltip(ToolTipFx.of("Copy Basic Information"));
 
         Button[] buttons = new Button[]{copyButton};

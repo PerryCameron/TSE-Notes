@@ -46,33 +46,29 @@ public class ButtonFx {
         return button;
     }
 
-    public static Button utilityButton(Runnable runnable, String... strings) {
-        Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(strings[1])));
-        ImageView imageViewCopy = new ImageView(copyIcon);
+    public static Button utilityButton(Runnable runnable, Image image, String... strings) {
+        ImageView imageViewCopy = new ImageView(image);
         Button button = ButtonFx.of(imageViewCopy, "invisible-button");
         button.setText(strings[0]);
         button.setOnAction(event -> runnable.run());
         return button;
     }
 
-    public static Button utilityButton(String image, Runnable runnable) {
-        Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(image)));
-        ImageView imageViewCopy = new ImageView(copyIcon);
+    public static Button utilityButton(Image image, Runnable runnable) {
+        ImageView imageViewCopy = new ImageView(image);
         Button button = ButtonFx.of(imageViewCopy, "invisible-button");
         button.setOnAction(event -> runnable.run());
         return button;
     }
 
-    public static Button utilityButton(String image) {
-        Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(image)));
-        ImageView imageViewCopy = new ImageView(copyIcon);
+    public static Button utilityButton(Image image) {
+        ImageView imageViewCopy = new ImageView(image);
         Button button = ButtonFx.of(imageViewCopy, "invisible-button");
         return button;
     }
 
-    public static Button utilityButton(String image, String text, double width) {
-        Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(image)));
-        ImageView imageViewCopy = new ImageView(copyIcon);
+    public static Button utilityButton(Image image, String text, double width) {
+        ImageView imageViewCopy = new ImageView(image);
         Button button = ButtonFx.of(imageViewCopy, "invisible-button");
         button.setText(text);
         button.setPrefWidth(width);
