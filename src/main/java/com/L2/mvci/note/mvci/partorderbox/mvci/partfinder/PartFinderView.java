@@ -230,7 +230,6 @@ public class PartFinderView implements Builder<Alert> {
         // Set default content in the StackPane
         // Assume familyPane, notePane, keywordsPane, infoPane, photoPane are already created
         stackPane.getChildren().addAll(photoPane, familyPane, notePane, keywordsPane, infoPane);
-//        stackPane.getChildren().setAll(photoPane);
         photoPane.setVisible(true);
         familyPane.setVisible(false);
         notePane.setVisible(false);
@@ -273,9 +272,6 @@ public class PartFinderView implements Builder<Alert> {
         // Set up the StackPane
         partModel.setStackPane(new StackPane());
         // Create panes for each button
-//        Pane infoPane = new VBox(HBoxFx.testBox("Info")); // Pane for infoButton
-        // Set up the button stack and toggle group
-
         Node buttonStack = buttonStack(partModel.getStackPane(),
                 new PartPhoto(this).build(),
                 new ProductFamily(this).build(),
@@ -299,7 +295,7 @@ public class PartFinderView implements Builder<Alert> {
     private void setSelectedChangeListener() {
         partModel.getSparesTableView().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                System.out.println("---- " + newSelection + " ----");
+//                System.out.println("---- " + newSelection + " ----");
                 // updates our selected spare to match selected
                 partModel.selectedSpareProperty().set(newSelection);
                 // updates treeView for product families and ranges

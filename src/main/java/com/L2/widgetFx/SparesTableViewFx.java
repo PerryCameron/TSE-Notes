@@ -2,15 +2,20 @@ package com.L2.widgetFx;
 
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.mvci.note.NoteModel;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class SparesTableViewFx {
     public static TableView<SparesDTO> createTableView(NoteModel noteModel) {
         TableView<SparesDTO> tableView = TableViewFx.of(SparesDTO.class);
         tableView.setItems(noteModel.getSearchedParts());
-        tableView.getColumns().addAll(Arrays.asList(col1(), col2(), col3()));
+        tableView.getColumns().addAll(Arrays.asList(col1(), col2(), catalogue()));
         tableView.setPrefHeight(200);
         return tableView;
     }
@@ -43,17 +48,51 @@ public class SparesTableViewFx {
         return col;
     }
 
-    private static TableColumn<SparesDTO, String> col3() {
-        // Define options and default value
-        TableColumn<SparesDTO, String> col = TableColumnFx.stringTableColumnSimple(
-                SparesDTO::isArchived,
-                "In catalogue"
-        );
-        col.setStyle("-fx-alignment: center");
-        col.setMinWidth(125);
-        col.setPrefWidth(125);
-        col.setMaxWidth(125);
-        return col;
+//    private static TableColumn<SparesDTO, String> col3() {
+//        // Define options and default value
+//        TableColumn<SparesDTO, String> col = TableColumnFx.stringTableColumnSimple(
+//                SparesDTO::isArchived,
+//                "In catalogue"
+//        );
+//        col.setStyle("-fx-alignment: center");
+//        col.setMinWidth(125);
+//        col.setPrefWidth(125);
+//        col.setMaxWidth(125);
+//        return col;
+//    }
+
+    private static TableColumn<SparesDTO, Boolean> catalogue() {
+        TableColumn<SparesDTO, Boolean> catalogueCol = new TableColumn<>("In catalogue");
+        catalogueCol.setPrefWidth(125);
+        catalogueCol.setMaxWidth(125);
+        catalogueCol.setMinWidth(125);
+        // Define the cell factory
+        catalogueCol.setCellFactory(param -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+            private final Image yesImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/yes-16.png")));
+            private final Image noImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/no-16.png")));
+            {
+                setAlignment(Pos.CENTER);
+            }
+            @Override
+            protected void updateItem(Boolean isArchived, boolean empty) {
+                super.updateItem(isArchived, empty);
+                if (empty || isArchived == null) {
+                    setGraphic(null); // No image if empty or null
+                } else {
+                    imageView.setImage(isArchived ? noImage : yesImage);
+                    imageView.setFitWidth(16);
+                    imageView.setFitHeight(16);
+                    setGraphic(imageView); // Display the appropriate icon
+                }
+            }
+        });
+
+        // Bind the archived property to the column's value
+        catalogueCol.setCellValueFactory(cellData ->
+                new SimpleBooleanProperty(cellData.getValue().getArchived()));
+
+        return catalogueCol;
     }
 
     // makes it so you can highlight text and still select the row
