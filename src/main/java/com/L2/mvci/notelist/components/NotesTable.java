@@ -9,7 +9,6 @@ import com.L2.widgetFx.TableColumnFx;
 import com.L2.widgetFx.TableViewFx;
 import javafx.application.Platform;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
@@ -71,12 +70,10 @@ public class NotesTable implements Component<Region> {
                     if (event.getDeltaY() > 0 && verticalScrollBar.getValue() == 0.0) {
                         actionInProgress = true;
                         noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
-//                        resetActionFlag();
                         actionInProgress = false;
                     } else if (event.getDeltaY() < 0 && verticalScrollBar.getValue() == 1.0) {
                         actionInProgress = true;
                         noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
-//                        resetActionFlag();
                         actionInProgress = false;
                     }
             } else noteListView.getAction().accept(NoteListMessage.NO_ACTION_TAKEN_FOR_SCROLL);
@@ -90,7 +87,6 @@ public class NotesTable implements Component<Region> {
                         if (verticalScrollBar.getValue() == 0.0) {
                             actionInProgress = true;
                             noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
-//                            resetActionFlag();
                             actionInProgress = false;
                         }
                         break;
@@ -98,7 +94,6 @@ public class NotesTable implements Component<Region> {
                         if (verticalScrollBar.getValue() == 1.0) {
                             actionInProgress = true;
                             noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
-//                            resetActionFlag();
                             actionInProgress = false;
                         }
                         break;
@@ -108,10 +103,6 @@ public class NotesTable implements Component<Region> {
             } else noteListView.getAction().accept(NoteListMessage.NO_ACTION_TAKEN_FOR_KEY_PRESS);
         });
     }
-
-//    private void resetActionFlag() {
-//        Platform.runLater(() -> actionInProgress = false);
-//    }
 
     private TableColumn<NoteFx, String> col0() {
         TableColumn<NoteFx, String> col = TableColumnFx.stringTableColumn(NoteFx::formattedTimestampProperty, "Date/Time");

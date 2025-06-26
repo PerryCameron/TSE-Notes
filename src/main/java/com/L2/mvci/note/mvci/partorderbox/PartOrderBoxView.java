@@ -8,13 +8,13 @@ import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partviewer.PartViewerController;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderController;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.*;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -62,9 +62,7 @@ public class PartOrderBoxView implements Builder<Region> {
     private void setNewPartListener() {
         partOrderBoxModel.messageProperty().addListener((observable, oldValue, newValue) -> {
             switch (newValue) {
-                case NEW_PART -> {
-                    newPart();
-                }
+                case NEW_PART -> newPart();
                 case PART_EXISTS -> launchPartViewer();
             }
             action.accept(PartOrderBoxMessage.RESET_PART_LISTENER);
@@ -246,7 +244,7 @@ public class PartOrderBoxView implements Builder<Region> {
         return iconBox;
     }
 
-    public TableView<PartFx> buildTable(PartOrderFx partOrderDTO) {
+    public void buildTable(PartOrderFx partOrderDTO) {
         TableView<PartFx> tableView = partOrderBoxModel.getTableView();
         Map<String, TableColumn<PartFx, String>> map = new HashMap<>();
         tableView.setItems(partOrderDTO.getParts()); // Set the ObservableList here
@@ -274,7 +272,6 @@ public class PartOrderBoxView implements Builder<Region> {
                 noteModel.selectedPartProperty().set(newSelection);
             }
         });
-        return tableView;
     }
 
     private static void lineTypeIsShown(Map<String, TableColumn<PartFx, String>> map, boolean showType, TableView<PartFx> tableView) {
@@ -348,10 +345,9 @@ public class PartOrderBoxView implements Builder<Region> {
         col.setStyle("-fx-alignment: center");
 
         // Set a cell factory to render a button in each cell
-        col.setCellFactory(param -> new TableCell<PartFx, String>() {
-            Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/view-16.png")));
-            ImageView imageViewCopy = new ImageView(copyIcon);
-            Button button = ButtonFx.of(imageViewCopy, "invisible-button");
+        col.setCellFactory(param -> new TableCell<>() {
+            final ImageView imageViewCopy = new ImageView(ImageResources.VIEW);
+            final Button button = ButtonFx.of(imageViewCopy, "invisible-button");
 
             @Override
             protected void updateItem(String item, boolean empty) {
