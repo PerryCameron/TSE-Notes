@@ -22,16 +22,38 @@ public class ImageResources {
     public static final Image COPY_LOGGED_CALL;
     public static final Image SEARCH;
     public static final Image SAVE;
-    public static final Image TSELOGO;
+    public static final Image TSELOGO16;
+    public static final Image TSELOGO24;
+    public static final Image TSELOGO64;
     public static final Image EDIT;
     public static final Image CANCEL;
     public static final Image PERSON;
     public static final Image HELP;
     public static final Image DICTIONARY;
     public static final Image TABLE;
+    public static final Image NO_IMAGE_AVAILABLE;
+    public static final Image NOTES;
+    public static final Image GEAR;
+    public static final Image LIST;
 
     static {
         try {
+            NOTES = new Image(Objects.requireNonNull(
+                    ImageResources.class.getResourceAsStream("/images/notes-16.png"),
+                    "Failed to load resource: /images/notes-16.png"
+            ));
+            GEAR = new Image(Objects.requireNonNull(
+                    ImageResources.class.getResourceAsStream("/images/gear-16.png"),
+                    "Failed to load resource: /images/gear-16.png"
+            ));
+            LIST = new Image(Objects.requireNonNull(
+                    ImageResources.class.getResourceAsStream("/images/list-16.png"),
+                    "Failed to load resource: /images/list-16.png"
+            ));
+            NO_IMAGE_AVAILABLE = new Image(Objects.requireNonNull(
+                    ImageResources.class.getResourceAsStream("/images/no-image357x265.png"),
+                    "Failed to load resource: /images/no-image357x265.png"
+            ));
             HELP = new Image(Objects.requireNonNull(
                     ImageResources.class.getResourceAsStream("/images/help-16.png"),
                     "Failed to load resource: /images/help-16.png"
@@ -60,9 +82,17 @@ public class ImageResources {
                     ImageResources.class.getResourceAsStream("/images/save-16.png"),
                     "Failed to load resource: /images/save-16.png"
             ));
-            TSELOGO = new Image(Objects.requireNonNull(
+            TSELOGO16 = new Image(Objects.requireNonNull(
+                    ImageResources.class.getResourceAsStream("/images/TSELogo-16.png"),
+                    "Failed to load resource: /images/TSELogo-16.png"
+            ));
+            TSELOGO24 = new Image(Objects.requireNonNull(
                     ImageResources.class.getResourceAsStream("/images/TSELogo-24.png"),
                     "Failed to load resource: /images/TSELogo-24.png"
+            ));
+            TSELOGO64 = new Image(Objects.requireNonNull(
+                    ImageResources.class.getResourceAsStream("/images/TSELogo-64.png"),
+                    "Failed to load resource: /images/TSELogo-64.png"
             ));
             SEARCH = new Image(Objects.requireNonNull(
                     ImageResources.class.getResourceAsStream("/images/search-16.png"),

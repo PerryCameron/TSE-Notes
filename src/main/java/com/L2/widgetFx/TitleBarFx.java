@@ -1,5 +1,6 @@
 package com.L2.widgetFx;
 
+import com.L2.static_tools.ImageResources;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,8 +17,7 @@ public class TitleBarFx {
         Label label = LabelFx.of(boxInfo[0]);
         label.setPadding(new Insets(0, 0, 0, 5));
         HBox iconBox = HBoxFx.iconBox(10);
-        Image copyIcon = new Image(Objects.requireNonNull(TitleBarFx.class.getResourceAsStream("/images/copy-16.png")));
-        ImageView imageViewCopy = new ImageView(copyIcon);
+        ImageView imageViewCopy = new ImageView(ImageResources.COPY);
         Button copyButton = ButtonFx.of(imageViewCopy, "invisible-button");
         copyButton.setTooltip(ToolTipFx.of(boxInfo[1]));
         copyButton.setOnAction(e -> {

@@ -1,6 +1,7 @@
 package com.L2.widgetFx;
 
 import com.L2.BaseApplication;
+import com.L2.static_tools.ImageResources;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -22,8 +23,7 @@ public class DialogueFx {
         alert.setHeaderText(header); // I would like the header to be a larger font
         alert.setContentText(message);
         alert.setTitle("");
-        Image image = new Image(Objects.requireNonNull(DialogueFx.class.getResourceAsStream("/images/TSELogo-64.png")));
-        ImageView imageView = new ImageView(image);
+        ImageView imageView = new ImageView(ImageResources.TSELOGO64);
         imageView.setFitHeight(64); // Adjust the height as needed
         imageView.setFitWidth(64);  // Adjust the width as needed
         alert.setGraphic(imageView);
@@ -45,8 +45,7 @@ public class DialogueFx {
         alert.setHeaderText("Cloning Options");
         alert.setContentText("Do you want to also clone the parts?");
 
-        Image image = new Image(Objects.requireNonNull(DialogueFx.class.getResourceAsStream("/images/TSELogo-64.png")));
-        ImageView imageView = new ImageView(image);
+        ImageView imageView = new ImageView(ImageResources.TSELOGO64);
         imageView.setFitHeight(64); // Adjust the height as needed
         imageView.setFitWidth(64);  // Adjust the width as needed
         alert.setGraphic(imageView);
@@ -112,9 +111,7 @@ public class DialogueFx {
         Stage alertStage = (Stage) dialogPane.getScene().getWindow();
         try {
             // Load icon from resources (adjust path as needed)
-            Image icon = new Image(Objects.requireNonNull(
-                    DialogueFx.class.getResourceAsStream("/images/TSELogo-16.png")));
-            alertStage.getIcons().add(icon);
+            alertStage.getIcons().add(ImageResources.TSELOGO16);
         } catch (Exception e) {
             logger.error("Failed to load icon: {}", e.getMessage());
         }

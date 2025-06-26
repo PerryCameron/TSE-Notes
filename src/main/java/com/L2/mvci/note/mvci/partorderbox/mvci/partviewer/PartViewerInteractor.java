@@ -2,6 +2,7 @@ package com.L2.mvci.note.mvci.partorderbox.mvci.partviewer;
 
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderInteractor;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
@@ -35,7 +36,7 @@ public class PartViewerInteractor {
                     return new Image(new ByteArrayInputStream(imageAsByte));
                 } else {
                     // Load fallback image
-                    return new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/no-image357x265.png")));
+                    return ImageResources.NO_IMAGE_AVAILABLE;
                 }
             }
         };
@@ -48,8 +49,7 @@ public class PartViewerInteractor {
             // Handle errors on the FX thread
             logger.debug("Error in getImage: {}", loadImageTask.getException().getMessage(), loadImageTask.getException());
             // Optionally set fallback image on error
-            Image fallbackImage = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/no-image357x265.png")));
-            partViewerModel.getImageView().setImage(fallbackImage);
+            partViewerModel.getImageView().setImage(ImageResources.NO_IMAGE_AVAILABLE);
         });
         // Start the task on a background thread
         executorService.submit(loadImageTask);

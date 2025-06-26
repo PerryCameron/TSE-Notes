@@ -8,6 +8,7 @@ import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.notelist.NoteListController;
 import com.L2.mvci.notelist.NoteListMessage;
 import com.L2.mvci.settings.SettingsController;
+import com.L2.static_tools.ImageResources;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -63,8 +64,6 @@ public class MainController extends Controller<MainMessage> {
             case REFRESH_PART_ORDERS -> noteController.action(NoteMessage.REFRESH_PART_ORDERS);
             case CLONE_NOTE -> noteController.action(NoteMessage.CLONE_NOTE);
             case REFRESH_ENTITLEMENT_COMBO_BOX -> noteController.action(NoteMessage.REFRESH_ENTITLEMENT_COMBO_BOX);
-//            case CREATE_DATABASE -> mainInteractor.createDataBase();
-//            case CHECK_FOR_DATABASE -> mainInteractor.checkForDataBase();
             case SHOW_LOG -> mainInteractor.showLog();
             case ENABLE_NEXT_BUTTON -> mainInteractor.disableNextButton(false);
             case DISABLE_NEXT_BUTTON -> mainInteractor.disableNextButton(true);
@@ -106,17 +105,17 @@ public class MainController extends Controller<MainMessage> {
 
     private void openNoteTab() {
         noteController = new NoteController(this);
-        mainView.addNewTab("Note", noteController.getView(), false,"/images/notes-16.png");
+        mainView.addNewTab("Note", noteController.getView(), false, ImageResources.NOTES);
     }
 
     private void openSettingsTab() {
         settingsController = new SettingsController(this);
-        mainView.addNewTab("Settings", settingsController.getView(), true,"/images/gear-16.png");
+        mainView.addNewTab("Settings", settingsController.getView(), true, ImageResources.GEAR);
     }
 
     private void openNoteListTab() {
         noteListController = new NoteListController(this);
-        mainView.addNewTab("Notes", noteListController.getView(), false,"/images/list-16.png");
+        mainView.addNewTab("Notes", noteListController.getView(), false, ImageResources.LIST);
     }
 
     public NoteController getNoteController() {

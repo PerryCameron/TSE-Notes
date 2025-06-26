@@ -5,6 +5,7 @@ import atlantafx.base.theme.Styles;
 import com.L2.BaseApplication;
 import com.L2.mvci.main.MainMessage;
 import com.L2.mvci.main.MainView;
+import com.L2.static_tools.ImageResources;
 import com.L2.static_tools.VersionUtil;
 import com.L2.widgetFx.DialogueFx;
 import com.L2.widgetFx.MenuFx;
@@ -16,7 +17,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -48,7 +48,7 @@ public class TitleBar implements Builder<Region> {
         hbox.setMinHeight(40);
 
         // Load the image
-        ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/TSELogo-24.png")));
+        ImageView imageView = new ImageView(ImageResources.TSELOGO24);
         imageView.setFitHeight(24);
         imageView.setFitWidth(24);
 

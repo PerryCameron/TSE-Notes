@@ -4,6 +4,7 @@ import com.L2.dto.UpdatedByDTO;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.enums.SaveType;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.DialogueFx;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -244,7 +245,7 @@ public class PartFinderInteractor {
                     return new Image(new ByteArrayInputStream(imageAsByte));
                 } else {
                     // Load fallback image
-                    return new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/no-image357x265.png")));
+                    return ImageResources.NO_IMAGE_AVAILABLE;
                 }
             }
         };
@@ -257,8 +258,7 @@ public class PartFinderInteractor {
             // Handle errors on the FX thread
                 logger.debug("Error in getImage: {}", loadImageTask.getException().getMessage(), loadImageTask.getException());
                 // Optionally set fallback image on error
-                Image fallbackImage = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream("/images/no-image357x265.png")));
-                partModel.getImageView().setImage(fallbackImage);
+                partModel.getImageView().setImage(ImageResources.NO_IMAGE_AVAILABLE);
         });
         // Start the task on a background thread
         executorService.submit(loadImageTask);

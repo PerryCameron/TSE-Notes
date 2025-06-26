@@ -15,7 +15,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public class MainView implements Builder<Region> {
@@ -90,13 +89,10 @@ public class MainView implements Builder<Region> {
         action.accept(MainMessage.UPDATE_STATUSBAR_WITH_STRING);
     }
 
-    protected void addNewTab(String name, Region region, boolean closeable, String image) {
+    protected void addNewTab(String name, Region region, boolean closeable, Image image) {
         Tab newTab = new Tab(name, region);
-        if (!image.isEmpty()) {
-            Image copyIcon = new Image(Objects.requireNonNull(ButtonFx.class.getResourceAsStream(image)));
-            ImageView imageViewCopy = new ImageView(copyIcon);
-            newTab.setGraphic(imageViewCopy);
-        }
+        ImageView imageViewCopy = new ImageView(image);
+        newTab.setGraphic(imageViewCopy);
         if (name.equals("Note")) mainModel.noteTabProperty().set(newTab);
         newTab.setClosable(closeable);
         mainModel.mainTabPaneProperty().get().getTabs().add(newTab);

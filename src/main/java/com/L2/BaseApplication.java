@@ -70,7 +70,7 @@ public class BaseApplication extends Application {
         primaryStage.setScene(new Scene(new MainController().getView()));
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         primaryStage.getScene().getStylesheets().add("css/light.css");
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/TSELogo-64.png")));
+        primaryStage.getIcons().add(ImageResources.TSELOGO64);
         // Mouse pressed for dragging the window
         primaryStage.initStyle(StageStyle.UNDECORATED);
         WindowUtils.addResizeListeners(primaryStage);

@@ -1,5 +1,6 @@
 package com.L2.widgetFx;
 
+import com.L2.static_tools.ImageResources;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -30,14 +31,11 @@ public class LabelFx {
     }
 
     public static Node titledGraphicBoolean(String title, boolean value) {
-        String[] imageName = {"/images/yes-16.png","/images/no-16.png"};
-        int selection = 0;
-        if(value) selection = 1;
+        Image image = value ? ImageResources.NO : ImageResources.YES;
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_LEFT);
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add("semi-prominent-label");
-        Image image = new Image(Objects.requireNonNull(DialogueFx.class.getResourceAsStream(imageName[selection])));
         hbox.getChildren().addAll(titleLabel, new ImageView(image));
         return hbox;
     }
