@@ -43,7 +43,6 @@ public class PartInfo implements Builder<Pane> {
             System.out.println("No updated by");
             vBox.getChildren().add(new Label("No updated by"));
         }
-        partView.getPartModel().getUpdatedByDTOs().clear();
     }
 
     public void refresh() {

@@ -60,7 +60,6 @@ public class PartFinderView implements Builder<Alert> {
         noteModel.numberInRangeProperty().addListener(rangeNumber -> partModel.getRangeNumberLabel()
                 .setText("Spares in range: " + noteModel.numberInRangeProperty().get()));
         noteView.getAction().accept(NoteMessage.UPDATE_RANGE_COUNT);
-        System.out.println("Sent GET_UPDATE_BY_INFORMATION ");
         if (noteModel.selectedRangeProperty().get() != null)
             return partModel.getAlert();
         else return null;
@@ -124,7 +123,7 @@ public class PartFinderView implements Builder<Alert> {
 
     private Node cancelBox() {
         partModel.setCancelHbox(new VBox());
-        partModel.setCancelButton(new Button("Cancel"));
+        partModel.setCancelButton(new Button("Close"));
         partModel.getCancelHbox().setAlignment(Pos.CENTER_RIGHT);
         partModel.getCancelHbox().getChildren().add(partModel.getCancelButton());
         partModel.getCancelButton().setOnAction(e -> cleanAlertClose());
@@ -170,7 +169,11 @@ public class PartFinderView implements Builder<Alert> {
         HBox searchHbox = new HBox();
         HBox.setHgrow(searchHbox, Priority.ALWAYS); // Spacer grows to push buttons right
         searchHbox.setAlignment(Pos.CENTER_RIGHT);
-        searchHbox.getChildren().addAll(partModel.getRangeNumberLabel(), searchButton());
+        Button testButton = new Button("Test");
+        testButton.setOnAction(event -> {
+            action.accept(PartFinderMessage.TEST_SOME_SHIT);
+        });
+        searchHbox.getChildren().addAll(partModel.getRangeNumberLabel(), testButton, searchButton());
         return searchHbox;
     }
 
@@ -295,7 +298,6 @@ public class PartFinderView implements Builder<Alert> {
     private void setSelectedChangeListener() {
         partModel.getSparesTableView().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-//                System.out.println("---- " + newSelection + " ----");
                 // updates our selected spare to match selected
                 partModel.selectedSpareProperty().set(newSelection);
                 // updates treeView for product families and ranges

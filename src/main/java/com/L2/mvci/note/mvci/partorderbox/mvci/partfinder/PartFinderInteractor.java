@@ -324,6 +324,7 @@ public class PartFinderInteractor {
         }
         // Check if user exists
         if (partModel.getNoteModel().userProperty().get() == null) {
+            System.out.println("No user, exiting.");
             return;
         }
         // Get current user and timestamp
@@ -350,14 +351,19 @@ public class PartFinderInteractor {
                     // Check if the last update was within 24 hours
                     long hoursSinceLastUpdate = ChronoUnit.HOURS.between(lastUpdateTime, now);
                     if (hoursSinceLastUpdate < 24) {
-                        // Update the timestamp of the existing entry
+                        // Update the timestamp and append saveType.name() to changeMade
                         entry.setUpdatedDateTime(currentTimestamp);
+                        String currentChange = entry.getChangeMade();
+                        if (currentChange == null || currentChange.isEmpty()) {
+                            entry.setChangeMade(saveType.name());
+                        } else {
+                            entry.setChangeMade(currentChange + ", " + saveType.name());
+                        }
                         foundRecentEntry = true;
                         break;
                     }
                 } catch (Exception e) {
-                    logger.error("Error parsing timestamp: {}", entry.getUpdatedDateTime());
-                    // Continue to check other entries or add a new one if parsing fails
+                    logger.error("Error parsing timestamp: {}", entry.getUpdatedDateTime(), e);
                 }
             }
         }
@@ -372,7 +378,7 @@ public class PartFinderInteractor {
         // Serialize the list to JSON
         try {
             ObjectMapper mapper = partModel.getObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT); // Optional: for readable JSON
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
             String updatedJson = mapper.writeValueAsString(updatedByDTOs);
             // Set JSON to SparesDTO's lastUpdatedBy field
             Platform.runLater(() -> {
@@ -380,14 +386,22 @@ public class PartFinderInteractor {
             });
             logger.info("Added JSON: {}", updatedJson);
         } catch (Exception e) {
-            logger.error("Error serializing UpdatedByDTOs: {}", e.getMessage());
+            logger.error("Error serializing UpdatedByDTOs: {}", e.getMessage(), e);
         }
     }
 
     public void refreshPartInfo() {
+        // clear the old ones first
+        partModel.getUpdatedByDTOs().clear();
         // updates editing data (person - timestamp)
         getUpdatedByToPOJO();
         // triggers view refresh
         partModel.refreshPartInfo();
+    }
+
+    public void testSomeShit() {
+        List<UpdatedByDTO> updatedByDTOs = partModel.getUpdatedByDTOs();
+        System.out.println("UpdatedByDTOs size: " + updatedByDTOs.size());
+        updatedByDTOs.forEach(System.out::println);
     }
 }
