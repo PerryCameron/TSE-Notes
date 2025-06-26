@@ -4,6 +4,7 @@ import com.L2.dto.NoteFx;
 import com.L2.interfaces.Component;
 import com.L2.mvci.notelist.NoteListMessage;
 import com.L2.mvci.notelist.NoteListView;
+import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.TableColumnFx;
 import com.L2.widgetFx.TableViewFx;
 import javafx.application.Platform;
@@ -162,7 +163,7 @@ public class NotesTable implements Component<Region> {
             @Override
             public TableCell<NoteFx, Boolean> call(TableColumn<NoteFx, Boolean> param) {
                 return new TableCell<>() {
-                    private final ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/mail-16.png")));
+                    private final ImageView imageView = new ImageView(ImageResources.MAIL);
 
                     @Override
                     protected void updateItem(Boolean isEmail, boolean empty) {
