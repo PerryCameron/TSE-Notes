@@ -23,17 +23,17 @@ public class PartInfo implements Builder<Pane> {
     public Pane build() {
         this.vBox = new VBox();
 //        vBox.getChildren().add(new Label("Part is in catalogue: " + partView.getPartModel().selectedSpareProperty().get().getArchived()));
-        System.out.println(partView.getPartModel().selectedSpareProperty().get());
+        System.out.println(partView.getPartFinderModel().selectedSpareProperty().get());
         addEditHistory();
-        partView.getPartModel().refreshPartInfoProperty().addListener((observable, oldValue, newValue) -> {
+        partView.getPartFinderModel().refreshPartInfoProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue) refresh();
         });
         return vBox;
     }
 
     public void addEditHistory() {
-        List<UpdatedByDTO> dtoList = partView.getPartModel().getUpdatedByDTOs();
-        if(!partView.getPartModel().getUpdatedByDTOs().isEmpty()) {
+        List<UpdatedByDTO> dtoList = partView.getPartFinderModel().getUpdatedByDTOs();
+        if(!partView.getPartFinderModel().getUpdatedByDTOs().isEmpty()) {
             System.out.println("list size is " + dtoList.size());
             for (UpdatedByDTO dto : dtoList) {
                 String changes = dto.getChangeMade() == null ? "" : " Changes: " + dto.getChangeMade();

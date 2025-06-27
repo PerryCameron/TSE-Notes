@@ -26,7 +26,7 @@ public class PartKeyWords implements Builder<Pane> {
     private Button modifyButton;
 
     public PartKeyWords(PartFinderView partView) {
-        this.partModel = partView.getPartModel();
+        this.partModel = partView.getPartFinderModel();
         this.action = partView.getAction();
     }
 

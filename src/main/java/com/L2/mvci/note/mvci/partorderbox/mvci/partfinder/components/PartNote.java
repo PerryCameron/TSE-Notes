@@ -26,7 +26,7 @@ public class PartNote implements Builder<Pane> {
     private Button modifyButton;
 
     public PartNote(PartFinderView partView) {
-        this.partModel = partView.getPartModel();
+        this.partModel = partView.getPartFinderModel();
         this.action = partView.getAction();
     }
 

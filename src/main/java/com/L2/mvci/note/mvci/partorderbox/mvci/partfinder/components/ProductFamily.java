@@ -38,7 +38,7 @@ public class ProductFamily implements Builder<Pane> {
 
     public ProductFamily(PartFinderView partView) {
         this.partView = partView;
-        this.partFinderModel = partView.getPartModel();
+        this.partFinderModel = partView.getPartFinderModel();
     }
 
     @Override

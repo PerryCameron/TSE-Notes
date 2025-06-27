@@ -33,10 +33,10 @@ public class PartPhoto implements Builder<Pane> {
         hBox.setSpacing(10);
         hBox.setAlignment(Pos.CENTER);
         // ImageView to display the spare's image
-        partView.getPartModel().setImageView(new ImageView());
-        partView.getPartModel().getImageView().setFitWidth(357); // Match target width
-        partView.getPartModel().getImageView().setFitHeight(265); // Match target height
-        partView.getPartModel().getImageView().setPreserveRatio(true);
+        partView.getPartFinderModel().setImageView(new ImageView());
+        partView.getPartFinderModel().getImageView().setFitWidth(357); // Match target width
+        partView.getPartFinderModel().getImageView().setFitHeight(265); // Match target height
+        partView.getPartFinderModel().getImageView().setPreserveRatio(true);
         // Button to save clipboard image
 
         Button pasteButton = ButtonFx.utilityButton(ImageResources.PASTE, "Paste Clipboard Image", 200);
@@ -45,8 +45,8 @@ public class PartPhoto implements Builder<Pane> {
         // Load initial image for the selected spare
         loadImageForSelectedSpare();
         // Listen for changes to the selected spare
-        partView.getPartModel().selectedSpareProperty().addListener((obs, oldSpare, newSpare) -> loadImageForSelectedSpare());
-        imageContainer.getChildren().addAll(partView.getPartModel().getImageView());
+        partView.getPartFinderModel().selectedSpareProperty().addListener((obs, oldSpare, newSpare) -> loadImageForSelectedSpare());
+        imageContainer.getChildren().addAll(partView.getPartFinderModel().getImageView());
         buttonContainer.getChildren().add(pasteButton);
         // Add components to HBox
         hBox.getChildren().addAll(imageContainer, buttonContainer);

@@ -14,11 +14,14 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Dialog;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
 public class MainController extends Controller<MainMessage> {
@@ -121,7 +124,8 @@ public class MainController extends Controller<MainMessage> {
     }
 
     private void openChangeSetAlert() {
-        new ChangeController(this).getView();
+        Optional<Alert> alert = Optional.ofNullable(new ChangeController(this).getView());
+        alert.ifPresent(Dialog::showAndWait);
     }
 
     public NoteController getNoteController() {
