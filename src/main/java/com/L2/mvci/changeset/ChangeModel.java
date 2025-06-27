@@ -1,18 +1,21 @@
 package com.L2.mvci.changeset;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import com.L2.dto.UpdatedByDTO;
+import com.L2.dto.UserDTO;
+import javafx.beans.property.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChangeModel {
     private final Alert alert = new Alert(Alert.AlertType.NONE);
     private final DialogPane dialogPane = new DialogPane();
     private final BooleanProperty includeAll = new SimpleBooleanProperty(false);
     private final IntegerProperty numberOfDays = new SimpleIntegerProperty(0);
-
+    private final ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
+    private final List<UpdatedByDTO> updatedBys = new ArrayList<>();
 
 
     public Alert getAlert() {
@@ -37,5 +40,17 @@ public class ChangeModel {
 
     public IntegerProperty numberOfDaysProperty() {
         return numberOfDays;
+    }
+
+    public UserDTO getUser() {
+        return user.get();
+    }
+
+    public ObjectProperty<UserDTO> userProperty() {
+        return user;
+    }
+
+    public List<UpdatedByDTO> getUpdatedBys() {
+        return updatedBys;
     }
 }

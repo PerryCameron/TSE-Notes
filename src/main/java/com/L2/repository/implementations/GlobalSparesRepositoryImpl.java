@@ -3,6 +3,7 @@ package com.L2.repository.implementations;
 import com.L2.dto.global_spares.*;
 import com.L2.repository.interfaces.GlobalSparesRepository;
 import com.L2.repository.rowmappers.RangesRowMapper;
+import com.L2.repository.rowmappers.SparePictureRowMapper;
 import com.L2.repository.rowmappers.SparesRowMapper;
 import com.L2.static_tools.DatabaseConnector;
 import com.L2.static_tools.NoteTools;
@@ -607,6 +608,28 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
         } catch (Exception e) {
             logger.error("Error querying spares updated within {} days", days, e);
             throw new RuntimeException("Failed to retrieve spares: " + e.getMessage(), e);
+        }
+    }
+
+    public Optional<SparePictureDTO> findSparePictureByName(String spareName) {
+        String sql = """
+            SELECT
+                id,
+                spare_name,
+                picture
+            FROM spare_pictures
+            WHERE spare_name = ?
+            """;
+        try {
+            SparePictureDTO sparePicture = jdbcTemplate.queryForObject(
+                    sql,
+                    new SparePictureRowMapper(),
+                    spareName
+            );
+            return Optional.ofNullable(sparePicture);
+        } catch (Exception e) {
+            logger.error("Error querying spare picture for spare_name: {}", spareName, e);
+            return Optional.empty();
         }
     }
 }

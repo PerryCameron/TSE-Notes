@@ -1,5 +1,6 @@
 package com.L2.repository.implementations;
 
+import com.L2.dto.global_spares.SparePictureDTO;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.repository.interfaces.ChangeSetRepository;
 import com.L2.static_tools.DatabaseConnector;
@@ -52,6 +53,29 @@ public class ChangeSetRepositoryImpl implements ChangeSetRepository {
         } catch (Exception e) {
             logger.error("Error inserting spare: {}", e.getMessage());
             return 0;
+        }
+    }
+
+    @Override
+    public void insertSparePicture(SparePictureDTO sparePicture) {
+        if (sparePicture == null || sparePicture.getSpareName() == null || sparePicture.getPicture() == null) {
+            throw new IllegalArgumentException("SparePicture and its fields (spareName, picture) must not be null");
+        }
+
+        String sql = """
+            INSERT INTO spare_pictures (spare_name, picture)
+            VALUES (?, ?)
+            """;
+
+        try {
+            jdbcTemplate.update(sql,
+                    sparePicture.getSpareName(),
+                    sparePicture.getPicture()
+            );
+            logger.info("Inserted spare picture for spare_name: {}", sparePicture.getSpareName());
+        } catch (Exception e) {
+            logger.error("Error inserting spare picture for spare_name: {}", sparePicture.getSpareName(), e);
+            throw new RuntimeException("Failed to insert spare picture: " + e.getMessage(), e);
         }
     }
 

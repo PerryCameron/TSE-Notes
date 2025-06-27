@@ -8,16 +8,23 @@ public class ChangeController extends AlertController<ChangeMessage> {
 
     private final ChangeView changeView;
     private final ChangeInteractor changeInteractor;
+    private final MainController mainController;
 
     public ChangeController(MainController mainController) {
         ChangeModel changeModel = new ChangeModel();
         changeInteractor = new ChangeInteractor(changeModel);
         changeView = new ChangeView(changeModel, this::action);
+        this.mainController = mainController;
+        setUser();
     }
 
     @Override
     public Alert getView() {
         return changeView.build();
+    }
+
+    public void setUser() {
+        changeInteractor.setUser(mainController.getNoteController().getUser());
     }
 
     @Override
