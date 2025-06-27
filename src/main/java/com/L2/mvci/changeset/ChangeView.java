@@ -1,5 +1,6 @@
 package com.L2.mvci.changeset;
 
+import com.L2.widgetFx.DialogueFx;
 import javafx.scene.control.Alert;
 import javafx.util.Builder;
 
@@ -17,6 +18,7 @@ public class ChangeView implements Builder<Alert> {
 
     @Override
     public Alert build() {
-        return null;
+
+        return DialogueFx.errorAlert("This is a test", "because it is easy");
     }
 }

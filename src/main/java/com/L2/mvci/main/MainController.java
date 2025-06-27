@@ -3,6 +3,7 @@ package com.L2.mvci.main;
 import com.L2.dto.NoteFx;
 import com.L2.dto.UserDTO;
 import com.L2.interfaces.Controller;
+import com.L2.mvci.changeset.ChangeController;
 import com.L2.mvci.note.NoteController;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.notelist.NoteListController;
@@ -74,6 +75,7 @@ public class MainController extends Controller<MainMessage> {
             case PRINT_PARTS -> noteController.printPartsTableView();
             case PRINT_PRODUCT_FAMILIES -> printProductFamilies();
             case SHUTDOWN_EXECUTOR_SERVICE -> mainInteractor.shutDownExecutorService();
+            case LAUNCH_CHANGE_SET_ALERT -> openChangeSetAlert();
         }
     }
 
@@ -116,6 +118,10 @@ public class MainController extends Controller<MainMessage> {
     private void openNoteListTab() {
         noteListController = new NoteListController(this);
         mainView.addNewTab("Notes", noteListController.getView(), false, ImageResources.LIST);
+    }
+
+    private void openChangeSetAlert() {
+        new ChangeController(this).getView();
     }
 
     public NoteController getNoteController() {

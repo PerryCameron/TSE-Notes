@@ -1,22 +1,22 @@
 package com.L2.mvci.changeset;
 
-import com.L2.interfaces.Controller;
-import javafx.scene.layout.Region;
+import com.L2.interfaces.AlertController;
+import com.L2.mvci.main.MainController;
+import javafx.scene.control.Alert;
 
-public class ChangeController extends Controller<ChangeMessage> {
+public class ChangeController extends AlertController<ChangeMessage> {
 
     private final ChangeView changeView;
 
-    public ChangeController() {
+    public ChangeController(MainController mainController) {
         ChangeModel changeModel = new ChangeModel();
         ChangeInteractor changeInteractor = new ChangeInteractor(changeModel);
         changeView = new ChangeView(changeModel, this::action);
-
     }
 
     @Override
-    public Region getView() {
-        return null;
+    public Alert getView() {
+        return changeView.build();
     }
 
     @Override
