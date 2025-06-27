@@ -16,6 +16,7 @@ public interface ApplicationPaths {
     Path preferredDbDirectory = homeDir.resolve("OneDrive - Schneider Electric\\TSENotes");
     Path backupDir = Paths.get(secondaryDbDirectory.toString(), "backup");
     Path globalSparesDir = Paths.get(secondaryDbDirectory.toString(), "global_spares");
+    Path changeSetDir = Paths.get(System.getProperty("user.home") + "\\TSENotes", "change_sets");
     // this will be where we store attachments
     Path fileDirectory = homeDir.resolve("OneDrive - Schneider Electric\\TSENotes\\files");
 

@@ -7,10 +7,11 @@ import javafx.scene.control.Alert;
 public class ChangeController extends AlertController<ChangeMessage> {
 
     private final ChangeView changeView;
+    private final ChangeInteractor changeInteractor;
 
     public ChangeController(MainController mainController) {
         ChangeModel changeModel = new ChangeModel();
-        ChangeInteractor changeInteractor = new ChangeInteractor(changeModel);
+        changeInteractor = new ChangeInteractor(changeModel);
         changeView = new ChangeView(changeModel, this::action);
     }
 
@@ -21,6 +22,9 @@ public class ChangeController extends AlertController<ChangeMessage> {
 
     @Override
     public void action(ChangeMessage message) {
+        switch (message) {
+            case CREATE_CHANGESET -> changeInteractor.createChangeSet();
+        }
 
     }
 }

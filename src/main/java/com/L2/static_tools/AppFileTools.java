@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -24,6 +25,23 @@ public class AppFileTools {
             } catch (IOException e) {
                 logger.error(e.getMessage());
                 throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void clearDirectory(Path dir) throws IOException {
+        // Check if the path exists and is a directory
+        if (!Files.exists(dir) || !Files.isDirectory(dir)) {
+            throw new IllegalArgumentException("Path does not exist or is not a directory: " + dir);
+        }
+
+        // Iterate over directory contents and delete files
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+            for (Path entry : stream) {
+                if (Files.isRegularFile(entry)) {
+                    Files.delete(entry);
+                    logger.info("file deleted: {}", entry);
+                }
             }
         }
     }

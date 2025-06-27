@@ -17,4 +17,6 @@ public interface GlobalSparesRepository {
     SparesDTO findBySpareItem(String spareItem);
 
     int insertSpare(SparesDTO sparesDTO);
+
+    List<SparesDTO> findSparesUpdatedWithinDays(int days);
 }

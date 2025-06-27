@@ -19,6 +19,7 @@ public class ChangeView implements Builder<Alert> {
 
     public ChangeView(ChangeModel changeModel, Consumer<ChangeMessage> action) {
         this.changeModel = changeModel;
+        this.action = action;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class ChangeView implements Builder<Alert> {
         vBox.setPadding(new Insets(10)); // Add padding around VBox
         // Create and configure the ComboBox (1-30 days)
         ComboBox<Integer> daysComboBox = new ComboBox<>();
-        for (int i = 1; i <= 30; i++) {
+        for (int i = 1; i <= 60; i++) {
             daysComboBox.getItems().add(i);
         }
         daysComboBox.setValue(7); // Default to 7 days
@@ -58,11 +59,9 @@ public class ChangeView implements Builder<Alert> {
         // Create Button for changeset creation
         Button createChangeSetButton = new Button("Create Changeset");
         createChangeSetButton.setOnAction(event -> {
-            int days = daysComboBox.getValue() != null ? daysComboBox.getValue() : 7;
-            boolean includeAll = includeAllCheckBox.isSelected();
-            // Placeholder for changeset creation logic
-            System.out.println("Creating changeset for " + days + " days, include all: " + includeAll);
-            // Add your changeset creation logic here, e.g., call a method with days and includeAll
+            changeModel.numberOfDaysProperty().set(daysComboBox.getValue() != null ? daysComboBox.getValue() : 7);
+            changeModel.includeAllProperty().set(includeAllCheckBox.isSelected());
+            action.accept(ChangeMessage.CREATE_CHANGESET);
         });
         // Add all components to VBox
         vBox.getChildren().addAll(daysLabel, daysComboBox, includeAllCheckBox, createChangeSetButton);

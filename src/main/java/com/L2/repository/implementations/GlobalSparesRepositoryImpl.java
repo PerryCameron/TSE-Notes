@@ -569,4 +569,44 @@ public class GlobalSparesRepositoryImpl implements GlobalSparesRepository {
             return 0;
         }
     }
+
+    @Override
+    public List<SparesDTO> findSparesUpdatedWithinDays(int days) {
+        String sql = """
+            SELECT
+                id,
+                pim,
+                spare_item,
+                replacement_item,
+                standard_exchange_item,
+                spare_description,
+                catalogue_version,
+                end_of_service_date,
+                last_update,
+                added_to_catalogue,
+                removed_from_catalogue,
+                comments,
+                keywords,
+                archived,
+                custom_add,
+                last_updated_by
+            FROM spares
+            WHERE
+                last_update IS NOT NULL
+                AND last_update LIKE '% UTC'
+                AND DATETIME(SUBSTR(last_update, 1, 19)) >= DATETIME('now', '-' || ? || ' days')
+            ORDER BY
+                CASE
+                    WHEN last_update LIKE '% UTC' THEN DATETIME(SUBSTR(last_update, 1, 19))
+                    ELSE DATE(last_update)
+                END DESC
+            """;
+
+        try {
+            return jdbcTemplate.query(sql, new SparesRowMapper(), days);
+        } catch (Exception e) {
+            logger.error("Error querying spares updated within {} days", days, e);
+            throw new RuntimeException("Failed to retrieve spares: " + e.getMessage(), e);
+        }
+    }
 }

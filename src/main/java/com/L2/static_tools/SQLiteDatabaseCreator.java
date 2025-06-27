@@ -18,7 +18,7 @@ public class SQLiteDatabaseCreator {
     }
 
     public static void createDataBase(String databaseName) {
-    Path path = AppFileTools.getDbPath();
+        Path path = AppFileTools.getDbPath();
         logger.info("Creating database...{}", path.toString());
         String url = "jdbc:sqlite:" + BaseApplication.dataBaseLocation.resolve(databaseName);
 
@@ -71,7 +71,7 @@ public class SQLiteDatabaseCreator {
                     orderNumber TEXT,
                     showType INTEGER NOT NULL CHECK (showType IN (0, 1)) -- Boolean: 0 = false, 1 = true
                 );
-
+                
                 CREATE TABLE IF NOT EXISTS Parts (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     partOrderId INTEGER NOT NULL REFERENCES PartOrders,
@@ -237,6 +237,52 @@ public class SQLiteDatabaseCreator {
         }
 
         DatabaseTools.checkForDatabaseChanges();
+    }
+
+
+    public static void createChangeSetDB() {
+        logger.info("Creating change set database...");
+        String url = "jdbc:sqlite:" + ApplicationPaths.changeSetDir.resolve("change_set.sqlite");
+
+        String createTables = """
+                                            CREATE TABLE  IF NOT EXISTS spares (
+                                                    id                     INTEGER PRIMARY KEY AUTOINCREMENT,
+                                                    pim                    TEXT, -- JSON storing pim_range and pim_product_family
+                                                    spare_item             TEXT UNIQUE, -- I want no duplicates here its a key
+                                                    replacement_item       TEXT,
+                                                    standard_exchange_item TEXT,
+                                                    spare_description      TEXT,
+                                                    catalogue_version      TEXT,
+                                                    end_of_service_date    TEXT,
+                                                    last_update            TEXT,
+                                                    added_to_catalogue     TEXT,
+                                                    removed_from_catalogue TEXT,
+                                                    comments               TEXT,
+                                                    keywords               TEXT,
+                                                    archived               INTEGER NOT NULL,
+                                                    custom_add             INTEGER NOT NULL,
+                                                    last_updated_by        TEXT,
+                                                    CHECK (archived IN (0, 1)),
+                                                    CHECK (custom_add IN (0, 1))
+                                            );
+                                                
+                                            CREATE TABLE spare_pictures (
+                                                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                                    spare_name TEXT NOT NULL UNIQUE,
+                                                    picture BLOB NOT NULL,
+                                                    FOREIGN KEY (spare_name) REFERENCES spares(spare_item) ON DELETE CASCADE
+                                            );
+                """;
+        try (Connection conn = DriverManager.getConnection(url);
+             Statement stmt = conn.createStatement()) {
+
+            // Create tables
+            stmt.executeUpdate(createTables);
+            logger.info("Change Set Tables created successfully.");
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
     }
 }
 
