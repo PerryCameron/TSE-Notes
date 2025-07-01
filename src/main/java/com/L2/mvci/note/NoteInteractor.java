@@ -265,7 +265,6 @@ public class NoteInteractor {
     }
 
     private void updateSpans(AreaType areaType, StyleSpans<Collection<String>> spans) {
-        logger.info("I am testing what thread this is on");
             switch (areaType) {
                 case subject -> {
                     noteModel.subjectAreaProperty().get().setStyleSpans(0, spans);

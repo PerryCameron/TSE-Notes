@@ -63,7 +63,6 @@ public class ProductFamily implements Builder<Pane> {
         this.saveButton = ButtonFx.utilityButton(ImageResources.SAVE, "Save Changes", 150);
         this.deleteButton = ButtonFx.utilityButton(ImageResources.DELETE, "Delete Item", 150);
         this.cancelButton = ButtonFx.utilityButton(ImageResources.CANCEL, "Cancel Edit", 150);
-//        this.testButton = ButtonFx.utilityButton("/images/person-16.png", "view DTO's", 150);
 
         editButton.setOnAction(event -> partFinderModel.getTreeView().editableProperty().set(true));
         addRange.setOnAction(event -> addNewRange());
@@ -71,28 +70,31 @@ public class ProductFamily implements Builder<Pane> {
         deleteButton.setOnAction(event -> markForDeletion());
         saveButton.setOnAction(event -> saveChanges());
         cancelButton.setOnAction(event -> cancelEdit());
-//        testButton.setOnAction(event -> test());
 
         // we use the editable property in treeView to make an (edit mode)
         setModeListener();
 
         partFinderModel.getTreeView().getSelectionModel().selectedItemProperty().addListener((obs, oldItem, newItem) -> {
-            if (newItem != null) {
+            if (newItem != null && partFinderModel.getTreeView().editableProperty().get()) {
+                System.out.println("selected Item property " + newItem);
                 if (partFinderModel.getTreeView().editableProperty().get())
-                    setBySelection();
+                    System.out.println("setBySelection called from selected item property");
+                setBySelection();
                 String displayText = getDisplayText(newItem);
                 logger.debug("Selected node: {} Depth: {}", displayText, getTreeItemDepth(newItem));
             }
         });
 
-        partFinderModel.updatedRangeProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && newValue) {
-                partFinderModel.getTreeView().editableProperty().set(false);
-                partFinderModel.updatedRangeProperty().set(false);
-                setBySelection();
-            }
-        });
+//        partFinderModel.updatedRangeProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue != null && newValue) {
+//                partFinderModel.getTreeView().editableProperty().set(false);
+//                partFinderModel.updatedRangeProperty().set(false);
+//                System.out.println("setBySelection called from rangeProperty listener");
+//                setBySelection();
+//            }
+//        });
 
+        System.out.println("visibility 5");
         setButtonVisibility(false, false, false, false);
         partFinderModel.getTreeView().setEditable(false);
         ButtonFx.buttonVisible(saveButton, false); // I should not need this
@@ -108,11 +110,14 @@ public class ProductFamily implements Builder<Pane> {
     private void setModeListener() {
         partFinderModel.getTreeView().editableProperty().addListener((observable, oldValue, editMode) -> {
             if (editMode) {
+                System.out.println("editMode");
                 // we are in edit mode we don't need the edit button
                 ButtonFx.buttonVisible(editButton, false);
                 ButtonFx.buttonVisible(saveButton, true);
+                System.out.println("setBySelection called from setModeListener");
                 setBySelection();
             } else {
+                System.out.println("normalMode");
                 // we are in normal mode
                 ButtonFx.buttonVisible(editButton, true);
                 cancelEdit();
@@ -127,6 +132,7 @@ public class ProductFamily implements Builder<Pane> {
         partFinderModel.getTreeView().editableProperty().set(false);
         logger.debug("Cancelled edits and refreshed TreeView");
         ButtonFx.buttonVisible(saveButton, false);
+        System.out.println("visibility 4");
         setButtonVisibility(false, false, false, false); // why did you remove this?
     }
 
@@ -134,10 +140,12 @@ public class ProductFamily implements Builder<Pane> {
         if (partFinderModel.getTreeView().getSelectionModel().selectedItemProperty().get() == null) {
             logger.warn("None of the treeView items are selected");
             //                range, product, delete, cancel
+            System.out.println("visibility 2");
             setButtonVisibility(false, false, false, true);
             return;
         }
         int selection = getTreeItemDepth(partFinderModel.getTreeView().getSelectionModel().getSelectedItem());
+        System.out.println("visibility 3");
         switch (selection) {
             //                          add range, add product, delete item, cancel edit
             case 0 -> setButtonVisibility(true, false, false, true);
@@ -241,12 +249,14 @@ public class ProductFamily implements Builder<Pane> {
                         .map(pf -> pf.getRange() + " -> " + pf.getProductFamilies())
                         .collect(Collectors.toList()));
         partView.getAction().accept(PartFinderMessage.SAVE_PIM_TO_JSON);
+        System.out.println("visibility 1");
         setButtonVisibility(false, false, false, false);
         logger.debug("After saveChanges: ProductFamilies: {}",
                 partFinderModel.getProductFamilies().stream()
                         .map(pf -> pf.getRange() + " -> " + pf.getProductFamilies())
                         .collect(Collectors.toList()));
         logger.debug("Saved changes and cleared deletion marks");
+        cancelEdit();  // TODO added this to see if it would work
     }
 
 
@@ -301,6 +311,7 @@ public class ProductFamily implements Builder<Pane> {
     }
 
     private void setButtonVisibility(boolean range, boolean product, boolean family, boolean cancel) {
+        logger.debug("visibility range ={}, product ={}, family={}, cancel={}", range, product, family, cancel);
         ButtonFx.buttonVisible(addRange, range);
         ButtonFx.buttonVisible(addProduct, product);
         ButtonFx.buttonVisible(deleteButton, family);

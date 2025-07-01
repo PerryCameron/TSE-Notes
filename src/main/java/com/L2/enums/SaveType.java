@@ -4,5 +4,6 @@ public enum SaveType {
     NOTE,
     KEYWORD,
     IMAGE,
-    ADD_PART
+    ADD_PART,
+    PRODUCT_FAM
 }

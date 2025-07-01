@@ -5,7 +5,6 @@ import com.L2.dto.global_spares.RangesFx;
 import com.L2.enums.SaveType;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.static_tools.ImageResources;
-import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.DialogueFx;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,7 +29,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 public class PartFinderInteractor {
@@ -90,13 +88,10 @@ public class PartFinderInteractor {
         saveEditHistory(type);
         int success = globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
         switch (type) {
-            case NOTE -> Platform.runLater(() -> {
-                partModel.updatedNotesProperty().set(success == 1);
-            });
+            case NOTE -> Platform.runLater(() -> partModel.updatedNotesProperty().set(success == 1));
             case IMAGE -> logger.info("New image for {} saved", partModel.selectedSpareProperty().get().getSpareItem());
-            case KEYWORD -> Platform.runLater(() -> {
-                partModel.getUpdatedKeywordsProperty().set(success == 1);
-            });
+            case KEYWORD -> Platform.runLater(() -> partModel.getUpdatedKeywordsProperty().set(success == 1));
+            case PRODUCT_FAM -> Platform.runLater(() -> partModel.updatedRangeProperty().set(success == 1));
         }
     }
 
@@ -132,8 +127,9 @@ public class PartFinderInteractor {
             selectedSpare.setPim(updatedJson);
             logger.debug("Saved ProductFamilies to JSON: {}", updatedJson);
 
-            int success = globalSparesRepo.updateSpare(selectedSpare);
-            partModel.updatedRangeProperty().set(success == 1);
+//            int success = globalSparesRepo.updateSpare(selectedSpare);
+            savePart(SaveType.PRODUCT_FAM);
+//            partModel.updatedRangeProperty().set(success == 1);
         } catch (Throwable t) {
             logger.error("Error in saveToJson: {}", t.getMessage(), t);
             Platform.runLater(() ->
@@ -238,7 +234,7 @@ public class PartFinderInteractor {
     public void getImage(ExecutorService executorService) {
         Task<Image> loadImageTask = new Task<>() {
             @Override
-            protected Image call() throws Exception {
+            protected Image call() {
                 // Perform potentially blocking operation off the FX thread
                 byte[] imageAsByte = globalSparesRepo.getImage(partModel.selectedSpareProperty().get().getSpareItem());
                 if (imageAsByte != null) {
@@ -333,9 +329,7 @@ public class PartFinderInteractor {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC"));
         String currentTimestamp = now.format(formatter);
         // update lastUpdate field in the currently selected SparesDTO
-        Platform.runLater(() -> {
-            partModel.selectedSpareProperty().get().setLastUpdate(currentTimestamp);
-        });
+        Platform.runLater(() -> partModel.selectedSpareProperty().get().setLastUpdate(currentTimestamp));
         // Get the existing list of UpdatedByDTOs
         List<UpdatedByDTO> updatedByDTOs = partModel.getUpdatedByDTOs();
         // Look for an existing entry by the current user
@@ -381,9 +375,7 @@ public class PartFinderInteractor {
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             String updatedJson = mapper.writeValueAsString(updatedByDTOs);
             // Set JSON to SparesDTO's lastUpdatedBy field
-            Platform.runLater(() -> {
-                partModel.selectedSpareProperty().get().setLastUpdatedBy(updatedJson);
-            });
+            Platform.runLater(() -> partModel.selectedSpareProperty().get().setLastUpdatedBy(updatedJson));
             logger.info("Added JSON: {}", updatedJson);
         } catch (Exception e) {
             logger.error("Error serializing UpdatedByDTOs: {}", e.getMessage(), e);

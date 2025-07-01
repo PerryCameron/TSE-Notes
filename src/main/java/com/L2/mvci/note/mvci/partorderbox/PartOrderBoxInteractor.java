@@ -72,7 +72,7 @@ public class PartOrderBoxInteractor {
         String updatedBy = "[ {\n" +
                 "  \"updated_by\" : \"" + fullName + "\",\n" +
                 "  \"updated_date_time\" : \"" + timestamp + "\"\n" +
-                "  \"change_made\" : \"Added Part\"\n" +
+                "  \"change_made\" : \"ADD\"\n" +
                 "} ]";
         sparesDTO.setLastUpdatedBy(updatedBy);
         if(globalSparesRepo.insertSpare(sparesDTO) == 1) {
