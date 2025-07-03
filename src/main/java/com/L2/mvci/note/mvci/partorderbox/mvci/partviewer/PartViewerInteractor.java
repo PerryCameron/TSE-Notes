@@ -1,16 +1,13 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.partviewer;
 
-import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderInteractor;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.static_tools.ImageResources;
-import com.L2.widgetFx.ButtonFx;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 public class PartViewerInteractor {

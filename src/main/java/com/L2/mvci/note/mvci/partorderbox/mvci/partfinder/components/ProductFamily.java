@@ -85,16 +85,6 @@ public class ProductFamily implements Builder<Pane> {
             }
         });
 
-//        partFinderModel.updatedRangeProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue != null && newValue) {
-//                partFinderModel.getTreeView().editableProperty().set(false);
-//                partFinderModel.updatedRangeProperty().set(false);
-//                System.out.println("setBySelection called from rangeProperty listener");
-//                setBySelection();
-//            }
-//        });
-
-        System.out.println("visibility 5");
         setButtonVisibility(false, false, false, false);
         partFinderModel.getTreeView().setEditable(false);
         ButtonFx.buttonVisible(saveButton, false); // I should not need this
@@ -110,15 +100,10 @@ public class ProductFamily implements Builder<Pane> {
     private void setModeListener() {
         partFinderModel.getTreeView().editableProperty().addListener((observable, oldValue, editMode) -> {
             if (editMode) {
-                System.out.println("editMode");
-                // we are in edit mode we don't need the edit button
                 ButtonFx.buttonVisible(editButton, false);
                 ButtonFx.buttonVisible(saveButton, true);
-                System.out.println("setBySelection called from setModeListener");
                 setBySelection();
             } else {
-                System.out.println("normalMode");
-                // we are in normal mode
                 ButtonFx.buttonVisible(editButton, true);
                 cancelEdit();
             }

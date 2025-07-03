@@ -71,7 +71,7 @@ public class PartOrderBoxInteractor {
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss 'UTC'"));
         String updatedBy = "[ {\n" +
                 "  \"updated_by\" : \"" + fullName + "\",\n" +
-                "  \"updated_date_time\" : \"" + timestamp + "\"\n" +
+                "  \"updated_date_time\" : \"" + timestamp + "\",\n" +
                 "  \"change_made\" : \"ADD\"\n" +
                 "} ]";
         sparesDTO.setLastUpdatedBy(updatedBy);

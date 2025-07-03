@@ -86,9 +86,6 @@ public class PartViewerView implements Builder<Alert> {
     private Node mainInfo() {
         VBox vBox = new VBox(10);
         HBox.setHgrow(vBox, Priority.ALWAYS);
-        // vBox.setPadding(new Insets(10, 10, 10, 10));
-        // we need to make sure spare item is set
-        System.out.println(partViewerModel.getSparesDTO().getSpareItem()); // getting null here after adding new part to database
         Node titledLabel = LabelFx.titledLabel("Part Number: ", partViewerModel.getSparesDTO().getSpareItem());
         Node titledDescription = LabelFx.titledLabel("Description: ", partViewerModel.getSparesDTO().getSpareDescription());
         Node inCatalogue = LabelFx.titledGraphicBoolean("In Catalogue: ", partViewerModel.getSparesDTO().getArchived());
