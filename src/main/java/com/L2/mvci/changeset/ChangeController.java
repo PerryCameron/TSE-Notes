@@ -30,7 +30,7 @@ public class ChangeController extends AlertController<ChangeMessage> {
     @Override
     public void action(ChangeMessage message) {
         switch (message) {
-            case CREATE_CHANGESET -> changeInteractor.createChangeSet();
+            case CREATE_CHANGESET -> changeInteractor.createChangeSet(mainController.getExecutorService());
         }
 
     }

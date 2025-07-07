@@ -13,12 +13,14 @@ import com.L2.widgetFx.DialogueFx;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 
 public class ChangeInteractor {
 
@@ -33,47 +35,57 @@ public class ChangeInteractor {
         this.changeSetRepo = new ChangeSetRepositoryImpl();
     }
 
-    public void createChangeSet() {
-        System.out.println("Creating change set with " + changeModel.numberOfDaysProperty().get() + " days");
-        System.out.println("This will include all records: " + changeModel.includeAllProperty().get());
-        // create folder changeset if it does not exist
-        AppFileTools.createFileIfNotExists(ApplicationPaths.changeSetDir);
-        // clear contents of directory if any exist
-        try {
-            AppFileTools.clearDirectory(ApplicationPaths.changeSetDir);
-        } catch (IOException e) {
-            logger.error("Error clearing directory: {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            logger.error("Invalid directory: {}", e.getMessage());
-        }
-        // create database with note and note_image tables
-        SQLiteDatabaseCreator.createChangeSetDB();
-        // write tables that fit into category into change set
-        List<SparesDTO> spares = globalSparesRepo.findSparesUpdatedWithinDays(changeModel.numberOfDaysProperty().get());
-        spares.forEach(sparesDTO -> {
-
-            // turn updated by JSON into UpdatedByDTO's
-            deserializeUpdatedBy(sparesDTO);
-            // find the UpdatedByDTO which matches the main lastUpdated timestamp
-            UpdatedByDTO updatedByDTO = findCorrectEntry(sparesDTO);
-            if (updatedByDTO != null) {
-                if (changeModel.isIncludeAll()) {
-                    changeSetRepo.insertSpare(sparesDTO);
-                    if(updatedByDTO.getChangeMade() != null)
-                    if(updatedByDTO.getChangeMade().contains("IMAGE"));
-                    Optional<SparePictureDTO> sparePictureDTO = globalSparesRepo.findSparePictureByName(sparesDTO.getSpareItem());
-                    if (sparePictureDTO.isPresent()) {
-                        changeSetRepo.insertSparePicture(sparePictureDTO.get());
-                    }
-                } else { // we are only going to include entries by the user
-                    if (updatedByDTO.getUpdatedBy().equals(changeModel.getUser().getFullName())) {
-                        changeSetRepo.insertSpare(sparesDTO);
-                        System.out.println(updatedByDTO.getUpdatedBy() + " changed user only: " + updatedByDTO.getChangeMade());
-                    }
+    public void createChangeSet(ExecutorService executorService) {
+        Task<Void> createChangeSet = new Task<Void>() {
+            @Override
+            protected Void call() {
+                System.out.println("Creating change set with " + changeModel.numberOfDaysProperty().get() + " days");
+                System.out.println("This will include all records: " + changeModel.includeAllProperty().get());
+                // create folder changeset if it does not exist
+                AppFileTools.createFileIfNotExists(ApplicationPaths.changeSetDir);
+                // clear contents of directory if any exist
+                try {
+                    AppFileTools.clearDirectory(ApplicationPaths.changeSetDir);
+                } catch (IOException e) {
+                    logger.error("Error clearing directory: {}", e.getMessage());
+                } catch (IllegalArgumentException e) {
+                    logger.error("Invalid directory: {}", e.getMessage());
                 }
+                // create database with note and note_image tables
+                SQLiteDatabaseCreator.createChangeSetDB();
+                // write tables that fit into category into change set
+                List<SparesDTO> spares = globalSparesRepo.findSparesUpdatedWithinDays(changeModel.numberOfDaysProperty().get());
+                spares.forEach(sparesDTO -> {
+
+                    // turn updated by JSON into UpdatedByDTO's
+                    deserializeUpdatedBy(sparesDTO);
+                    // find the UpdatedByDTO which matches the main lastUpdated timestamp
+                    UpdatedByDTO updatedByDTO = findCorrectEntry(sparesDTO);
+                    if (updatedByDTO != null) {
+                        if (changeModel.isIncludeAll()) {
+                            changeSetRepo.insertSpare(sparesDTO);
+                            if (updatedByDTO.getChangeMade() != null)
+                                if (updatedByDTO.getChangeMade().contains("IMAGE")) ;
+                            Optional<SparePictureDTO> sparePictureDTO = globalSparesRepo.findSparePictureByName(sparesDTO.getSpareItem());
+                            if (sparePictureDTO.isPresent()) {
+                                changeSetRepo.insertSparePicture(sparePictureDTO.get());
+                            }
+                        } else { // we are only going to include entries by the user
+                            if (updatedByDTO.getUpdatedBy().equals(changeModel.getUser().getFullName())) {
+                                changeSetRepo.insertSpare(sparesDTO);
+                                System.out.println(updatedByDTO.getUpdatedBy() + " changed user only: " + updatedByDTO.getChangeMade());
+                            }
+                        }
+                    }
+                    System.out.println("Updated bys for " + sparesDTO.getSpareItem() + " size= " + changeModel.getUpdatedBys().size());
+                });
+                return null;
             }
-            System.out.println("Updated bys for " + sparesDTO.getSpareItem() + " size= " + changeModel.getUpdatedBys().size());
+        };
+        createChangeSet.setOnSucceeded(event -> {
+            DialogueFx.conformationAlert("","");
         });
+        executorService.submit(createChangeSet);
     }
 
     // makes sure the date from the main tuple matches the updatedBy date entry, time is ignored.
