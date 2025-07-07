@@ -62,6 +62,7 @@ public class ChangeView implements Builder<Alert> {
             changeModel.numberOfDaysProperty().set(daysComboBox.getValue() != null ? daysComboBox.getValue() : 7);
             changeModel.includeAllProperty().set(includeAllCheckBox.isSelected());
             action.accept(ChangeMessage.CREATE_CHANGESET);
+            cleanAlertClose();
         });
         // Add all components to VBox
         vBox.getChildren().addAll(daysLabel, daysComboBox, includeAllCheckBox, createChangeSetButton);

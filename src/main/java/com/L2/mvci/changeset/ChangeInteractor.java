@@ -4,6 +4,7 @@ import com.L2.dto.UpdatedByDTO;
 import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.SparePictureDTO;
 import com.L2.dto.global_spares.SparesDTO;
+import com.L2.mvci.note.mvci.partorderbox.PartOrderBoxMessage;
 import com.L2.repository.implementations.ChangeSetRepositoryImpl;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.static_tools.AppFileTools;
@@ -14,6 +15,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +39,7 @@ public class ChangeInteractor {
     }
 
     public void createChangeSet(ExecutorService executorService) {
-        Task<Void> createChangeSet = new Task<Void>() {
+        Task<Void> createChangeSet = new Task<>() {
             @Override
             protected Void call() {
                 System.out.println("Creating change set with " + changeModel.numberOfDaysProperty().get() + " days");
@@ -56,7 +59,6 @@ public class ChangeInteractor {
                 // write tables that fit into category into change set
                 List<SparesDTO> spares = globalSparesRepo.findSparesUpdatedWithinDays(changeModel.numberOfDaysProperty().get());
                 spares.forEach(sparesDTO -> {
-
                     // turn updated by JSON into UpdatedByDTO's
                     deserializeUpdatedBy(sparesDTO);
                     // find the UpdatedByDTO which matches the main lastUpdated timestamp
@@ -83,7 +85,22 @@ public class ChangeInteractor {
             }
         };
         createChangeSet.setOnSucceeded(event -> {
-            DialogueFx.conformationAlert("","");
+            Optional<Alert> finishAlert = DialogueFx.conformationAlert("Change Set successfully created","Would you like to open the file location?");
+            finishAlert.ifPresent(alert -> {
+                Optional<ButtonType> result = alert.showAndWait();
+                result.ifPresent(buttonType -> {
+                    if (buttonType == ButtonType.YES) {
+                        try {
+                            java.awt.Desktop.getDesktop().open(new java.io.File(ApplicationPaths.changeSetDir.toString()));
+                        } catch (IOException e) {
+                            System.err.println("Failed to open directory: " + ApplicationPaths.changeSetDir);
+                            e.printStackTrace();
+                            // Optionally show an error alert to the user
+                            DialogueFx.errorAlert("Error", "Unable to open the directory: " + ApplicationPaths.changeSetDir);
+                        }
+                    }
+                });
+            });
         });
         executorService.submit(createChangeSet);
     }
