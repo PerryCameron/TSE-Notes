@@ -169,11 +169,11 @@ public class PartFinderView implements Builder<Alert> {
         HBox searchHbox = new HBox();
         HBox.setHgrow(searchHbox, Priority.ALWAYS); // Spacer grows to push buttons right
         searchHbox.setAlignment(Pos.CENTER_RIGHT);
-        Button testButton = new Button("Test");
-        testButton.setOnAction(event -> {
-            action.accept(PartFinderMessage.TEST_SOME_SHIT);
-        });
-        searchHbox.getChildren().addAll(partFinderModel.getRangeNumberLabel(), testButton, searchButton());
+//        Button testButton = new Button("Test");
+//        testButton.setOnAction(event -> {
+//            action.accept(PartFinderMessage.TEST_SOME_SHIT);
+//        });
+        searchHbox.getChildren().addAll(partFinderModel.getRangeNumberLabel(), searchButton());
         return searchHbox;
     }
 
