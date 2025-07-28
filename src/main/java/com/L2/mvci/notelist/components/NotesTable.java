@@ -33,6 +33,19 @@ public class NotesTable implements Component<Region> {
         tableView.getColumns().addAll(Arrays.asList(col0(), mail(), col1(), col3(), col2()));
         tableView.setPlaceholder(new Label(""));
 
+        // Highlight rows where getRelatedCaseNumber is not empty
+        tableView.setRowFactory(tv -> {
+            TableRow<NoteFx> row = new TableRow<>();
+            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+                if (newItem != null && newItem.getRelatedCaseNumber() != null && !newItem.getRelatedCaseNumber().isEmpty()) {
+                    row.setStyle("-fx-background-color: #fdfdd1;"); // Light yellow highlight
+                } else {
+                    row.setStyle(""); // Reset to default style
+                }
+            });
+            return row;
+        });
+
         // do not delete this you will be sorry
         TableView.TableViewSelectionModel<NoteFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
