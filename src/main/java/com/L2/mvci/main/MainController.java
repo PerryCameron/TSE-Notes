@@ -79,6 +79,7 @@ public class MainController extends Controller<MainMessage> {
             case PRINT_PRODUCT_FAMILIES -> printProductFamilies();
             case SHUTDOWN_EXECUTOR_SERVICE -> mainInteractor.shutDownExecutorService();
             case LAUNCH_CHANGE_SET_ALERT -> openChangeSetAlert();
+            case OPEN_MANUAL -> mainInteractor.openManual();
         }
     }
 

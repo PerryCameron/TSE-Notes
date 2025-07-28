@@ -5,6 +5,7 @@ import com.L2.dto.global_spares.RangesFx;
 import com.L2.repository.implementations.SettingsRepositoryImpl;
 import com.L2.static_tools.AppFileTools;
 import com.L2.static_tools.ApplicationPaths;
+import com.L2.widgetFx.DialogueFx;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
@@ -12,7 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 
 public class MainInteractor implements ApplicationPaths {
@@ -75,5 +79,39 @@ public class MainInteractor implements ApplicationPaths {
     public void shutDownExecutorService() {
         logger.info("Shutting down executor service...");
         mainModel.getExecutor().shutdown();
+    }
+
+    public void openManual()  {
+        try (InputStream pdfStream = getClass().getResourceAsStream("/pdf/manual.pdf")) {
+            // Check if the PDF resource exists
+            if (pdfStream == null) {
+                System.err.println("PDF resource not found at /pdf/manual.pdf");
+                return;
+            }
+
+            // Create a temporary file
+            File tempFile = File.createTempFile("manual", ".pdf");
+            tempFile.deleteOnExit(); // Ensure the file is deleted when the JVM exits
+
+            // Copy the resource to the temporary file
+            try (FileOutputStream out = new FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = pdfStream.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            }
+
+            // Open the temporary file with the default PDF viewer
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(tempFile);
+            } else {
+                logger.error("Desktop is not supported on this platform");
+                DialogueFx.errorAlert("Error", "Desktop is not supported on this platform");
+            }
+        } catch (IOException e) {
+            logger.error("Error opening PDF: {}", e.getMessage());
+            DialogueFx.errorAlert("Error opening PDF", e.getMessage());
+        }
     }
 }

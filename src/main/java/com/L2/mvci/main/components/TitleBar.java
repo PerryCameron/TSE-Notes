@@ -260,7 +260,8 @@ public class TitleBar implements Builder<Region> {
             Alert alert = DialogueFx.aboutDialogue("TSE Notes", message, Alert.AlertType.INFORMATION);
             alert.showAndWait();
         }, null);
-        menu.getItems().add(showAboutDialogue);
+        MenuItem getManual = MenuFx.menuItemOf("Manual", x -> mainView.getAction().accept(MainMessage.OPEN_MANUAL), null);
+        menu.getItems().addAll(showAboutDialogue, getManual);
         return menu;
     }
 }
