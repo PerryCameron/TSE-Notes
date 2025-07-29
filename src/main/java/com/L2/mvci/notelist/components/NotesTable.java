@@ -34,17 +34,28 @@ public class NotesTable implements Component<Region> {
         tableView.setPlaceholder(new Label(""));
 
         // Highlight rows where getRelatedCaseNumber is not empty
-        tableView.setRowFactory(tv -> {
-            TableRow<NoteFx> row = new TableRow<>();
-            row.itemProperty().addListener((obs, oldItem, newItem) -> {
-                if (newItem != null && newItem.getRelatedCaseNumber() != null && !newItem.getRelatedCaseNumber().isEmpty()) {
-                    row.setStyle("-fx-background-color: #fdfdd1;"); // Light yellow highlight
-                } else {
-                    row.setStyle(""); // Reset to default style
-                }
-            });
-            return row;
-        });
+//        tableView.setRowFactory(tv -> {
+//            TableRow<NoteFx> row = new TableRow<>();
+//            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+//                if (newItem != null && newItem.getRelatedCaseNumber() != null && !newItem.getRelatedCaseNumber().isEmpty()) {
+//                    row.setStyle("-fx-background-color: #fdfdd1;"); // Light yellow highlight
+//                } else {
+//                    row.setStyle(""); // Reset to default style
+//                }
+//            });
+//            return row;
+//        });
+
+//        tableView.setRowFactory(tv -> {
+//            TableRow<NoteFx> row = new TableRow<>();
+//            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+//                row.getStyleClass().remove("highlighted-row"); // Remove the class first
+//                if (newItem != null && newItem.getRelatedCaseNumber() != null && !newItem.getRelatedCaseNumber().isEmpty()) {
+//                    row.getStyleClass().add("highlighted-row"); // Add highlight class
+//                }
+//            });
+//            return row;
+//        });
 
         // do not delete this you will be sorry
         TableView.TableViewSelectionModel<NoteFx> selectionModel = tableView.getSelectionModel();
@@ -80,15 +91,15 @@ public class NotesTable implements Component<Region> {
             // don't do anything if there is an active search
             if (!actionInProgress && !noteListView.getNoteListModel().isActiveSearch()) {
                 // if we have an active search do not do this
-                    if (event.getDeltaY() > 0 && verticalScrollBar.getValue() == 0.0) {
-                        actionInProgress = true;
-                        noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
-                        actionInProgress = false;
-                    } else if (event.getDeltaY() < 0 && verticalScrollBar.getValue() == 1.0) {
-                        actionInProgress = true;
-                        noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
-                        actionInProgress = false;
-                    }
+                if (event.getDeltaY() > 0 && verticalScrollBar.getValue() == 0.0) {
+                    actionInProgress = true;
+                    noteListView.getAction().accept(NoteListMessage.ADD_TO_TOP_OF_LIST);
+                    actionInProgress = false;
+                } else if (event.getDeltaY() < 0 && verticalScrollBar.getValue() == 1.0) {
+                    actionInProgress = true;
+                    noteListView.getAction().accept(NoteListMessage.ADD_TO_BOTTOM_OF_LIST);
+                    actionInProgress = false;
+                }
             } else noteListView.getAction().accept(NoteListMessage.NO_ACTION_TAKEN_FOR_SCROLL);
         });
 
@@ -162,22 +173,31 @@ public class NotesTable implements Component<Region> {
         emailCol.setPrefWidth(30);
         emailCol.setMaxWidth(30);
         emailCol.setMinWidth(30);
+
         // Define the cell factory
         emailCol.setCellFactory(new Callback<>() {
             @Override
             public TableCell<NoteFx, Boolean> call(TableColumn<NoteFx, Boolean> param) {
                 return new TableCell<>() {
-                    private final ImageView imageView = new ImageView(ImageResources.MAIL);
+                    private final ImageView emailImageView = new ImageView(ImageResources.MAIL);
+                    private final ImageView caseImageView = new ImageView(ImageResources.OWN); // Replace with your case icon
 
                     @Override
                     protected void updateItem(Boolean isEmail, boolean empty) {
                         super.updateItem(isEmail, empty);
-                        if (empty || isEmail == null || !isEmail) {
-                            setGraphic(null); // No image if not email
+                        NoteFx note = getTableRow().getItem(); // Get the current NoteFx item
+                        if (empty || note == null) {
+                            setGraphic(null); // No icon if empty
+                        } else if (isEmail != null && isEmail) {
+                            emailImageView.setFitWidth(16);
+                            emailImageView.setFitHeight(16);
+                            setGraphic(emailImageView); // Display email icon
+                        } else if (note.getRelatedCaseNumber() != null && !note.getRelatedCaseNumber().isEmpty()) {
+                            caseImageView.setFitWidth(16);
+                            caseImageView.setFitHeight(16);
+                            setGraphic(caseImageView); // Display case icon
                         } else {
-                            imageView.setFitWidth(16);
-                            imageView.setFitHeight(16);
-                            setGraphic(imageView); // Display the email icon
+                            setGraphic(null); // No icon if neither condition is met
                         }
                     }
                 };

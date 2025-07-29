@@ -35,9 +35,14 @@ public class ImageResources {
     public static final Image NOTES;
     public static final Image GEAR;
     public static final Image LIST;
+    public static final Image OWN;
 
     static {
         try {
+            OWN = new Image(Objects.requireNonNull(
+                    ImageResources.class.getResourceAsStream("/images/own-16.png"),
+                    "Failed to load resource: /images/own-16.png"
+            ));
             NOTES = new Image(Objects.requireNonNull(
                     ImageResources.class.getResourceAsStream("/images/notes-16.png"),
                     "Failed to load resource: /images/notes-16.png"
