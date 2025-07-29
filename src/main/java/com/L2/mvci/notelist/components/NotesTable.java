@@ -181,6 +181,7 @@ public class NotesTable implements Component<Region> {
                 return new TableCell<>() {
                     private final ImageView emailImageView = new ImageView(ImageResources.MAIL);
                     private final ImageView caseImageView = new ImageView(ImageResources.OWN); // Replace with your case icon
+                    private final ImageView flagImageView = new ImageView(ImageResources.FLAG);
 
                     @Override
                     protected void updateItem(Boolean isEmail, boolean empty) {
@@ -188,6 +189,10 @@ public class NotesTable implements Component<Region> {
                         NoteFx note = getTableRow().getItem(); // Get the current NoteFx item
                         if (empty || note == null) {
                             setGraphic(null); // No icon if empty
+                        } else if (note.isCompleted() == true) {
+                            flagImageView.setFitWidth(16);
+                            flagImageView.setFitHeight(16);
+                            setGraphic(flagImageView);
                         } else if (isEmail != null && isEmail) {
                             emailImageView.setFitWidth(16);
                             emailImageView.setFitHeight(16);

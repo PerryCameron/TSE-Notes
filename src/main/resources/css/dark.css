@@ -232,3 +232,7 @@
 .context-menu .menu-item .label {
     -fx-text-fill: black;
 }
+
+.label.boolean-label {
+    -fx-font-size: 16px !important;
+}

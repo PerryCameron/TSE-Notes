@@ -1,5 +1,6 @@
 package com.L2.mvci.note.components;
 
+import atlantafx.base.controls.ToggleSwitch;
 import com.L2.controls.SpellCheckArea;
 import com.L2.enums.AreaType;
 import com.L2.interfaces.Component;
@@ -12,8 +13,10 @@ import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -47,6 +50,7 @@ public class FinishBox implements Component<Region> {
         refreshFields();
         root.setOnMouseExited(event -> {
             noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
+            noteView.getAction().accept(NoteMessage.REFRESH_NOTE_TABLEVIEW);
         });
         return root;
     }
@@ -67,6 +71,8 @@ public class FinishBox implements Component<Region> {
         VBox vBox = new VBox(10);
         vBox.setPrefWidth(200);
         vBox.setPadding(new Insets(0, 0, 0, 10));
+
+
         Button customerRequestButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupA();
             noteView.getAction().accept(NoteMessage.COPY_CUSTOMER_REQUEST);
@@ -82,8 +88,19 @@ public class FinishBox implements Component<Region> {
             noteView.getAction().accept(NoteMessage.COPY_LOGGED_CALL);
         }, ImageResources.COPY_LOGGED_CALL, "Log Call");
 
-        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, logCallActionButton);
+        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, logCallActionButton, flagSwitch());
         return vBox;
+    }
+
+    private Node flagSwitch() {
+        Label label = new Label("Mark for Review");
+        label.getStyleClass().add("boolean-label");
+        ToggleSwitch toggleSwitch = new ToggleSwitch();
+        HBox hBox = new HBox(5);
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        toggleSwitch.selectedProperty().bindBidirectional(noteModel.boundNoteProperty().get().completedProperty());
+        hBox.getChildren().addAll(toggleSwitch, label);
+        return hBox;
     }
 
     @Override

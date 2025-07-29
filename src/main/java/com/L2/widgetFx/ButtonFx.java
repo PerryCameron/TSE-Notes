@@ -48,7 +48,7 @@ public class ButtonFx {
 
     public static Button utilityButton(Runnable runnable, Image image, String... strings) {
         ImageView imageViewCopy = new ImageView(image);
-        Button button = ButtonFx.of(imageViewCopy, "invisible-button");
+        Button button = of(imageViewCopy, "invisible-button");
         button.setText(strings[0]);
         button.setOnAction(event -> runnable.run());
         return button;
@@ -56,14 +56,14 @@ public class ButtonFx {
 
     public static Button utilityButton(Image image, Runnable runnable) {
         ImageView imageViewCopy = new ImageView(image);
-        Button button = ButtonFx.of(imageViewCopy, "invisible-button");
+        Button button = of(imageViewCopy, "invisible-button");
         button.setOnAction(event -> runnable.run());
         return button;
     }
 
     public static Button utilityButton(Image image) {
         ImageView imageViewCopy = new ImageView(image);
-        Button button = ButtonFx.of(imageViewCopy, "invisible-button");
+        Button button = of(imageViewCopy, "invisible-button");
         return button;
     }
 
