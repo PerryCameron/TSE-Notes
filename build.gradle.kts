@@ -106,7 +106,8 @@ tasks.register<Exec>("generateRuntime") {
         "--add-modules", "java.base,java.desktop,java.prefs,java.sql.rowset,javafx.controls,jdk.unsupported",
         "--output", "build/runtime",
         "--strip-debug",
-        "--compress", "2",
+//        "--compress", "2",  <- removing this because it gave this warning: Warning: The 2 argument for --compress is deprecated and may be removed in a future release
+        "--compress=zip-9", // Updated to new syntax
         "--no-header-files",
         "--no-man-pages"
     )
