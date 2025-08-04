@@ -52,7 +52,7 @@ public class SpellCheckArea extends CodeArea {
                 this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA;
             }
             case finish -> {
-                height = 100;
+                height = 130;
                 setUpArea();
                 this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA;
             }
