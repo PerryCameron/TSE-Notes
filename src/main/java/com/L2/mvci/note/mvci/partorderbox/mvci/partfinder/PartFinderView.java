@@ -298,6 +298,9 @@ public class PartFinderView implements Builder<Alert> {
     private void setSelectedChangeListener() {
         partFinderModel.getSparesTableView().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                // makes sure we know if the part in catalogue toggle switch is programmatically set. We only want to change stuff
+                // if the user manually sets the ToggleButton.
+                partFinderModel.automaticToggleSwitchChangeProperty().set(true);
                 // updates our selected spare to match selected
                 partFinderModel.selectedSpareProperty().set(newSelection);
                 // updates treeView for product families and ranges

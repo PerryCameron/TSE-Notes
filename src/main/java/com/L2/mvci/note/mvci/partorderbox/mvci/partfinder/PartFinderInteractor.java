@@ -396,4 +396,13 @@ public class PartFinderInteractor {
         System.out.println("UpdatedByDTOs size: " + updatedByDTOs.size());
         updatedByDTOs.forEach(System.out::println);
     }
+
+    public void updateInCatelogue() {
+//        boolean newValue = !partModel.selectedSpareProperty().get().getArchived();
+//        partModel.selectedSpareProperty().get().setArchived(newValue);
+        logger.info("We are checking the thread we are on here.");
+        System.out.print(partModel.selectedSpareProperty().get().getSpareItem() + " archived= ");
+        System.out.println(partModel.selectedSpareProperty().get().getArchived());
+        partModel.getSparesTableView().refresh();
+    }
 }

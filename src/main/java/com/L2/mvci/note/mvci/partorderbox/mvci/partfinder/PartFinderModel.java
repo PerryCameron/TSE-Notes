@@ -60,6 +60,7 @@ public class PartFinderModel {
     private final BooleanProperty updatedRanges = new SimpleBooleanProperty(false);
     private final BooleanProperty updatedKeywords = new SimpleBooleanProperty(false);
     private final BooleanProperty refreshPartInfo = new SimpleBooleanProperty(false);
+    private final BooleanProperty manualToggleSwitchChange  = new SimpleBooleanProperty(false);
     private PartFinderController partController;
     private Byte[] imageBytes;
 //    private ObjectProperty<Image> image = new SimpleObjectProperty<>();
@@ -285,4 +286,9 @@ public class PartFinderModel {
     //    public ObjectProperty<PartInfo> partInfoProperty() {
 //        return partInfo;
 //    }
+
+
+    public BooleanProperty automaticToggleSwitchChangeProperty() {
+        return manualToggleSwitchChange;
+    }
 }

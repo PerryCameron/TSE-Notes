@@ -244,10 +244,10 @@ public class TitleBar implements Builder<Region> {
     private Menu createDebugMenu() {
         Menu menu = new Menu("Debug");
         MenuItem showDebugLog = MenuFx.menuItemOf("Show Log", x -> mainView.getAction().accept(MainMessage.SHOW_LOG), null);
-        //MenuItem testDebug = MenuFx.menuItemOf("Test Ranges", x -> mainView.getAction().accept(MainMessage.PRINT_RANGES), null);
+        MenuItem testDebug = MenuFx.menuItemOf("Test Ranges", x -> mainView.getAction().accept(MainMessage.PRINT_RANGES), null);
         //MenuItem testDebug2 = MenuFx.menuItemOf("Print Selected Part Order Table", x -> mainView.getAction().accept(MainMessage.PRINT_PARTS), null);
         ///MenuItem testDebug3 = MenuFx.menuItemOf("Print Selected Part Order Table", x -> mainView.getAction().accept(MainMessage.PRINT_PRODUCT_FAMILIES), null);
-        menu.getItems().add(showDebugLog);
+        menu.getItems().addAll(showDebugLog, testDebug);
         return menu;
     }
 

@@ -68,7 +68,7 @@ public class ProductFamily implements Builder<Pane> {
         addRange.setOnAction(event -> addNewRange());
         addProduct.setOnAction(event -> addNewProduct());
         deleteButton.setOnAction(event -> markForDeletion());
-        saveButton.setOnAction(event -> saveChanges());
+        saveButton.setOnAction(event -> saveChanges());  // this is line 71
         cancelButton.setOnAction(event -> cancelEdit());
 
         // we use the editable property in treeView to make an (edit mode)
@@ -202,7 +202,7 @@ public class ProductFamily implements Builder<Pane> {
             int depth = getTreeItemDepth(item);
             TreeItem<Object> parent = item.getParent();
             if (depth == 1) {
-                ProductFamilyDTO pf = (ProductFamilyDTO) item.getValue();
+                ProductFamilyDTO pf = (ProductFamilyDTO) item.getValue(); // this is line 205
                 logger.debug("Attempting to remove range: {} (instance: {})",
                         pf.getRange(), System.identityHashCode(pf));
                 if (partFinderModel.getProductFamilies().remove(pf)) {
@@ -241,7 +241,7 @@ public class ProductFamily implements Builder<Pane> {
                         .map(pf -> pf.getRange() + " -> " + pf.getProductFamilies())
                         .collect(Collectors.toList()));
         logger.debug("Saved changes and cleared deletion marks");
-        cancelEdit();  // TODO added this to see if it would work
+        cancelEdit();  // let me know if you need more context, don't answer unless you are sure of the issue.
     }
 
 
