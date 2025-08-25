@@ -4,7 +4,6 @@ import com.L2.dto.UpdatedByDTO;
 import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.SparePictureDTO;
 import com.L2.dto.global_spares.SparesDTO;
-import com.L2.mvci.note.mvci.partorderbox.PartOrderBoxMessage;
 import com.L2.repository.implementations.ChangeSetRepositoryImpl;
 import com.L2.repository.implementations.GlobalSparesRepositoryImpl;
 import com.L2.static_tools.AppFileTools;
@@ -14,6 +13,7 @@ import com.L2.widgetFx.DialogueFx;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -42,17 +42,19 @@ public class ChangeInteractor {
         Task<Void> createChangeSet = new Task<>() {
             @Override
             protected Void call() {
-                System.out.println("Creating change set with " + changeModel.numberOfDaysProperty().get() + " days");
-                System.out.println("This will include all records: " + changeModel.includeAllProperty().get());
                 // create folder changeset if it does not exist
                 AppFileTools.createFileIfNotExists(ApplicationPaths.changeSetDir);
                 // clear contents of directory if any exist
                 try {
-                    AppFileTools.clearDirectory(ApplicationPaths.changeSetDir);
+                    AppFileTools.clearDirectory(ApplicationPaths.changeSetDir); // why did this not  delete my file???
                 } catch (IOException e) {
+                    Platform.runLater(() ->
+                            DialogueFx.errorAlert("Error Deleting old change set", e.getMessage()));
                     logger.error("Error clearing directory: {}", e.getMessage());
                 } catch (IllegalArgumentException e) {
                     logger.error("Invalid directory: {}", e.getMessage());
+                    Platform.runLater(() ->
+                            DialogueFx.errorAlert("Illegal Argument ", e.getMessage()));
                 }
                 // create database with note and note_image tables
                 SQLiteDatabaseCreator.createChangeSetDB();
@@ -66,20 +68,22 @@ public class ChangeInteractor {
                     if (updatedByDTO != null) {
                         if (changeModel.isIncludeAll()) {
                             changeSetRepo.insertSpare(sparesDTO);
-                            if (updatedByDTO.getChangeMade() != null)
-                                if (updatedByDTO.getChangeMade().contains("IMAGE")) ;
-                            Optional<SparePictureDTO> sparePictureDTO = globalSparesRepo.findSparePictureByName(sparesDTO.getSpareItem());
-                            if (sparePictureDTO.isPresent()) {
-                                changeSetRepo.insertSparePicture(sparePictureDTO.get());
+                            if (updatedByDTO.getChangeMade() != null) {
+                                Optional<SparePictureDTO> sparePictureDTO = globalSparesRepo.findSparePictureByName(sparesDTO.getSpareItem());
+                                if (sparePictureDTO.isPresent()) {
+                                    changeSetRepo.insertSparePicture(sparePictureDTO.get());
+                                }
                             }
                         } else { // we are only going to include entries by the user
                             if (updatedByDTO.getUpdatedBy().equals(changeModel.getUser().getFullName())) {
                                 changeSetRepo.insertSpare(sparesDTO);
-                                System.out.println(updatedByDTO.getUpdatedBy() + " changed user only: " + updatedByDTO.getChangeMade());
+                                Optional<SparePictureDTO> sparePictureDTO = globalSparesRepo.findSparePictureByName(sparesDTO.getSpareItem());
+                                if (sparePictureDTO.isPresent()) {
+                                    changeSetRepo.insertSparePicture(sparePictureDTO.get());
+                                }
                             }
                         }
                     }
-                    System.out.println("Updated bys for " + sparesDTO.getSpareItem() + " size= " + changeModel.getUpdatedBys().size());
                 });
                 return null;
             }
