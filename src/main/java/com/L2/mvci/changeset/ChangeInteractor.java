@@ -69,18 +69,12 @@ public class ChangeInteractor {
                         if (changeModel.isIncludeAll()) {
                             changeSetRepo.insertSpare(sparesDTO);
                             if (updatedByDTO.getChangeMade() != null) {
-                                Optional<SparePictureDTO> sparePictureDTO = globalSparesRepo.findSparePictureByName(sparesDTO.getSpareItem());
-                                if (sparePictureDTO.isPresent()) {
-                                    changeSetRepo.insertSparePicture(sparePictureDTO.get());
-                                }
+                                addImage(sparesDTO);
                             }
                         } else { // we are only going to include entries by the user
                             if (updatedByDTO.getUpdatedBy().equals(changeModel.getUser().getFullName())) {
                                 changeSetRepo.insertSpare(sparesDTO);
-                                Optional<SparePictureDTO> sparePictureDTO = globalSparesRepo.findSparePictureByName(sparesDTO.getSpareItem());
-                                if (sparePictureDTO.isPresent()) {
-                                    changeSetRepo.insertSparePicture(sparePictureDTO.get());
-                                }
+                                addImage(sparesDTO);
                             }
                         }
                     }
@@ -98,8 +92,6 @@ public class ChangeInteractor {
                             java.awt.Desktop.getDesktop().open(new java.io.File(ApplicationPaths.changeSetDir.toString()));
                         } catch (IOException e) {
                             System.err.println("Failed to open directory: " + ApplicationPaths.changeSetDir);
-                            e.printStackTrace();
-                            // Optionally show an error alert to the user
                             DialogueFx.errorAlert("Error", "Unable to open the directory: " + ApplicationPaths.changeSetDir);
                         }
                     }
@@ -107,6 +99,11 @@ public class ChangeInteractor {
             });
         });
         executorService.submit(createChangeSet);
+    }
+
+    private void addImage(SparesDTO sparesDTO) {
+        Optional<SparePictureDTO> sparePictureDTO = globalSparesRepo.findSparePictureByName(sparesDTO.getSpareItem());
+        sparePictureDTO.ifPresent(changeSetRepo::insertSparePicture);
     }
 
     // makes sure the date from the main tuple matches the updatedBy date entry, time is ignored.
