@@ -506,50 +506,94 @@ public class NoteInteractor {
     }
 
     private String buildPartOrderToHTML(boolean includePOHeader) {
+        System.out.println("buildPartOrderToHTML called");
         StringBuilder stringBuilder = new StringBuilder();
         if (!noteModel.selectedPartOrderProperty().get().getParts().isEmpty()) {
             if (includePOHeader) {
-                stringBuilder.append("<b>Parts Ordered</b>");
+                stringBuilder.append("<b>Parts Ordered</b><br>");
             } else {
-                stringBuilder.append("<b>Parts Needed</b>");
+                stringBuilder.append("<b>Parts Needed</b><br>");
             }
-            stringBuilder.append("<table border=\"1\">");
+            stringBuilder.append("<table style=\"border: 1px solid black; border-collapse: collapse; width: auto; position: static; float: none; page-break-inside: auto; page-break-before: auto;\">");
+            stringBuilder.append("<thead>");
             if (includePOHeader) {
                 if (!noteModel.selectedPartOrderProperty().get().getOrderNumber().isEmpty()) {
-                    // Adjust colspan based on showType()
                     int colspan = noteModel.selectedPartOrderProperty().get().showType() ? 4 : 3;
-                    stringBuilder.append("<tr><th colspan=\"").append(colspan).append("\" style=\"background-color: lightgrey;\">")
+                    stringBuilder.append("<tr><th colspan=\"").append(colspan).append("\" style=\"background-color: lightgrey; border: 1px solid black; padding: 5px; font-weight: bold; text-align: center;\">")
                             .append("Part Order: ")
                             .append(noteModel.selectedPartOrderProperty().get().getOrderNumber())
                             .append("</th></tr>");
                 }
             }
-            // Headers: Include "Line Type" column only if showType() is true
             stringBuilder.append("<tr>")
-                    .append("<th>Part Number</th>");
+                    .append("<th style=\"border: 1px solid black; padding: 5px;\">Part Number</th>");
             if (noteModel.selectedPartOrderProperty().get().showType()) {
-                stringBuilder.append("<th>Type</th>");
+                stringBuilder.append("<th style=\"border: 1px solid black; padding: 5px;\">Type</th>");
             }
-            stringBuilder.append("<th>Description</th>")
-                    .append("<th>Qty</th>")
-                    .append("</tr>");
-            // Loop through each PartDTO to add table rows
+            stringBuilder.append("<th style=\"border: 1px solid black; padding: 5px;\">Description</th>")
+                    .append("<th style=\"border: 1px solid black; padding: 5px;\">Qty</th>")
+                    .append("</tr></thead><tbody>");
             noteModel.selectedPartOrderProperty().get().getParts().forEach(partDTO -> {
                 stringBuilder.append("<tr>")
-                        .append("<td>").append(partDTO.getPartNumber()).append("</td>");
-                // Add Line Type cell only if showType() is true
+                        .append("<td style=\"border: 1px solid black; padding: 5px;\">").append(partDTO.getPartNumber()).append("</td>");
                 if (noteModel.selectedPartOrderProperty().get().showType()) {
-                    stringBuilder.append("<td>").append(partDTO.getLineType()).append("</td>");
+                    stringBuilder.append("<td style=\"border: 1px solid black; padding: 5px;\">").append(partDTO.getLineType()).append("</td>");
                 }
-                stringBuilder.append("<td>").append(partDTO.getPartDescription()).append("</td>")
-                        .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
+                stringBuilder.append("<td style=\"border: 1px solid black; padding: 5px;\">").append(partDTO.getPartDescription()).append("</td>")
+                        .append("<td style=\"border: 1px solid black; padding: 5px;\">").append(partDTO.getPartQuantity()).append("</td>")
                         .append("</tr>");
             });
-            stringBuilder.append("</table>");
+            stringBuilder.append("</tbody></table>");
         }
         System.out.println(stringBuilder);
         return stringBuilder.toString();
     }
+
+//    private String buildPartOrderToHTML(boolean includePOHeader) {
+//        StringBuilder stringBuilder = new StringBuilder();
+//        if (!noteModel.selectedPartOrderProperty().get().getParts().isEmpty()) {
+//            if (includePOHeader) {
+//                stringBuilder.append("<b>Parts Ordered</b><br>");
+//            } else {
+//                stringBuilder.append("<b>Parts Needed</b><br>");
+//            }
+//            stringBuilder.append("<table border=\"1\">");
+//            if (includePOHeader) {
+//                if (!noteModel.selectedPartOrderProperty().get().getOrderNumber().isEmpty()) {
+//                    // Adjust colspan based on showType()
+//                    int colspan = noteModel.selectedPartOrderProperty().get().showType() ? 4 : 3;
+//                    stringBuilder.append("<tr><th colspan=\"").append(colspan).append("\" style=\"background-color: lightgrey;\">")
+//                            .append("Part Order: ")
+//                            .append(noteModel.selectedPartOrderProperty().get().getOrderNumber())
+//                            .append("</th></tr>");
+//                }
+//            }
+//            // Headers: Include "Line Type" column only if showType() is true
+//            stringBuilder.append("<tr>")
+//                    .append("<th>Part Number</th>");
+//            if (noteModel.selectedPartOrderProperty().get().showType()) {
+//                stringBuilder.append("<th>Type</th>");
+//            }
+//            stringBuilder.append("<th>Description</th>")
+//                    .append("<th>Qty</th>")
+//                    .append("</tr>");
+//            // Loop through each PartDTO to add table rows
+//            noteModel.selectedPartOrderProperty().get().getParts().forEach(partDTO -> {
+//                stringBuilder.append("<tr>")
+//                        .append("<td>").append(partDTO.getPartNumber()).append("</td>");
+//                // Add Line Type cell only if showType() is true
+//                if (noteModel.selectedPartOrderProperty().get().showType()) {
+//                    stringBuilder.append("<td>").append(partDTO.getLineType()).append("</td>");
+//                }
+//                stringBuilder.append("<td>").append(partDTO.getPartDescription()).append("</td>")
+//                        .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
+//                        .append("</tr>");
+//            });
+//            stringBuilder.append("</table>");
+//        }
+//        System.out.println(stringBuilder);
+//        return stringBuilder.toString();
+//    }
 
     private String buildPartOrderToPlainText() {
         System.out.println("buildPartOrderToPlainText() called");
@@ -766,8 +810,6 @@ public class NoteInteractor {
         else return "No";
     }
 
-
-
     // returns true if parts were ordered (has po number)
     private boolean partsWereOrdered() {
         return noteModel.boundNoteProperty().get().getPartOrders().stream()
@@ -796,7 +838,6 @@ public class NoteInteractor {
             stringBuilder.append(copyAllPartOrdersToHTML(false)).append("<br>").append("\r\n");
         }
         stringBuilder.append(shippingInformationToHTML()).append("<br>").append("\r\n");
-        System.out.println(stringBuilder);
         return stringBuilder.toString();
     }
 
