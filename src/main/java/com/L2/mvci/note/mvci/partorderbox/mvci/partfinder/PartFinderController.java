@@ -40,7 +40,7 @@ public class PartFinderController extends AlertController<PartFinderMessage> {
             case GET_UPDATE_BY_INFORMATION -> partInteractor.getUpdatedByToPOJO();
             case REFRESH_PART_INFO -> partInteractor.refreshPartInfo();
             case TEST_SOME_SHIT -> partInteractor.testSomeShit();
-            case UPDATE_IN_CATELOGUE -> partInteractor.updateInCatelogue();
+            case UPDATE_IN_CATELOGUE -> partInteractor.savePart(SaveType.IN_SPARES);
         }
     }
 

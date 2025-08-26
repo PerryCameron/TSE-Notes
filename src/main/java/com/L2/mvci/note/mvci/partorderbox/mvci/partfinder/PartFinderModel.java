@@ -1,5 +1,6 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder;
 
+import atlantafx.base.controls.ToggleSwitch;
 import com.L2.dto.PartFx;
 import com.L2.dto.UpdatedByDTO;
 import com.L2.dto.global_spares.ProductFamilyDTO;
@@ -53,6 +54,7 @@ public class PartFinderModel {
     private final ObjectProperty<TextArea> partKeyWords = new SimpleObjectProperty<>();
     private final ObjectProperty<ToggleButton> imageButton = new SimpleObjectProperty<>();
     private final ObjectProperty<ToggleButton> familyButton = new SimpleObjectProperty<>();
+    private final ObjectProperty<ToggleSwitch> selectedToggleSwitch = new SimpleObjectProperty<>(new ToggleSwitch("Part in catalogue"));
     // from noteModel
     private final ObservableList<RangesFx> ranges;
     private StackPane stackPane;
@@ -60,8 +62,8 @@ public class PartFinderModel {
     private final BooleanProperty updatedRanges = new SimpleBooleanProperty(false);
     private final BooleanProperty updatedKeywords = new SimpleBooleanProperty(false);
     private final BooleanProperty refreshPartInfo = new SimpleBooleanProperty(false);
-    private final BooleanProperty manualToggleSwitchChange  = new SimpleBooleanProperty(false);
-    private PartFinderController partController;
+    private final BooleanProperty inSparesTogSwitch = new SimpleBooleanProperty(false);
+    private final BooleanProperty blockTogSwitchListener = new SimpleBooleanProperty(false);
     private Byte[] imageBytes;
 //    private ObjectProperty<Image> image = new SimpleObjectProperty<>();
 
@@ -231,6 +233,7 @@ public class PartFinderModel {
     public BooleanProperty getUpdatedKeywordsProperty() {
         return updatedKeywords;
     }
+    public BooleanProperty blockToggleSwitchProperty() { return blockTogSwitchListener; }
     public ObjectProperty<TextArea> partNoteProperty() {
         return partNote;
     }
@@ -249,35 +252,27 @@ public class PartFinderModel {
     public void setImageView(ImageView imageView) {
         this.imageView = imageView;
     }
-
     public List<UpdatedByDTO> getUpdatedByDTOs() {
         return updatedByDTOs;
     }
-
     public void setUpdatedByDTOs(List<UpdatedByDTO> updatedByDTOs) {
         this.updatedByDTOs = updatedByDTOs;
     }
-
     public ToggleButton getImageButton() {
         return imageButton.get();
     }
-
     public ObjectProperty<ToggleButton> imageButtonProperty() {
         return imageButton;
     }
-
     public ToggleButton getFamilyButton() {
         return familyButton.get();
     }
-
     public ObjectProperty<ToggleButton> familyButtonProperty() {
         return familyButton;
     }
-
     public BooleanProperty refreshPartInfoProperty() {
         return refreshPartInfo;
     }
-
     public void refreshPartInfo() {
         refreshPartInfoProperty().set(true);
         refreshPartInfoProperty().set(false);
@@ -288,7 +283,10 @@ public class PartFinderModel {
 //    }
 
 
-    public BooleanProperty automaticToggleSwitchChangeProperty() {
-        return manualToggleSwitchChange;
+    public BooleanProperty inSparesTogSwitchProperty() {
+        return inSparesTogSwitch;
+    }
+    public ObjectProperty<ToggleSwitch> inSparesToggleProperty() {
+        return selectedToggleSwitch;
     }
 }

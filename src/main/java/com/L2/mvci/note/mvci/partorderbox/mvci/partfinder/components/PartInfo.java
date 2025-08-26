@@ -19,7 +19,6 @@ public class PartInfo implements Builder<Pane> {
     private final PartFinderView partView;
     private HBox hBox;
     private VBox vBox;
-    private ToggleSwitch toggleSwitch = new ToggleSwitch("Part in catalogue");
 
     public PartInfo(PartFinderView partView) {
         this.partView = partView;
@@ -29,33 +28,46 @@ public class PartInfo implements Builder<Pane> {
     public Pane build() {
         this.vBox = new VBox();
         this.hBox = new HBox(20);
-//        vBox.getChildren().add(new Label("Part is in catalogue: " + partView.getPartModel().selectedSpareProperty().get().getArchived()));
-        // System.out.println(partView.getPartFinderModel().selectedSpareProperty().get());
         addEditHistory();
         partView.getPartFinderModel().refreshPartInfoProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue) refresh();
+            if (newValue) refresh();
         });
         hBox.getChildren().addAll(vBox, addToggleSwitch());
         return hBox;
     }
 
     public Control addToggleSwitch() {
-
-        toggleSwitch.setSelected(!partView.getPartFinderModel().selectedSpareProperty().get().getArchived());
-        toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!partView.getPartFinderModel().automaticToggleSwitchChangeProperty().get()) {
-                System.out.println("Triggered manual change");
-                partView.getPartFinderModel().selectedSpareProperty().get().setArchived(newValue);
+        // procure our toggle switch
+        ToggleSwitch toggleSwitch = partView.getPartFinderModel().inSparesToggleProperty().get();
+        // bind to our model
+        toggleSwitch.selectedProperty().bindBidirectional(partView.getPartFinderModel().inSparesTogSwitchProperty());
+        // find if selected spare is archived (we take the opposite)
+        boolean inSpares = !partView.getPartFinderModel().selectedSpareProperty().get().getArchived();
+        // match toggle switch to status of spare part we are viewing
+        partView.getPartFinderModel().inSparesTogSwitchProperty().set(inSpares);
+        // lets us know if we are using part in catalogue toggle button (prevents conflict when changing spares we are viewing)
+        toggleSwitch.hoverProperty().addListener((observable, wasHovering, isHovering) -> {
+            if (isHovering) {
+                partView.getPartFinderModel().blockToggleSwitchProperty().set(true);
+            } else {
+                partView.getPartFinderModel().blockToggleSwitchProperty().set(false);
+            }
+        });
+        // listener
+        partView.getPartFinderModel().inSparesTogSwitchProperty().addListener((observable, oldValue, newValue) -> {
+            // this is to prevent this from happening when we select a new part
+            if(partView.getPartFinderModel().blockToggleSwitchProperty().get()) {
+                // new value must have not(!) in front because archived is reverse to our use.
+                partView.getPartFinderModel().selectedSpareProperty().get().setArchived(!newValue);
                 partView.getAction().accept(PartFinderMessage.UPDATE_IN_CATELOGUE);
             }
-            partView.getPartFinderModel().automaticToggleSwitchChangeProperty().set(false);
         });
         return toggleSwitch;
     }
 
     public void addEditHistory() {
         List<UpdatedByDTO> dtoList = partView.getPartFinderModel().getUpdatedByDTOs();
-        if(!partView.getPartFinderModel().getUpdatedByDTOs().isEmpty()) {
+        if (!partView.getPartFinderModel().getUpdatedByDTOs().isEmpty()) {
             for (UpdatedByDTO dto : dtoList) {
                 String changes = dto.getChangeMade() == null ? "" : " Changes: " + dto.getChangeMade();
                 vBox.getChildren().add(new Label(dto.getUpdatedBy() + " " + dto.getUpdatedDateTime() + changes));
@@ -68,6 +80,7 @@ public class PartInfo implements Builder<Pane> {
     public void refresh() {
         this.vBox.getChildren().clear();
         addEditHistory();
+        ToggleSwitch toggleSwitch = partView.getPartFinderModel().inSparesToggleProperty().get();
         toggleSwitch.setSelected(!partView.getPartFinderModel().selectedSpareProperty().get().getArchived());
     }
 }

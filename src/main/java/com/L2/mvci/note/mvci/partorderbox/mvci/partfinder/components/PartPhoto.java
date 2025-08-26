@@ -43,9 +43,7 @@ public class PartPhoto implements Builder<Pane> {
 //        Button saveButton = new Button("Save Clipboard Image");
         pasteButton.setOnAction(event -> saveClipboardImage());
         // Load initial image for the selected spare
-        loadImageForSelectedSpare();
-        // Listen for changes to the selected spare
-        partView.getPartFinderModel().selectedSpareProperty().addListener((obs, oldSpare, newSpare) -> loadImageForSelectedSpare());
+        partView.getAction().accept(PartFinderMessage.LOAD_IMAGE);
         imageContainer.getChildren().addAll(partView.getPartFinderModel().getImageView());
         buttonContainer.getChildren().add(pasteButton);
         // Add components to HBox
@@ -56,9 +54,4 @@ public class PartPhoto implements Builder<Pane> {
     private void saveClipboardImage() {
             partView.getAction().accept(PartFinderMessage.SAVE_IMAGE_TO_DATABASE);
     }
-
-    private void loadImageForSelectedSpare() {
-        partView.getAction().accept(PartFinderMessage.LOAD_IMAGE);
-    }
-
 }

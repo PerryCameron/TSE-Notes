@@ -274,8 +274,8 @@ public class ProductFamily implements Builder<Pane> {
             TreeItem<Object> rangeItem = new TreeItem<>(pf);
             rangeItem.setExpanded(true);
             for (Object productFamily : pf.getProductFamilies() != null ? pf.getProductFamilies() : List.of()) {
-                logger.debug("Creating product node: {} (instance: {})",
-                        productFamily, System.identityHashCode(productFamily));
+                //logger.debug("Creating product node: {} (instance: {})",
+                //        productFamily, System.identityHashCode(productFamily));
                 rangeItem.getChildren().add(new TreeItem<>(productFamily));
             }
             rootItem.getChildren().add(rangeItem);

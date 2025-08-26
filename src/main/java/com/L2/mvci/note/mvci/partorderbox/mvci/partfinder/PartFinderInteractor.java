@@ -92,6 +92,12 @@ public class PartFinderInteractor {
             case IMAGE -> logger.info("New image for {} saved", partModel.selectedSpareProperty().get().getSpareItem());
             case KEYWORD -> Platform.runLater(() -> partModel.getUpdatedKeywordsProperty().set(success == 1));
             case PRODUCT_FAM -> Platform.runLater(() -> partModel.updatedRangeProperty().set(success == 1));
+            case IN_SPARES -> {
+                if (success == 1)
+                    Platform.runLater(() -> {
+                        partModel.getSparesTableView().refresh();
+                    });
+            }
         }
     }
 
@@ -395,14 +401,5 @@ public class PartFinderInteractor {
         List<UpdatedByDTO> updatedByDTOs = partModel.getUpdatedByDTOs();
         System.out.println("UpdatedByDTOs size: " + updatedByDTOs.size());
         updatedByDTOs.forEach(System.out::println);
-    }
-
-    public void updateInCatelogue() {
-//        boolean newValue = !partModel.selectedSpareProperty().get().getArchived();
-//        partModel.selectedSpareProperty().get().setArchived(newValue);
-        logger.info("We are checking the thread we are on here.");
-        System.out.print(partModel.selectedSpareProperty().get().getSpareItem() + " archived= ");
-        System.out.println(partModel.selectedSpareProperty().get().getArchived());
-        partModel.getSparesTableView().refresh();
     }
 }

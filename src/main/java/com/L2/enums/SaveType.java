@@ -5,5 +5,5 @@ public enum SaveType {
     KEYWORD,
     IMAGE,
     ADD_PART,
-    PRODUCT_FAM
+    IN_SPARES, PRODUCT_FAM
 }
