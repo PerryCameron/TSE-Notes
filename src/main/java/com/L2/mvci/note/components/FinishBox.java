@@ -49,6 +49,7 @@ public class FinishBox implements Component<Region> {
         root.getChildren().addAll(TitleBarFx.of("Answer To Customer Notes", buttons), hBox);
         refreshFields();
         root.setOnMouseExited(event -> {
+            noteView.getAction().accept(NoteMessage.TRIM_ADDITIONAL);
             noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
             noteView.getAction().accept(NoteMessage.REFRESH_NOTE_TABLEVIEW);
         });

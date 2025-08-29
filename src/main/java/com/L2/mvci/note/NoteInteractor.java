@@ -1023,6 +1023,18 @@ public class NoteInteractor {
         }
     }
 
+    public void trimIssue() {
+        // trim issue to remove hard returns
+        String issue = noteModel.boundNoteProperty().get().getIssue().trim();
+        noteModel.boundNoteProperty().get().setIssue(issue);
+    }
+
+    public void trimAdditional() {
+        // trim final answer to remove hard returns
+        String answer = noteModel.boundNoteProperty().get().getAdditionalCorrectiveActionText().trim();
+        noteModel.boundNoteProperty().get().setAdditionalCorrectiveActionText(answer);
+    }
+
     // this synchronizes the bound object to the correct object in the list
     public void saveOrUpdateNote() {
         for (NoteFx noteDTO : noteModel.getNotes()) {

@@ -81,6 +81,8 @@ public class NoteController extends Controller<NoteMessage> {
             case SAVE_OR_UPDATE_NOTE -> noteInteractor.saveOrUpdateNote();
             case SET_COMPLETE -> noteInteractor.setComplete();
             case SELECT_NOTE_TAB -> mainController.action(MainMessage.SELECT_NOTE_TAB);
+            case TRIM_ISSUE -> noteInteractor.trimIssue();
+            case TRIM_ADDITIONAL -> noteInteractor.trimAdditional();
             case UPDATE_STATUSBAR_WITH_STRING ->  noteInteractor.setStatusLabelWithNoteInformation();
             case UPDATE_NOTE_TAB_NAME -> mainController.action(MainMessage.UPDATE_NOTE_TAB_NAME);
             case UPDATE_PART_ORDER -> noteInteractor.updatePartOrder();

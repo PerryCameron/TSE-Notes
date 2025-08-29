@@ -73,6 +73,8 @@ public class IssueBox implements Component<Region> {
                         codeArea.setEditable(false);
                         noteView.getAction().accept(NoteMessage.CLEAR_HIGHLIGHTS_ISSUE);
                     }
+                    // trim the text to get rid of all returns etc
+                    noteView.getAction().accept(NoteMessage.TRIM_ISSUE);
                     // Trigger save or update note action
                     noteView.getAction().accept(NoteMessage.SAVE_OR_UPDATE_NOTE);
                 }
