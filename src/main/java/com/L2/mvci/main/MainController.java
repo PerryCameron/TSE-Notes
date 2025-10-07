@@ -126,6 +126,7 @@ public class MainController extends Controller<MainMessage> {
 
     private void openChangeSetAlert() {
         Optional<Alert> alert = Optional.ofNullable(new ChangeController(this).getView());
+
         alert.ifPresent(Dialog::showAndWait);
     }
 

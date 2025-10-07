@@ -3,16 +3,17 @@
     -fx-pref-width: 150px; /* Set the preferred width for each tab */
 }
 
+/* this is JavaFX */
 /* Style for unselected tabs */
 .tab {
-    -fx-background-color: #020202; /* Unselected tab background color */
+    -fx-background-color: #3e3b3b; /* Unselected tab background color */
     -fx-text-fill: #ffffff;           /* Unselected tab text color */
 
 }
 
 /* Style for the selected tab top */
 .tab:selected {
-    -fx-background-color: #504f4f; /* Selected tab background color */     /* Selected tab text color */
+    -fx-background-color: #0c0909; /* Selected tab background color */
 }
 
 .tab .tab-label {
@@ -21,7 +22,7 @@
 }
 
 .tab:selected .tab-label {
-    -fx-text-fill: black;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
 }
 
@@ -80,7 +81,7 @@
 }
 
 .decorative-hbox .label:hover {
-    -fx-text-fill: red;
+    -fx-text-fill: white;
 }
 
 .decorative-header-box {
@@ -94,12 +95,12 @@
 }
 
 .decorative-header-box .label:hover {
-    -fx-text-fill: red;
+    -fx-text-fill: white;
 }
 
 /* this is the third color you see in some components */
 .inner-decorative-hbox {
-    -fx-background-color: #052845;
+    -fx-background-color: #01192e;
     -fx-background-radius: 5;
 }
 
@@ -117,7 +118,7 @@
 
 /* On hover, show a selection effect */
 .invisible-button:hover {
-    -fx-background-color: rgba(0, 0, 0, 0.1); /* Light transparent background on hover */
+    -fx-background-color: rgb(5, 40, 69); /* Light transparent background on hover */
     -fx-border-radius: 5; /* Optional: rounded corners on hover */
     -fx-cursor: hand; /* Change cursor to pointer */
 }
@@ -284,10 +285,10 @@
 
 /* Added to get rid of Labels turning red when you hover over them */
 .label:hover {
-    -fx-text-fill: inherit !important;
+    -fx-text-fill: white;
 }
 
 /*not used in light.css*/
 .base-vbox {
-    -fx-background-color: #504f4f;
+    -fx-background-color: #0c0909;
 }

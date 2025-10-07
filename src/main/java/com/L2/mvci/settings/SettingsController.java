@@ -5,7 +5,7 @@ import com.L2.mvci.main.MainMessage;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.main.MainController;
-import com.L2.mvci.settings.components.DictionaryMenu;
+import com.L2.mvci.settings.components.PreferenceMenu;
 import com.L2.mvci.settings.components.EntitlementsMenu;
 import com.L2.mvci.settings.components.GlobalSparesMenu;
 import com.L2.mvci.settings.components.UserMenu;
@@ -46,7 +46,7 @@ public class SettingsController extends Controller<SettingsMessage> {
             // case PRINT_ENTITLEMENTS -> settingsInteractor.printEntitlements();
             case SHOW_USER -> settingsInteractor.changeMenu(new UserMenu(settingsView).build());
             case SHOW_ENTITLEMENTS -> settingsInteractor.changeMenu(new EntitlementsMenu(settingsView).build());
-            case SHOW_DICTIONARY -> settingsInteractor.changeMenu(new DictionaryMenu(settingsView).build());
+            case SHOW_DICTIONARY -> settingsInteractor.changeMenu(new PreferenceMenu(settingsView).build());
             case SHOW_GLOBAL_SPARES -> settingsInteractor.changeMenu(new GlobalSparesMenu(settingsView).build());
             case NEW_ENTITLEMENT -> settingsInteractor.createNewEntitlement();
             case DELETE_ENTITLEMENT -> settingsInteractor.deleteEntitlement();

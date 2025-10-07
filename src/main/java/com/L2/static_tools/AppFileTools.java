@@ -4,11 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class AppFileTools {
@@ -113,5 +117,24 @@ public class AppFileTools {
             }
         }
         return ApplicationPaths.globalSparesDir;
+    }
+
+    public List<String> getCssFileNames() {
+        try {
+            // Get the path to the css directory in the resources folder
+            Path cssDir = Paths.get(getClass().getResource("/css").toURI());
+            // List all files in the css directory, filter for .css files, and remove the .css extension
+            return Files.list(cssDir)
+                    .filter(path -> path.toString().endsWith(".css"))
+                    .map(path -> {
+                        String fileName = path.getFileName().toString();
+                        return fileName.substring(0, fileName.length() - 4); // Remove .css
+                    })
+                    .collect(Collectors.toList());
+        } catch (IOException | URISyntaxException e) {
+            // Log the error and return an empty list in case of failure
+            logger.error("Failed to list CSS files in /css directory", e);
+            return List.of(); // Empty list as fallback
+        }
     }
 }

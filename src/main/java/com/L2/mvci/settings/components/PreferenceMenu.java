@@ -15,13 +15,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;
 
-public class DictionaryMenu implements Builder<Region> {
-    private static final Logger logger = LoggerFactory.getLogger(DictionaryMenu.class);
+public class PreferenceMenu implements Builder<Region> {
+    private static final Logger logger = LoggerFactory.getLogger(PreferenceMenu.class);
     private final SettingsModel settingsModel;
     private final Consumer<SettingsMessage> action;
     private final SettingsView view;
 
-    public DictionaryMenu(SettingsView view) {
+    public PreferenceMenu(SettingsView view) {
         this.settingsModel = view.getSettingsModel();
         this.action = view.getAction();
         this.view = view;

@@ -1,5 +1,6 @@
 package com.L2.mvci.changeset;
 
+import com.L2.BaseApplication;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.widgetFx.DialogueFx;
 import javafx.geometry.Insets;
@@ -70,10 +71,10 @@ public class ChangeView implements Builder<Alert> {
     }
 
     private DialogPane createDialogPane() {
-        changeModel.getDialogPane().getStylesheets().add("css/light.css");
         changeModel.getDialogPane().getStyleClass().add("decorative-hbox");
         changeModel.getDialogPane().setPrefWidth(400);
         changeModel.getDialogPane().setMinWidth(400); // Ensure minimum width is 800
+        changeModel.getDialogPane().getStylesheets().add("css/" + BaseApplication.theme + ".css");
         return changeModel.getDialogPane();
     }
 
