@@ -30,6 +30,13 @@ import javafx.scene.layout.VBox;
             return vBox;
         }
 
+        public static VBox of(boolean setHgrow, double spacing, Pos pos ) {
+            VBox vBox = new VBox(spacing);
+            if(setHgrow) HBox.setHgrow(vBox, Priority.ALWAYS);
+            vBox.setAlignment(pos);
+            return vBox;
+        }
+
         public static VBox of(double width, Insets insets, String id) {
             VBox vBox = new VBox();
             vBox.setPrefWidth(width);

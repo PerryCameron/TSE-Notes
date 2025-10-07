@@ -70,11 +70,7 @@ public class BaseApplication extends Application {
         primaryStage.setResizable(true);
         primaryStage.setScene(new Scene(new MainController().getView()));
         //Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-        if(BaseApplication.theme.equals("light"))
-            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-        else
-            Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
-        primaryStage.getScene().getStylesheets().add("css/" + BaseApplication.theme + ".css");
+        ThemeChanger.applyTheme();
         //primaryStage.getScene().getStylesheets().add("css/light.css")
         primaryStage.getIcons().add(ImageResources.TSELOGO64);
         // Mouse pressed for dragging the window

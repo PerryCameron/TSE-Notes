@@ -119,10 +119,10 @@ public class AppFileTools {
         return ApplicationPaths.globalSparesDir;
     }
 
-    public List<String> getCssFileNames() {
+    public static List<String> getCssFileNames() {
         try {
             // Get the path to the css directory in the resources folder
-            Path cssDir = Paths.get(getClass().getResource("/css").toURI());
+            Path cssDir = Paths.get(AppFileTools.class.getResource("/css").toURI());
             // List all files in the css directory, filter for .css files, and remove the .css extension
             return Files.list(cssDir)
                     .filter(path -> path.toString().endsWith(".css"))
