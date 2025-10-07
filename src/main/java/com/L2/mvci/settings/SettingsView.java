@@ -24,6 +24,7 @@ public class SettingsView implements Builder<Region> {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
+        borderPane.getStyleClass().add("base-vbox");
         borderPane.setLeft(setMenu());
         borderPane.setCenter(setCenter());
         return borderPane;

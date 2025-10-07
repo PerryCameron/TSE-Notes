@@ -6,7 +6,6 @@ import com.L2.mvci.main.MainController;
 import com.L2.static_tools.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
@@ -20,6 +19,7 @@ public class BaseApplication extends Application {
     public static Stage primaryStage;
     public static boolean testMode = false;
     public static String dataBase = "notes.db";
+    public static String theme = "light";
     public static Path dataBaseLocation;
     public static boolean isResizing = false;
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
@@ -70,8 +70,11 @@ public class BaseApplication extends Application {
         primaryStage.setResizable(true);
         primaryStage.setScene(new Scene(new MainController().getView()));
         //Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
-        primaryStage.getScene().getStylesheets().add("css/dark.css");
+        if(BaseApplication.theme.equals("light"))
+            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        else
+            Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        primaryStage.getScene().getStylesheets().add("css/" + BaseApplication.theme + ".css");
         //primaryStage.getScene().getStylesheets().add("css/light.css")
         primaryStage.getIcons().add(ImageResources.TSELOGO64);
         // Mouse pressed for dragging the window

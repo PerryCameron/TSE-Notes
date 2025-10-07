@@ -66,7 +66,8 @@ public class PartFinderView implements Builder<Alert> {
     }
 
     private DialogPane createDialogPane() {
-        partFinderModel.getDialogPane().getStylesheets().add("css/light.css");
+        //partFinderModel.getDialogPane().getStylesheets().add("css/light.css");
+        partFinderModel.getDialogPane().getStylesheets().add("css/" + BaseApplication.theme + ".css");
         partFinderModel.getDialogPane().getStyleClass().add("decorative-hbox");
         partFinderModel.getDialogPane().setPrefWidth(partFinderModel.getWidth());
         partFinderModel.getDialogPane().setMinWidth(partFinderModel.getWidth()); // Ensure minimum width is 800

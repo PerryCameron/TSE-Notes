@@ -1,5 +1,6 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.partviewer;
 
+import com.L2.BaseApplication;
 import com.L2.widgetFx.DialogueFx;
 import com.L2.widgetFx.LabelFx;
 import javafx.geometry.Insets;
@@ -47,7 +48,8 @@ public class PartViewerView implements Builder<Alert> {
     }
 
     private DialogPane createDialogPane() {
-        partViewerModel.getDialogPane().getStylesheets().add("css/light.css");
+        //partViewerModel.getDialogPane().getStylesheets().add("css/light.css");
+        partViewerModel.getDialogPane().getStylesheets().add("css/" + BaseApplication.theme + ".css");
         partViewerModel.getDialogPane().getStyleClass().add("decorative-hbox");
         partViewerModel.getDialogPane().setPrefWidth(partViewerModel.getWidth());
         partViewerModel.getDialogPane().setMinWidth(partViewerModel.getWidth()); // Ensure minimum width is 800

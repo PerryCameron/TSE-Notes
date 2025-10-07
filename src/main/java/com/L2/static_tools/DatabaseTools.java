@@ -61,10 +61,9 @@ public class DatabaseTools {
                 updateSchemaVersion(jdbcTemplate, 2, "Added lineType to Parts, showType to PartOrders, and t_and_m to Notes");
             }
 
-            // Future versions can be added here (e.g., if (version < 3) { ... })
-
             // Check for spell check setting (independent of schema version)
             checkSpellCheckSetting(jdbcTemplate);
+            getTheme(jdbcTemplate);
 
         } catch (Exception e) {
             logger.error("Error during database schema check/update", e);
@@ -205,5 +204,22 @@ public class DatabaseTools {
         }
     }
 
+    // Helper method to check and initialize spell check setting
+    private static void getTheme(JdbcTemplate jdbcTemplate) {
+        String themeKey = "theme";
+        String query = "SELECT value FROM settings WHERE key = ?";
+        try {
+            BaseApplication.theme = jdbcTemplate.queryForObject(query, String.class, themeKey);
+            logger.info("theme found: {}", BaseApplication.theme);
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            // No result found, insert default value (e.g., "true" for enabled)
+            String defaultValue = "light";
+            jdbcTemplate.update(
+                    "INSERT INTO settings (key, value, group_name, description) VALUES (?, ?, ?, ?)",
+                    themeKey, defaultValue, "ui", "App theme"
+            );
+            logger.info("theme setting not found; initialized to {}", defaultValue);
+        }
+    }
 }
 

@@ -33,7 +33,8 @@ public class DialogueFx {
             headerLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
         }
         tieAlertToStage(alert, 400, 200);
-        dialogPane.getStylesheets().add("css/light.css");
+        //dialogPane.getStylesheets().add("css/light.css");
+        dialogPane.getStylesheets().add("css/" + BaseApplication.theme + ".css");
         return alert;
     }
 
@@ -60,8 +61,8 @@ public class DialogueFx {
             headerLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
         }
         tieAlertToStage(alert, 400, 200);
-        dialogPane.getStylesheets().add("css/light.css");
-
+        //dialogPane.getStylesheets().add("css/light.css");
+        dialogPane.getStylesheets().add("css/" + BaseApplication.theme + ".css");
         // Set them as the buttons for this alert.
         alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
         Optional<ButtonType> result = alert.showAndWait();
@@ -84,7 +85,8 @@ public class DialogueFx {
         tieAlertToStage(alert, 400, 200);
         DialogPane dialogPane = alert.getDialogPane();
         getTitleIcon(dialogPane);
-        dialogPane.getStylesheets().add("css/light.css");
+        //dialogPane.getStylesheets().add("css/light.css");
+        dialogPane.getStylesheets().add("css/" + BaseApplication.theme + ".css");
         dialogPane.getStyleClass().add("myDialog");
         alert.showAndWait();
         return alert;
@@ -98,7 +100,8 @@ public class DialogueFx {
         tieAlertToStage(alert, 400, 200);
         DialogPane dialogPane = alert.getDialogPane();
         getTitleIcon(dialogPane);
-        dialogPane.getStylesheets().add("css/light.css");
+        //dialogPane.getStylesheets().add("css/light.css");
+        dialogPane.getStylesheets().add("css/" + BaseApplication.theme + ".css");
         dialogPane.getStyleClass().add("myDialog");
         alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
         return Optional.of(alert);
@@ -122,7 +125,8 @@ public class DialogueFx {
         tieAlertToStage(alert, 400, 200);
         DialogPane dialogPane = alert.getDialogPane();
         getTitleIcon(dialogPane);
-        dialogPane.getStylesheets().add("css/light.css");
+        //dialogPane.getStylesheets().add("css/light.css");
+        dialogPane.getStylesheets().add("css/" + BaseApplication.theme + ".css");
         dialogPane.getStyleClass().add("myDialog");
         alert.showAndWait();
     }

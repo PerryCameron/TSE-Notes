@@ -44,16 +44,13 @@
 
 /* this is the the pane where the buttons are located at the bottom (previous, next, new note, etc) */
 .bottom-pane {
-    -fx-background-color: grey;
+    -fx-background-color: #020202;
+    -fx-text-fill: #ffffff;
 }
 
 /* Optional: Remove focus border from tabs */
 .tab-pane:focused > .tab-header-area > .tab:selected {
     -fx-background-color: #2980b9; /* Match this to selected tab color to remove focus border */
-}
-
-.bottom-pane {
-    -fx-background-color: #F5F6F6FF;
 }
 
 .title-pane .title {
@@ -87,21 +84,22 @@
 }
 
 .decorative-header-box {
-    -fx-background-color: #d6dada;
+    -fx-background-color: #020202;
     -fx-background-radius: 5;
 }
 
 .decorative-header-box .label {
     -fx-font-size: 12px;
-    -fx-text-fill: #000000;
+    -fx-text-fill: #ffffff;
 }
 
 .decorative-header-box .label:hover {
     -fx-text-fill: red;
 }
-/* styles.css */
+
+/* this is the third color you see in some components */
 .inner-decorative-hbox {
-    -fx-background-color: #efeded;
+    -fx-background-color: #052845;
     -fx-background-radius: 5;
 }
 
@@ -244,7 +242,7 @@
 
 /* Override MenuItem label color in the popup context */
 .context-menu .menu-item .label {
-    -fx-text-fill: black;
+    -fx-text-fill: #ffffff;
 }
 
 .misspelled {
