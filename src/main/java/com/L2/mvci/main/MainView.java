@@ -91,13 +91,23 @@ public class MainView implements Builder<Region> {
     }
 
     protected void addNewTab(String name, Region region, boolean closeable, Image image) {
-        Tab newTab = new Tab(name, region);
-        ImageView imageViewCopy = new ImageView(image);
-        newTab.setGraphic(imageViewCopy);
-        if (name.equals("Note")) mainModel.noteTabProperty().set(newTab);
-        newTab.setClosable(closeable);
-        mainModel.mainTabPaneProperty().get().getTabs().add(newTab);
-        mainModel.mainTabPaneProperty().get().getSelectionModel().select(newTab);
+        if(!tabIsOpen(name)) {
+            Tab newTab = new Tab(name, region);
+            ImageView imageViewCopy = new ImageView(image);
+            newTab.setGraphic(imageViewCopy);
+            if (name.equals("Note")) mainModel.noteTabProperty().set(newTab);
+            newTab.setClosable(closeable);
+            mainModel.mainTabPaneProperty().get().getTabs().add(newTab);
+            mainModel.mainTabPaneProperty().get().getSelectionModel().select(newTab);
+        }
+    }
+
+    protected boolean tabIsOpen(String name) {
+        return mainModel.mainTabPaneProperty().get().getTabs()
+                .stream()
+                .filter(tab -> tab.getText().equals(name))
+                .findFirst()
+                .isPresent();
     }
 
     public Consumer<MainMessage> getAction() {
