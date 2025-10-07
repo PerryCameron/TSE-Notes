@@ -33,9 +33,10 @@ public class MainView implements Builder<Region> {
         borderPane.setTop(new TitleBar(this, borderPane).build()); // <- here is where I create the Menu, what if we used boarderPane instead of scene?
         borderPane.setCenter(setUpCenterPane());
         borderPane.setBottom(setUpBottomPane());
-        borderPane.setStyle("-fx-border-color: #878484; -fx-border-width: 1;");
+        // borderPane.setStyle("-fx-border-color: #878484; -fx-border-width: 1;"); // moved to css
+        borderPane.getStyleClass().add("main-border-pane"); // Assign a style class
         return borderPane;
-    }
+    } // I want to move the style for this to my dark.css and light.css files
 
     private Node setUpBottomPane() {
         HBox hBox = new HBox();

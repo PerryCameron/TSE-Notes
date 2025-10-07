@@ -1,5 +1,6 @@
 package com.L2;
 
+import atlantafx.base.theme.PrimerDark;
 import atlantafx.base.theme.PrimerLight;
 import com.L2.mvci.main.MainController;
 import com.L2.static_tools.*;
@@ -68,8 +69,10 @@ public class BaseApplication extends Application {
         primaryStage.setMinWidth(800);
         primaryStage.setResizable(true);
         primaryStage.setScene(new Scene(new MainController().getView()));
-        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-        primaryStage.getScene().getStylesheets().add("css/light.css");
+        //Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        primaryStage.getScene().getStylesheets().add("css/dark.css");
+        //primaryStage.getScene().getStylesheets().add("css/light.css")
         primaryStage.getIcons().add(ImageResources.TSELOGO64);
         // Mouse pressed for dragging the window
         primaryStage.initStyle(StageStyle.UNDECORATED);

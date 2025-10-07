@@ -506,7 +506,6 @@ public class NoteInteractor {
     }
 
     private String buildPartOrderToHTML(boolean includePOHeader) {
-        System.out.println("buildPartOrderToHTML called");
         StringBuilder stringBuilder = new StringBuilder();
         if (!noteModel.selectedPartOrderProperty().get().getParts().isEmpty()) {
             if (includePOHeader) {
@@ -833,7 +832,7 @@ public class NoteInteractor {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(buildNameDateToHTML()).append("<br>").append("\r\n");
         stringBuilder.append(basicInformationToHTML()).append("<br>").append("\r\n");
-        stringBuilder.append(issueToHTML()).append("<br>").append("\r\n");
+        stringBuilder.append(issueToHTML()).append("\r\n");  //.append("<br>") <- removed for spacing (if not issues get rid of this)
         if (!noteModel.boundNoteProperty().get().getPartOrders().isEmpty()) {
             stringBuilder.append(copyAllPartOrdersToHTML(false)).append("<br>").append("\r\n");
         }

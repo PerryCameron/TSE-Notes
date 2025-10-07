@@ -43,6 +43,7 @@ public class NoteView implements Builder<Region> {
     @Override
     public Region build() {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 5, 0, 0));
+        vBox.getStyleClass().add("base-vbox");
         action.accept(NoteMessage.INITALIZE_DICTIONARY);
         ScrollPane scrollPane = new ScrollPane();
         ContextMenu contextMenu = new ContextMenu();
@@ -94,7 +95,7 @@ public class NoteView implements Builder<Region> {
 
     private Node setMainVBox() {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
-        vBox.getStyleClass().add("main-vbox");
+//        vBox.getStyleClass().add("main-vbox");
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
         vBox.getChildren().addAll(

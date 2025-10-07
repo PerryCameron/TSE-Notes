@@ -35,6 +35,12 @@
     -fx-background-color: #e2e1e1;
 }
 
+.main-border-pane {
+    -fx-border-color: #878484; /* Same as original, or adjust for light theme */
+    -fx-border-width: 1px;
+    -fx-border-style: solid; /* Explicitly define border style */
+    -fx-background-color: #ffffff; /* Optional: Light theme background */
+}
 
 .bottom-pane {
     -fx-background-color: grey;
