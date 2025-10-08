@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
@@ -330,79 +331,79 @@ public class NoteInteractor {
     }
 
     private void updateSpans(AreaType areaType, StyleSpans<Collection<String>> spans) {
-            switch (areaType) {
-                case subject -> {
-                    noteModel.subjectAreaProperty().get().setStyleSpans(0, spans);
-                    noteModel.subjectSpansProperty().set(spans);
-                }
-                case issue -> {
-                    noteModel.issueAreaProperty().get().setStyleSpans(0, spans);
-                    noteModel.issueSpansProperty().set(spans);
-                }
-                case finish -> {
-                    noteModel.finishAreaProperty().get().setStyleSpans(0, spans);
-                    noteModel.finishSpansProperty().set(spans);
-                }
+        switch (areaType) {
+            case subject -> {
+                noteModel.subjectAreaProperty().get().setStyleSpans(0, spans);
+                noteModel.subjectSpansProperty().set(spans);
             }
+            case issue -> {
+                noteModel.issueAreaProperty().get().setStyleSpans(0, spans);
+                noteModel.issueSpansProperty().set(spans);
+            }
+            case finish -> {
+                noteModel.finishAreaProperty().get().setStyleSpans(0, spans);
+                noteModel.finishSpansProperty().set(spans);
+            }
+        }
     }
 
     public void initializeDictionary() {
-                try {
-                    // Extract and load hunspell.dll
-                    String dllPathInJar = "/win32-x86-64/hunspell.dll"; // Matches your JAR structure
-                    long startTime = System.nanoTime();
-                    File tempDll = extractNativeLibrary(dllPathInJar);
-                    logger.debug("Extracted hunspell.dll to: {}", tempDll.getAbsolutePath());
-                    System.load(tempDll.getAbsolutePath());
-                    long dllLoadTime = System.nanoTime();
-                    logger.info("Loaded hunspell.dll successfully");
+        try {
+            // Extract and load hunspell.dll
+            String dllPathInJar = "/win32-x86-64/hunspell.dll"; // Matches your JAR structure
+            long startTime = System.nanoTime();
+            File tempDll = extractNativeLibrary(dllPathInJar);
+            logger.debug("Extracted hunspell.dll to: {}", tempDll.getAbsolutePath());
+            System.load(tempDll.getAbsolutePath());
+            long dllLoadTime = System.nanoTime();
+            logger.info("Loaded hunspell.dll successfully");
 
-                    // Dictionary paths
-                    String dictResourcePath = "/dictionary/en_US.dic";
-                    String affResourcePath = "/dictionary/en_US.aff";
-                    File dictFile = extractResourceToTemp(dictResourcePath, "en_US.dic");
-                    File affFile = extractResourceToTemp(affResourcePath, "en_US.aff");
-                    String dictPath = dictFile.getAbsolutePath();
-                    String affPath = affFile.getAbsolutePath();
-                    String customDictFullPath = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic").getAbsolutePath();
+            // Dictionary paths
+            String dictResourcePath = "/dictionary/en_US.dic";
+            String affResourcePath = "/dictionary/en_US.aff";
+            File dictFile = extractResourceToTemp(dictResourcePath, "en_US.dic");
+            File affFile = extractResourceToTemp(affResourcePath, "en_US.aff");
+            String dictPath = dictFile.getAbsolutePath();
+            String affPath = affFile.getAbsolutePath();
+            String customDictFullPath = new File(ApplicationPaths.homeDir + "\\TSENotes\\custom.dic").getAbsolutePath();
 
-                    logger.info("Loading Hunspell with aff: {}, dict: {}, custom: {}", affPath, dictPath, customDictFullPath);
-                    logger.info("aff exists: {}, size: {} bytes", affFile.exists(), affFile.length());
-                    logger.info("dict exists: {}, size: {} bytes", dictFile.exists(), dictFile.length());
-                    logger.info("custom exists: {}, size: {} bytes", new File(customDictFullPath).exists(), new File(customDictFullPath).length());
+            logger.info("Loading Hunspell with aff: {}, dict: {}, custom: {}", affPath, dictPath, customDictFullPath);
+            logger.info("aff exists: {}, size: {} bytes", affFile.exists(), affFile.length());
+            logger.info("dict exists: {}, size: {} bytes", dictFile.exists(), dictFile.length());
+            logger.info("custom exists: {}, size: {} bytes", new File(customDictFullPath).exists(), new File(customDictFullPath).length());
 
-                    noteModel.hunspellProperty().setValue(new Hunspell(dictPath, affPath));
-                    long initTime = System.nanoTime();
-                    logger.info("DLL load time: {} ms", (dllLoadTime - startTime) / 1_000_000.0);
-                    logger.info("Hunspell init time: {} ms", (initTime - dllLoadTime) / 1_000_000.0);
-                    logger.info("Test 'hello': {}", noteModel.hunspellProperty().get().spell("hello"));
-                    logger.info("Test 'xyzzy': {}", noteModel.hunspellProperty().get().spell("xyzzy"));
-                    if (!noteModel.hunspellProperty().get().spell("hello")) {
-                        logger.error("Hunspell failed basic test - base dictionary not working");
+            noteModel.hunspellProperty().setValue(new Hunspell(dictPath, affPath));
+            long initTime = System.nanoTime();
+            logger.info("DLL load time: {} ms", (dllLoadTime - startTime) / 1_000_000.0);
+            logger.info("Hunspell init time: {} ms", (initTime - dllLoadTime) / 1_000_000.0);
+            logger.info("Test 'hello': {}", noteModel.hunspellProperty().get().spell("hello"));
+            logger.info("Test 'xyzzy': {}", noteModel.hunspellProperty().get().spell("xyzzy"));
+            if (!noteModel.hunspellProperty().get().spell("hello")) {
+                logger.error("Hunspell failed basic test - base dictionary not working");
+            }
+
+            File customDictFile = new File(customDictFullPath);
+            if (customDictFile.exists() && customDictFile.length() > 2) {
+                noteModel.hunspellProperty().get().addDic(customDictFullPath);
+                logger.info("Added custom dictionary from {}", customDictFullPath);
+                logger.info("Testing custom dict - TCP/IP: {}, S/N: {}",
+                        noteModel.hunspellProperty().get().spell("TCP/IP"),
+                        noteModel.hunspellProperty().get().spell("S/N"));
+            } else if (!customDictFile.exists()) {
+                if (customDictFile.getParentFile().mkdirs() || customDictFile.createNewFile()) {
+                    try (FileWriter writer = new FileWriter(customDictFile)) {
+                        writer.write("0\n");
                     }
-
-                    File customDictFile = new File(customDictFullPath);
-                    if (customDictFile.exists() && customDictFile.length() > 2) {
-                        noteModel.hunspellProperty().get().addDic(customDictFullPath);
-                        logger.info("Added custom dictionary from {}", customDictFullPath);
-                        logger.info("Testing custom dict - TCP/IP: {}, S/N: {}",
-                                noteModel.hunspellProperty().get().spell("TCP/IP"),
-                                noteModel.hunspellProperty().get().spell("S/N"));
-                    } else if (!customDictFile.exists()) {
-                        if (customDictFile.getParentFile().mkdirs() || customDictFile.createNewFile()) {
-                            try (FileWriter writer = new FileWriter(customDictFile)) {
-                                writer.write("0\n");
-                            }
-                            logger.info("Created new custom dictionary file: {}", customDictFullPath);
-                        }
-                    }
-                } catch (UnsatisfiedLinkError e) {
-                    logger.error("Failed to load hunspell.dll", e);
-                } catch (IOException e) {
-                    logger.error("IO error during Hunspell setup", e);
-                } catch (Exception e) {
-                    logger.error("Unexpected error initializing Hunspell", e);
+                    logger.info("Created new custom dictionary file: {}", customDictFullPath);
                 }
+            }
+        } catch (UnsatisfiedLinkError e) {
+            logger.error("Failed to load hunspell.dll", e);
+        } catch (IOException e) {
+            logger.error("IO error during Hunspell setup", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error initializing Hunspell", e);
+        }
     }
 
 
@@ -470,7 +471,7 @@ public class NoteInteractor {
         writetoCustomDictTask.setOnFailed(event -> {
             Throwable e = writetoCustomDictTask.getException();
             logger.error("Failed to append '{}' to custom dictionary", word, e);
-            DialogueFx.errorAlert("Unable to add entry to custom dictionary","Failed to add "
+            DialogueFx.errorAlert("Unable to add entry to custom dictionary", "Failed to add "
                     + word + " to custom dictionary " + e.getMessage());
         });
         executorService.submit(writetoCustomDictTask);
@@ -1176,15 +1177,15 @@ public class NoteInteractor {
             @Override
             protected List<SparesDTO> call() {
                 // we are not searching a range, and there is one keyword, probably a part
-                if(noteModel.selectedRangeProperty().get().getProductFamily().equals("all")) {
+                if (noteModel.selectedRangeProperty().get().getProductFamily().equals("all")) {
                     if (searchParams.length == 1) {
                         // System.out.println("There is only one parameter: " + searchParams[0]);
                         if (StringChecker.hasNumbers(searchParams[0])) {
                             List<SparesDTO> sparesDTOS = globalSparesRepo.searchSparesByPartNumber(searchParams[0], noteModel.selectedPartOrderProperty().get().getId());
                             // looks like either the part we were looking for didn't exist or maybe it wasn't a part number
                             if (sparesDTOS.isEmpty())
-                            return globalSparesRepo.searchSparesScoringSingleKeyword(searchParams[0]); // TODO change this to a one parameter search
-                            // we got some results off the parts search, hopefully exactly 1
+                                return globalSparesRepo.searchSparesScoringSingleKeyword(searchParams[0]); // TODO change this to a one parameter search
+                                // we got some results off the parts search, hopefully exactly 1
                             else return sparesDTOS;
                         } else {
                             return globalSparesRepo.searchSparesScoring(searchParams);
@@ -1224,7 +1225,7 @@ public class NoteInteractor {
 
     // helper method to return appropriate sting
     private String setNumberByResults(int size) {
-        if(size == 1) return "1 Result";
+        if (size == 1) return "1 Result";
         else return size + " Results";
     }
 
@@ -1250,7 +1251,7 @@ public class NoteInteractor {
         }
 
         // Get range keywords
-        if(noteModel.selectedRangeProperty().get() == null) {
+        if (noteModel.selectedRangeProperty().get() == null) {
             logger.error("Cannot update range count: noteModel.selectedRangeProperty is null");
             DialogueFx.errorAlert("Ranges not found", "It appears that the parts database is not available");
             return;
@@ -1306,5 +1307,31 @@ public class NoteInteractor {
 
     public void setMainController(MainController mainController) {
         noteModel.setMainController(mainController);
+    }
+
+    public void emailNasp() {
+        if(noteModel.selectedPartOrderProperty().get() == null) {
+            Platform.runLater(() -> {
+                DialogueFx.errorAlert("Email Error", "There must be a part order to send an email to NASP");
+            });
+        } else {
+            String cc = noteModel.boundNoteProperty().get().getCallInEmail();
+            if (cc == null) cc = "";
+            try {
+                // Example with CC
+                EmailSender.openEmail(
+                        "northamericanserviceparts@schneider-electric.com",
+                        "PO " + noteModel.selectedPartOrderProperty().get().getOrderNumber(),
+                        "Please provide status / ETA for the following: \n\n" + buildPartOrderToPlainText(),
+                        cc
+                );
+                // Example without CC (your original call)
+                // openEmail("northamericanserviceparts@schneider-electric.com", "PO 1234567", "This is a test");
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

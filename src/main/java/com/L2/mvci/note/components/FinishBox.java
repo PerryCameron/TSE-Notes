@@ -7,6 +7,7 @@ import com.L2.interfaces.Component;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
+import com.L2.static_tools.EmailSender;
 import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.TitleBarFx;
@@ -25,6 +26,9 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class FinishBox implements Component<Region> {
 
@@ -89,7 +93,12 @@ public class FinishBox implements Component<Region> {
             noteView.getAction().accept(NoteMessage.COPY_LOGGED_CALL);
         }, ImageResources.COPY_LOGGED_CALL, "Log Call");
 
-        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, logCallActionButton, flagSwitch());
+        Button emailNaspActionButton = ButtonFx.utilityButton(() -> {
+            noteView.getAction().accept(NoteMessage.EMAIL_NASP);
+            //noteView.getAction().accept(NoteMessage.COPY_LOGGED_CALL);
+        }, ImageResources.EMAIL, "Email NASP");
+
+        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, logCallActionButton, emailNaspActionButton, flagSwitch());
         return vBox;
     }
 

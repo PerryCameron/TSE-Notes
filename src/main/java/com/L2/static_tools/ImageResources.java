@@ -38,9 +38,14 @@ public class ImageResources {
     public static final Image OWN;
     public static final Image FLAG;
     public static final Image PREFERENCE;
+    public static final Image EMAIL;
 
     static {
         try {
+            EMAIL = new Image(Objects.requireNonNull(
+                    ImageResources.class.getResourceAsStream("/images/letter-16.png"),
+                    "Failed to load resource: /images/letter-16.png"
+            ));
             PREFERENCE = new Image(Objects.requireNonNull(
                     ImageResources.class.getResourceAsStream("/images/preference-16.png"),
                     "Failed to load resource: /images/flag-16.png"
