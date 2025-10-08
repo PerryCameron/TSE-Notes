@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 
@@ -119,22 +121,63 @@ public class AppFileTools {
         return ApplicationPaths.globalSparesDir;
     }
 
+//    public static List<String> getCssFileNames() {
+//        try {
+//            // Get the path to the css directory in the resources folder
+//            Path cssDir = Paths.get(AppFileTools.class.getResource("/css").toURI()); // when I package the app this no longer works, I think this needs to be getresorceasstream
+//            // List all files in the css directory, filter for .css files, and remove the .css extension
+//            return Files.list(cssDir)
+//                    .filter(path -> path.toString().endsWith(".css"))
+//                    .map(path -> {
+//                        String fileName = path.getFileName().toString();
+//                        return fileName.substring(0, fileName.length() - 4); // Remove .css
+//                    })
+//                    .collect(Collectors.toList());
+//        } catch (IOException | URISyntaxException e) {
+//            // Log the error and return an empty list in case of failure
+//            logger.error("Failed to list CSS files in /css directory", e);
+//            return List.of(); // Empty list as fallback
+//        }
+//    }
+
     public static List<String> getCssFileNames() {
         try {
-            // Get the path to the css directory in the resources folder
-            Path cssDir = Paths.get(AppFileTools.class.getResource("/css").toURI());
-            // List all files in the css directory, filter for .css files, and remove the .css extension
-            return Files.list(cssDir)
-                    .filter(path -> path.toString().endsWith(".css"))
-                    .map(path -> {
-                        String fileName = path.getFileName().toString();
-                        return fileName.substring(0, fileName.length() - 4); // Remove .css
-                    })
-                    .collect(Collectors.toList());
+            // Get the ClassLoader
+            ClassLoader classLoader = AppFileTools.class.getClassLoader();
+            // Use getResource to locate the /css directory
+            URL cssDirUrl = classLoader.getResource("css");
+            if (cssDirUrl == null) {
+                logger.warn("CSS directory '/css' not found in resources");
+                return List.of();
+            }
+
+            // Check if running from a JAR
+            if (cssDirUrl.getProtocol().equals("jar")) {
+                // Extract JAR file path and list entries
+                String jarPath = cssDirUrl.getPath().substring(5, cssDirUrl.getPath().indexOf("!"));
+                try (JarFile jar = new JarFile(jarPath)) {
+                    return jar.stream()
+                            .filter(entry -> entry.getName().startsWith("css/") && entry.getName().endsWith(".css"))
+                            .map(entry -> {
+                                String fileName = entry.getName().substring("css/".length());
+                                return fileName.substring(0, fileName.length() - 4); // Remove .css
+                            })
+                            .collect(Collectors.toList());
+                }
+            } else {
+                // Running from file system (e.g., IDE)
+                Path cssDir = Paths.get(cssDirUrl.toURI());
+                return Files.list(cssDir)
+                        .filter(path -> path.toString().endsWith(".css"))
+                        .map(path -> {
+                            String fileName = path.getFileName().toString();
+                            return fileName.substring(0, fileName.length() - 4); // Remove .css
+                        })
+                        .collect(Collectors.toList());
+            }
         } catch (IOException | URISyntaxException e) {
-            // Log the error and return an empty list in case of failure
             logger.error("Failed to list CSS files in /css directory", e);
-            return List.of(); // Empty list as fallback
+            return List.of();
         }
     }
 }
