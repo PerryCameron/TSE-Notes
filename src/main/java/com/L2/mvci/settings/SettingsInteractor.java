@@ -1,5 +1,6 @@
 package com.L2.mvci.settings;
 
+import com.L2.BaseApplication;
 import com.L2.dto.EntitlementFx;
 import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesFx;
@@ -224,5 +225,9 @@ public class SettingsInteractor {
         String[]  keywords = settingsModel.selectedRangeProperty().get().getProductFamily().split(",");
         int count = globalSparesRepo.countSparesByRanges(keywords);
         settingsModel.numberOfSparesLabelProperty().get().setText("Number of Spares in Range: " + count);
+    }
+
+    public void persistTheme() {
+        settingsRepo.setTheme(BaseApplication.theme);
     }
 }

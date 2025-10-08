@@ -59,6 +59,7 @@ public class PreferenceMenu implements Builder<Region> {
             if (newValue != null) {
                 BaseApplication.theme = newValue; // Update the theme field
                 ThemeChanger.applyTheme();
+                action.accept(SettingsMessage.PERSIST_THEME);
                 // Persist the theme to the database
                 //setTheme(newValue);
             }
