@@ -549,54 +549,7 @@ public class NoteInteractor {
         return stringBuilder.toString();
     }
 
-//    private String buildPartOrderToHTML(boolean includePOHeader) {
-//        StringBuilder stringBuilder = new StringBuilder();
-//        if (!noteModel.selectedPartOrderProperty().get().getParts().isEmpty()) {
-//            if (includePOHeader) {
-//                stringBuilder.append("<b>Parts Ordered</b><br>");
-//            } else {
-//                stringBuilder.append("<b>Parts Needed</b><br>");
-//            }
-//            stringBuilder.append("<table border=\"1\">");
-//            if (includePOHeader) {
-//                if (!noteModel.selectedPartOrderProperty().get().getOrderNumber().isEmpty()) {
-//                    // Adjust colspan based on showType()
-//                    int colspan = noteModel.selectedPartOrderProperty().get().showType() ? 4 : 3;
-//                    stringBuilder.append("<tr><th colspan=\"").append(colspan).append("\" style=\"background-color: lightgrey;\">")
-//                            .append("Part Order: ")
-//                            .append(noteModel.selectedPartOrderProperty().get().getOrderNumber())
-//                            .append("</th></tr>");
-//                }
-//            }
-//            // Headers: Include "Line Type" column only if showType() is true
-//            stringBuilder.append("<tr>")
-//                    .append("<th>Part Number</th>");
-//            if (noteModel.selectedPartOrderProperty().get().showType()) {
-//                stringBuilder.append("<th>Type</th>");
-//            }
-//            stringBuilder.append("<th>Description</th>")
-//                    .append("<th>Qty</th>")
-//                    .append("</tr>");
-//            // Loop through each PartDTO to add table rows
-//            noteModel.selectedPartOrderProperty().get().getParts().forEach(partDTO -> {
-//                stringBuilder.append("<tr>")
-//                        .append("<td>").append(partDTO.getPartNumber()).append("</td>");
-//                // Add Line Type cell only if showType() is true
-//                if (noteModel.selectedPartOrderProperty().get().showType()) {
-//                    stringBuilder.append("<td>").append(partDTO.getLineType()).append("</td>");
-//                }
-//                stringBuilder.append("<td>").append(partDTO.getPartDescription()).append("</td>")
-//                        .append("<td>").append(partDTO.getPartQuantity()).append("</td>")
-//                        .append("</tr>");
-//            });
-//            stringBuilder.append("</table>");
-//        }
-//        System.out.println(stringBuilder);
-//        return stringBuilder.toString();
-//    }
-
     private String buildPartOrderToPlainText() {
-        System.out.println("buildPartOrderToPlainText() called");
         PartOrderFx partOrderDTO = noteModel.selectedPartOrderProperty().get();
         StringBuilder stringBuilder = new StringBuilder();
         ObservableList<PartFx> parts = partOrderDTO.getParts();
@@ -1003,10 +956,15 @@ public class NoteInteractor {
     }
 
     private void checkAndLoadPartOrdersIfNeeded() {
+        // this removes the last selected part order in case the new note has no part orders to have a selected one. (I added this because email to NASP would include previous part orders if we were on a note with no part orders)
+        noteModel.selectedPartOrderProperty().set(null);
+        // get the bound note
         NoteFx noteDTO = noteModel.boundNoteProperty().get();
+        // if the bound not has no part orders...
         if (noteDTO.getPartOrders().isEmpty()) {
             logger.debug("No Part orders found in memory, checking database..");
             noteDTO.setPartOrders(FXCollections.observableArrayList(partOrderRepo.findAllPartOrdersByNoteId(noteDTO.getId())));
+            // we found some part orders in the database for this note
             if (!noteModel.boundNoteProperty().get().getPartOrders().isEmpty()) {
                 logger.debug("{} part orders loaded into memory", noteDTO.getPartOrders().size());
                 noteModel.selectedPartOrderProperty().set(noteDTO.getPartOrders().getFirst());
@@ -1310,9 +1268,13 @@ public class NoteInteractor {
     }
 
     public void emailNasp() {
-        if(noteModel.selectedPartOrderProperty().get() == null) {
+        if (noteModel.selectedPartOrderProperty().get() == null) {
             Platform.runLater(() -> {
                 DialogueFx.errorAlert("Email Error", "There must be a part order to send an email to NASP");
+            });
+        } else if (noteModel.selectedPartOrderProperty().get().getOrderNumber().isEmpty()) {
+            Platform.runLater(() -> {
+                DialogueFx.errorAlert("Email Error", "You have a part order but you have not put in a part order number yet");
             });
         } else {
             String cc = noteModel.boundNoteProperty().get().getCallInEmail();
@@ -1321,8 +1283,23 @@ public class NoteInteractor {
                 // Example with CC
                 EmailSender.openEmail(
                         "northamericanserviceparts@schneider-electric.com",
-                        "PO " + noteModel.selectedPartOrderProperty().get().getOrderNumber(),
-                        "Please provide status / ETA for the following: \n\n" + buildPartOrderToPlainText(),
+                        "Order#: " + noteModel.selectedPartOrderProperty().get().getOrderNumber()
+                        +" - " + noteModel.boundNoteProperty().get().workOrderProperty().get()
+                        + " - " + noteModel.boundNoteProperty().get().getInstalledAt(),
+                        "Hi NASP, \n\nPlease provide status / ETA for the following: \n\n"
+                                + buildPartOrderToPlainText()
+
+                                + "\nPoint of Contact:\n" + noteModel.boundNoteProperty().get().getContactName()
+                                + "\n" + noteModel.boundNoteProperty().get().getContactPhoneNumber()
+                                + "\n" + noteModel.boundNoteProperty().get().getContactEmail()
+
+                                + "\n\nShipped to:"
+                                + "\n" + noteModel.boundNoteProperty().get().getStreet()
+                                + "\n" + noteModel.boundNoteProperty().get().getCity()
+                                + ", " + noteModel.boundNoteProperty().get().getState()
+                                + " " + noteModel.boundNoteProperty().get().getZip()
+                                + "\n\nThanks, \n"
+                                + noteModel.userProperty().get().getFullName(),
                         cc
                 );
                 // Example without CC (your original call)

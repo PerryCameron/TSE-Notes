@@ -71,16 +71,16 @@ public class NoteListInteractor implements ApplicationPaths {
     protected void displayPreviousNote() {
         int index = getIndexById(noteListModel.getBoundNote().getId());
         if (index < noteListModel.getNotes().size() - 1) {
-            NoteFx noteDTO = noteListModel.getNotes().get(index + 1);
-            selectTableRow(noteDTO);
+            NoteFx noteFx = noteListModel.getNotes().get(index + 1);
+            selectTableRow(noteFx);
         }
     }
 
     protected void displayNextNote() {
         int index = getIndexById(noteListModel.getBoundNote().getId());
         if (index > 0) {
-            NoteFx noteDTO = noteListModel.getNotes().get(index - 1);
-            selectTableRow(noteDTO);
+            NoteFx noteFx = noteListModel.getNotes().get(index - 1);
+            selectTableRow(noteFx);
         }
     }
 
