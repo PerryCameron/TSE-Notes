@@ -1311,4 +1311,49 @@ public class NoteInteractor {
             }
         }
     }
+
+    public void emailOct() {
+        if (noteModel.selectedPartOrderProperty().get() == null) {
+            Platform.runLater(() -> {
+                DialogueFx.errorAlert("Email Error", "There must be a part order to send an email to OEC");
+            });
+        } else if (noteModel.selectedPartOrderProperty().get().getOrderNumber().isEmpty()) {
+            Platform.runLater(() -> {
+                DialogueFx.errorAlert("Email Error", "You have a part order but you have not put in a part order number yet");
+            });
+        } else {
+            String cc = noteModel.boundNoteProperty().get().getCallInEmail();
+            if (cc == null) cc = "";
+            try {
+                // Example with CC
+                EmailSender.openEmail(
+                        "OracleError.CorrectionsTeam@schneider-electric.com",
+                        "Order#: " + noteModel.selectedPartOrderProperty().get().getOrderNumber()
+                                +" is in Error - " + noteModel.boundNoteProperty().get().workOrderProperty().get()
+                                + " - " + noteModel.boundNoteProperty().get().getInstalledAt(),
+                        "Hi OEC, \n\nPlease book.\n\n"
+                                + buildPartOrderToPlainText()
+
+                                + "\nPoint of Contact:\n" + noteModel.boundNoteProperty().get().getContactName()
+                                + "\n" + noteModel.boundNoteProperty().get().getContactPhoneNumber()
+                                + "\n" + noteModel.boundNoteProperty().get().getContactEmail()
+
+                                + "\n\nShipped to:"
+                                + "\n" + noteModel.boundNoteProperty().get().getStreet()
+                                + "\n" + noteModel.boundNoteProperty().get().getCity()
+                                + ", " + noteModel.boundNoteProperty().get().getState()
+                                + " " + noteModel.boundNoteProperty().get().getZip()
+                                + "\n\nThanks, \n"
+                                + noteModel.userProperty().get().getFullName(),
+                        ""
+                );
+                // Example without CC (your original call)
+                // openEmail("northamericanserviceparts@schneider-electric.com", "PO 1234567", "This is a test");
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

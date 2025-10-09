@@ -95,10 +95,14 @@ public class FinishBox implements Component<Region> {
 
         Button emailNaspActionButton = ButtonFx.utilityButton(() -> {
             noteView.getAction().accept(NoteMessage.EMAIL_NASP);
-            //noteView.getAction().accept(NoteMessage.COPY_LOGGED_CALL);
         }, ImageResources.EMAIL, "Email NASP");
 
-        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton, logCallActionButton, emailNaspActionButton, flagSwitch());
+        Button emailOctActionButton = ButtonFx.utilityButton(() -> {
+            noteView.getAction().accept(NoteMessage.EMAIL_OCT);
+        }, ImageResources.EMAIL2, "Email OCT");
+
+        vBox.getChildren().addAll(customerRequestButton, correctiveActionButton,
+                logCallActionButton, emailNaspActionButton, emailOctActionButton,flagSwitch());
         return vBox;
     }
 
