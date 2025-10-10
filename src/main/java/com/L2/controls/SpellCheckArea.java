@@ -288,9 +288,10 @@ public class SpellCheckArea extends CodeArea {
 
     private MenuItem getMenuItem(String cleanWord) {
         MenuItem addToDict = new MenuItem("Add to Dictionary");
-
+        addToDict.getStyleClass().add("add-to-dictionary-item");
+        addToDict.setId("add-to-dictionary-item");
         // Set the text color to green using an inline style
-        addToDict.setStyle("-fx-text-fill: green;");
+        addToDict.setStyle("-fx-text-fill: red;");
 
         addToDict.setOnAction(e -> {
             noteModel.hunspellProperty().get().add(cleanWord);

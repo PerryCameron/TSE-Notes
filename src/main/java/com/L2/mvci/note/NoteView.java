@@ -46,6 +46,7 @@ public class NoteView implements Builder<Region> {
         vBox.getStyleClass().add("base-vbox");
         action.accept(NoteMessage.INITALIZE_DICTIONARY);
         ScrollPane scrollPane = new ScrollPane();
+//        scrollPane.getStyleClass().add("base-vbox");
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.setStyle("-fx-font-family: '" + Font.getDefault().getFamily() + "';");
         noteModel.noteScrollPaneProperty().setValue(scrollPane);
@@ -96,7 +97,7 @@ public class NoteView implements Builder<Region> {
 
     private Node setMainVBox() {
         VBox vBox = VBoxFx.of(true, 10, new Insets(10, 20, 20, 20));
-//        vBox.getStyleClass().add("main-vbox");
+        vBox.getStyleClass().add("base-vbox");
         HBox hBox = new HBox();
         hBox.getChildren().addAll(basicInformation.build(), setBox3Info());
         vBox.getChildren().addAll(

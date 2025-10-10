@@ -14,14 +14,6 @@ import static com.L2.BaseApplication.primaryStage;
 public class ThemeChanger {
     private static final Logger logger = LoggerFactory.getLogger(ThemeChanger.class);
 
-    //    public static void applyTheme() {
-//        BaseApplication.primaryStage.getScene().getStylesheets().clear();
-//        if (BaseApplication.theme.equals("light"))
-//            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-//        else if (BaseApplication.theme.equals("dark"))
-//            Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
-//        primaryStage.getScene().getStylesheets().add("css/" + BaseApplication.theme + ".css");
-//    }
     public static void applyTheme() {
         // Validate theme
         String theme = BaseApplication.theme != null ? BaseApplication.theme : "light";
@@ -40,7 +32,7 @@ public class ThemeChanger {
             if (theme.equals("light")) {
                 Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
             } else if (theme.equals("dark")) {
-                Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+                //Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
             }
             logger.info("Applied AtlantaFX theme: {}", theme);
         } catch (Exception e) {

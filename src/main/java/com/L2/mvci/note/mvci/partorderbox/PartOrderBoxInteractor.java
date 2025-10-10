@@ -37,8 +37,8 @@ public class PartOrderBoxInteractor {
     // sending signal to part mvci
     public void printProductFamilies() {
         if (partOrderBoxModel.getPartController() == null) {
-            System.out.println("No part controller available");
-        }
+            logger.error("No part controller available");
+        } else
         partOrderBoxModel.getPartController().printProductFamilies();
     }
 
