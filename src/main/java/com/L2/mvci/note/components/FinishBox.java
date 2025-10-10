@@ -1,6 +1,8 @@
 package com.L2.mvci.note.components;
 
 import com.L2.controls.SpellCheckArea;
+import com.L2.widgetFx.HBoxFx;
+import javafx.animation.FadeTransition;
 import org.controlsfx.control.ToggleSwitch;
 import com.L2.enums.AreaType;
 import com.L2.interfaces.Component;
@@ -13,11 +15,8 @@ import com.L2.widgetFx.TitleBarFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -31,7 +30,6 @@ public class FinishBox implements Component<Region> {
     private final NoteView noteView;
     private final NoteModel noteModel;
     private VBox root;
-    private TextArea textArea;
 
     public FinishBox(NoteView noteView) {
         this.noteView = noteView;
@@ -42,8 +40,7 @@ public class FinishBox implements Component<Region> {
     public Region build() {
         this.root = VBoxFx.of(5.0, new Insets(5, 5, 10, 5));
         root.getStyleClass().add("decorative-hbox");
-        HBox hBox = new HBox(); // box to hold basic info and service plan
-        hBox.setPadding(new Insets(0, 5, 5, 5));
+        HBox hBox = HBoxFx.of(new Insets(0, 5, 5, 5)); // box to hold basic info and service plan
         Button[] buttons = new Button[]{};
         hBox.getChildren().addAll(correctiveText(), buttonBox());
         root.getChildren().addAll(TitleBarFx.of("Answer To Customer Notes", buttons), hBox);
@@ -69,10 +66,7 @@ public class FinishBox implements Component<Region> {
     }
 
     private Node buttonBox() {
-        VBox vBox = new VBox(10);
-        vBox.setPrefWidth(200);
-        vBox.setPadding(new Insets(0, 0, 0, 10));
-
+        VBox vBox = VBoxFx.of(200.0, 10.0, new Insets(0, 0, 0, 10));
 
         Button customerRequestButton = ButtonFx.utilityButton(() -> {
             noteView.flashGroupA();
@@ -98,28 +92,26 @@ public class FinishBox implements Component<Region> {
         }, ImageResources.EMAIL2, "Email OCT");
 
         vBox.getChildren().addAll(customerRequestButton, correctiveActionButton,
-                logCallActionButton, emailNaspActionButton, emailOctActionButton,flagSwitch());
+                logCallActionButton, emailNaspActionButton, emailOctActionButton, flagSwitch());
         return vBox;
     }
 
     private Node flagSwitch() {
-        Label label = new Label("Mark for Review");
-        label.getStyleClass().add("boolean-label");
-        ToggleSwitch toggleSwitch = new ToggleSwitch();
-        HBox hBox = new HBox(5);
-        hBox.setAlignment(Pos.CENTER_LEFT);
+        ToggleSwitch toggleSwitch = new ToggleSwitch("Mark for Review");
+        HBox hBox = new HBox(toggleSwitch);
+        hBox.setPadding(new Insets(0, 0, 0, 5));
         toggleSwitch.selectedProperty().bindBidirectional(noteModel.boundNoteProperty().get().completedProperty());
-        hBox.getChildren().addAll(toggleSwitch, label);
         return hBox;
     }
 
     @Override
     public void flash() {
-        root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+        root.getStyleClass().add("flash");
         PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-        pause.setOnFinished(event -> root.setStyle("")); // Reset the style
+        pause.setOnFinished(event -> root.getStyleClass().remove("flash")); // Reset the style
         pause.play();
     }
+
 
     @Override
     public void refreshFields() {

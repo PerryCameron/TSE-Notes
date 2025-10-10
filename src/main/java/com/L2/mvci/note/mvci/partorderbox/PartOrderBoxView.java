@@ -151,9 +151,10 @@ public class PartOrderBoxView implements Builder<Region> {
             }
         },ImageResources.DELETE, "Delete Part");
         // Create the VBox from your method
-        HBox lineTypeBox = lineTypeToggle(partOrderDTO);
+        Control lineTypeBox = lineTypeToggle(partOrderDTO);
+
         // Set a top margin (e.g., 10 pixels) on lineTypeBox
-        VBox.setMargin(lineTypeBox, new Insets(20, 0, 0, 0));
+        VBox.setMargin(lineTypeBox, new Insets(20, 3, 0, 3));
         vBox.getStyleClass().add("inner-decorative-hbox");
         // Now add all nodes to the parent vBox
         vBox.getChildren().addAll(searchButton, addPartButton, deleteButton, lineTypeBox);
@@ -161,15 +162,11 @@ public class PartOrderBoxView implements Builder<Region> {
     }
 
     // do we want to show a line type in the table?
-    private HBox lineTypeToggle(PartOrderFx partOrderDTO) {
-        HBox vBox = new HBox(5);
-        vBox.setPadding(new Insets(15, 5, 15, 5));
-        Label label = new Label("Show Type");
-        ToggleSwitch toggleSwitch = new ToggleSwitch();
-//        toggleSwitch.setSelected(partOrderDTO.showType());
+    private Control lineTypeToggle(PartOrderFx partOrderDTO) {
+        ToggleSwitch toggleSwitch = new ToggleSwitch("Show Type");
+        toggleSwitch.setSelected(partOrderDTO.showType());
         toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> partOrderDTO.showTypeProperty().set(observable.getValue()));
-        vBox.getChildren().addAll(label, toggleSwitch);
-        return vBox;
+        return toggleSwitch;
     }
 
     private TextField createPartOrderText(PartOrderFx partOrderDTO) {
@@ -372,9 +369,9 @@ public class PartOrderBoxView implements Builder<Region> {
     public void flash() {
         for (Map.Entry<PartOrderFx, VBox> entry : partOrderBoxModel.getPartOrderMap().entrySet()) {
             VBox vBox = entry.getValue();
-            vBox.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+            vBox.getStyleClass().add("flash");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-            pause.setOnFinished(event -> vBox.setStyle("")); // Reset the style
+            pause.setOnFinished(event -> vBox.getStyleClass().remove("flash")); // Reset the style
             pause.play();
         }
     }

@@ -16,6 +16,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.geometry.Insets;
+import javafx.util.Duration;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 
@@ -85,9 +86,9 @@ public class IssueBox implements Component<Region> {
 
     @Override
     public void flash() {
-        root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(0.2));
-        pause.setOnFinished(event -> root.setStyle(""));
+        root.getStyleClass().add("flash");
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        pause.setOnFinished(event -> root.getStyleClass().remove("flash")); // Reset the style
         pause.play();
     }
 

@@ -201,9 +201,9 @@ public class BasicInformation implements Component<Region> {
 
     @Override
     public void flash() {
-        root.setStyle("-fx-border-color: blue; -fx-border-width: 1px; -fx-border-radius: 5px");
+        root.getStyleClass().add("flash");
         PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
-        pause.setOnFinished(event -> root.setStyle("")); // Reset the style
+        pause.setOnFinished(event -> root.getStyleClass().remove("flash")); // Reset the style
         pause.play();
     }
 }

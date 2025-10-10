@@ -1045,16 +1045,33 @@
     -fx-text-fill: red;
 }
 
-.toggle-switch .background {
-    -fx-fill: lightgray;
-    -fx-arc-width: 25;
-    -fx-arc-height: 25;
+ /*Default theme (off state)*/
+
+.toggle-switch {
+    -fx-padding: 0 2 0 0; /* Reduce padding around the entire control */
+    -fx-spacing: 2; /* Target internal HBox-like layout, if used */
+    -fx-alignment: center-left; /* Ensure label and switch are aligned tightly */
 }
 
 .toggle-switch .thumb {
-    -fx-fill: white;
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 12.5;
 }
 
-.toggle-switch.switched-on .background {
-    -fx-fill: lightgreen;
+.toggle-switch .track {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 12.5;
+}
+
+/* On state (pseudo-class) */
+.toggle-switch:selected .thumb {
+    -fx-background-color: -fx-selected-text;
+}
+
+.toggle-switch:selected .track {
+    -fx-background-color: -fx-focus-accent;
+}
+
+.flash {
+    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.5, 0, 0);
 }
