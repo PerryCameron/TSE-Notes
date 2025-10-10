@@ -89,18 +89,17 @@ public class PartOrderBoxView implements Builder<Region> {
     }
 
     public Node createPartOrderBox(PartOrderFx partOrderDTO) {
-        VBox box = new VBox(10);
+        VBox box = new VBox();
+        box.getStyleClass().add("decorative-hbox");
+        box.setPadding(new Insets(5, 5, 10, 5));
+        box.setSpacing(5);
         partOrderBoxModel.setTableView(TableViewFx.of(PartFx.class));
         buildTable(partOrderDTO);
         box.setOnMouseEntered(event -> noteModel.selectedPartOrderProperty().set(partOrderDTO));
         box.setOnMouseExited(event -> partOrderBoxModel.getTableView().getSelectionModel().clearSelection());
         partOrderBoxModel.getPartOrderMap().put(partOrderDTO, box);
-        box.getStyleClass().add("decorative-hbox");
-        box.setPadding(new Insets(5, 5, 10, 5));
-        HBox hBox = new HBox(5);
-        hBox.setPadding(new Insets(0, 5, 0, 0));
+        HBox hBox = HBoxFx.of(new Insets(0, 5, 0, 0), 5.0);
         hBox.getChildren().addAll(menu(partOrderDTO), partOrderBoxModel.getTableView());
-        box.setSpacing(5);
         box.getChildren().addAll(toolbar(partOrderDTO), hBox);
         return box;
     }

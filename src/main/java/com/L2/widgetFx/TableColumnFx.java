@@ -61,7 +61,7 @@ public class TableColumnFx {
 
 
         // Set the cell factory
-        col.setCellFactory(column -> new TableCell<T, String>() {
+        col.setCellFactory(column -> new TableCell<>() {
             private final ComboBox<String> comboBox = new ComboBox<>();
             private final Text text = new Text();
 
@@ -69,6 +69,7 @@ public class TableColumnFx {
             {
                 comboBox.getItems().addAll(options);
                 comboBox.setValue(defaultValue);
+                text.getStyleClass().add("table-text"); // Use a unique class for table Text nodes
 
 
                 // Commit edit when ComboBox value changes
