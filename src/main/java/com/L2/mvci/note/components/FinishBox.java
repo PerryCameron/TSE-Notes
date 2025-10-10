@@ -1,13 +1,12 @@
 package com.L2.mvci.note.components;
 
-import atlantafx.base.controls.ToggleSwitch;
 import com.L2.controls.SpellCheckArea;
+import org.controlsfx.control.ToggleSwitch;
 import com.L2.enums.AreaType;
 import com.L2.interfaces.Component;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
-import com.L2.static_tools.EmailSender;
 import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.TitleBarFx;
@@ -26,9 +25,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 public class FinishBox implements Component<Region> {
 

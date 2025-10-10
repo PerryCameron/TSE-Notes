@@ -1,6 +1,5 @@
 package com.L2.mvci.settings.components;
 
-import atlantafx.base.layout.InputGroup;
 import com.L2.dto.EntitlementFx;
 import com.L2.mvci.settings.SettingsMessage;
 import com.L2.mvci.settings.SettingsModel;
@@ -49,7 +48,7 @@ public class EntitlementsMenu implements Builder<Region> {
     public Region build() {
         VBox root = VBoxFx.of(new Insets(0, 10, 10, 10));
         root.getStyleClass().add("decorative-hbox");
-        InputGroup inputGroup = new InputGroup(); // extends hbox
+        HBox inputGroup = new HBox(); // extends hbox
         inputGroup.setSpacing(10);
         inputGroup.getChildren().addAll(new EntitlementsTableView(view).build(), CreateEditFields());
         root.getChildren().addAll(HeaderFx.withTitle("Entitlements"), inputGroup);

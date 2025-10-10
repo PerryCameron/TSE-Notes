@@ -1,6 +1,6 @@
 package com.L2.mvci.note.mvci.partorderbox;
 
-import atlantafx.base.controls.ToggleSwitch;
+import org.controlsfx.control.ToggleSwitch;
 import com.L2.dto.PartFx;
 import com.L2.dto.PartOrderFx;
 import com.L2.mvci.note.NoteMessage;
@@ -166,7 +166,7 @@ public class PartOrderBoxView implements Builder<Region> {
         vBox.setPadding(new Insets(15, 5, 15, 5));
         Label label = new Label("Show Type");
         ToggleSwitch toggleSwitch = new ToggleSwitch();
-        toggleSwitch.setSelected(partOrderDTO.showType());
+//        toggleSwitch.setSelected(partOrderDTO.showType());
         toggleSwitch.selectedProperty().addListener((observable, oldValue, newValue) -> partOrderDTO.showTypeProperty().set(observable.getValue()));
         vBox.getChildren().addAll(label, toggleSwitch);
         return vBox;

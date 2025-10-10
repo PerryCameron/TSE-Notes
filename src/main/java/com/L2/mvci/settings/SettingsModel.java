@@ -1,6 +1,7 @@
 package com.L2.mvci.settings;
 
-import atlantafx.base.controls.ToggleSwitch;
+
+import org.controlsfx.control.ToggleSwitch;
 import com.L2.dto.EntitlementFx;
 import com.L2.dto.UserDTO;
 import com.L2.dto.global_spares.RangesFx;
@@ -24,7 +25,7 @@ public class SettingsModel {
     private ObjectProperty<TextArea> includeNotTextArea = new SimpleObjectProperty<>();
     private ObservableList<EntitlementFx> entitlements = null;
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>(null);
-    private ObjectProperty<ToggleSwitch> isSpellCheck = new SimpleObjectProperty<>(new ToggleSwitch("Enable Spell Checking"));
+    private ObjectProperty<ToggleSwitch> isSpellCheck = new SimpleObjectProperty<>(new ToggleSwitch());
     private StringProperty filePath = new SimpleStringProperty();
     private BooleanProperty partsDBAvailable = new SimpleBooleanProperty(false);
     private ObjectProperty<Path> droppedFile = new SimpleObjectProperty<>();

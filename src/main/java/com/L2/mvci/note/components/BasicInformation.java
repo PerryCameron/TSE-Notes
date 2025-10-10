@@ -1,6 +1,6 @@
 package com.L2.mvci.note.components;
 
-import atlantafx.base.controls.ToggleSwitch;
+import org.controlsfx.control.ToggleSwitch;
 import com.L2.dto.EntitlementFx;
 import com.L2.interfaces.Component;
 import com.L2.mvci.note.NoteMessage;

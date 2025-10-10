@@ -1,7 +1,6 @@
 package com.L2;
 
-import atlantafx.base.theme.PrimerDark;
-import atlantafx.base.theme.PrimerLight;
+
 import com.L2.mvci.main.MainController;
 import com.L2.static_tools.*;
 import javafx.application.Application;

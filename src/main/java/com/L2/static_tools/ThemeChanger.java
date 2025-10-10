@@ -1,15 +1,12 @@
 package com.L2.static_tools;
 
-import atlantafx.base.theme.PrimerDark;
-import atlantafx.base.theme.PrimerLight;
+
 import com.L2.BaseApplication;
 import javafx.application.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
-
-import static com.L2.BaseApplication.primaryStage;
 
 public class ThemeChanger {
     private static final Logger logger = LoggerFactory.getLogger(ThemeChanger.class);
@@ -29,11 +26,11 @@ public class ThemeChanger {
 
         // Apply AtlantaFX user agent stylesheet
         try {
-            if (theme.equals("light")) {
-                Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-            } else if (theme.equals("dark")) {
-                //Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
-            }
+//            if (theme.equals("light")) {
+//                Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+//            } else if (theme.equals("dark")) {
+//                //Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+//            }
             logger.info("Applied AtlantaFX theme: {}", theme);
         } catch (Exception e) {
             logger.error("Failed to apply AtlantaFX theme '{}'; defaulting to Modena", theme, e);

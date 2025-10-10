@@ -49,7 +49,9 @@ dependencies {
     // https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform
     implementation("net.java.dev.jna:jna-platform:5.14.0")
     // theme
-    implementation("io.github.mkpaz:atlantafx-base:2.0.1")
+//    implementation("io.github.mkpaz:atlantafx-base:2.0.1")
+    // https://mvnrepository.com/artifact/org.controlsfx/controlsfx
+    implementation("org.controlsfx:controlsfx:11.2.2")
     // logging api
     implementation("org.slf4j:slf4j-api:2.0.16")
     // implementation of the SLF4J API for Logback, a reliable, generic, fast and flexible logging framework.

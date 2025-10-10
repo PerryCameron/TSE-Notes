@@ -1,6 +1,5 @@
 package com.L2.mvci.note.components;
 
-import atlantafx.base.theme.Styles;
 import com.L2.mvci.note.NoteModel;
 import com.L2.mvci.note.NoteView;
 import com.L2.widgetFx.RegionFx;
@@ -32,7 +31,7 @@ public class ServicePlanDetails implements Builder<Region> {
         Label label = new Label(noteModel.currentEntitlementProperty().get().getName());
         label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ff0000;");
         Label label1 = new Label("Includes");
-        label1.getStyleClass().add(Styles.TEXT_BOLD);
+//        label1.getStyleClass().add(Styles.TEXT_BOLD);
         String[] includes = noteModel.currentEntitlementProperty().get().getIncludes().split("\\R");
         String[] notIncludes = noteModel.currentEntitlementProperty().get().getNotIncludes().split("\\R");
         vBox.getChildren().addAll(label, label1);
@@ -40,7 +39,7 @@ public class ServicePlanDetails implements Builder<Region> {
             vBox.getChildren().add(new Label(include));
         }
         Label label2 = new Label("Does not include:");
-        label2.getStyleClass().add(Styles.TEXT_BOLD);
+//        label2.getStyleClass().add(Styles.TEXT_BOLD);
         vBox.getChildren().addAll(RegionFx.regionHeightOf(15), label2);
         for (String notInclude : notIncludes) {
             vBox.getChildren().add(new Label(notInclude));

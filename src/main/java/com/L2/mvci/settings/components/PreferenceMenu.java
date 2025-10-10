@@ -1,7 +1,7 @@
 package com.L2.mvci.settings.components;
 
-import atlantafx.base.controls.ToggleSwitch;
 import com.L2.BaseApplication;
+import org.controlsfx.control.ToggleSwitch;
 import com.L2.mvci.settings.SettingsMessage;
 import com.L2.mvci.settings.SettingsModel;
 import com.L2.mvci.settings.SettingsView;
@@ -68,7 +68,7 @@ public class PreferenceMenu implements Builder<Region> {
         return hbox;
     }
 
-    private Control spellCheckOption() {
+    private Node spellCheckOption() {
         ObjectProperty<ToggleSwitch> toggleSwitch = settingsModel.isSpellCheckProperty();
         settingsModel.isSpellCheckProperty().get().selectedProperty().addListener((obs, oldVal, newVal) -> {
             logger.debug("ToggleSwitch changed from {} to {}", oldVal, newVal);

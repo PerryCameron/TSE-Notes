@@ -1,10 +1,10 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.components;
 
-import atlantafx.base.controls.ToggleSwitch;
+import org.controlsfx.control.ToggleSwitch;
 import com.L2.dto.UpdatedByDTO;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderMessage;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;
-import javafx.scene.control.Control;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -36,7 +36,7 @@ public class PartInfo implements Builder<Pane> {
         return hBox;
     }
 
-    public Control addToggleSwitch() {
+    public Node addToggleSwitch() {
         // procure our toggle switch
         ToggleSwitch toggleSwitch = partView.getPartFinderModel().inSparesToggleProperty().get();
         // bind to our model
@@ -81,6 +81,6 @@ public class PartInfo implements Builder<Pane> {
         this.vBox.getChildren().clear();
         addEditHistory();
         ToggleSwitch toggleSwitch = partView.getPartFinderModel().inSparesToggleProperty().get();
-        toggleSwitch.setSelected(!partView.getPartFinderModel().selectedSpareProperty().get().getArchived());
+//        toggleSwitch.setSelected(!partView.getPartFinderModel().selectedSpareProperty().get().getArchived());
     }
 }

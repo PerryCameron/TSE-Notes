@@ -1,7 +1,6 @@
 package com.L2.mvci.main.components;
 
 
-import atlantafx.base.theme.Styles;
 import com.L2.BaseApplication;
 import com.L2.mvci.main.MainMessage;
 import com.L2.mvci.main.MainView;
@@ -58,8 +57,9 @@ public class TitleBar implements Builder<Region> {
             hbox.setStyle("-fx-background-color: #5c1200;");
         }
         titleLabel = new Label("TSE Notes");
-        titleLabel.getStyleClass().add(Styles.TITLE_4);
-        titleLabel.setStyle("-fx-text-fill: white;");
+        titleLabel.getStyleClass().add("title-label");
+//        titleLabel.getStyleClass().add(Styles.TITLE_4);
+//        titleLabel.setStyle("-fx-text-fill: white;");
 
         // Create an HBox to push the close button to the right
         HBox spacer = new HBox();

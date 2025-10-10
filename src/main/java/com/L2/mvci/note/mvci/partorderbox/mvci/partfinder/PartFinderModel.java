@@ -1,6 +1,5 @@
 package com.L2.mvci.note.mvci.partorderbox.mvci.partfinder;
 
-import atlantafx.base.controls.ToggleSwitch;
 import com.L2.dto.PartFx;
 import com.L2.dto.UpdatedByDTO;
 import com.L2.dto.global_spares.ProductFamilyDTO;
@@ -16,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.ToggleSwitch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class PartFinderModel {
     private final ObjectProperty<TextArea> partKeyWords = new SimpleObjectProperty<>();
     private final ObjectProperty<ToggleButton> imageButton = new SimpleObjectProperty<>();
     private final ObjectProperty<ToggleButton> familyButton = new SimpleObjectProperty<>();
-    private final ObjectProperty<ToggleSwitch> selectedToggleSwitch = new SimpleObjectProperty<>(new ToggleSwitch("Part in catalogue"));
+    private final ObjectProperty<ToggleSwitch> selectedToggleSwitch = new SimpleObjectProperty<>(new ToggleSwitch());
     // from noteModel
     private final ObservableList<RangesFx> ranges;
     private StackPane stackPane;

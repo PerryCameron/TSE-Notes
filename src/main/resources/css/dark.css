@@ -14,7 +14,7 @@
     -fx-selected-text: #FFFFFF; /* Selected text color (e.g., ComboBox) */
     -fx-textfield-border: #333333; /* TextField-specific border */
     -fx-textfield-border-hover: -fx-scroll-thumb; /* TextField hover border */
-    -fx-table-header: -fx-secondary-bg; /* table header color */
+    -fx-table-header: -fx-tertiary-bg; /* table header color */
     -fx-table-cell-border: #FFFFFF;
 }
 
@@ -89,6 +89,11 @@
 .inner-decorative-hbox {
     -fx-background-color: -fx-hover-bg;
     -fx-background-radius: 5;
+}
+
+.title-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: -fx-text-color;
 }
 
 /* Make the button transparent */
@@ -1038,4 +1043,18 @@
 }
 .context-menu #add-to-dictionary-item:pressed .label {
     -fx-text-fill: red;
+}
+
+.toggle-switch .background {
+    -fx-fill: lightgray;
+    -fx-arc-width: 25;
+    -fx-arc-height: 25;
+}
+
+.toggle-switch .thumb {
+    -fx-fill: white;
+}
+
+.toggle-switch.switched-on .background {
+    -fx-fill: lightgreen;
 }
