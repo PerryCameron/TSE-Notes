@@ -25,7 +25,7 @@ public class SettingsModel {
     private ObjectProperty<TextArea> includeNotTextArea = new SimpleObjectProperty<>();
     private ObservableList<EntitlementFx> entitlements = null;
     private ObjectProperty<UserDTO> user = new SimpleObjectProperty<>(null);
-    private ObjectProperty<ToggleSwitch> isSpellCheck = new SimpleObjectProperty<>(new ToggleSwitch());
+    private ObjectProperty<ToggleSwitch> isSpellCheck = new SimpleObjectProperty<>(new ToggleSwitch("Enable Spell Check"));
     private StringProperty filePath = new SimpleStringProperty();
     private BooleanProperty partsDBAvailable = new SimpleBooleanProperty(false);
     private ObjectProperty<Path> droppedFile = new SimpleObjectProperty<>();

@@ -5,6 +5,7 @@
     -fx-tertiary-bg: #2C2C2C;
     -fx-quaternary-bg: #878484;
     -fx-text-color: #E0E0E0;
+    -fx-alternate-text-color : #f4f2f2;
     -fx-prompt-text-color: #A0A0A0;
     -fx-hover-bg: #252526;
     -fx-focus-accent: #2196F3;
@@ -12,11 +13,11 @@
     -fx-scroll-thumb: #424242;
     -fx-scroll-thumb-hover: #555555;
     -fx-selected-text: #FFFFFF;
-    -fx-textfield-border: #333333;
+    -fx-textfield-border: -fx-light-accent;
     -fx-textfield-border-hover: -fx-scroll-thumb;
     -fx-table-header: -fx-tertiary-bg;
     -fx-table-cell-border: #FFFFFF;
-
+    -fx-field-border: #555555;
 }
 
 /*******************************************************************************
@@ -530,11 +531,11 @@
  *                                                                             *
  ******************************************************************************/
 .text-field {
-    -fx-background-color: -fx-primary-bg;
+    -fx-background-color: -fx-tertiary-bg;
     -fx-text-fill: -fx-text-color;
     -fx-prompt-text-fill: -fx-prompt-text-color;
     -fx-background-radius: 4;
-    -fx-border-color: -fx-textfield-border; /* Kept as is since not a variable */
+    -fx-border-color: -fx-field-border; /* Kept as is since not a variable */
     -fx-border-width: 1;
     -fx-border-radius: 4;
     -fx-padding: 8 12 8 12;
@@ -563,19 +564,20 @@
  *                                                                             *
  ******************************************************************************/
 .text-area {
-    -fx-background-color: -fx-primary-bg;
+    -fx-background-color: -fx-tertiary-bg;
     -fx-text-fill: -fx-text-color;
     -fx-prompt-text-fill: -fx-prompt-text-color;
     -fx-background-radius: 4;
+    -fx-border-radius: 4;
     -fx-padding: 0;
-    -fx-border-width: 0;
-    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-field-border;
     -fx-font-size: 14px; /* Match TextField font size */
 }
 
 /* TextArea Content Area (the editable text region) */
 .text-area .content {
-    -fx-background-color: -fx-primary-bg;
+    -fx-background-color: -fx-tertiary-bg;
     -fx-background-radius: 4;
     -fx-border-width: 0;
     -fx-border-color: transparent;
@@ -641,31 +643,33 @@
  *                                                                             *
  ******************************************************************************/
 .code-area {
-    -fx-background-color: -fx-primary-bg; /* Match TextField and TextArea background */
+    -fx-background-color: -fx-tertiary-bg; /* Match TextField and TextArea background */
     -fx-text-fill: -fx-text-color; /* Match TextField/TextArea text color */
     -fx-font-size: 14px; /* Match TextField/TextArea font size */
     -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-radius: 4;
     -fx-padding: 8 12 8 12; /* Match TextArea outer padding */
-    -fx-border-width: 0; /* No border */
-    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-border-width: 1; /* No border */
+    -fx-border-color: -fx-field-border;
     -fx-background-insets: 0; /* Prevent corner issues */
 }
 
 /* CodeArea Single Styles */
 .code-area-single {
-    -fx-background-color: -fx-primary-bg; /* Match TextField/TextArea background */
+    -fx-background-color: -fx-tertiary-bg; /* Match TextField/TextArea background */
     -fx-text-fill: -fx-text-color; /* Match TextField/TextArea text color */
     -fx-font-size: 14px; /* Match TextField/TextArea font size */
     -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-radius: 4;
     -fx-padding: 8 12 8 12; /* Match TextArea outer padding */
-    -fx-border-width: 0; /* No border */
-    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-border-width: 1; /* No border */
+    -fx-border-color: -fx-field-border;
     -fx-background-insets: 0; /* Prevent corner issues */
 }
 
 /* CodeArea Content Area */
 .code-area .content, .code-area-single .content {
-    -fx-background-color: -fx-primary-bg; /* Match outer background */
+    -fx-background-color: -fx-tertiary-bg; /* Match outer background */
     -fx-background-radius: 4; /* Match rounded corners */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent; /* Ensure no border color */
@@ -739,20 +743,21 @@
  *                                                                             *
  ******************************************************************************/
 .combo-box {
-    -fx-background-color: -fx-primary-bg; /* Match TextField/TextArea/CodeArea background */
+    -fx-background-color: -fx-tertiary-bg; /* Match TextField/TextArea/CodeArea background */
     -fx-text-fill: -fx-text-color; /* Match text color */
     -fx-prompt-text-fill: -fx-prompt-text-color; /* Match placeholder text color */
     -fx-font-size: 14px; /* Match font size */
     -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-radius: 4;
     -fx-padding: 0; /* Match TextArea/CodeArea outer padding */
-    -fx-border-width: 0; /* No border */
-    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-border-width: 1; /* No border */
+    -fx-border-color: -fx-field-border;
     -fx-background-insets: 0; /* Prevent corner issues */
 }
 
 /* ComboBox Text Field (editable part) */
 .combo-box .text-field {
-    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-color: -fx-tertiary-bg; /* Match ComboBox background */
     -fx-text-fill: -fx-text-color; /* Match text color */
     -fx-prompt-text-fill: -fx-prompt-text-color; /* Match placeholder text color */
     -fx-font-size: 14px; /* Match font size */
@@ -765,7 +770,7 @@
 
 /* ComboBox Arrow Button */
 .combo-box .arrow-button {
-    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-color: -fx-tertiary-bg; /* Match ComboBox background */
     -fx-background-radius: 0 4 4 0; /* Rounded right corners, flat left */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent;
@@ -797,7 +802,7 @@
 
 /* ComboBox Popup (Dropdown List) */
 .combo-box .list-view {
-    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-color: -fx-tertiary-bg; /* Match ComboBox background */
     -fx-background-radius: 4; /* Rounded corners for dropdown */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent;
@@ -806,8 +811,8 @@
 }
 
 .combo-box .list-cell {
-    -fx-background: transparent;
-    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    /*-fx-background: transparent;*/
+    -fx-background-color: -fx-tertiary-bg; /* Match ComboBox background */
     -fx-text-fill: -fx-text-color; /* Match text color */
     -fx-font-size: 14px; /* Match font size */
     -fx-padding: 8 12 8 12; /* Match content padding */
@@ -815,7 +820,7 @@
     -fx-background-insets: 0;
 }
 
-/* List Cell Hover/Selected States */
+ /*List Cell Hover/Selected States */
 .combo-box .list-cell:hover {
     -fx-background-color: -fx-focus-accent; /* Slightly lighter on hover */
     -fx-text-fill: -fx-text-color;
@@ -828,7 +833,7 @@
 
 /* ScrollPane in ComboBox Popup */
 .combo-box .list-view .scroll-pane {
-    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-color: -fx-tertiary-bg; /* Match ComboBox background */
     -fx-background-radius: 4;
     -fx-border-width: 0;
     -fx-border-color: transparent;
@@ -846,7 +851,7 @@
 
 /* ScrollBar in ComboBox Popup */
 .combo-box .list-view .scroll-bar:vertical, .combo-box .list-view .scroll-bar:horizontal {
-    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-color: -fx-tertiary-bg; /* Match ComboBox background */
     -fx-background-radius: 4;
     -fx-border-width: 0;
     -fx-border-color: transparent;
@@ -891,7 +896,7 @@
 }
 
 .table-view .column-header {
-    -fx-background-color: -fx-table-header; /* header background color */
+    -fx-background-color: -fx-secondary-bg; /* header background color */
     /*-fx-background-radius: 4 4 0 0;*/
     -fx-border-width: 0;
     -fx-border-color: transparent;
@@ -909,7 +914,7 @@
 
 /* Table Cells */
 .table-view .table-cell {
-    -fx-background-color: -fx-primary-bg;
+    -fx-background-color: -fx-tertiary-bg;
     -fx-text-fill: -fx-text-color;
     -fx-font-size: 14px;
     -fx-padding: 2; /* Your specified padding */
@@ -1063,29 +1068,60 @@
 
  /*Default theme (off state)*/
 
+/* Main ToggleSwitch Styling */
 .toggle-switch {
-    -fx-padding: 0 2 0 0; /* Reduce padding around the entire control */
-    -fx-spacing: 2; /* Target internal HBox-like layout, if used */
-    -fx-alignment: center-left; /* Ensure label and switch are aligned tightly */
+    -fx-padding: 0 2 0 0; /* Reduce padding around the control */
+    -fx-spacing: 2; /* Target internal HBox-like layout */
+    -fx-alignment: center-left; /* Align label and switch tightly */
+    -fx-background-color: transparent !important; /* Prevent background interference */
 }
 
+/* Thumb-Area (Track, Off State) */
+.toggle-switch .thumb-area {
+    -fx-background-color: -fx-secondary-bg !important; /* Green for off state */
+    -fx-background-radius: 12.5 !important; /* Rounded corners */
+    -fx-border-radius: 12.5;
+    -fx-pref-height: 25;
+    -fx-pref-width: 40;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-tertiary-bg !important; /* Remove border */
+    -fx-background-insets: 0 !important; /* Prevent inset issues */
+}
+
+/* Thumb (Off State) */
 .toggle-switch .thumb {
-    -fx-background-color: -fx-primary-bg;
-    -fx-background-radius: 12.5;
+    -fx-background-color: -fx-primary-bg !important; /* White for off state (already working) */
+    -fx-background-radius: 12.5 !important;
+    -fx-border-radius: 12.5;
+    -fx-border-width: 1;
+    -fx-border-color: gray !important; /* Remove border */
+    -fx-background-insets: 0 !important;
 }
 
-.toggle-switch .track {
-    -fx-background-color: -fx-primary-bg;
-    -fx-background-radius: 12.5;
+/* Selected State (On State) */
+.toggle-switch:selected .thumb-area {
+    -fx-background-color: -fx-focus-accent !important; /* Red for on state */
+    -fx-background-radius: 12.5 !important;
+    -fx-border-color: transparent !important;
+    -fx-border-radius: 12.5;
+    -fx-pref-height: 25;
+    -fx-pref-width: 40;
+    -fx-border-width: 3;
+    /*-fx-border-color: grey !important; !* Remove border *!*/
+    -fx-background-insets: 0 !important;
 }
 
-/* On state (pseudo-class) */
 .toggle-switch:selected .thumb {
-    -fx-background-color: -fx-selected-text;
+    -fx-background-color: -fx-primary-bg !important; /* White for on state (already working) */
+    -fx-background-radius: 12.5 !important;
+    -fx-border-color: transparent !important;
+    -fx-background-insets: 0 !important;
 }
 
-.toggle-switch:selected .track {
-    -fx-background-color: -fx-focus-accent;
+/* Optional: Handle Focus to Prevent Unwanted Effects */
+.toggle-switch:focused .thumb-area,
+.toggle-switch:focused .thumb {
+    -fx-effect: none !important; /* Prevent focus glow */
 }
 
 .flash {
@@ -1099,6 +1135,7 @@
  ******************************************************************************/
 /* Style the button that opens the calendar popup */
 /* Style the DatePicker’s root node to remove the light background outline */
+
 .date-picker {
     -fx-background-color: transparent; /* Make the root background transparent */
     -fx-border-color: transparent; /* Remove any default border */
@@ -1115,7 +1152,7 @@
     -fx-background-color: -fx-tertiary-bg; /* Background, e.g., #2C2C2C */
     -fx-text-fill: -fx-text-color; /* Text color, e.g., #E0E0E0 */
     -fx-prompt-text-fill: -fx-prompt-text-color; /* Prompt text, e.g., #A0A0A0 */
-    -fx-border-color: -fx-textfield-border; /* Border, e.g., #333333 */
+    -fx-border-color: -fx-field-border; /* Border, e.g., #333333 */
     -fx-border-width: 1;
     -fx-background-insets: 0; /* No padding/offset */
     -fx-background-radius: 4 0 0 4; /* Round top-left and bottom-left corners only */
@@ -1206,12 +1243,22 @@
     -fx-background-insets: 0;
 }
 
+/*.date-picker > .text-field {*/
+/*    -fx-background-color: -fx-tertiary-bg; !* Background, e.g., #2C2C2C *!*/
+/*    -fx-text-fill: -fx-text-color; !* Text color, e.g., #E0E0E0 *!*/
+/*    -fx-prompt-text-fill: -fx-prompt-text-color; !* Prompt text, e.g., #A0A0A0 *!*/
+/*    -fx-border-color: -fx-field-border; !* Border, e.g., #333333 *!*/
+/*    -fx-border-width: 1;*/
+/*    -fx-background-insets: 0; !* No padding/offset *!*/
+/*    -fx-background-radius: 4 0 0 4; !* Round top-left and bottom-left corners only *!*/
+/*}*/
+
 /* Style the text field inside the Spinner */
 .spinner > .text-field {
     -fx-background-color: -fx-tertiary-bg; /* #2C2C2C */
     -fx-text-fill: -fx-text-color; /* #E0E0E0 */
     -fx-prompt-text-fill: -fx-prompt-text-color; /* #A0A0A0 */
-    -fx-border-color: -fx-textfield-border transparent -fx-textfield-border -fx-textfield-border; /* #333333, no right border */
+    -fx-border-color: -fx-field-border; /* #333333, no right border */
     -fx-border-width: 1 0 1 1; /* No right border to blend with buttons */
     -fx-background-insets: 0;
     -fx-background-radius: 4 0 0 4; /* Round left corners, like DatePicker */
