@@ -28,6 +28,7 @@ public class BaseApplication extends Application {
             if ("test".equalsIgnoreCase(arg)) {
                 testMode = true;
                 dataBase = "test-notes.db";
+                System.setProperty("com.sun.javafx.css.debug", "true");
             }
         }
         // I prefer logs in the console in test mode
@@ -68,9 +69,7 @@ public class BaseApplication extends Application {
         primaryStage.setMinWidth(800);
         primaryStage.setResizable(true);
         primaryStage.setScene(new Scene(new MainController().getView()));
-        //Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         ThemeChanger.applyTheme();
-        //primaryStage.getScene().getStylesheets().add("css/light.css")
         primaryStage.getIcons().add(ImageResources.TSELOGO64);
         // Mouse pressed for dragging the window
         primaryStage.initStyle(StageStyle.UNDECORATED);

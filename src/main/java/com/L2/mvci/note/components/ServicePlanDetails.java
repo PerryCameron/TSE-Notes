@@ -29,9 +29,17 @@ public class ServicePlanDetails implements Builder<Region> {
     public void updateDetails() {
         vBox.getChildren().clear();
         Label label = new Label(noteModel.currentEntitlementProperty().get().getName());
-        label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ff0000;");
+        label.getStyleClass().clear(); // Clear default classes
+        label.getStyleClass().add("service-plan-details");
+
+        // Debug styles
+        System.out.println("Style classes: " + label.getStyleClass());
+        System.out.println("Computed CSS properties: " + label.getCssMetaData());
+        System.out.println("Inline style: " + label.getStyle());
+
+
+
         Label label1 = new Label("Includes");
-//        label1.getStyleClass().add(Styles.TEXT_BOLD);
         String[] includes = noteModel.currentEntitlementProperty().get().getIncludes().split("\\R");
         String[] notIncludes = noteModel.currentEntitlementProperty().get().getNotIncludes().split("\\R");
         vBox.getChildren().addAll(label, label1);
@@ -39,7 +47,6 @@ public class ServicePlanDetails implements Builder<Region> {
             vBox.getChildren().add(new Label(include));
         }
         Label label2 = new Label("Does not include:");
-//        label2.getStyleClass().add(Styles.TEXT_BOLD);
         vBox.getChildren().addAll(RegionFx.regionHeightOf(15), label2);
         for (String notInclude : notIncludes) {
             vBox.getChildren().add(new Label(notInclude));

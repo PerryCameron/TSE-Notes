@@ -121,25 +121,6 @@ public class AppFileTools {
         return ApplicationPaths.globalSparesDir;
     }
 
-//    public static List<String> getCssFileNames() {
-//        try {
-//            // Get the path to the css directory in the resources folder
-//            Path cssDir = Paths.get(AppFileTools.class.getResource("/css").toURI()); // when I package the app this no longer works, I think this needs to be getresorceasstream
-//            // List all files in the css directory, filter for .css files, and remove the .css extension
-//            return Files.list(cssDir)
-//                    .filter(path -> path.toString().endsWith(".css"))
-//                    .map(path -> {
-//                        String fileName = path.getFileName().toString();
-//                        return fileName.substring(0, fileName.length() - 4); // Remove .css
-//                    })
-//                    .collect(Collectors.toList());
-//        } catch (IOException | URISyntaxException e) {
-//            // Log the error and return an empty list in case of failure
-//            logger.error("Failed to list CSS files in /css directory", e);
-//            return List.of(); // Empty list as fallback
-//        }
-//    }
-
     public static List<String> getCssFileNames() {
         try {
             // Get the ClassLoader

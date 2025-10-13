@@ -26,6 +26,13 @@
  *                                                                             *
  ******************************************************************************/
 
+/*This controls the text properties of the service plan title*/
+.service-plan-details {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-focus-accent !important;
+}
+
 /*This controls the background of the entire center pane, can only see a sliver under the title bar*/
 .center-pane {
     -fx-background-color: -fx-tertiary-bg;

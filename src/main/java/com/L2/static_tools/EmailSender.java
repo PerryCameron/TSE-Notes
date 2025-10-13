@@ -31,7 +31,7 @@ public class EmailSender {
         } else {
             throw new IOException("Desktop or MAIL action not supported on this platform.");
         }
-    }
+    } // I have been using this to send an email from my JavaFX app.  It opens Outlook, and when I hit send it looks like nothing happens, there is no email in the sent box, however if I open another email and send it then it may then show in the sent box
 
     // Overload for calls without CC
     public static void openEmail(String to, String subject, String body)

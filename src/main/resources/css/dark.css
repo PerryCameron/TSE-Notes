@@ -15,8 +15,8 @@
     -fx-selected-text: #FFFFFF;
     -fx-textfield-border: -fx-light-accent;
     -fx-textfield-border-hover: -fx-scroll-thumb;
-    -fx-table-header: -fx-tertiary-bg;
-    -fx-table-cell-border: #FFFFFF;
+    -fx-table-header: -fx-secondary-bg;
+    -fx-table-cell-border: -fx-primary-bg;
     -fx-field-border: #555555;
 }
 
@@ -25,6 +25,13 @@
  * Custom                                                                     *
  *                                                                             *
  ******************************************************************************/
+
+/*This controls the text properties of the service plan title*/
+Label.service-plan-details {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: rgb(255, 0, 0) !important;
+}
 
 /*This controls the background of the entire center pane, can only see a sliver under the title bar*/
 .center-pane {
@@ -587,11 +594,11 @@
 }
 
 /* TextArea Hover State */
-.text-area:hover {
-    -fx-background-color: -fx-hover-bg; /* Slightly lighter on hover */
-    -fx-border-width: 0; /* No border on hover */
-    -fx-border-color: transparent; /* Ensure no border color */
-}
+/*.text-area:hover {*/
+/*    -fx-background-color: -fx-hover-bg; !* Slightly lighter on hover *!*/
+/*    -fx-border-width: 0; !* No border on hover *!*/
+/*    -fx-border-color: transparent; !* Ensure no border color *!*/
+/*}*/
 
 /* TextArea Focus State */
 .text-area:focused {
@@ -786,19 +793,19 @@
 }
 
 /* ComboBox Hover State */
-.combo-box:hover {
-    /*-fx-background-color: -fx-hover-bg; !* Slightly lighter on hover *!*/
-    -fx-border-width: 0; /* No border */
-    -fx-border-color: transparent;
-}
+/*.combo-box:hover {*/
+/*    !*-fx-background-color: -fx-hover-bg; !* Slightly lighter on hover *!*!*/
+/*    -fx-border-width: 0; !* No border *!*/
+/*    -fx-border-color: transparent;*/
+/*}*/
 
 /* ComboBox Focus State */
-.combo-box:focused {
-    /*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*/
-    -fx-border-width: 0; /* No border */
-    -fx-border-color: transparent;
-    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); /* Subtle blue glow for focus */
-}
+/*.combo-box:focused {*/
+/*    !*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*!*/
+/*    -fx-border-width: 0; !* No border *!*/
+/*    -fx-border-color: transparent;*/
+/*    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); !* Subtle blue glow for focus *!*/
+/*}*/
 
 /* ComboBox Popup (Dropdown List) */
 .combo-box .list-view {
@@ -890,14 +897,15 @@
 /* Table Header */
 .table-view .column-header-background {
     -fx-border-width: 0 0 1 0;
-    -fx-border-color: -fx-focus-accent !important;
+    -fx-border-color: -fx-table-cell-border !important; /* This is the border color of the header */
     -fx-background-insets: 0;
     -fx-padding: 0;
 }
 
 .table-view .column-header {
-    -fx-background-color: -fx-secondary-bg; /* header background color */
+    -fx-background-color: -fx-table-header; /* header background color */
     /*-fx-background-radius: 4 4 0 0;*/
+    /*-fx-border-radius: 4 4 0 0;*/
     -fx-border-width: 0;
     -fx-border-color: transparent;
     -fx-background-insets: 0;
@@ -919,9 +927,9 @@
     -fx-font-size: 14px;
     -fx-padding: 2; /* Your specified padding */
     /*-fx-border-width: 0 0 0.5 0; !* Bottom-only border *!*/
-    -fx-border-color: transparent transparent -fx-table-cell-border transparent;
+    -fx-border-color: transparent transparent -fx-table-cell-border transparent; /* Top, right, bottom, left */
     -fx-background-insets: 0;
-    -fx-border-width: 1; /* Explicitly remove all borders */
+    -fx-border-width: .5; /* Explicitly remove all borders */
 
 }
 
