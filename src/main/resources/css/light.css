@@ -10,6 +10,7 @@
     -fx-hover-bg: #ffffff;
     -fx-focus-accent: #0969da;
     -fx-light-accent: #d2eaff;
+    -fx-spell-accent: #aa2222;
     -fx-scroll-thumb: #424242;
     -fx-scroll-thumb-hover: #555555;
     -fx-selected-text: #020202;
@@ -140,102 +141,6 @@
     -fx-fill: -fx-text-color; /* #E0E0E0 from your :root */
 }
 
-/*******************************************************************************
- *                                                                             *
- * MenuBar                                                                     *
- *                                                                             *
- ******************************************************************************/
-.menu-bar {
-    -fx-background-color: transparent;
-    -fx-background-radius: 4;
-    -fx-border-width: 0;
-    -fx-border-color: transparent;
-    -fx-background-insets: 0;
-    -fx-padding: 0;
-    -fx-font-size: 14px;
-}
-
-/* Individual Menu (e.g., File, Edit) */
-.menu-bar .menu {
-    -fx-background-color: transparent;
-    -fx-background-radius: 4;
-    -fx-border-width: 0;
-    -fx-border-color: transparent;
-    -fx-background-insets: 0;
-    -fx-padding: 8 12 8 12; /* Match content padding */
-}
-
-/* Menu Label */
-.menu-bar .menu .label {
-    -fx-text-fill: -fx-alternate-text-color; /* after clicking menu this is the text color of the top level items (for both hover and not hover) */
-    -fx-font-size: 14px;
-    -fx-padding: 0;
-}
-
-/* Menu Hover State */
-.menu-bar .menu:hover {
-    -fx-background-color: transparent;  /* after clicking menu this is the background color when mouse hovers over */
-    -fx-text-fill: blue; /* appears to do nothing */
-}
-
-/* Menu Focused/Selected State */
-.menu-bar .menu:focused, .menu-bar .menu:showing {
-    -fx-background-color: transparent;  /* after clicking menu item this is the background color when mouse hovers over */
-    -fx-text-fill: red; /* appears to do nothing */
-    /*-fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0);*/
-}
-
-/* Context Menu (Dropdown) */
-.menu-bar .context-menu {
-    -fx-background-color: -fx-primary-bg;
-    -fx-background-radius: 4;
-    -fx-border-width: 0;
-    -fx-border-color: transparent;
-    -fx-background-insets: 0;
-    /*-fx-effect: dropshadow(gaussian, #00000033, 10, 0, 0, 0); !* Subtle shadow for dropdown *!*/
-}
-
-/*******************************************************************************
- *                                                                             *
- * MenuItem                                                                    *
- *                                                                             *
- ******************************************************************************/
-.menu-bar .menu-item {
-    -fx-background-color: -fx-primary-bg;
-    -fx-text-fill: -fx-text-color;
-    -fx-font-size: 14px;
-    -fx-padding: 8 12 8 12; /* Match content padding */
-    -fx-background-radius: 0; /* Flat for menu items in dropdown */
-    -fx-border-width: 0;
-    -fx-border-color: transparent;
-    -fx-background-insets: 0;
-}
-
-/* MenuItem Label */
-.menu-bar .menu-item .label {
-    -fx-text-fill: -fx-text-color;
-    -fx-font-size: 14px;
-}
-
-/* MenuItem Hover/Focused State */
-.menu-bar .menu-item:hover, .menu-bar .menu-item:focused {
-    -fx-background-color: green; /* appears to do nothing */
-    -fx-text-fill: -fx-text-color;
-}
-
-/* MenuItem Selected State (e.g., check menu item) */
-.menu-bar .menu-item:selected {
-    -fx-background-color: pink; /* appears to do nothing */
-    -fx-text-fill: -fx-selected-text;
-}
-
-/* Disabled MenuItem */
-.menu-bar .menu-item:disabled {
-    -fx-background-color: -fx-primary-bg;
-    -fx-text-fill: -fx-prompt-text-color;
-    -fx-opacity: 0.6;
-}
-
 .custom-close-button {
     -fx-background-color: transparent;
     -fx-alignment: center;
@@ -287,13 +192,8 @@
     -fx-font-size: 16 !important;
 }
 
-/* Change the text color of the Menu labels to white */
-.menu-bar .label {
-    -fx-text-fill: -fx-text-color;
-}
-
 .misspelled {
-    -fx-fill: -fx-light-accent !important;
+    -fx-fill: -fx-spell-accent !important;
     -fx-underline: true;
 }
 
@@ -311,6 +211,132 @@
 .base-vbox {
     -fx-background-color: -fx-hover-bg;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * MenuBar                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+/* Change the text color of the Menu labels to white */
+.menu-bar .label {
+    -fx-text-fill: -fx-text-color;
+}
+
+.menu-bar {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-font-size: 14px;
+}
+
+/* Individual Menu (e.g., File, Edit) */
+.menu-bar .menu {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 8 12 8 12; /* Match content padding */
+}
+
+/* Menu Label */
+.menu-bar .menu .label {
+    -fx-text-fill: -fx-alternate-text-color; /* after clicking menu this is the text color of the top level items (for both hover and not hover) */
+    -fx-font-size: 14px;
+    -fx-padding: 0;
+}
+
+/* Menu Hover State */
+.menu-bar .menu:hover {
+    -fx-background-color: transparent;  /* after clicking menu this is the background color when mouse hovers over */
+    /*-fx-text-fill: blue; !* appears to do nothing *!*/
+}
+
+/* Menu Focused/Selected State */
+.menu-bar .menu:focused, .menu-bar .menu:showing {
+    -fx-background-color: transparent;  /* after clicking menu item this is the background color when mouse hovers over */
+    /*-fx-text-fill: red; !* appears to do nothing *!*/
+    /*-fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0);*/
+}
+
+/* Context Menu (Dropdown) */
+.menu-bar .context-menu {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    /*-fx-effect: dropshadow(gaussian, #00000033, 10, 0, 0, 0); !* Subtle shadow for dropdown *!*/
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * MenuItem                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+.menu-bar .menu-item {
+    -fx-background-color: purple;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12; /* Match content padding */
+    -fx-background-radius: 0; /* Flat for menu items in dropdown */
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* Individual Menu (e.g., File, Edit) */
+.menu-bar .menu {
+    -fx-background-color: transparent; /* menu button background color */
+    -fx-text-fill: -fx-alternate-text-color; /* this appears to do nothing
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 8 12 8 12; /* Match content padding */
+}
+
+.menu-bar .menu .label {
+    -fx-text-fill: -fx-alternate-text-color; /* this is the main text for the menu bar */
+    -fx-font-size: 14px;
+    -fx-padding: 0;
+}
+
+/* MenuItem Hover/Focused State */
+.menu-bar .menu-item:hover, .menu-bar .menu-item:focused {
+    /*-fx-background-color: blue; !* appears to do nothing *!*/
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-background-color: -fx-light-accent !important;
+
+}
+
+/* MenuItem Selected State (e.g., check menu item) */
+.menu-bar .menu-item:selected {
+    -fx-background-color: pink; /* appears to do nothing */
+    -fx-text-fill: -fx-selected-text;
+}
+
+/* Disabled MenuItem */
+.menu-bar .menu-item:disabled {
+    -fx-background-color: -fx-primary-bg;
+    -fx-text-fill: -fx-prompt-text-color;
+    -fx-opacity: 0.6;
+}
+
+.menu-bar .context-menu {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    /*-fx-effect: dropshadow(gaussian, #00000033, 10, 0, 0, 0); !* Subtle shadow for dropdown *!*/
+}
+
+
 
 /*******************************************************************************
  *                                                                             *
@@ -829,7 +855,7 @@
 
 /* List Cell Hover/Selected States */
 .combo-box .list-cell:hover {
-    -fx-background-color: -fx-focus-accent; /* Slightly lighter on hover */
+    -fx-background-color: -fx-light-accent; /* Slightly lighter on hover */
     -fx-text-fill: -fx-text-color;
 }
 
@@ -887,8 +913,8 @@
 .table-view {
     /*-fx-background-color: -fx-focus-accent;*/
     -fx-background-radius: 4;
-    -fx-border-width: 0;
-    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-table-cell-border;
     -fx-background-insets: 0;
     -fx-padding: 0;
     -fx-font-size: 14px;
@@ -933,12 +959,12 @@
 }
 
 .table-view .table-row-cell:selected {
-    -fx-background-color: -fx-focus-accent !important; /* Explicit blue */
+    /*-fx-background-color: -fx-light-accent !important; !* Explicit blue *!*/
     -fx-text-fill: -fx-selected-text !important; /* White text */
 }
 
 .table-view .table-row-cell:selected .table-cell {
-    -fx-background-color: -fx-focus-accent !important; /* Explicit blue for cells */
+    -fx-background-color: -fx-light-accent !important; /* Explicit blue for cells */
     -fx-text-fill: -fx-selected-text !important; /* White text */
 }
 
@@ -971,8 +997,8 @@
 .table-view .scroll-bar:vertical, .table-view .scroll-bar:horizontal {
     -fx-background-color: -fx-primary-bg;
     -fx-background-radius: 4;
-    -fx-border-width: 0;
-    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-table-cell-border;
     -fx-background-insets: 0;
 }
 
@@ -983,6 +1009,11 @@
 
 .table-view .scroll-bar .thumb:hover {
     -fx-background-color: -fx-scroll-thumb-hover;
+}
+
+/* This is the region to the right of the header and above the scroll bar */
+.table-view .column-header-background .filler {
+    -fx-background-color: -fx-table-header !important;
 }
 
 /* Corner Fix for TableView ScrollPane */
@@ -1298,3 +1329,52 @@
 /*    -fx-border-color: -fx-field-border; !* #333333, no right border *!*/
 /*    -fx-border-width: 0 1 1 0; !* No right border to blend with buttons *!*/
 /*}*/
+
+/*******************************************************************************
+ *                                                                             *
+ * DialogPane                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+/* DialogPane styling */
+.dialog-pane {
+    -fx-background-color: -fx-primary-bg; /* #ffffff */
+    -fx-border-color: -fx-field-border; /* #d0d7de */
+    -fx-border-width: 1;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+/* Header panel */
+.dialog-pane .header-panel {
+    -fx-background-color: -fx-secondary-bg; /* #f5f6f6 */
+    -fx-padding: 10;
+}
+
+/* Header text */
+.dialog-pane .header-panel .label {
+    -fx-font-size: 22px; /* Larger font for header */
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color; /* #020202 */
+}
+
+/* Content text */
+.dialog-pane .content.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-color; /* #020202 */
+    -fx-padding: 10;
+}
+
+/* Button bar */
+.dialog-pane .button-bar .button {
+    -fx-background-color: -fx-focus-accent; /* #0969da */
+    -fx-text-fill: -fx-selected-text; /* #020202 */
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+}
+
+.dialog-pane .button-bar .button:hover {
+    -fx-background-color: -fx-light-accent; /* #d2eaff */
+    -fx-text-fill: fx-alternate-text-color;
+}

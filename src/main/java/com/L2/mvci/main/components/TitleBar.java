@@ -58,8 +58,6 @@ public class TitleBar implements Builder<Region> {
         }
         titleLabel = new Label("TSE Notes");
         titleLabel.getStyleClass().add("title-label");
-//        titleLabel.getStyleClass().add(Styles.TITLE_4);
-//        titleLabel.setStyle("-fx-text-fill: white;");
 
         // Create an HBox to push the close button to the right
         HBox spacer = new HBox();
