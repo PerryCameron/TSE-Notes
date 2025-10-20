@@ -1,14 +1,17 @@
 package com.L2.mvci.changeset;
 
 import com.L2.BaseApplication;
-import com.L2.mvci.note.NoteMessage;
 import com.L2.widgetFx.DialogueFx;
+import com.L2.widgetFx.HBoxFx;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Builder;
+import org.controlsfx.control.ToggleSwitch;
 
 import java.util.function.Consumer;
 
@@ -44,30 +47,36 @@ public class ChangeView implements Builder<Alert> {
     private Node contentBox() {
         VBox vBox = new VBox(10); // Set spacing between elements
         vBox.setPadding(new Insets(10)); // Add padding around VBox
-        // Create and configure the ComboBox (1-30 days)
-        ComboBox<Integer> daysComboBox = new ComboBox<>();
-        for (int i = 1; i <= 60; i++) {
-            daysComboBox.getItems().add(i);
-        }
-        daysComboBox.setValue(7); // Default to 7 days
-        daysComboBox.setPromptText("Select days");
-        // Create label for ComboBox
-        Label daysLabel = new Label("Number of days to include in changeset");
-        daysLabel.setLabelFor(daysComboBox);
         // Create CheckBox for all records vs. user-only
-        CheckBox includeAllCheckBox = new CheckBox("Include all records (uncheck for user-only)");
+        ToggleSwitch includeAllCheckBox = new ToggleSwitch("Include all records (uncheck for user-only)");
         includeAllCheckBox.setSelected(true); // Default to all records
         // Create Button for changeset creation
         Button createChangeSetButton = new Button("Create Changeset");
         createChangeSetButton.setOnAction(event -> {
-            changeModel.numberOfDaysProperty().set(daysComboBox.getValue() != null ? daysComboBox.getValue() : 7);
+            changeModel.numberOfDaysProperty().set(changeModel.getDaysComboBox().getValue() != null ? changeModel.getDaysComboBox().getValue() : 7);
             changeModel.includeAllProperty().set(includeAllCheckBox.isSelected());
             action.accept(ChangeMessage.CREATE_CHANGESET);
             cleanAlertClose();
         });
         // Add all components to VBox
-        vBox.getChildren().addAll(daysLabel, daysComboBox, includeAllCheckBox, createChangeSetButton);
+        vBox.getChildren().addAll(daysToIncludeBox(), includeAllCheckBox, createChangeSetButton);
         return vBox;
+    }
+
+    private Node daysToIncludeBox() {
+        HBox hBox = HBoxFx.of(10.0, Pos.CENTER_LEFT);
+        // Create and configure the ComboBox (1-30 days)
+        ComboBox<Integer> daysComboBox = changeModel.getDaysComboBox();
+        for (int i = 1; i <= 60; i++) {
+            daysComboBox.getItems().add(i);
+        }
+        daysComboBox.setValue(7); // Default to 7 days
+        daysComboBox.setPromptText("Select days");
+        Label daysLabel = new Label("Number of days to include in changeset");
+        // Create label for ComboBox
+        daysLabel.setLabelFor(daysComboBox);
+        hBox.getChildren().addAll(daysLabel, daysComboBox);
+        return hBox;
     }
 
     private DialogPane createDialogPane() {

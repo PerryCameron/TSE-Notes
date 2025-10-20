@@ -8,6 +8,7 @@
     -fx-alternate-text-color: #f4f2f2;
     -fx-prompt-text-color: #A0A0A0;
     -fx-hover-bg: #ffffff;
+    -fx-button-accent: #0257bc;
     -fx-focus-accent: #0969da;
     -fx-light-accent: #d2eaff;
     -fx-spell-accent: #aa2222;
@@ -1347,7 +1348,7 @@
 
 /* Header panel */
 .dialog-pane .header-panel {
-    -fx-background-color: -fx-secondary-bg; /* #f5f6f6 */
+    -fx-background-color: -fx-tertiary-bg; /* #f5f6f6 */
     -fx-padding: 10;
 }
 
@@ -1367,14 +1368,27 @@
 
 /* Button bar */
 .dialog-pane .button-bar .button {
-    -fx-background-color: -fx-focus-accent; /* #0969da */
-    -fx-text-fill: -fx-selected-text; /* #020202 */
+    -fx-background-color: -fx-button-accent;
+    -fx-text-fill: -fx-alternate-text-color;
     -fx-font-size: 14px;
     -fx-padding: 8 12 8 12;
     -fx-background-radius: 4;
 }
 
 .dialog-pane .button-bar .button:hover {
-    -fx-background-color: -fx-light-accent; /* #d2eaff */
-    -fx-text-fill: fx-alternate-text-color;
+    -fx-background-color: -fx-focus-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+.dialog-pane .button {
+    -fx-background-color: -fx-button-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+}
+
+.dialog-pane .button:hover {
+    -fx-background-color: -fx-focus-accent;
+    -fx-text-fill: -fx-alternate-text-color;
 }

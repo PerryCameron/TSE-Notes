@@ -4,6 +4,7 @@ import com.L2.dto.UpdatedByDTO;
 import com.L2.dto.UserDTO;
 import javafx.beans.property.*;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class ChangeModel {
     private final BooleanProperty includeAll = new SimpleBooleanProperty(false);
     private final IntegerProperty numberOfDays = new SimpleIntegerProperty(0);
     private final ObjectProperty<UserDTO> user = new SimpleObjectProperty<>();
+    private final ObjectProperty<ComboBox<Integer>> daysComboBox = new SimpleObjectProperty<>(new ComboBox<>());
     private final List<UpdatedByDTO> updatedBys = new ArrayList<>();
 
 
@@ -52,5 +54,13 @@ public class ChangeModel {
 
     public List<UpdatedByDTO> getUpdatedBys() {
         return updatedBys;
+    }
+
+    public ComboBox<Integer> getDaysComboBox() {
+        return daysComboBox.get();
+    }
+
+    public ObjectProperty<ComboBox<Integer>> daysComboBoxProperty() {
+        return daysComboBox;
     }
 }

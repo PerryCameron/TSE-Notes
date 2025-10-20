@@ -8,6 +8,7 @@
     -fx-alternate-text-color : #f4f2f2;
     -fx-prompt-text-color: #A0A0A0;
     -fx-hover-bg: #252526;
+    -fx-button-accent: #0257bc;
     -fx-focus-accent: #2196F3;
     -fx-light-accent: #d2eaff;
     -fx-scroll-thumb: #424242;
@@ -891,6 +892,7 @@ Label.service-plan-details {
 .table-view {
     /*-fx-background-color: -fx-focus-accent;*/
     -fx-background-radius: 4;
+    -fx-border-radius: 4;
     -fx-border-width: 1;
     -fx-border-color: -fx-table-cell-border;
     -fx-background-insets: 0;
@@ -1320,7 +1322,7 @@ Label.service-plan-details {
 
 /* DialogPane styling */
 .dialog-pane {
-    -fx-background-color: -fx-primary-bg; /* #ffffff */
+    -fx-background-color: -fx-tertiary-bg; /* #ffffff */
     -fx-border-color: -fx-field-border; /* #d0d7de */
     -fx-border-width: 1;
     -fx-background-insets: 0;
@@ -1329,7 +1331,7 @@ Label.service-plan-details {
 
 /* Header panel */
 .dialog-pane .header-panel {
-    -fx-background-color: -fx-secondary-bg; /* #f5f6f6 */
+    -fx-background-color: -fx-primary-bg; /* #f5f6f6 */
     -fx-padding: 10;
 }
 
@@ -1349,14 +1351,27 @@ Label.service-plan-details {
 
 /* Button bar */
 .dialog-pane .button-bar .button {
-    -fx-background-color: -fx-focus-accent; /* #0969da */
-    -fx-text-fill: -fx-selected-text; /* #020202 */
+    -fx-background-color: -fx-button-accent;
+    -fx-text-fill: -fx-alternate-text-color;
     -fx-font-size: 14px;
     -fx-padding: 8 12 8 12;
     -fx-background-radius: 4;
 }
 
 .dialog-pane .button-bar .button:hover {
-    -fx-background-color: -fx-light-accent; /* #d2eaff */
-    -fx-text-fill: fx-alternate-text-color;
+    -fx-background-color: -fx-focus-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+.dialog-pane .button {
+    -fx-background-color: -fx-button-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+}
+
+.dialog-pane .button:hover {
+    -fx-background-color: -fx-focus-accent;
+    -fx-text-fill: -fx-alternate-text-color;
 }
