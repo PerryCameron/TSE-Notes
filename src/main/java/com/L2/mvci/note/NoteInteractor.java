@@ -1285,19 +1285,19 @@ public class NoteInteractor {
                     "Order#: " + noteModel.selectedPartOrderProperty().get().getOrderNumber()
                             + " - " + noteModel.boundNoteProperty().get().workOrderProperty().get()
                             + " - " + noteModel.boundNoteProperty().get().getInstalledAt(),
-                    "Hi NASP, \n\nPlease provide status / ETA for the following: \n\n"
-                            + buildPartOrderToPlainText()
+                    "Hi NASP, <br><br>Please provide status / ETA for the following: <br><br>"
+                            + buildPartOrderToHTML(true)
 
-                            + "\nPoint of Contact:\n" + noteModel.boundNoteProperty().get().getContactName()
-                            + "\n" + noteModel.boundNoteProperty().get().getContactPhoneNumber()
-                            + "\n" + noteModel.boundNoteProperty().get().getContactEmail()
+                            + "<br>Point of Contact:<br>" + noteModel.boundNoteProperty().get().getContactName()
+                            + "<br>" + noteModel.boundNoteProperty().get().getContactPhoneNumber()
+                            + "<br>" + noteModel.boundNoteProperty().get().getContactEmail()
 
-                            + "\n\nShipped to:"
-                            + "\n" + noteModel.boundNoteProperty().get().getStreet()
-                            + "\n" + noteModel.boundNoteProperty().get().getCity()
+                            + "<br><br>Shipped to:"
+                            + "<br>" + noteModel.boundNoteProperty().get().getStreet()
+                            + "<br>" + noteModel.boundNoteProperty().get().getCity()
                             + ", " + noteModel.boundNoteProperty().get().getState()
                             + " " + noteModel.boundNoteProperty().get().getZip()
-                            + "\n\nThanks, \n"
+                            + "<br><br>Thanks, <br>"
                             + noteModel.userProperty().get().getFullName()
             );
             // Example without CC (your original call)
@@ -1325,19 +1325,19 @@ public class NoteInteractor {
                     "Order#: " + noteModel.selectedPartOrderProperty().get().getOrderNumber()
                             + " is in Error - " + noteModel.boundNoteProperty().get().workOrderProperty().get()
                             + " - " + noteModel.boundNoteProperty().get().getInstalledAt(),
-                    "Hi OEC, \n\nPlease book.\n\n"
+                    "Hi OEC, <br><br>Please book.<br><br>"
                             +  buildPartOrderToHTML(true)
 
-                            + "\nPoint of Contact:\n" + noteModel.boundNoteProperty().get().getContactName()
-                            + "\n" + noteModel.boundNoteProperty().get().getContactPhoneNumber()
-                            + "\n" + noteModel.boundNoteProperty().get().getContactEmail()
+                            + "<br>Point of Contact:<br>" + noteModel.boundNoteProperty().get().getContactName()
+                            + "<br>" + noteModel.boundNoteProperty().get().getContactPhoneNumber()
+                            + "<br>" + noteModel.boundNoteProperty().get().getContactEmail()
 
-                            + "\n\nShipped to:"
-                            + "\n" + noteModel.boundNoteProperty().get().getStreet()
-                            + "\n" + noteModel.boundNoteProperty().get().getCity()
+                            + "<br><br>Shipped to:"
+                            + "<br>" + noteModel.boundNoteProperty().get().getStreet()
+                            + "<br>" + noteModel.boundNoteProperty().get().getCity()
                             + ", " + noteModel.boundNoteProperty().get().getState()
                             + " " + noteModel.boundNoteProperty().get().getZip()
-                            + "\n\nThanks, \n"
+                            + "<br><br>Thanks, <br>"
                             + noteModel.userProperty().get().getFullName()
             );
         }
