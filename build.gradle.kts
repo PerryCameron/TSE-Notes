@@ -66,9 +66,13 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
     implementation("com.fasterxml.jackson.core:jackson-core:2.18.3")
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.3")
+//    implementation(files("libs/jacob-1.21.jar"))
+    // https://mvnrepository.com/artifact/io.github.osobolev/jacob -this is a child repo to the main, not sure why the main doesn't have a repo in Maven Central
+    implementation("io.github.osobolev:jacob:1.21")
     testImplementation("ch.qos.logback:logback-classic:1.5.6")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+
 }
 
 tasks.withType<JavaCompile> {

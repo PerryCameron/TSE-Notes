@@ -58,6 +58,7 @@ public class BaseApplication extends Application {
             DatabaseTools.backupDatabase();
             DatabaseTools.checkForDatabaseChanges();
         }
+        JacobLoader.initJacob();
     }
 
     @Override

@@ -5,6 +5,7 @@ build/
 !**/src/test/**/build/
 src/main/java/com/L2/static_tools/AddressParseTest.java
 resources/note.txt
+resources/libs
 src/main/resources/images/png/16x16
 
 src/main/resources/note.txt
