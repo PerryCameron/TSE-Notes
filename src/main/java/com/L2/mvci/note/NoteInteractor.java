@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
@@ -242,7 +241,7 @@ public class NoteInteractor {
         // Run the highlighting computation in a background thread to avoid blocking the UI
         Task<StyleSpans<Collection<String>>> computeHighlightTask = new Task<>() {
             @Override
-            protected StyleSpans<Collection<String>> call() throws Exception {
+            protected StyleSpans<Collection<String>> call() {
                 int totalLength = 0; // Tracks the total length of text processed by spans
                 int i = 0;           // Current position in the text string
 
@@ -1168,7 +1167,7 @@ public class NoteInteractor {
             logger.error("Search failed: {}", ex.getMessage());
             // Optionally notify user via UI
         });
-        Executors.newCachedThreadPool().execute(searchTask);
+            Executors.newCachedThreadPool().execute(searchTask);
     }
 
     /**
@@ -1268,19 +1267,21 @@ public class NoteInteractor {
     }
 
     public void emailNasp() {
+        if(!EmailSender.isClassicOutlookAvailable()) {
+            Platform.runLater(() -> DialogueFx.errorAlert("Unable to create email", "You are using the new outlook, " +
+                    "this feature only works with classic outlook. If you want to use this feature " +
+                    "you will need to switch back."));
+            return;
+        }
         if (noteModel.selectedPartOrderProperty().get() == null) {
-            Platform.runLater(() -> {
-                DialogueFx.errorAlert("Email Error", "There must be a part order to send an email to NASP");
-            });
+            Platform.runLater(() -> DialogueFx.errorAlert("Email Error", "There must be a part order to send an email to NASP"));
         } else if (noteModel.selectedPartOrderProperty().get().getOrderNumber().isEmpty()) {
-            Platform.runLater(() -> {
-                DialogueFx.errorAlert("Email Error", "You have a part order but you have not put in a part order number yet");
-            });
+            Platform.runLater(() -> DialogueFx.errorAlert("Email Error", "You have a part order but you have not put in a part order number yet"));
         } else {
             String cc = noteModel.boundNoteProperty().get().getCallInEmail();
             if (cc == null) cc = "";
             // Example with CC
-            EmailSender.displayEmail(
+            EmailSender.displayEmailForReview(
                     "northamericanserviceparts@schneider-electric.com", cc,
                     "Order#: " + noteModel.selectedPartOrderProperty().get().getOrderNumber()
                             + " - " + noteModel.boundNoteProperty().get().workOrderProperty().get()
@@ -1307,14 +1308,16 @@ public class NoteInteractor {
     }
 
     public void emailOct() {
+        if(!EmailSender.isClassicOutlookAvailable()) {
+            Platform.runLater(() -> DialogueFx.errorAlert("Unable to create email", "You are using the new outlook, " +
+                    "this feature only works with classic outlook. If you want to use this feature " +
+                    "you will need to switch back."));
+            return;
+        }
         if (noteModel.selectedPartOrderProperty().get() == null) {
-            Platform.runLater(() -> {
-                DialogueFx.errorAlert("Email Error", "There must be a part order to send an email to OEC");
-            });
+            Platform.runLater(() -> DialogueFx.errorAlert("Email Error", "There must be a part order to send an email to OEC"));
         } else if (noteModel.selectedPartOrderProperty().get().getOrderNumber().isEmpty()) {
-            Platform.runLater(() -> {
-                DialogueFx.errorAlert("Email Error", "You have a part order but you have not put in a part order number yet");
-            });
+            Platform.runLater(() -> DialogueFx.errorAlert("Email Error", "You have a part order but you have not put in a part order number yet"));
         } else {
             String cc = noteModel.boundNoteProperty().get().getCallInEmail();
             if (cc == null) cc = "";
