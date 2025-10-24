@@ -1392,3 +1392,23 @@
     -fx-background-color: -fx-focus-accent;
     -fx-text-fill: -fx-alternate-text-color;
 }
+
+.app-button {
+    -fx-background-color: -fx-button-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent; /* Make the border invisible */
+}
+
+.app-button:hover {
+    -fx-background-color: -fx-focus-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+.app-button:selected {
+    -fx-background-color: -fx-prompt-text-color;
+    -fx-text-fill: -fx-alternate-text-color;
+}

@@ -218,7 +218,7 @@ public class PartFinderView implements Builder<Alert> {
     }
 
     private Node buttonStack(StackPane stackPane, Pane photoPane, Pane familyPane,  Pane notePane, Pane keywordsPane, Pane infoPane) {
-        VBox buttonStack = new VBox();
+        VBox buttonStack = new VBox(2);
         buttonStack.setMinWidth(150);
         ToggleGroup toggleGroup = new ToggleGroup();
         ToggleButton photoButton = ButtonFx.toggleof("Photo", 150, toggleGroup);

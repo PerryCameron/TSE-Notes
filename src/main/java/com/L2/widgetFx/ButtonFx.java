@@ -34,6 +34,7 @@ public class ButtonFx {
 
     public static ToggleButton toggleof(String text, double width, ToggleGroup tg) {
         ToggleButton button = new ToggleButton(text);
+        button.getStyleClass().add("app-button");
         button.setPrefWidth(width);
         button.setToggleGroup(tg);
         return button;
