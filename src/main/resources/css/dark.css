@@ -734,16 +734,12 @@ Label.service-plan-details {
     -fx-background-color: -fx-scroll-thumb-hover; /* Lighter thumb on hover */
 }
 
-/*.code-area:focused, .code-area-single:focused {*/
-/*    !*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*!*/
-/*    -fx-border-width: 0; !* No border *!*/
-/*    -fx-border-color: transparent;*/
-/*    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); !* Subtle blue glow for focus *!*/
-/*}*/
-
-/*.code-area:focused .scroll-pane .viewport, .code-area-single:focused .scroll-pane .viewport {*/
-/*    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); !* Apply subtle blue glow to viewport *!*/
-/*}*/
+.code-area:focused, .code-area-single:focused {
+    /*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*/
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); /* Subtle blue glow for focus */
+}
 
 .code-area:focused, .code-area-single:focused {
     -fx-border-width: 0; /* No border */
