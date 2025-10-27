@@ -190,6 +190,7 @@ public class ProductFamily implements Builder<Pane> {
 
     private void markForDeletion() {
         TreeItem<Object> selected = partFinderModel.getTreeView().getSelectionModel().getSelectedItem();
+        System.out.println(selected + " Marked for deletion");
         if (selected == null) {
             new Alert(Alert.AlertType.WARNING, "No item selected.").showAndWait();
             return;

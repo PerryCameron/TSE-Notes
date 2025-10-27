@@ -31,14 +31,6 @@ public class ServicePlanDetails implements Builder<Region> {
         Label label = new Label(noteModel.currentEntitlementProperty().get().getName());
         label.getStyleClass().clear(); // Clear default classes
         label.getStyleClass().add("service-plan-details");
-
-        // Debug styles
-        System.out.println("Style classes: " + label.getStyleClass());
-        System.out.println("Computed CSS properties: " + label.getCssMetaData());
-        System.out.println("Inline style: " + label.getStyle());
-
-
-
         Label label1 = new Label("Includes");
         String[] includes = noteModel.currentEntitlementProperty().get().getIncludes().split("\\R");
         String[] notIncludes = noteModel.currentEntitlementProperty().get().getNotIncludes().split("\\R");

@@ -19,6 +19,7 @@
     -fx-table-header: -fx-secondary-bg;
     -fx-table-cell-border: -fx-primary-bg;
     -fx-field-border: #555555;
+    -fx-delete: #FF0000FF;
 }
 
 /*******************************************************************************
@@ -26,6 +27,10 @@
  * Custom                                                                     *
  *                                                                             *
  ******************************************************************************/
+
+.deleted-item {
+    -fx-text-color: -fx-delete;
+}
 
 .custom-close-button:hover {
     -fx-background-color: red; /* Highlight color on hover */
@@ -95,7 +100,7 @@
 Label.service-plan-details {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: rgb(255, 0, 0) !important;
+    -fx-text-color: -fx-focus-accent;
 }
 
 /*This controls the background of the entire center pane, can only see a sliver under the title bar*/

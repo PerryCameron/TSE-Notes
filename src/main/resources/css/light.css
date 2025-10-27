@@ -20,6 +20,7 @@
     -fx-table-header: -fx-tertiary-bg;
     -fx-table-cell-border: -fx-tertiary-bg;
     -fx-field-border: #d0d7de;
+    -fx-delete: #FF0000FF;
 }
 
 /*******************************************************************************
@@ -28,11 +29,16 @@
  *                                                                             *
  ******************************************************************************/
 
+/* styles.css */
+.deleted-item {
+    -fx-text-fill: -fx-delete;
+}
+
 /*This controls the text properties of the service plan title*/
-.service-plan-details {
+Label.service-plan-details {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: -fx-focus-accent !important;
+    -fx-text-color: -fx-focus-accent;
 }
 
 /*This controls the background of the entire center pane, can only see a sliver under the title bar*/

@@ -101,21 +101,41 @@ public class EditableTreeCell extends TreeCell<Object> {
         logger.debug("Committed edit successfully for TreeItem at depth {}, newText: {}", depth, newText);
     }
 
+    //    @Override
+//    protected void updateItem(Object item, boolean empty) {
+//        super.updateItem(item, empty);
+//        if (empty || item == null) {
+//            setText(null);
+//            setGraphic(null);
+//            setStyle(null);
+//        } else {
+//            setText(ProductFamily.getDisplayText(getTreeItem()));
+//            setGraphic(isEditing() ? textField : null);
+//            TreeItem<Object> treeItem = getTreeItem();
+//            if (productFamily.isMarkedForDeletion(treeItem)) {
+//                setStyle("-fx-text-fill: red;");
+//            } else {
+//                setStyle(null);
+//            }
+//        }
+//    }
     @Override
     protected void updateItem(Object item, boolean empty) {
         super.updateItem(item, empty);
         if (empty || item == null) {
             setText(null);
             setGraphic(null);
-            setStyle(null);
+            getStyleClass().remove("deleted-item"); // Remove the class if present
         } else {
             setText(ProductFamily.getDisplayText(getTreeItem()));
             setGraphic(isEditing() ? textField : null);
             TreeItem<Object> treeItem = getTreeItem();
             if (productFamily.isMarkedForDeletion(treeItem)) {
-                setStyle("-fx-text-fill: red;");
+                if (!getStyleClass().contains("deleted-item")) {
+                    getStyleClass().add("deleted-item"); // Add the class if not already present
+                }
             } else {
-                setStyle(null);
+                getStyleClass().remove("deleted-item"); // Remove the class if present
             }
         }
     }
