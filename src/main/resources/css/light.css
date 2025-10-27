@@ -140,7 +140,7 @@ Label.service-plan-details {
 }
 
 .text-field-error {
-    -fx-border-color: red;
+    -fx-border-color: -fx-delete;
     -fx-border-radius: 5px;
 }
 
@@ -206,12 +206,6 @@ Label.service-plan-details {
 
 .search-dialogue {
     -fx-background-color: -fx-text-color;
-}
-
-
-/* Added to get rid of Labels turning red when you hover over them */
-.label:hover {
-    -fx-text-fill: -fx-text-color;
 }
 
 /*not used in light.css*/

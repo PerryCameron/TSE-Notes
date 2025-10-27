@@ -85,12 +85,6 @@
     -fx-background-color: -fx-text-color;
 }
 
-
-/* Added to get rid of Labels turning red when you hover over them */
-.label:hover {
-    -fx-text-fill: -fx-text-color;
-}
-
 /*not used in light.css*/
 .base-vbox {
     -fx-background-color: -fx-hover-bg;
@@ -120,11 +114,6 @@ Label.service-plan-details {
     -fx-background-color: -fx-tertiary-bg;
     -fx-text-fill: -fx-selected-text;
 }
-
-/*!* Optional: Remove focus border from tabs *!*/
-/*.tab-pane:focused > .tab-header-area > .tab:selected {*/
-/*    -fx-background-color: #2980b9; !* Match this to selected tab color to remove focus border *!*/
-/*}*/
 
 .title-pane .title {
     -fx-font-size: 12px;
