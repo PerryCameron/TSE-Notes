@@ -24,9 +24,29 @@
 
 /*******************************************************************************
  *                                                                             *
- * Custom                                                                     *
+ * Custom                                                                      *
  *                                                                             *
  ******************************************************************************/
+
+.app-button {
+    -fx-background-color: -fx-button-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent; /* Make the border invisible */
+}
+
+.app-button:hover {
+    -fx-background-color: -fx-focus-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+.app-button:selected {
+    -fx-background-color: -fx-prompt-text-color;
+    -fx-text-fill: -fx-alternate-text-color;
+}
 
 .deleted-item {
     -fx-text-color: -fx-delete;
@@ -804,20 +824,13 @@ Label.service-plan-details {
     -fx-scale-y: 0.6;
 }
 
-/* ComboBox Hover State */
-/*.combo-box:hover {*/
-/*    !*-fx-background-color: -fx-hover-bg; !* Slightly lighter on hover *!*!*/
-/*    -fx-border-width: 0; !* No border *!*/
-/*    -fx-border-color: transparent;*/
-/*}*/
-
-/* ComboBox Focus State */
-/*.combo-box:focused {*/
-/*    !*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*!*/
-/*    -fx-border-width: 0; !* No border *!*/
-/*    -fx-border-color: transparent;*/
-/*    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); !* Subtle blue glow for focus *!*/
-/*}*/
+ /*ComboBox Focus State*/
+.combo-box:focused {
+    /*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*/
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); /* Subtle blue glow for focus */
+}
 
 /* ComboBox Popup (Dropdown List) */
 .combo-box .list-view {
@@ -1383,22 +1396,30 @@ Label.service-plan-details {
     -fx-text-fill: -fx-alternate-text-color;
 }
 
-.app-button {
-    -fx-background-color: -fx-button-accent;
-    -fx-text-fill: -fx-alternate-text-color;
-    -fx-font-size: 14px;
-    -fx-padding: 8 12 8 12;
-    -fx-background-radius: 4;
-    -fx-border-width: 0 0 1 0;
-    -fx-border-color: transparent; /* Make the border invisible */
-}
+/*******************************************************************************
+ *                                                                             *
+ * ListView                                                                    *
+ *                                                                             *
+ ******************************************************************************/
 
-.app-button:hover {
-    -fx-background-color: -fx-focus-accent;
+.list-cell {
+    -fx-background-color: -fx-tertiary-bg; /* Set background color for all ListView cells (rows) */
     -fx-text-fill: -fx-alternate-text-color;
 }
 
-.app-button:selected {
-    -fx-background-color: -fx-prompt-text-color;
-    -fx-text-fill: -fx-alternate-text-color;
+/*.list-cell:odd {*/
+/*    -fx-background-color: -fx-tertiary-bg; !* Optional: Slightly different color for odd rows to maintain striping *!*/
+/*}*/
+
+/*.list-cell:even {*/
+/*    -fx-background-color: -fx-secondary-bg; !* Even rows *!*/
+/*}*/
+
+/*.list-view {*/
+/*    -fx-background-color: #F0F0F0; !* Ensure the ListView container background matches *!*/
+/*}*/
+
+.list-cell:selected {
+    -fx-background-color: -fx-focus-accent; /* Background for selected cells (blue) */
+    -fx-text-fill: -fx-alternate-text-color; /* Text color for selected cells (white) */
 }

@@ -702,8 +702,6 @@ Label.service-plan-details {
     -fx-background-insets: 0; /* Prevent corner issues */
 }
 
-
-
 /* CodeArea Content Area */
 .code-area .content, .code-area-single .content {
     -fx-background-color: -fx-primary-bg; /* Match outer background */
@@ -821,13 +819,6 @@ Label.service-plan-details {
     -fx-scale-x: 0.6; /* Adjust arrow size */
     -fx-scale-y: 0.6;
 }
-
-/*!* ComboBox Hover State *!*/
-/*.combo-box:hover {*/
-/*    !*-fx-background-color: -fx-hover-bg; !* Slightly lighter on hover *!*!*/
-/*    -fx-border-width: 0; !* No border *!*/
-/*    -fx-border-color: transparent;*/
-/*}*/
 
 /* ComboBox Focus State */
 .combo-box:focused {
