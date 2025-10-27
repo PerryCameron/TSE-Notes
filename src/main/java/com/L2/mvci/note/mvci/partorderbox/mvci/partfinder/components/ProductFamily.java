@@ -7,6 +7,7 @@ import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderModel;
 import com.L2.mvci.note.mvci.partorderbox.mvci.partfinder.PartFinderView;
 import com.L2.static_tools.ImageResources;
 import com.L2.widgetFx.ButtonFx;
+import com.L2.widgetFx.HBoxFx;
 import com.L2.widgetFx.VBoxFx;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -34,7 +35,7 @@ public class ProductFamily implements Builder<Pane> {
     private Button deleteButton;
     private Button cancelButton;
     private final Set<TreeItem<Object>> markedForDeletion = new HashSet<>();
-//    private Button testButton;
+    private Button testButton;
 
     public ProductFamily(PartFinderView partView) {
         this.partView = partView;
@@ -43,7 +44,7 @@ public class ProductFamily implements Builder<Pane> {
 
     @Override
     public Pane build() {
-        HBox hBox = new HBox();
+        HBox hBox = HBoxFx.of(200, 10);
         VBox vBox = VBoxFx.of(10.0, Pos.TOP_LEFT, 150.0);
 
         logger.debug("Building TreeView with ProductFamilies: {}", partFinderModel.getProductFamilies());
@@ -52,7 +53,7 @@ public class ProductFamily implements Builder<Pane> {
 
         hBox.setPrefHeight(200);
         hBox.getChildren().add(partFinderModel.getTreeView());
-        partFinderModel.getTreeView().setPrefWidth(500);
+        partFinderModel.getTreeView().setPrefWidth(510);
         partFinderModel.getTreeView().setEditable(true);
         // Explicitly set the cell factory to use EditableTreeCell
         partFinderModel.getTreeView().setCellFactory(param -> new EditableTreeCell(this, partFinderModel));
@@ -63,6 +64,7 @@ public class ProductFamily implements Builder<Pane> {
         this.saveButton = ButtonFx.utilityButton(ImageResources.SAVE, "Save Changes", 150);
         this.deleteButton = ButtonFx.utilityButton(ImageResources.DELETE, "Delete Item", 150);
         this.cancelButton = ButtonFx.utilityButton(ImageResources.CANCEL, "Cancel Edit", 150);
+        this.testButton = ButtonFx.utilityButton(ImageResources.DICTIONARY, "Test", 150);
 
         editButton.setOnAction(event -> partFinderModel.getTreeView().editableProperty().set(true));
         addRange.setOnAction(event -> addNewRange());
@@ -70,6 +72,7 @@ public class ProductFamily implements Builder<Pane> {
         deleteButton.setOnAction(event -> markForDeletion());
         saveButton.setOnAction(event -> saveChanges());  // this is line 71
         cancelButton.setOnAction(event -> cancelEdit());
+        testButton.setOnAction(event -> printTest());
 
         // we use the editable property in treeView to make an (edit mode)
         setModeListener();
@@ -89,8 +92,29 @@ public class ProductFamily implements Builder<Pane> {
         partFinderModel.getTreeView().setEditable(false);
         ButtonFx.buttonVisible(saveButton, false); // I should not need this
         hBox.getChildren().add(vBox);
-        vBox.getChildren().addAll(addRange, addProduct, editButton, saveButton, deleteButton, cancelButton);
+        vBox.getChildren().addAll(addRange, addProduct, editButton, saveButton, deleteButton, cancelButton, testButton);
         return hBox;
+    }
+
+    private void printTest() {
+        TreeView<Object> treeView = partFinderModel.getTreeView();
+        TreeItem<Object> root = treeView.getRoot();
+        if (root != null) {
+            printTreeItems(root, 0); // Start at level 0 for the root
+        } else {
+            System.out.println("TreeView is empty or has no root.");
+        }
+    }
+
+    // Recursive method to print TreeItem values and their levels
+    private void printTreeItems(TreeItem<Object> item, int level) {
+        // Print the current item with its level
+        System.out.println("Level " + level + ": " + item.getValue());
+
+        // Recursively process all children
+        for (TreeItem<Object> child : item.getChildren()) {
+            printTreeItems(child, level + 1);
+        }
     }
 
     private void test() {
@@ -117,7 +141,6 @@ public class ProductFamily implements Builder<Pane> {
         partFinderModel.getTreeView().editableProperty().set(false);
         logger.debug("Cancelled edits and refreshed TreeView");
         ButtonFx.buttonVisible(saveButton, false);
-        System.out.println("visibility 4");
         setButtonVisibility(false, false, false, false); // why did you remove this?
     }
 
@@ -200,9 +223,10 @@ public class ProductFamily implements Builder<Pane> {
         List<TreeItem<Object>> toRemove = new ArrayList<>(markedForDeletion);
         for (TreeItem<Object> item : toRemove) {
             int depth = getTreeItemDepth(item);
+            System.out.println("Depth is " + depth);
             TreeItem<Object> parent = item.getParent();
             if (depth == 1) {
-                ProductFamilyDTO pf = (ProductFamilyDTO) item.getValue(); // this is line 205
+                ProductFamilyDTO pf = (ProductFamilyDTO) item.getValue();
                 logger.debug("Attempting to remove range: {} (instance: {})",
                         pf.getRange(), System.identityHashCode(pf));
                 if (partFinderModel.getProductFamilies().remove(pf)) {

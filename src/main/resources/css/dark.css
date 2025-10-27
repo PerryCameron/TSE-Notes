@@ -571,6 +571,41 @@ Label.service-plan-details {
 
 /*******************************************************************************
  *                                                                             *
+ * TreeView                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+
+.tree-view {
+    -fx-background-color: -fx-tertiary-bg !important;
+    -fx-background-radius: 4 !important;
+    -fx-border-radius: 4 !important;
+    -fx-padding: 0 !important;
+    -fx-border-width: 1 !important;
+    -fx-border-color: -fx-field-border !important;
+    -fx-background-insets: 0 !important; /* Prevent inset issues */
+    -fx-focus-color: transparent !important; /* Remove focus ring */
+    -fx-faint-focus-color: transparent !important;
+}
+
+.tree-cell {
+    -fx-text-fill: -fx-text-color !important;
+    -fx-font-size: 14px !important;
+    -fx-background-color: transparent !important;
+    -fx-border-width: 0 !important; /* Prevent unwanted borders */
+}
+
+.tree-cell:selected {
+    -fx-background-color: #0078d7 !important; /* Highlight selected items */
+    -fx-text-fill: white !important;
+}
+
+.tree-cell:hover {
+    -fx-background-color: #e6e6e6 !important; /* Hover effect */
+    -fx-text-fill: white !important;
+}
+
+/*******************************************************************************
+ *                                                                             *
  * TextArea                                                                    *
  *                                                                             *
  ******************************************************************************/
