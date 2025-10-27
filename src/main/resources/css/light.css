@@ -499,7 +499,7 @@ Label.service-plan-details {
  *                                                                             *
  ******************************************************************************/
 .scroll-pane {
-    -fx-background-color: -fx-primary-bg; /* Match TextField/TextArea/CodeArea/ComboBox background */
+    -fx-background-color: -fx-primary-bg; /*
     -fx-background-radius: 4; /* Match rounded corners */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent; /* Ensure no border color */
@@ -701,6 +701,8 @@ Label.service-plan-details {
     -fx-border-color: -fx-field-border;
     -fx-background-insets: 0; /* Prevent corner issues */
 }
+
+
 
 /* CodeArea Content Area */
 .code-area .content, .code-area-single .content {

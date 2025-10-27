@@ -199,6 +199,15 @@ Label.service-plan-details {
     -fx-fill: -fx-text-color; /* #E0E0E0 from your :root */
 }
 
+.custom-close-button {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+
 /*******************************************************************************
  *                                                                             *
  * MenuBar                                                                     *
@@ -300,27 +309,17 @@ Label.service-plan-details {
     -fx-opacity: 0.6;
 }
 
-.custom-close-button {
-    -fx-background-color: transparent;
-    -fx-alignment: center;
-    -fx-padding: 10px;
-    -fx-border-radius: 0;
-    -fx-background-radius: 0;
-}
-
-
 /*******************************************************************************
  *                                                                             *
  * TabPane                                                                     *
  *                                                                             *
  ******************************************************************************/
 .tab-pane {
-    /*-fx-background-color: red; !* Match TextField/TextArea/CodeArea/ComboBox/ScrollPane background *!*/
     -fx-background-radius: 4; /* Match rounded corners */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent; /* Ensure no border color */
     -fx-background-insets: 0; /* Prevent corner issues */
-    -fx-padding: 0; /* Match TextArea/CodeArea/ScrollPane outer padding */
+    -fx-padding: 0;
 }
 
 /* Tab Header Area */
@@ -384,7 +383,6 @@ Label.service-plan-details {
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent;
     -fx-background-insets: 0;
-    /*-fx-padding: 8 12 8 12; !* Match TextField/TextArea/CodeArea content padding *!*/
 }
 
 /* ScrollPane in TabPane (if tabs are scrollable) */
@@ -415,7 +413,7 @@ Label.service-plan-details {
 }
 
 .tab-pane .scroll-bar .thumb {
-    -fx-background-color: -fx-scroll-thumb; /* Match TextArea/CodeArea/ComboBox/ScrollPane scrollbar thumb */
+    -fx-background-color: -fx-scroll-thumb;
     -fx-background-radius: 4;
 }
 
@@ -434,14 +432,6 @@ Label.service-plan-details {
     -fx-font-size: 14px; /* Match font size */
 }
 
-/* Optional: Focus State for TabPane */
-/*.tab-pane:focused {*/
-/*    -fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*/
-/*    -fx-border-width: 0; !* No border *!*/
-/*    -fx-border-color: transparent;*/
-/*    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); !* Subtle blue glow for focus *!*/
-/*}*/
-
 /* Optional: Disabled Tab */
 .tab-pane .tab:disabled {
     -fx-background-color: -fx-primary-bg; /* Maintain background */
@@ -459,22 +449,18 @@ Label.service-plan-details {
     -fx-effect: none !important; /* Remove any glow or shadow */
 }
 
-/*.tab {*/
-/*    -fx-pref-width: 150px; !* Set the preferred width for each tab *!*/
-/*}*/
-
 /*******************************************************************************
  *                                                                             *
  * ScrollPane                                                                    *
  *                                                                             *
  ******************************************************************************/
 .scroll-pane {
-    -fx-background-color: -fx-primary-bg; /* Match TextField/TextArea/CodeArea/ComboBox background */
+    -fx-background-color: -fx-primary-bg;
     -fx-background-radius: 4; /* Match rounded corners */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent; /* Ensure no border color */
     -fx-background-insets: 0; /* Prevent corner issues */
-    -fx-padding: 0; /* Match TextArea/CodeArea outer padding */
+    -fx-padding: 0;
 }
 
 /* ScrollPane Viewport (Content Area) */
@@ -484,7 +470,7 @@ Label.service-plan-details {
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent; /* Ensure no border color */
     -fx-background-insets: 0; /* Prevent corner issues */
-    -fx-padding: 8 12 8 12; /* Match TextField/TextArea/CodeArea content padding */
+    -fx-padding: 8 12 8 12;
 }
 
 /* ScrollBar Styles */
@@ -497,7 +483,7 @@ Label.service-plan-details {
 }
 
 .scroll-pane .scroll-bar .thumb {
-    -fx-background-color: -fx-scroll-thumb; /* Match TextArea/CodeArea/ComboBox scrollbar thumb */
+    -fx-background-color: -fx-scroll-thumb;
     -fx-background-radius: 4;
 }
 
@@ -547,19 +533,8 @@ Label.service-plan-details {
     -fx-font-size: 14px;
 }
 
-/* TextField Hover State */
-/*.text-field:hover {*/
-/*    -fx-background-color: -fx-hover-bg; !* Slightly lighter background on hover *!*/
-/*    -fx-border-color: -fx-scroll-thumb; !* Lighter border for subtle feedback *!*/
-/*    -fx-font-size: 14px; !* Maintain font size on hover *!*/
-/*}*/
-
 /* TextField Focus State */
 .text-field:focused {
-    /*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*/
-    /*-fx-border-color: -fx-focus-accent; !* Blue accent for focus indication *!*/
-    /*-fx-border-width: 1.5; !* Slightly thicker border for emphasis *!*/
-    /*-fx-font-size: 14px; !* Maintain font size when focused *!*/
     -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); /* Optional: subtle blue glow for focus */
 }
 
@@ -625,13 +600,6 @@ Label.service-plan-details {
     -fx-background-insets: 0;
     -fx-font-size: 14px; /* Ensure content text matches */
 }
-
-/* TextArea Hover State */
-/*.text-area:hover {*/
-/*    -fx-background-color: -fx-hover-bg; !* Slightly lighter on hover *!*/
-/*    -fx-border-width: 0; !* No border on hover *!*/
-/*    -fx-border-color: transparent; !* Ensure no border color *!*/
-/*}*/
 
 /* TextArea Focus State */
 .text-area:focused {
@@ -707,6 +675,11 @@ Label.service-plan-details {
     -fx-background-insets: 0; /* Prevent corner issues */
 }
 
+/*This is the color of the cursor*/
+.code-area .caret, .code-area-single .caret {
+    -fx-stroke: -fx-text-color; /* Set cursor color */
+}
+
 /* CodeArea Content Area */
 .code-area .content, .code-area-single .content {
     -fx-background-color: -fx-tertiary-bg; /* Match outer background */
@@ -761,11 +734,20 @@ Label.service-plan-details {
     -fx-background-color: -fx-scroll-thumb-hover; /* Lighter thumb on hover */
 }
 
+/*.code-area:focused, .code-area-single:focused {*/
+/*    !*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*!*/
+/*    -fx-border-width: 0; !* No border *!*/
+/*    -fx-border-color: transparent;*/
+/*    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); !* Subtle blue glow for focus *!*/
+/*}*/
+
+/*.code-area:focused .scroll-pane .viewport, .code-area-single:focused .scroll-pane .viewport {*/
+/*    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); !* Apply subtle blue glow to viewport *!*/
+/*}*/
+
 .code-area:focused, .code-area-single:focused {
-    /*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*/
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent;
-    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); /* Subtle blue glow for focus */
 }
 
 /* Corner Fix for ScrollPane */
@@ -784,13 +766,13 @@ Label.service-plan-details {
  ******************************************************************************/
 
 .combo-box {
-    -fx-background-color: -fx-tertiary-bg; /* Match TextField/TextArea/CodeArea background */
+    -fx-background-color: -fx-tertiary-bg;
     -fx-text-fill: -fx-text-color; /* Match text color */
     -fx-prompt-text-fill: -fx-prompt-text-color; /* Match placeholder text color */
     -fx-font-size: 14px; /* Match font size */
     -fx-background-radius: 4; /* Match rounded corners */
     -fx-border-radius: 4;
-    -fx-padding: 0; /* Match TextArea/CodeArea outer padding */
+    -fx-padding: 0;
     -fx-border-width: 1; /* No border */
     -fx-border-color: -fx-field-border;
     -fx-background-insets: 0; /* Prevent corner issues */
@@ -900,7 +882,7 @@ Label.service-plan-details {
 }
 
 .combo-box .list-view .scroll-bar .thumb {
-    -fx-background-color: -fx-scroll-thumb; /* Match TextArea/CodeArea scrollbar thumb */
+    -fx-background-color: -fx-scroll-thumb;
     -fx-background-radius: 4;
 }
 
