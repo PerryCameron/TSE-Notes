@@ -30,7 +30,6 @@ public class RangesListView implements Builder<ListView<RangesFx>> {
                 setText(empty || item == null ? null : item.getRange());
             }
         });
-
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 // copy the values from newSelection to the bound object
@@ -40,7 +39,6 @@ public class RangesListView implements Builder<ListView<RangesFx>> {
                 action.accept(SettingsMessage.UPDATE_NUMBER_OF_SPARES);
             }
         });
-
         return listView;
     }
 }

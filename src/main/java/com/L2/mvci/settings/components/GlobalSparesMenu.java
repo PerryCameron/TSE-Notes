@@ -43,9 +43,6 @@ public class GlobalSparesMenu implements Builder<Region> {
         setPartsAvailabilityListener(vbox);
         // made sure database exists and is writable
         action.accept(SettingsMessage.VERIFY_PARTS_DATABASE);
-        // settingsModel.boundRangeFxProperty().get().rangeProperty().addListener(range -> System.out.println(range));
-        // settingsModel.boundRangeFxProperty().get().rangeTypeProperty().addListener(range -> System.out.println(range));
-        // settingsModel.boundRangeFxProperty().get().productFamilyProperty().addListener(range -> System.out.println(range));
         return vbox;
     }
 
@@ -69,7 +66,6 @@ public class GlobalSparesMenu implements Builder<Region> {
     private Node description() {
         Label label = new Label("Your ranges allow you to quickly refine the way you search. The keywords are what will be searched for when the range is selected. You can add and delete them as you choose. Only product family and range information will be searched with this.");
         // Optional: Style the Label (e.g., font, color)
-        label.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
         label.setWrapText(true);
         VBox.setMargin(label, new Insets(10, 0, 10, 0));
         return label;
@@ -107,12 +103,8 @@ public class GlobalSparesMenu implements Builder<Region> {
 
     private Node createButtonRow() {
         HBox hBox = new HBox(5);
-        Button saveButton = ButtonFx.utilityButton(() -> {
-            action.accept(SettingsMessage.SAVE_RANGES);
-        }, ImageResources.SAVE, "Save");
-        Button deleteButton = ButtonFx.utilityButton(() -> {
-            showConfirmationAlert();
-        }, ImageResources.DELETE, "Delete");
+        Button saveButton = ButtonFx.utilityButton(() -> action.accept(SettingsMessage.SAVE_RANGES), ImageResources.SAVE, "Save");
+        Button deleteButton = ButtonFx.utilityButton(this::showConfirmationAlert, ImageResources.DELETE, "Delete");
         Button newButton = ButtonFx.utilityButton(() -> {
             settingsModel.getRanges().add(new RangesFx());
             action.accept(SettingsMessage.ADD_RANGE);

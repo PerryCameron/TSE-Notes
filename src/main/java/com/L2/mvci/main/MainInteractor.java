@@ -72,7 +72,7 @@ public class MainInteractor implements ApplicationPaths {
     }
 
     public ExecutorService getExecutorService() {
-        logger.info("Getting executor service...");
+        logger.debug("Getting executor service...");
         return mainModel.getExecutor();
     }
 

@@ -142,7 +142,6 @@ Label.service-plan-details {
 .titledPane > .title {
     -fx-font-size: 10px;
     -fx-background-color: -fx-primary-bg;
-    -fx-padding: 0px;
     -fx-padding: 1 0 0 10px; /* top right bottom left */
 }
 

@@ -94,12 +94,12 @@ public class NoteListInteractor implements ApplicationPaths {
     }
 
     protected void sortTableView() {
-        logger.debug("Sorting table view");
+        //logger.debug("Sorting table view");
         noteListModel.getNotes().sort(Comparator.comparing(NoteFx::getTimestamp).reversed());
     }
 
     protected void refreshTableView() {
-        logger.debug("Refreshing table view");
+        //logger.debug("Refreshing table view");
         noteListModel.refreshTable();
     }
 

@@ -59,11 +59,6 @@ Label.service-plan-details {
     -fx-text-fill: -fx-selected-text;
 }
 
-/*!* Optional: Remove focus border from tabs *!*/
-/*.tab-pane:focused > .tab-header-area > .tab:selected {*/
-/*    -fx-background-color: #2980b9; !* Match this to selected tab color to remove focus border *!*/
-/*}*/
-
 .title-pane .title {
     -fx-font-size: 12px;
 }
@@ -71,7 +66,6 @@ Label.service-plan-details {
 .titledPane > .title {
     -fx-font-size: 10px;
     -fx-background-color: -fx-primary-bg;
-    -fx-padding: 0px;
     -fx-padding: 1 0 0 10px; /* top right bottom left */
 }
 
@@ -91,7 +85,7 @@ Label.service-plan-details {
 }
 
 .decorative-hbox .label:hover {
-    -fx-text-fill: white;
+    -fx-text-fill: -fx-alternate-text-color;
 }
 
 .decorative-header-box {
@@ -105,7 +99,7 @@ Label.service-plan-details {
 }
 
 .decorative-header-box .label:hover {
-    -fx-text-fill: white;
+    -fx-text-fill: -fx-alternate-text-color;
 }
 
 /* this is the third color you see in some components */
@@ -254,14 +248,11 @@ Label.service-plan-details {
 /* Menu Hover State */
 .menu-bar .menu:hover {
     -fx-background-color: transparent;  /* after clicking menu this is the background color when mouse hovers over */
-    /*-fx-text-fill: blue; !* appears to do nothing *!*/
 }
 
 /* Menu Focused/Selected State */
 .menu-bar .menu:focused, .menu-bar .menu:showing {
     -fx-background-color: transparent;  /* after clicking menu item this is the background color when mouse hovers over */
-    /*-fx-text-fill: red; !* appears to do nothing *!*/
-    /*-fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0);*/
 }
 
 /* Context Menu (Dropdown) */
@@ -271,7 +262,6 @@ Label.service-plan-details {
     -fx-border-width: 0;
     -fx-border-color: transparent;
     -fx-background-insets: 0;
-    /*-fx-effect: dropshadow(gaussian, #00000033, 10, 0, 0, 0); !* Subtle shadow for dropdown *!*/
 }
 
 /*******************************************************************************
@@ -293,12 +283,7 @@ Label.service-plan-details {
 /* Individual Menu (e.g., File, Edit) */
 .menu-bar .menu {
     -fx-background-color: transparent; /* menu button background color */
-    -fx-text-fill: -fx-alternate-text-color; /* this appears to do nothing
-    -fx-background-radius: 4;
-    -fx-border-width: 0;
-    -fx-border-color: transparent;
-    -fx-background-insets: 0;
-    -fx-padding: 8 12 8 12; /* Match content padding */
+    -fx-text-fill: -fx-alternate-text-color;
 }
 
 .menu-bar .menu .label {
@@ -309,10 +294,8 @@ Label.service-plan-details {
 
 /* MenuItem Hover/Focused State */
 .menu-bar .menu-item:hover, .menu-bar .menu-item:focused {
-    /*-fx-background-color: blue; !* appears to do nothing *!*/
     -fx-text-fill: -fx-alternate-text-color;
     -fx-background-color: -fx-light-accent !important;
-
 }
 
 /* MenuItem Selected State (e.g., check menu item) */
@@ -334,7 +317,6 @@ Label.service-plan-details {
     -fx-border-width: 0;
     -fx-border-color: transparent;
     -fx-background-insets: 0;
-    /*-fx-effect: dropshadow(gaussian, #00000033, 10, 0, 0, 0); !* Subtle shadow for dropdown *!*/
 }
 
 
@@ -345,12 +327,12 @@ Label.service-plan-details {
  *                                                                             *
  ******************************************************************************/
 .tab-pane {
-    /*-fx-background-color: red; !* Match TextField/TextArea/CodeArea/ComboBox/ScrollPane background *!*/
+    /*-fx-background-color: red;
     -fx-background-radius: 4; /* Match rounded corners */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent; /* Ensure no border color */
     -fx-background-insets: 0; /* Prevent corner issues */
-    -fx-padding: 0; /* Match TextArea/CodeArea/ScrollPane outer padding */
+    -fx-padding: 0;
 }
 
 /* Tab Header Area */
@@ -414,7 +396,6 @@ Label.service-plan-details {
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent;
     -fx-background-insets: 0;
-    /*-fx-padding: 8 12 8 12; !* Match TextField/TextArea/CodeArea content padding *!*/
 }
 
 /* ScrollPane in TabPane (if tabs are scrollable) */
@@ -445,7 +426,7 @@ Label.service-plan-details {
 }
 
 .tab-pane .scroll-bar .thumb {
-    -fx-background-color: -fx-scroll-thumb; /* Match TextArea/CodeArea/ComboBox/ScrollPane scrollbar thumb */
+    -fx-background-color: -fx-scroll-thumb;
     -fx-background-radius: 4;
 }
 
@@ -464,15 +445,6 @@ Label.service-plan-details {
     -fx-font-size: 14px; /* Match font size */
 }
 
-/* Optional: Focus State for TabPane */
-/*.tab-pane:focused {*/
-/*    -fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*/
-/*    -fx-border-width: 0; !* No border *!*/
-/*    -fx-border-color: transparent;*/
-/*    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); !* Subtle blue glow for focus *!*/
-/*}*/
-
-/* Optional: Disabled Tab */
 .tab-pane .tab:disabled {
     -fx-background-color: -fx-primary-bg; /* Maintain background */
     -fx-text-fill: -fx-prompt-text-color; /* Muted text for disabled state */
@@ -489,10 +461,6 @@ Label.service-plan-details {
     -fx-effect: none !important; /* Remove any glow or shadow */
 }
 
-/*.tab {*/
-/*    -fx-pref-width: 150px; !* Set the preferred width for each tab *!*/
-/*}*/
-
 /*******************************************************************************
  *                                                                             *
  * ScrollPane                                                                    *
@@ -504,7 +472,7 @@ Label.service-plan-details {
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent; /* Ensure no border color */
     -fx-background-insets: 0; /* Prevent corner issues */
-    -fx-padding: 0; /* Match TextArea/CodeArea outer padding */
+    -fx-padding: 0;
 }
 
 /* ScrollPane Viewport (Content Area) */
@@ -514,7 +482,7 @@ Label.service-plan-details {
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent; /* Ensure no border color */
     -fx-background-insets: 0; /* Prevent corner issues */
-    -fx-padding: 8 12 8 12; /* Match TextField/TextArea/CodeArea content padding */
+    -fx-padding: 8 12 8 12;
 }
 
 /* ScrollBar Styles */
@@ -527,7 +495,7 @@ Label.service-plan-details {
 }
 
 .scroll-pane .scroll-bar .thumb {
-    -fx-background-color: -fx-scroll-thumb; /* Match TextArea/CodeArea/ComboBox scrollbar thumb */
+    -fx-background-color: -fx-scroll-thumb;
     -fx-background-radius: 4;
 }
 
@@ -551,7 +519,6 @@ Label.service-plan-details {
     -fx-background-color: -fx-hover-bg; /* Slightly lighter to indicate focus */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent;
-    /*-fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); !* Subtle blue glow for focus *!*/
 }
 
 /* Ensure Content Text Matches (if applicable) */
@@ -576,13 +543,6 @@ Label.service-plan-details {
     -fx-padding: 8 12 8 12;
     -fx-font-size: 14px;
 }
-
-/* TextField Hover State */
-/*.text-field:hover {*/
-/*    -fx-background-color: -fx-hover-bg; !* Slightly lighter background on hover *!*/
-/*    -fx-border-color: -fx-scroll-thumb; !* Lighter border for subtle feedback *!*/
-/*    -fx-font-size: 14px; !* Maintain font size on hover *!*/
-/*}*/
 
 /* TextField Focus State */
 .text-field:focused {
@@ -619,13 +579,6 @@ Label.service-plan-details {
     -fx-padding: 8 12 8 12;
     -fx-background-insets: 0;
     -fx-font-size: 14px; /* Ensure content text matches */
-}
-
-/* TextArea Hover State */
-.text-area:hover {
-    -fx-background-color: -fx-hover-bg; /* Slightly lighter on hover */
-    -fx-border-width: 0; /* No border on hover */
-    -fx-border-color: transparent; /* Ensure no border color */
 }
 
 /* TextArea Focus State */
@@ -805,7 +758,7 @@ Label.service-plan-details {
 
 /* ComboBox Arrow Button */
 .combo-box .arrow-button {
-    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-color: -fx-primary-bg;
     -fx-background-radius: 0 4 4 0; /* Rounded right corners, flat left */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent;
@@ -822,7 +775,6 @@ Label.service-plan-details {
 
 /* ComboBox Focus State */
 .combo-box:focused {
-    /*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*/
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent;
     -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); /* Subtle blue glow for focus */
@@ -923,18 +875,18 @@ Label.service-plan-details {
 }
 
 .table-view .column-header {
-    -fx-background-color: -fx-table-header; /* header background color */
+    -fx-background-color: -fx-table-header;
     /*-fx-background-radius: 4 4 0 0;*/
     -fx-border-width: 0;
     -fx-border-color: transparent;
     -fx-background-insets: 0;
-    -fx-padding: 2; /* Match content padding */
-    -fx-pref-height: 40; /* Set desired header height in pixels */
+    -fx-padding: 2;
+    -fx-pref-height: 40;
 }
 
 .table-view .column-header .label {
     -fx-text-fill: -fx-text-color;
-    -fx-alignment: CENTER-LEFT; /* Align text to the left */
+    -fx-alignment: CENTER-LEFT;
     -fx-font-size: 14px;
     -fx-padding: 0;
 }
@@ -944,22 +896,20 @@ Label.service-plan-details {
     -fx-background-color: -fx-primary-bg;
     -fx-text-fill: -fx-text-color;
     -fx-font-size: 14px;
-    -fx-padding: 2; /* Your specified padding */
-    /*-fx-border-width: 0 0 0.5 0; !* Bottom-only border *!*/
+    -fx-padding: 2;
     -fx-border-color: transparent transparent -fx-table-cell-border transparent;
     -fx-background-insets: 0;
-    -fx-border-width: 1; /* Explicitly remove all borders */
-
+    -fx-border-width: 1;
 }
 
 .table-view .table-row-cell:selected {
     /*-fx-background-color: -fx-light-accent !important; !* Explicit blue *!*/
-    -fx-text-fill: -fx-selected-text !important; /* White text */
+    -fx-text-fill: -fx-selected-text !important;
 }
 
 .table-view .table-row-cell:selected .table-cell {
     -fx-background-color: -fx-light-accent !important; /* Explicit blue for cells */
-    -fx-text-fill: -fx-selected-text !important; /* White text */
+    -fx-text-fill: -fx-selected-text !important;
 }
 
 /* Focus State */
@@ -1085,20 +1035,6 @@ Label.service-plan-details {
 .context-menu .menu-item .label {
     -fx-text-fill: -fx-text-color; /* #E0E0E0, changed from -fx-selected-text for consistency */
 }
-
-/* Add to Dictionary item (using ID) */
-/*.context-menu #add-to-dictionary-item .label {*/
-/*    -fx-text-fill: -fx-focus-accent; !* Red text *!*/
-/*}*/
-/*.context-menu #add-to-dictionary-item:hover .label,*/
-/*.context-menu #add-to-dictionary-item:focused .label {*/
-/*    -fx-text-fill: -fx-focus-accent;*/
-/*}*/
-/*.context-menu #add-to-dictionary-item:pressed .label {*/
-/*    -fx-text-fill: -fx-focus-accent;*/
-/*}*/
-
-/*Default theme (off state)*/
 
 /* Main ToggleSwitch Styling */
 .toggle-switch {
@@ -1315,14 +1251,6 @@ Label.service-plan-details {
 .spinner .decrement-arrow-button:hover .decrement-arrow {
     -fx-background-color: -fx-focus-accent; /* This doesn't work, I just want to change the color of the arrow on hover */
 }
-
-
-/*.spinner > .increment-arrow-button:hover,*/
-/*.spinner > .decrement-arrow-button:hover {*/
-/*    -fx-background-color: white; !* #252526 *!*/
-/*    -fx-border-color: -fx-field-border; !* #333333, no right border *!*/
-/*    -fx-border-width: 0 1 1 0; !* No right border to blend with buttons *!*/
-/*}*/
 
 /*******************************************************************************
  *                                                                             *
