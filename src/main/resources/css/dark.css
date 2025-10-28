@@ -27,6 +27,11 @@
  * Custom                                                                      *
  *                                                                             *
  ******************************************************************************/
+.drop-region {
+    -fx-background-color: -fx-tertiary-bg;
+    -fx-border-color: -fx-textfield-border;
+    -fx-border-width: 2;
+}
 
 .app-button {
     -fx-background-color: -fx-button-accent;
@@ -83,9 +88,9 @@
 }
 
 .prominent-answer {
-    -fx-font-size: 16 !important;         /* Ensures font size is 16 */
-    -fx-font-weight: bold;     /* Ensures bold font */
-    -fx-text-fill: -fx-focus-accent 16 !important;        /* Sets text color to red */
+    -fx-font-size: 16 !important;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-focus-accent 16 !important;
     -fx-effect: null;          /* Removes any overriding effects */
     -fx-opacity: 1.0;          /* Ensures text is fully visible */
     -fx-label-padding: 0;      /* Avoids padding issues */
@@ -808,7 +813,7 @@ Label.service-plan-details {
 
 /* ComboBox Arrow Button */
 .combo-box .arrow-button {
-    -fx-background-color: -fx-tertiary-bg; /* Match ComboBox background */
+    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
     -fx-background-radius: 0 4 4 0; /* Rounded right corners, flat left */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent;
@@ -873,7 +878,7 @@ Label.service-plan-details {
 
 /* Viewport in ComboBox Popup */
 .combo-box .list-view .scroll-pane .viewport {
-    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-color: transparent; /* Match ComboBox background */
     -fx-background-radius: 4;
     -fx-border-width: 0;
     -fx-border-color: transparent;
@@ -902,6 +907,9 @@ Label.service-plan-details {
 .combo-box .list-view .scroll-pane .corner {
     -fx-background-color: transparent; /* Prevent white corners */
 }
+
+
+
 
 /*******************************************************************************
  *                                                                             *
@@ -1095,20 +1103,6 @@ Label.service-plan-details {
     -fx-text-fill: -fx-text-color; /* #E0E0E0, changed from -fx-selected-text for consistency */
 }
 
-/* Add to Dictionary item (using ID) */
-/*.context-menu #add-to-dictionary-item .label {*/
-/*    -fx-text-fill: -fx-focus-accent; !* Red text *!*/
-/*}*/
-/*.context-menu #add-to-dictionary-item:hover .label,*/
-/*.context-menu #add-to-dictionary-item:focused .label {*/
-/*    -fx-text-fill: -fx-focus-accent;*/
-/*}*/
-/*.context-menu #add-to-dictionary-item:pressed .label {*/
-/*    -fx-text-fill: -fx-focus-accent;*/
-/*}*/
-
- /*Default theme (off state)*/
-
 /* Main ToggleSwitch Styling */
 .toggle-switch {
     -fx-padding: 0 2 0 0; /* Reduce padding around the control */
@@ -1221,12 +1215,7 @@ Label.service-plan-details {
     -fx-background-color: -fx-primary-bg;
     -fx-background-insets: 0 0 0 0, 0 0 1 0;
 }
-/*.date-picker-popup > * > .spinner {*/
-/*    -fx-spacing: 0.25em; !* 3 *!*/
-/*    -fx-alignment: CENTER;*/
-/*    -fx-fill-height: false;*/
-/*    -fx-background-color: transparent;*/
-/*}*/
+
 .date-picker-popup > * > .spinner > .button {
     -fx-background-color: -fx-primary-bg;
     -fx-background-insets: 0, 1, 2;
@@ -1283,16 +1272,6 @@ Label.service-plan-details {
     -fx-border-color: transparent; /* No border */
     -fx-background-insets: 0;
 }
-
-/*.date-picker > .text-field {*/
-/*    -fx-background-color: -fx-tertiary-bg; !* Background, e.g., #2C2C2C *!*/
-/*    -fx-text-fill: -fx-text-color; !* Text color, e.g., #E0E0E0 *!*/
-/*    -fx-prompt-text-fill: -fx-prompt-text-color; !* Prompt text, e.g., #A0A0A0 *!*/
-/*    -fx-border-color: -fx-field-border; !* Border, e.g., #333333 *!*/
-/*    -fx-border-width: 1;*/
-/*    -fx-background-insets: 0; !* No padding/offset *!*/
-/*    -fx-background-radius: 4 0 0 4; !* Round top-left and bottom-left corners only *!*/
-/*}*/
 
 /* Style the text field inside the Spinner */
 .spinner > .text-field {
@@ -1404,6 +1383,8 @@ Label.service-plan-details {
 .list-cell {
     -fx-background-color: -fx-tertiary-bg; /* Set background color for all ListView cells (rows) */
     -fx-text-fill: -fx-alternate-text-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -fx-table-cell-border !important; /* This is the border color of the header */
 }
 
 /*.list-cell:odd {*/

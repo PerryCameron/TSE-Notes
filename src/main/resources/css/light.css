@@ -29,6 +29,32 @@
  *                                                                             *
  ******************************************************************************/
 
+.drop-region {
+    -fx-background-color: -fx-tertiary-bg;
+    -fx-border-color: -fx-textfield-border;
+    -fx-border-width: 2;
+}
+
+.app-button {
+    -fx-background-color: -fx-button-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent; /* Make the border invisible */
+}
+
+.app-button:hover {
+    -fx-background-color: -fx-focus-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+.app-button:selected {
+    -fx-background-color: -fx-prompt-text-color;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
 /* styles.css */
 .deleted-item {
     -fx-text-fill: -fx-delete;
@@ -196,6 +222,10 @@ Label.service-plan-details {
 .misspelled {
     -fx-fill: -fx-spell-accent !important;
     -fx-underline: true;
+}
+
+.dictionary-label {
+    -fx-text-fill: green;
 }
 
 .search-dialogue {
@@ -758,7 +788,7 @@ Label.service-plan-details {
 
 /* ComboBox Arrow Button */
 .combo-box .arrow-button {
-    -fx-background-color: -fx-primary-bg;
+    -fx-background-color: -fx-tertiary-bg;
     -fx-background-radius: 0 4 4 0; /* Rounded right corners, flat left */
     -fx-border-width: 0; /* No border */
     -fx-border-color: transparent;
@@ -1314,22 +1344,32 @@ Label.service-plan-details {
     -fx-text-fill: -fx-alternate-text-color;
 }
 
-.app-button {
-    -fx-background-color: -fx-button-accent;
-    -fx-text-fill: -fx-alternate-text-color;
-    -fx-font-size: 14px;
-    -fx-padding: 8 12 8 12;
-    -fx-background-radius: 4;
+/*******************************************************************************
+ *                                                                             *
+ * ListView                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+
+.list-cell {
+    -fx-background-color: -fx-primary-bg; /* Set background color for all ListView cells (rows) */
+    -fx-text-fill: -fx-text-color;
     -fx-border-width: 0 0 1 0;
-    -fx-border-color: transparent; /* Make the border invisible */
+    -fx-border-color: -fx-table-cell-border !important; /* This is the border color of the header */
 }
 
-.app-button:hover {
-    -fx-background-color: -fx-focus-accent;
-    -fx-text-fill: -fx-alternate-text-color;
-}
+/*.list-cell:odd {*/
+/*    -fx-background-color: -fx-tertiary-bg; !* Optional: Slightly different color for odd rows to maintain striping *!*/
+/*}*/
 
-.app-button:selected {
-    -fx-background-color: -fx-prompt-text-color;
-    -fx-text-fill: -fx-alternate-text-color;
+/*.list-cell:even {*/
+/*    -fx-background-color: -fx-secondary-bg; !* Even rows *!*/
+/*}*/
+
+/*.list-view {*/
+/*    -fx-background-color: #F0F0F0; !* Ensure the ListView container background matches *!*/
+/*}*/
+
+.list-cell:selected {
+    -fx-background-color: -fx-focus-accent; /* Background for selected cells (blue) */
+    -fx-text-fill: -fx-alternate-text-color; /* Text color for selected cells (white) */
 }

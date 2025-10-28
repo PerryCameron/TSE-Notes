@@ -130,7 +130,9 @@ public class GlobalSparesMenu implements Builder<Region> {
     private Node modelsBox() {
         VBox vbox = new VBox();
         vbox.setSpacing(10);
-        vbox.getChildren().add(new Label("Product Family and Range Keywords (Each on a separate line)"));
+        Label label = new Label("Product Family and Range Keywords (Each on a separate line)");
+        label.setPadding(new Insets(5, 5, 0, 5));
+        vbox.getChildren().add(label);
         TextArea textArea = new TextArea();
         textArea.setEditable(true);
         textArea.setWrapText(false);
@@ -156,7 +158,9 @@ public class GlobalSparesMenu implements Builder<Region> {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
         });
-        vBox.getChildren().add(new Label("Range"));
+        Label label = new Label("Range");
+        label.setPadding(new Insets(5, 5, 0, 5));
+        vBox.getChildren().add(label);
         vBox.getChildren().add(textField);
         vBox.getStyleClass().add("inner-decorative-hbox");
         vBox.setAlignment(Pos.CENTER_LEFT);
@@ -171,7 +175,9 @@ public class GlobalSparesMenu implements Builder<Region> {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) action.accept(SettingsMessage.UPDATE_RANGE_IN_LIST);
         });
-        vBox.getChildren().add(new Label("Range type"));
+        Label label = new Label("Range type");
+        label.setPadding(new Insets(5, 5, 0, 5));
+        vBox.getChildren().add(label);
         vBox.getChildren().add(textField);
         vBox.getStyleClass().add("inner-decorative-hbox");
         vBox.setAlignment(Pos.CENTER_LEFT);
@@ -211,7 +217,7 @@ public class GlobalSparesMenu implements Builder<Region> {
     public Pane createDropRegion() {
         // Create a Region (using Pane for simplicity)
         Pane dropRegion = new Pane();
-        dropRegion.setStyle("-fx-background-color: lightgray; -fx-border-color: black; -fx-border-width: 2;");
+        dropRegion.getStyleClass().add("drop-region");
         dropRegion.setPrefSize(400, 300);
 
         // Add a text node to display instructions or results

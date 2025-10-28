@@ -52,7 +52,7 @@ public class SpellCheckArea extends CodeArea {
                 this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_ISSUE_AREA;
             }
             case finish -> {
-                height = 130;
+                height = 190;
                 setUpArea();
                 this.computeHighlight = NoteMessage.COMPUTE_HIGHLIGHTING_FINISH_AREA;
             }
@@ -291,7 +291,7 @@ public class SpellCheckArea extends CodeArea {
         addToDict.getStyleClass().add("add-to-dictionary-item");
         addToDict.setId("add-to-dictionary-item");
         // Set the text color to green using an inline style
-        addToDict.setStyle("-fx-text-fill: red;");
+//        addToDict.setStyle("-fx-text-fill: red;");
 
         addToDict.setOnAction(e -> {
             noteModel.hunspellProperty().get().add(cleanWord);
