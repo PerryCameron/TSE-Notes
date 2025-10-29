@@ -88,8 +88,8 @@ public class NoteController extends Controller<NoteMessage> {
             case UPDATE_PART_ORDER -> noteInteractor.updatePartOrder();
             case UPDATE_PART -> noteInteractor.updatePart();
             case UPDATE_RANGE_COUNT -> noteInteractor.updateRangeCount();
-            case EMAIL_NASP -> noteInteractor.emailNasp();
-            case EMAIL_OCT -> noteInteractor.emailOct();
+            case EMAIL_NASP -> noteInteractor.checkForClassic(() -> noteInteractor.emailNasp());
+            case EMAIL_OCT  -> noteInteractor.checkForClassic(() -> noteInteractor.emailOct());
         }
     }
 

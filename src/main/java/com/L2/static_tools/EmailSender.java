@@ -10,19 +10,6 @@ import org.slf4j.LoggerFactory;
 public class EmailSender {
     private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
-    public static boolean isClassicOutlookAvailable() {
-        try {
-            ActiveXComponent outlookTest = new ActiveXComponent("Outlook.Application");
-            String version = Dispatch.get(outlookTest, "Version").getString();
-            outlookTest.safeRelease();
-            com.jacob.com.ComThread.Release();
-            logger.debug("Classic Outlook detected, version: {}", version);
-            return true;
-        } catch (Exception e) {
-            logger.warn("Classic Outlook not available, likely new Outlook: {}", e.getMessage());
-            return false;
-        }
-    }
 
     public static void displayEmail(String to, String cc, String subject, String htmlBody) {
         ActiveXComponent outlook = null;

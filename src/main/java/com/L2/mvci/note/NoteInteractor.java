@@ -4,6 +4,7 @@ import com.L2.dto.*;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.enums.AreaType;
+import com.L2.enums.OutlookType;
 import com.L2.mvci.main.MainController;
 import com.L2.repository.implementations.*;
 import com.L2.repository.interfaces.*;
@@ -31,6 +32,8 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
+
+import static com.L2.enums.OutlookType.CLASSIC;
 
 public class NoteInteractor {
 
@@ -1266,13 +1269,22 @@ public class NoteInteractor {
         noteModel.setMainController(mainController);
     }
 
-    public void emailNasp() {
-        if(!EmailSender.isClassicOutlookAvailable()) {
-            Platform.runLater(() -> DialogueFx.errorAlert("Unable to create email", "You are using the new outlook, " +
-                    "this feature only works with classic outlook. If you want to use this feature " +
-                    "you will need to switch back."));
-            return;
+
+    public void errorAlert(String message) {
+        DialogueFx.errorAlert("Unable to create email", message);
+    }
+
+    public void checkForClassic(Runnable onClassic) {
+        switch (OutlookProcessDetector.isClassicOutlook()) {
+            case CLASSIC -> onClassic.run();
+            case NEW -> errorAlert("You are using the new Outlook. This feature only works with classic Outlook.");
+            case BOTH -> errorAlert("It appears both instances of Outlook are running");
+            case ERROR -> errorAlert("Unable to tell which version of Outlook is running");
+            case NONE -> errorAlert("Outlook is not running. It must be running and be classic Outlook");
         }
+    }
+
+    public void emailNasp() {
         if (noteModel.selectedPartOrderProperty().get() == null) {
             Platform.runLater(() -> DialogueFx.errorAlert("Email Error", "There must be a part order to send an email to NASP"));
         } else if (noteModel.selectedPartOrderProperty().get().getOrderNumber().isEmpty()) {
@@ -1308,12 +1320,6 @@ public class NoteInteractor {
     }
 
     public void emailOct() {
-        if(!EmailSender.isClassicOutlookAvailable()) {
-            Platform.runLater(() -> DialogueFx.errorAlert("Unable to create email", "You are using the new outlook, " +
-                    "this feature only works with classic outlook. If you want to use this feature " +
-                    "you will need to switch back."));
-            return;
-        }
         if (noteModel.selectedPartOrderProperty().get() == null) {
             Platform.runLater(() -> DialogueFx.errorAlert("Email Error", "There must be a part order to send an email to OEC"));
         } else if (noteModel.selectedPartOrderProperty().get().getOrderNumber().isEmpty()) {
