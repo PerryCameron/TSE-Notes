@@ -1,0 +1,1381 @@
+/* Define color variables in .root */
+.root {
+    -fx-primary-bg: #ffffff;
+    -fx-secondary-bg: #f5f6f6;
+    -fx-tertiary-bg: #e2e1e1;
+    -fx-quaternary-bg: #cd3131;
+    -fx-text-color: #020202;
+    -fx-alternate-text-color: #f4f2f2;
+    -fx-prompt-text-color: #A0A0A0;
+    -fx-hover-bg: #ffffff;
+    -fx-button-accent: #359e35;
+    -fx-focus-accent: #47c347;
+    -fx-light-accent: #bdf3bd;
+    -fx-spell-accent: #aa2222;
+    -fx-scroll-thumb: #424242;
+    -fx-scroll-thumb-hover: #555555;
+    -fx-selected-text: #020202;
+    -fx-textfield-border: #333333;
+    -fx-textfield-border-hover: -fx-scroll-thumb;
+    -fx-table-header: -fx-tertiary-bg;
+    -fx-table-cell-border: -fx-tertiary-bg;
+    -fx-field-border: #d0d7de;
+    -fx-delete: #FF0000FF;
+    -fx-schneider: #47c347;
+    -fx-schneider-hover: #359e35
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Custom                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+.drop-region {
+    -fx-background-color: -fx-tertiary-bg;
+    -fx-border-color: -fx-textfield-border;
+    -fx-border-width: 2;
+}
+
+.app-button {
+    -fx-background-color: -fx-button-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent; /* Make the border invisible */
+}
+
+.app-button:hover {
+    -fx-background-color: -fx-focus-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+.app-button:selected {
+    -fx-background-color: -fx-prompt-text-color;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+/* styles.css */
+.deleted-item {
+    -fx-text-fill: -fx-delete;
+}
+
+/*This controls the text properties of the service plan title*/
+Label.service-plan-details {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-color: -fx-focus-accent;
+}
+
+/*This controls the background of the entire center pane, can only see a sliver under the title bar*/
+.center-pane {
+    -fx-background-color: -fx-tertiary-bg;
+}
+
+.main-border-pane {
+    /*-fx-border-color: -fx-quatemary-bg; !* Same as original *!*/
+    -fx-border-width: 1px;
+    -fx-border-style: solid; /* Explicitly define border style */
+    /*-fx-background-color: -fx-tertiary-bg; !* Optional: Dark theme background *!*/
+}
+
+/* this is the the pane where the buttons are located at the bottom (previous, next, new note, etc) */
+.bottom-pane {
+    -fx-background-color: -fx-tertiary-bg;
+    -fx-text-fill: -fx-selected-text;
+}
+
+.title-pane .title {
+    -fx-font-size: 12px;
+}
+
+.titledPane > .title {
+    -fx-font-size: 10px;
+    -fx-background-color: -fx-primary-bg;
+    -fx-padding: 1 0 0 10px; /* top right bottom left */
+}
+
+.titledPane > .content {
+    -fx-padding: 1;
+    -fx-background-color: -fx-primary-bg;
+}
+
+.decorative-hbox {
+    -fx-background-color: -fx-secondary-bg;
+    -fx-background-radius: 5;
+}
+
+.decorative-hbox .label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-selected-text;
+}
+
+.decorative-hbox .label:hover {
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+.decorative-header-box {
+    -fx-background-color: -fx-tertiary-bg;
+    -fx-background-radius: 5;
+}
+
+.decorative-header-box .label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-selected-text;
+}
+
+.decorative-header-box .label:hover {
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+/* this is the third color you see in some components */
+.inner-decorative-hbox {
+    -fx-background-color: -fx-tertiary-bg;
+    -fx-background-radius: 5;
+}
+
+.title-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+/* Make the button transparent */
+.invisible-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0 4 0 4; /* Remove padding */
+    -fx-text-fill: -fx-text-color;
+}
+
+/* Keep the image fully visible */
+.invisible-button .image-view {
+    -fx-opacity: 1;
+}
+
+/* On hover, show a selection effect */
+.invisible-button:hover {
+    -fx-background-color: -fx-focus-accent; /* Light transparent background on hover */
+    -fx-border-radius: 5; /* Optional: rounded corners on hover */
+    -fx-cursor: hand; /* Change cursor to pointer */
+}
+
+.text-field-error {
+    -fx-border-color: -fx-delete;
+    -fx-border-radius: 5px;
+}
+
+.table-text {
+    -fx-fill: -fx-text-color; /* #E0E0E0 from your :root */
+}
+
+.custom-close-button {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+.custom-close-button:hover {
+    -fx-background-color: red; /* Highlight color on hover */
+}
+
+.title-bar {
+    -fx-background-color: -fx-schneider;
+}
+
+.test-title-bar {
+    -fx-background-color: -fx-schneider
+}
+
+.maximizeButton {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.maximizeButton:hover {
+    -fx-background-color: -fx-schneider-hover;
+}
+
+.prominent-label {
+    -fx-font-size: 16 !important;
+    -fx-font-weight: bold;
+}
+
+.semi-prominent-label {
+    -fx-font-size: 14 !important;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-font-weight: bold;
+}
+
+.prominent-answer {
+    -fx-font-size: 16 !important;         /* Ensures font size is 16 */
+    -fx-font-weight: bold;     /* Ensures bold font */
+    -fx-text-fill: -fx-focus-accent 16 !important;        /* Sets text color to red */
+    -fx-effect: null;          /* Removes any overriding effects */
+    -fx-opacity: 1.0;          /* Ensures text is fully visible */
+    -fx-label-padding: 0;      /* Avoids padding issues */
+}
+
+.range-answer {
+    -fx-font-size: 16 !important;
+}
+
+.misspelled {
+    -fx-fill: -fx-spell-accent !important;
+    -fx-underline: true;
+}
+
+.dictionary-label {
+    -fx-text-fill: green;
+}
+
+.search-dialogue {
+    -fx-background-color: -fx-text-color;
+}
+
+/*not used in light.css*/
+.base-vbox {
+    -fx-background-color: -fx-hover-bg;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * MenuBar                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+/* Change the text color of the Menu labels to white */
+.menu-bar .label {
+    -fx-text-fill: -fx-text-color;
+}
+
+.menu-bar {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-font-size: 14px;
+}
+
+/* Individual Menu (e.g., File, Edit) */
+.menu-bar .menu {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 8 12 8 12; /* Match content padding */
+}
+
+/* Menu Label */
+.menu-bar .menu .label {
+    -fx-text-fill: -fx-alternate-text-color; /* after clicking menu this is the text color of the top level items (for both hover and not hover) */
+    -fx-font-size: 14px;
+    -fx-padding: 0;
+}
+
+/* Menu Hover State */
+.menu-bar .menu:hover {
+    -fx-background-color: transparent;  /* after clicking menu this is the background color when mouse hovers over */
+}
+
+/* Menu Focused/Selected State */
+.menu-bar .menu:focused, .menu-bar .menu:showing {
+    -fx-background-color: transparent;  /* after clicking menu item this is the background color when mouse hovers over */
+}
+
+/* Context Menu (Dropdown) */
+.menu-bar .context-menu {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * MenuItem                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+.menu-bar .menu-item {
+    -fx-background-color: purple;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12; /* Match content padding */
+    -fx-background-radius: 0; /* Flat for menu items in dropdown */
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* Individual Menu (e.g., File, Edit) */
+.menu-bar .menu {
+    -fx-background-color: transparent; /* menu button background color */
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+.menu-bar .menu .label {
+    -fx-text-fill: -fx-alternate-text-color; /* this is the main text for the menu bar */
+    -fx-font-size: 14px;
+    -fx-padding: 0;
+}
+
+/* MenuItem Hover/Focused State */
+.menu-bar .menu-item:hover, .menu-bar .menu-item:focused {
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-background-color: -fx-light-accent !important;
+}
+
+/* MenuItem Selected State (e.g., check menu item) */
+.menu-bar .menu-item:selected {
+    -fx-background-color: pink; /* appears to do nothing */
+    -fx-text-fill: -fx-selected-text;
+}
+
+/* Disabled MenuItem */
+.menu-bar .menu-item:disabled {
+    -fx-background-color: -fx-primary-bg;
+    -fx-text-fill: -fx-prompt-text-color;
+    -fx-opacity: 0.6;
+}
+
+.menu-bar .context-menu {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+
+
+/*******************************************************************************
+ *                                                                             *
+ * TabPane                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+.tab-pane {
+    /*-fx-background-color: red;
+    -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-background-insets: 0; /* Prevent corner issues */
+    -fx-padding: 0;
+}
+
+/* Tab Header Area */
+.tab-pane .tab-header-area {
+    /*-fx-background-color: red; !* Match TabPane background *!*/
+    /*-fx-background-radius: 4 4 0 0; !* Rounded top corners *!*/
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0; /* Minimal padding for header area */
+}
+
+/* Tab Header Background */
+.tab-pane .tab-header-background {
+    -fx-background-color: -fx-tertiary-bg; /* this is the background behind the tabs */
+    -fx-background-radius: 4 4 0 0; /* Rounded top corners */
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.tab-pane .tab {
+    -fx-background-color: -fx-secondary-bg; /* Match TabPane background */
+    -fx-background-radius: 4 4 0 0; /* Rounded top corners */
+    -fx-border-width: 0; /* No border */
+    -fx-pref-width: 150px;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 8 12 8 12; /* Match content padding */
+    -fx-text-fill: -fx-text-color; /* Match text color */
+    -fx-font-size: 14px; /* Match font size */
+}
+
+/* Tab Hover State */
+.tab-pane .tab:hover {
+    -fx-background-color: -fx-hover-bg; /* Slightly lighter on hover */
+    -fx-text-fill: -fx-text-color; /* Maintain text color */
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: -fx-hover-bg; /* Match hover/focus background */
+    -fx-text-fill: -fx-text-color; /* Maintain text color */
+    -fx-border-width: 0 !important; /* Ensure no border */
+    -fx-border-color: transparent !important;
+    /* -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); */ /* Comment out to test */
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-border-width: 0 !important; /* Force remove border */
+    -fx-border-color: transparent !important; /* Force no border color */
+    -fx-background-color: transparent !important; /* Remove background effects */
+    -fx-focus-color: transparent !important; /* Remove focus ring */
+    -fx-faint-focus-color: transparent !important; /* Remove faint focus ring */
+    -fx-background-insets: 0 !important; /* Prevent inset-related borders */
+}
+
+/* Tab Content Area */
+.tab-pane .tab-content-area {
+    -fx-background-color: -fx-primary-bg; /* Match TabPane background */
+    -fx-background-radius: 0 0 4 4; /* Rounded bottom corners */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* ScrollPane in TabPane (if tabs are scrollable) */
+.tab-pane .scroll-pane {
+    -fx-background-color: -fx-primary-bg; /* Match TabPane background */
+    -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* Viewport in TabPane ScrollPane */
+.tab-pane .scroll-pane .viewport {
+    -fx-background-color: -fx-primary-bg; /* Match TabPane background */
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* ScrollBar in TabPane */
+.tab-pane .scroll-bar:vertical, .tab-pane .scroll-bar:horizontal {
+    -fx-background-color: -fx-primary-bg; /* Match TabPane background */
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.tab-pane .scroll-bar .thumb {
+    -fx-background-color: -fx-scroll-thumb;
+    -fx-background-radius: 4;
+}
+
+.tab-pane .scroll-bar .thumb:hover {
+    -fx-background-color: -fx-scroll-thumb-hover; /* Lighter thumb on hover */
+}
+
+/* Corner Fix for TabPane ScrollPane */
+.tab-pane .scroll-pane .corner {
+    -fx-background-color: transparent; /* Prevent white corners */
+}
+
+/* Tab Text */
+.tab-pane .tab .tab-label {
+    -fx-text-fill: -fx-text-color; /* Match text color */
+    -fx-font-size: 14px; /* Match font size */
+}
+
+.tab-pane .tab:disabled {
+    -fx-background-color: -fx-primary-bg; /* Maintain background */
+    -fx-text-fill: -fx-prompt-text-color; /* Muted text for disabled state */
+    -fx-opacity: 0.6; /* Slightly faded */
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-width: 0 !important; /* Remove the border */
+    -fx-border-color: transparent !important; /* Ensure no border color */
+    -fx-background-color: transparent !important; /* Remove any background */
+    -fx-background-insets: 0 !important; /* Prevent inset-related borders */
+    -fx-focus-color: transparent !important; /* Disable focus color */
+    -fx-faint-focus-color: transparent !important; /* Disable faint focus color */
+    -fx-effect: none !important; /* Remove any glow or shadow */
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ScrollPane                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+.scroll-pane {
+    -fx-background-color: -fx-primary-bg; /*
+    -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-background-insets: 0; /* Prevent corner issues */
+    -fx-padding: 0;
+}
+
+/* ScrollPane Viewport (Content Area) */
+.scroll-pane .viewport {
+    -fx-background-color: -fx-primary-bg; /* Match ScrollPane background */
+    -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-background-insets: 0; /* Prevent corner issues */
+    -fx-padding: 8 12 8 12;
+}
+
+/* ScrollBar Styles */
+.scroll-pane .scroll-bar:vertical, .scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: -fx-primary-bg; /* Match ScrollPane background */
+    -fx-background-radius: 4;
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .scroll-bar .thumb {
+    -fx-background-color: -fx-scroll-thumb;
+    -fx-background-radius: 4;
+}
+
+.scroll-pane .scroll-bar .thumb:hover {
+    -fx-background-color: -fx-scroll-thumb-hover; /* Lighter thumb on hover */
+}
+
+/* Corner Fix for ScrollPane */
+.scroll-pane .corner {
+    -fx-background-color: transparent; /* Prevent white corners */
+}
+
+/* Optional: Hover and Focus States */
+.scroll-pane:hover {
+    -fx-background-color: -fx-hover-bg; /* Slightly lighter on hover */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+}
+
+.scroll-pane:focused {
+    -fx-background-color: -fx-hover-bg; /* Slightly lighter to indicate focus */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+}
+
+/* Ensure Content Text Matches (if applicable) */
+.scroll-pane .text {
+    -fx-fill: -fx-text-color; /* Match text color */
+    -fx-font-size: 14px; /* Match font size */
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * TextField                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+.text-field {
+    -fx-background-color: -fx-primary-bg;
+    -fx-text-fill: -fx-text-color;
+    -fx-prompt-text-fill: -fx-prompt-text-color;
+    -fx-background-radius: 4;
+    -fx-border-color: -fx-field-border; /* Kept as is since not a variable */
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-padding: 8 12 8 12;
+    -fx-font-size: 14px;
+}
+
+/* TextField Focus State */
+.text-field:focused {
+    /*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*/
+    /*-fx-border-color: -fx-focus-accent; !* Blue accent for focus indication *!*/
+    /*-fx-border-width: 1.5; !* Slightly thicker border for emphasis *!*/
+    /*-fx-font-size: 14px; !* Maintain font size when focused *!*/
+    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); /* Optional: subtle blue glow for focus */
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * TextArea                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+.text-area {
+    -fx-background-color: -fx-primary-bg;
+    -fx-text-fill: -fx-text-color;
+    -fx-prompt-text-fill: -fx-prompt-text-color;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-padding: 0;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-field-border;
+    -fx-font-size: 14px; /* Match TextField font size */
+}
+
+/* TextArea Content Area (the editable text region) */
+.text-area .content {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-padding: 8 12 8 12;
+    -fx-background-insets: 0;
+    -fx-font-size: 14px; /* Ensure content text matches */
+}
+
+/* TextArea Focus State */
+.text-area:focused {
+    -fx-background-color: -fx-hover-bg; /* Slightly lighter to indicate focus */
+    -fx-border-width: 0; /* No border on focus */
+    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); /* Optional: subtle blue glow for focus */
+}
+
+/* ScrollPane in TextArea */
+.text-area .scroll-pane {
+    -fx-background-color: -fx-primary-bg; /* Match TextArea background */
+    -fx-background-radius: 4; /* Match the outer radius */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-background-insets: 0; /* Remove insets to prevent corner issues */
+}
+
+/* Viewport in ScrollPane (ensures no white corners) */
+.text-area .scroll-pane .viewport {
+    -fx-background-color: -fx-primary-bg; /* Match TextArea background */
+    -fx-background-radius: 4; /* Match the outer radius */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-background-insets: 0; /* Remove insets */
+}
+
+/* ScrollBar Styles */
+.text-area .scroll-bar:vertical, .text-area .scroll-bar:horizontal {
+    -fx-background-color: -fx-primary-bg; /* Match TextArea background */
+    -fx-background-radius: 4;
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.text-area .scroll-bar .thumb {
+    -fx-background-color: -fx-scroll-thumb; /* Scrollbar thumb color */
+    -fx-background-radius: 4;
+}
+
+.text-area .scroll-bar .thumb:hover {
+    -fx-background-color: -fx-scroll-thumb-hover; /* Lighter thumb on hover */
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * CodeArea                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+.code-area {
+    -fx-background-color: -fx-primary-bg; /* Match TextField and TextArea background */
+    -fx-text-fill: -fx-text-color; /* Match TextField/TextArea text color */
+    -fx-font-size: 14px; /* Match TextField/TextArea font size */
+    -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-radius: 4;
+    -fx-padding: 8 12 8 12; /* Match TextArea outer padding */
+    -fx-border-width: 1; /* No border */
+    -fx-border-color: -fx-field-border;
+    -fx-background-insets: 0; /* Prevent corner issues */
+}
+
+/* CodeArea Single Styles */
+.code-area-single {
+    -fx-background-color: -fx-primary-bg; /* Match TextField/TextArea background */
+    -fx-text-fill: -fx-text-color; /* Match TextField/TextArea text color */
+    -fx-font-size: 14px; /* Match TextField/TextArea font size */
+    -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-radius: 4;
+    -fx-padding: 8 12 8 12; /* Match TextArea outer padding */
+    -fx-border-width: 1; /* No border */
+    -fx-border-color: -fx-field-border;
+    -fx-background-insets: 0; /* Prevent corner issues */
+}
+
+/* CodeArea Content Area */
+.code-area .content, .code-area-single .content {
+    -fx-background-color: -fx-primary-bg; /* Match outer background */
+    -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-background-insets: 0; /* Prevent corner issues */
+    -fx-padding: 8 12 8 12; /* Match TextField and TextArea content padding */
+}
+
+/* ScrollPane in CodeArea */
+.code-area .scroll-pane, .code-area-single .scroll-pane {
+    -fx-background-color: -fx-primary-bg; /* Match CodeArea background */
+    -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-background-insets: 0; /* Prevent corner issues */
+}
+
+/* Viewport in ScrollPane (Apply padding here to ensure text offset) */
+.code-area .scroll-pane .viewport, .code-area-single .scroll-pane .viewport {
+    -fx-background-color: -fx-primary-bg; /* Match CodeArea background */
+    -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent; /* Ensure no border color */
+    -fx-background-insets: 0; /* Prevent corner issues */
+    -fx-padding: 0; /* Apply padding to viewport to offset text content */
+}
+
+/* Text Styling for RichTextFX */
+.code-area .text, .code-area-single .text {
+    -fx-fill: -fx-text-color; /* Match TextField/TextArea text color */
+    -fx-font-size: 14px; /* Ensure consistency */
+}
+
+/* ScrollBar Styles */
+.code-area .scroll-bar:vertical, .code-area .scroll-bar:horizontal,
+.code-area-single .scroll-bar:vertical, .code-area-single .scroll-bar:horizontal {
+    -fx-background-color: -fx-primary-bg; /* Match CodeArea background */
+    -fx-background-radius: 4;
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.code-area .scroll-bar .thumb, .code-area-single .scroll-bar .thumb {
+    -fx-background-color: -fx-scroll-thumb; /* Scrollbar thumb color */
+    -fx-background-radius: 4;
+}
+
+.code-area .scroll-bar .thumb:hover, .code-area-single .scroll-bar .thumb:hover {
+    -fx-background-color: -fx-scroll-thumb-hover; /* Lighter thumb on hover */
+}
+
+.code-area:focused, .code-area-single:focused {
+    /*-fx-background-color: -fx-hover-bg; !* Slightly lighter to indicate focus *!*/
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); /* Subtle blue glow for focus */
+}
+
+/* Corner Fix for ScrollPane */
+.code-area .scroll-pane .corner, .code-area-single .scroll-pane .corner {
+    -fx-background-color: transparent; /* Prevent white corners */
+}
+
+.code-area .paragraph-box, .code-area-single .paragraph-box {
+    -fx-padding: 8 12 8 12;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ComboBox                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+.combo-box {
+    -fx-background-color: -fx-primary-bg; /* Match TextField/TextArea/CodeArea background */
+    -fx-text-fill: -fx-text-color; /* Match text color */
+    -fx-prompt-text-fill: -fx-prompt-text-color; /* Match placeholder text color */
+    -fx-font-size: 14px; /* Match font size */
+    -fx-background-radius: 4; /* Match rounded corners */
+    -fx-border-radius: 4; /* Match border radius to background */
+    -fx-padding: 0; /* Match TextArea/CodeArea outer padding */
+    -fx-border-width: 1; /* No border */
+    -fx-border-color: -fx-field-border;
+    -fx-background-insets: 0; /* Prevent corner issues */
+}
+
+/* ComboBox Text Field (editable part) */
+.combo-box .text-field {
+    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-text-fill: -fx-text-color; /* Match text color */
+    -fx-prompt-text-fill: -fx-prompt-text-color; /* Match placeholder text color */
+    -fx-font-size: 14px; /* Match font size */
+    -fx-background-radius: 4 0 0 4; /* Rounded left corners, flat right for arrow */
+    -fx-padding: 8 12 8 12; /* Match TextField/TextArea content padding */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* ComboBox Arrow Button */
+.combo-box .arrow-button {
+    -fx-background-color: -fx-tertiary-bg;
+    -fx-background-radius: 0 4 4 0; /* Rounded right corners, flat left */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* ComboBox Arrow */
+.combo-box .arrow {
+    -fx-background-color: -fx-text-color; /* Match text color for visibility */
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z"; /* Downward arrow shape */
+    -fx-scale-x: 0.6; /* Adjust arrow size */
+    -fx-scale-y: 0.6;
+}
+
+/* ComboBox Focus State */
+.combo-box:focused {
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.3, 0, 0); /* Subtle blue glow for focus */
+}
+
+/* ComboBox Popup (Dropdown List) */
+.combo-box .list-view {
+    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-radius: 4; /* Rounded corners for dropdown */
+    -fx-border-width: 0; /* No border */
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, #00000033, 10, 0, 0, 0); /* Subtle shadow for popup */
+}
+
+.combo-box .list-cell {
+    -fx-background-color: -fx-primary-bg; /* Replace -fx-background and remove redundant transparent */
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+    -fx-background-insets: 0;
+}
+
+/* List Cell Hover/Selected States */
+.combo-box .list-cell:hover {
+    -fx-background-color: -fx-light-accent; /* Slightly lighter on hover */
+    -fx-text-fill: -fx-text-color;
+}
+
+.combo-box .list-cell:selected {
+    /*-fx-background-color: -fx-focus-accent; !* Blue accent for selected item *!*/
+    -fx-text-fill: -fx-selected-text; /* White text for contrast */
+}
+
+/* ScrollPane in ComboBox Popup */
+.combo-box .list-view .scroll-pane {
+    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* Viewport in ComboBox Popup */
+.combo-box .list-view .scroll-pane .viewport {
+    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* ScrollBar in ComboBox Popup */
+.combo-box .list-view .scroll-bar:vertical, .combo-box .list-view .scroll-bar:horizontal {
+    -fx-background-color: -fx-primary-bg; /* Match ComboBox background */
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.combo-box .list-view .scroll-bar .thumb {
+    -fx-background-color: -fx-scroll-thumb; /* Match TextArea/CodeArea scrollbar thumb */
+    -fx-background-radius: 4;
+}
+
+.combo-box .list-view .scroll-bar .thumb:hover {
+    -fx-background-color: -fx-scroll-thumb-hover; /* Lighter thumb on hover */
+}
+
+/* Corner Fix for ComboBox Popup ScrollPane */
+.combo-box .list-view .scroll-pane .corner {
+    -fx-background-color: transparent; /* Prevent white corners */
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * TableView                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+.table-view {
+    /*-fx-background-color: -fx-focus-accent;*/
+    -fx-background-radius: 4;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-table-cell-border;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-font-size: 14px;
+}
+
+/* Table Header */
+.table-view .column-header-background {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -fx-focus-accent !important;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: -fx-table-header;
+    /*-fx-background-radius: 4 4 0 0;*/
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 2;
+    -fx-pref-height: 40;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -fx-text-color;
+    -fx-alignment: CENTER-LEFT;
+    -fx-font-size: 14px;
+    -fx-padding: 0;
+}
+
+/* Table Cells */
+.table-view .table-cell {
+    -fx-background-color: -fx-primary-bg;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 2;
+    -fx-border-color: transparent transparent -fx-table-cell-border transparent;
+    -fx-background-insets: 0;
+    -fx-border-width: 1;
+}
+
+.table-view .table-row-cell:selected {
+    /*-fx-background-color: -fx-light-accent !important; !* Explicit blue *!*/
+    -fx-text-fill: -fx-selected-text !important;
+}
+
+.table-view .table-row-cell:selected .table-cell {
+    -fx-background-color: -fx-light-accent !important; /* Explicit blue for cells */
+    -fx-text-fill: -fx-selected-text !important;
+}
+
+/* Focus State */
+.table-view:focused {
+    -fx-background-color: -fx-primary-bg;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+}
+
+/* ScrollPane in TableView */
+.table-view .scroll-pane {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* Viewport in TableView */
+.table-view .scroll-pane .viewport {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* ScrollBar in TableView */
+.table-view .scroll-bar:vertical, .table-view .scroll-bar:horizontal {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-table-cell-border;
+    -fx-background-insets: 0;
+}
+
+.table-view .scroll-bar .thumb {
+    -fx-background-color: -fx-scroll-thumb;
+    -fx-background-radius: 4;
+}
+
+.table-view .scroll-bar .thumb:hover {
+    -fx-background-color: -fx-scroll-thumb-hover;
+}
+
+/* This is the region to the right of the header and above the scroll bar */
+.table-view .column-header-background .filler {
+    -fx-background-color: -fx-table-header !important;
+}
+
+/* Corner Fix for TableView ScrollPane */
+.table-view .scroll-pane .corner {
+    -fx-background-color: transparent;
+}
+
+/* Placeholder for Empty Table */
+.table-view .placeholder {
+    -fx-text-fill: -fx-prompt-text-color;
+    -fx-font-size: 14px;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ContextMenu                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+.context-menu {
+    -fx-background-color: -fx-primary-bg; /* #6c6a6a */
+    -fx-border-color: -fx-textfield-border; /* #333333 */
+    -fx-border-width: 1;
+    -fx-background-insets: 0;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0, 0);
+}
+
+/* Menu item styling */
+.context-menu .menu-item {
+    -fx-background-color: -fx-primary-bg; /* #6c6a6a */
+    -fx-text-fill: -fx-text-color; /* #E0E0E0 */
+    -fx-padding: 6 12 6 12;
+    -fx-pref-height: 28;
+}
+
+/* Menu item hover effect */
+.context-menu .menu-item:hover,
+.context-menu .menu-item:focused {
+    -fx-background-color: -fx-hover-bg; /* #252526 */
+    -fx-text-fill: -fx-selected-text; /* #FFFFFF */
+}
+
+/* Selected menu item */
+.context-menu .menu-item:pressed {
+    -fx-background-color: -fx-focus-accent; /* #2196F3 */
+    -fx-text-fill: -fx-selected-text; /* #FFFFFF */
+}
+
+/* Separator styling */
+.context-menu .separator .line {
+    -fx-border-color: -fx-textfield-border; /* #333333 */
+    -fx-border-width: 1;
+    -fx-padding: 2 8 2 8;
+}
+
+/* Disabled menu item */
+.context-menu .menu-item:disabled {
+    -fx-opacity: 0.6;
+    -fx-text-fill: -fx-prompt-text-color; /* #A0A0A0 */
+}
+
+/* Optional: Arrow for sub-menus */
+.context-menu .menu-item .arrow {
+    -fx-background-color: -fx-text-color; /* #E0E0E0 */
+}
+
+/* Optional: Arrow hover effect */
+.context-menu .menu-item:hover .arrow,
+.context-menu .menu-item:focused .arrow {
+    -fx-background-color: -fx-selected-text; /* #FFFFFF */
+}
+
+/* General MenuItem label color */
+.context-menu .menu-item .label {
+    -fx-text-fill: -fx-text-color; /* #E0E0E0, changed from -fx-selected-text for consistency */
+}
+
+/* Main ToggleSwitch Styling */
+.toggle-switch {
+    -fx-padding: 0 2 0 0; /* Reduce padding around the control */
+    -fx-spacing: 2; /* Target internal HBox-like layout */
+    -fx-alignment: center-left; /* Align label and switch tightly */
+    -fx-background-color: transparent !important; /* Prevent background interference */
+}
+
+/* Thumb-Area (Track, Off State) */
+.toggle-switch .thumb-area {
+    -fx-background-color: -fx-secondary-bg !important; /* Green for off state */
+    -fx-background-radius: 12.5 !important; /* Rounded corners */
+    -fx-border-radius: 12.5;
+    -fx-pref-height: 25;
+    -fx-pref-width: 40;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-tertiary-bg !important; /* Remove border */
+    -fx-background-insets: 0 !important; /* Prevent inset issues */
+}
+
+/* Thumb (Off State) */
+.toggle-switch .thumb {
+    -fx-background-color: -fx-primary-bg !important; /* White for off state (already working) */
+    -fx-background-radius: 12.5 !important;
+    -fx-border-radius: 12.5;
+    -fx-border-width: 1;
+    -fx-border-color: gray !important; /* Remove border */
+    -fx-background-insets: 0 !important;
+}
+
+/* Selected State (On State) */
+.toggle-switch:selected .thumb-area {
+    -fx-background-color: -fx-focus-accent !important; /* Red for on state */
+    -fx-background-radius: 12.5 !important;
+    -fx-border-color: transparent !important;
+    -fx-border-radius: 12.5;
+    -fx-pref-height: 25;
+    -fx-pref-width: 40;
+    -fx-border-width: 3;
+    /*-fx-border-color: grey !important; !* Remove border *!*/
+    -fx-background-insets: 0 !important;
+}
+
+.toggle-switch:selected .thumb {
+    -fx-background-color: -fx-primary-bg !important; /* White for on state (already working) */
+    -fx-background-radius: 12.5 !important;
+    -fx-border-color: transparent !important;
+    -fx-background-insets: 0 !important;
+}
+
+/* Optional: Handle Focus to Prevent Unwanted Effects */
+.toggle-switch:focused .thumb-area,
+.toggle-switch:focused .thumb {
+    -fx-effect: none !important; /* Prevent focus glow */
+}
+
+.flash {
+    -fx-effect: dropshadow(gaussian, -fx-focus-accent, 10, 0.5, 0, 0);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * DatePicker                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+/* Style the button that opens the calendar popup */
+/* Style the DatePicker’s root node to remove the light background outline */
+.date-picker {
+    -fx-background-color: transparent; /* Make the root background transparent */
+    -fx-border-color: transparent; /* Remove any default border */
+    -fx-background-insets: 0;
+}
+
+.date-picker > .arrow-button {
+    -fx-background-color: -fx-tertiary-bg;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0 4 4 0; /* I want the right hand corners to be rounded only */
+}
+
+.date-picker > .text-field {
+    -fx-background-color: -fx-primary-bg; /* Background, e.g., #2C2C2C */
+    -fx-text-fill: -fx-text-color; /* Text color, e.g., #E0E0E0 */
+    -fx-prompt-text-fill: -fx-prompt-text-color; /* Prompt text, e.g., #A0A0A0 */
+    -fx-border-color: -fx-field-border; /* Border, e.g., #333333 */
+    -fx-border-width: 1;
+    -fx-background-insets: 0; /* No padding/offset */
+    -fx-border-radius: 4 0 0 4;
+    -fx-background-radius: 4 0 0 4; /* Round top-left and bottom-left corners only */
+}
+
+.date-picker > .arrow-button > .arrow {
+    -fx-shape: "M0,0v9h9V0H0z M2,8H1V7h1V8z M2,6H1V5h1V6z M2,4H1V3h1V4z M4,8H3V7h1V8z M4,6H3V5h1V6z M4,4H3V3h1V4z M6,8H5V7h1V8z M6,6H5 V5h1V6z M6,4H5V3h1V4z M8,8H7V7h1V8z M8,6H7V5h1V6z M8,4H7V3h1V4z";
+    -fx-background-color: -fx-focus-accent, -fx-light-accent;
+    -fx-background-insets: 1 0 -1 0, 0;
+    -fx-padding: 0.416667em 0.416667em 0.333333em 0.333333em; /* 5 5 4 4 */
+    -fx-scale-shape: true;
+}
+
+.date-picker-popup {
+    -fx-background-color: -fx-focus-accent;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 0;
+    -fx-alignment: CENTER; /* VBox */
+    -fx-spacing: 0; /* VBox */
+    -fx-padding: 0.083333em; /* 1 1 1 1 */
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
+}
+.date-picker-popup > .month-year-pane {
+    -fx-padding: 0.588883em 0.5em 0.666667em 0.5em; /* 7 6 8 6 */
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-insets: 0 0 0 0, 0 0 1 0;
+}
+/*.date-picker-popup > * > .spinner {*/
+/*    -fx-spacing: 0.25em; !* 3 *!*/
+/*    -fx-alignment: CENTER;*/
+/*    -fx-fill-height: false;*/
+/*    -fx-background-color: transparent;*/
+/*}*/
+.date-picker-popup > * > .spinner > .button {
+    -fx-background-color: -fx-primary-bg;  /* This is the arrow buttons in the popup */
+    -fx-background-insets: 0, 1, 2;
+    -fx-color: transparent;
+    -fx-background-radius: 0;
+}
+
+.date-picker-popup > * > .spinner > .button:focused {
+    -fx-background-color: -fx-secondary-bg;
+    -fx-color: -fx-hover-base;
+    -fx-background-insets: -0.2, 1, 2, -1.4, 2.6;
+}
+
+/*provides the color over the calendar days*/
+.date-picker-popup > .calendar-grid {
+    -fx-background-color: -fx-tertiary-bg;
+    /*-fx-background-insets: 1 0 0 0;*/
+    -fx-padding: 0;
+}
+
+.date-picker-popup > * > .day-cell {
+    -fx-padding: 0.333333em 0.583333em 0.333333em 0.583333em; /* 4 7 4 7 */
+    -fx-border-color: -fx-primary-bg;
+    -fx-border-width: 1px;
+    -fx-font-size: 1em;
+    -fx-background: -fx-control-inner-background;
+    -fx-background-color: -fx-secondary-bg;
+    -fx-text-fill: -fx-text-background-color;
+}
+
+/*Provies selected day highlight*/
+.date-picker-popup > * > .day-cell:focused:hover,
+.date-picker-popup > * > .today:focused:hover,
+.date-picker-popup > * > .selected:focused,
+.date-picker-popup > * > .today.selected:focused {
+    -fx-background-color: -fx-selection-bar, -fx-cell-focus-inner-border, -fx-selection-bar;
+}
+
+/*Provies the highlight when hovered*/
+.date-picker-popup .date-cell:hover {
+    -fx-background-color: -fx-hover-bg; /* #252526 from your :root */
+    -fx-text-fill: -fx-text-color; /* Ensure text remains readable, e.g., #E0E0E0 */
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Spinner                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+.spinner {
+    -fx-background-color: transparent; /* Transparent background to blend with parent */
+    -fx-border-color: transparent; /* No border */
+    -fx-background-insets: 0;
+}
+
+/* Style the text field inside the Spinner */
+.spinner > .text-field {
+    -fx-background-color: -fx-primary-bg; /* #2C2C2C */
+    -fx-text-fill: -fx-text-color; /* #E0E0E0 */
+    -fx-prompt-text-fill: -fx-prompt-text-color; /* #A0A0A0 */
+    -fx-border-color: -fx-field-border; /* #333333, no right border */
+    -fx-border-width: 1 0 1 1; /* No right border to blend with buttons */
+    -fx-background-insets: 0;
+    -fx-border-radius: 4 0 0 4;
+    -fx-background-radius: 4 0 0 4; /* Round left corners, like DatePicker */
+    -fx-alignment: CENTER; /* Center text for clean appearance */
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-body-color: -fx-primary-bg; /* #6c6a6a, matches DatePicker arrow button */
+    -fx-background-color: -fx-tertiary-bg; /* Fallback for standard styling */
+    -fx-border-width: 0; /* Remove border to eliminate outline */
+    -fx-background-insets: 0; /* No insets to prevent outline */
+    -fx-effect: none; /* Remove any default effects */
+}
+
+.spinner .increment-arrow-button {
+    -fx-background-radius: 0 4 0 0; /* Round right corners */
+}
+
+.spinner .decrement-arrow-button {
+    -fx-background-radius: 0 0 4 0; /* Round right corners */
+}
+
+.spinner .increment-arrow-button .increment-arrow,
+.spinner .decrement-arrow-button .decrement-arrow {
+    -fx-background-color: -fx-text-color; /* Sets the color of the increment arrow to red */
+}
+
+.spinner .increment-arrow-button:hover .increment-arrow,
+.spinner .decrement-arrow-button:hover .decrement-arrow {
+    -fx-background-color: -fx-focus-accent; /* This doesn't work, I just want to change the color of the arrow on hover */
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * DialogPane                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+/* DialogPane styling */
+.dialog-pane {
+    -fx-background-color: -fx-primary-bg; /* #ffffff */
+    -fx-border-color: -fx-field-border; /* #d0d7de */
+    -fx-border-width: 1;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+/* Header panel */
+.dialog-pane .header-panel {
+    -fx-background-color: -fx-tertiary-bg; /* #f5f6f6 */
+    -fx-padding: 10;
+}
+
+/* Header text */
+.dialog-pane .header-panel .label {
+    -fx-font-size: 22px; /* Larger font for header */
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color; /* #020202 */
+}
+
+/* Content text */
+.dialog-pane .content.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-color; /* #020202 */
+    -fx-padding: 10;
+}
+
+/* Button bar */
+.dialog-pane .button-bar .button {
+    -fx-background-color: -fx-button-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+}
+
+.dialog-pane .button-bar .button:hover {
+    -fx-background-color: -fx-focus-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+.dialog-pane .button {
+    -fx-background-color: -fx-button-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+}
+
+.dialog-pane .button:hover {
+    -fx-background-color: -fx-focus-accent;
+    -fx-text-fill: -fx-alternate-text-color;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ListView                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+
+.list-cell {
+    -fx-background-color: -fx-primary-bg; /* Set background color for all ListView cells (rows) */
+    -fx-text-fill: -fx-text-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -fx-table-cell-border !important; /* This is the border color of the header */
+}
+
+/*.list-cell:odd {*/
+/*    -fx-background-color: -fx-tertiary-bg; !* Optional: Slightly different color for odd rows to maintain striping *!*/
+/*}*/
+
+/*.list-cell:even {*/
+/*    -fx-background-color: -fx-secondary-bg; !* Even rows *!*/
+/*}*/
+
+/*.list-view {*/
+/*    -fx-background-color: #F0F0F0; !* Ensure the ListView container background matches *!*/
+/*}*/
+
+.list-cell:selected {
+    -fx-background-color: -fx-focus-accent; /* Background for selected cells (blue) */
+    -fx-text-fill: -fx-alternate-text-color; /* Text color for selected cells (white) */
+}
