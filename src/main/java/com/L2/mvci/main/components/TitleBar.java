@@ -54,8 +54,7 @@ public class TitleBar implements Builder<Region> {
         Label titleLabel;
         // Create the title label
         if(BaseApplication.testMode) {
-//            hbox.setStyle("-fx-background-color: #5c1200;");
-            hbox.getStyleClass().add("test-title-bar");
+            hbox.setStyle("-fx-background-color: #5c1200;");
         }
         titleLabel = new Label("TSE Notes");
         titleLabel.getStyleClass().add("title-label");

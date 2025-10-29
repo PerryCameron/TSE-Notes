@@ -94,6 +94,7 @@ public class NoteController extends Controller<NoteMessage> {
     }
 
     private void deleteNote() {
+
         noteInteractor.deleteNote();
         mainController.action(MainMessage.UPDATE_TABLE);
     }

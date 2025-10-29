@@ -17,6 +17,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -1069,20 +1071,32 @@ public class NoteInteractor {
 
     public void deleteNote() {
         int id = noteModel.boundNoteProperty().get().getId();
-//        System.out.println("deleting note: " + id);
-        // deletedNoteDTO will be the reference to the correct NoteDTO in the list
-        NoteFx deletedNoteDTO = null;
-        for (NoteFx noteDTO : noteModel.getNotes()) {
-            if (noteDTO.idProperty().get() == id) {
-                deletedNoteDTO = noteDTO;
-            }
-        }
-        if (!noteModel.boundNoteProperty().get().getPartOrders().isEmpty()) {
-            noteModel.boundNoteProperty().get().getPartOrders().forEach(this::deletePartOrder);
-        }
-        if (deletedNoteDTO != null)
-            noteRepo.deleteNote(deletedNoteDTO);
-        noteModel.getNotes().remove(deletedNoteDTO);
+        Optional<Alert> alertOpt = DialogueFx.conformationAlert("Delete Note# " + id,
+                "Are you sure you want to delete this note?");
+        alertOpt.ifPresent(alert -> {
+            Optional<ButtonType> result = alert.showAndWait();
+            result.ifPresent(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    NoteFx deletedNoteDTO = null;
+                    // find the matching note in the list
+                    for (NoteFx noteDTO : noteModel.getNotes()) {
+                        if (noteDTO.idProperty().get() == id) {
+                            deletedNoteDTO = noteDTO;
+                        }
+                    }
+                    // delete any existing part orders
+                    if (!noteModel.boundNoteProperty().get().getPartOrders().isEmpty()) {
+                        noteModel.boundNoteProperty().get().getPartOrders().forEach(this::deletePartOrder);
+                    }
+                    if (deletedNoteDTO != null)
+                        noteRepo.deleteNote(deletedNoteDTO);
+                    noteModel.getNotes().remove(deletedNoteDTO);
+                    logger.info("Deleted note: {}", id);
+                } else {
+                    logger.info("Deleted note: {} cancelled", id);
+                }
+            });
+        });
     }
 
     public void deleteSelectedPartOrder() {
