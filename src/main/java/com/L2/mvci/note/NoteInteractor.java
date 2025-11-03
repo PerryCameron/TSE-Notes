@@ -4,7 +4,6 @@ import com.L2.dto.*;
 import com.L2.dto.global_spares.RangesFx;
 import com.L2.dto.global_spares.SparesDTO;
 import com.L2.enums.AreaType;
-import com.L2.enums.OutlookType;
 import com.L2.mvci.main.MainController;
 import com.L2.repository.implementations.*;
 import com.L2.repository.interfaces.*;
@@ -34,8 +33,6 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
-
-import static com.L2.enums.OutlookType.CLASSIC;
 
 public class NoteInteractor {
 

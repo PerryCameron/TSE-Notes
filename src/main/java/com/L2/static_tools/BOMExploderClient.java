@@ -3,7 +3,6 @@ package com.L2.static_tools;
 import jakarta.xml.soap.*;
 
 import java.net.URI;
-import java.net.URL;
 
 public class BOMExploderClient {
 
@@ -81,18 +80,18 @@ public class BOMExploderClient {
         // Re-measure
         baos = new java.io.ByteArrayOutputStream();
         request.writeTo(baos);
-        byte[] finalBytes = baos.toByteArray();
-        int contentLength = finalBytes.length;
+//        byte[] finalBytes = baos.toByteArray();
+//        int contentLength = finalBytes.length;
 
         // === PRINT FULL PACKET ===
-        System.out.println("POST " + ENDPOINT_URL + " HTTP/1.1");
-        System.out.println("Host: tarvols4web.apc.com:7003");
-        System.out.println("Content-Type: text/xml");
-        System.out.println("SOAPAction: bomexploder_request");
-        System.out.println("Content-Length: " + contentLength);
-        System.out.println();
-        System.out.println(expectedXml);
-        System.out.println();
+//        System.out.println("POST " + ENDPOINT_URL + " HTTP/1.1");
+//        System.out.println("Host: tarvols4web.apc.com:7003");
+//        System.out.println("Content-Type: text/xml");
+//        System.out.println("SOAPAction: bomexploder_request");
+//        System.out.println("Content-Length: " + contentLength);
+//        System.out.println();
+//        System.out.println(expectedXml);
+//        System.out.println();
 
         // === SEND ===
         SOAPConnectionFactory scf = SOAPConnectionFactory.newInstance();
@@ -104,7 +103,6 @@ public class BOMExploderClient {
         conn.close();
 
         return soapMessageToString(response);
-//        return null;
     }
 
     private static String soapMessageToString(SOAPMessage msg) throws Exception {
@@ -113,11 +111,11 @@ public class BOMExploderClient {
         return out.toString("UTF-8");
     }
 
-    public static void main(String[] args) throws Exception {
-        System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
-
-        String result = getBOMExplosionAsString("0J-HUA42548", "BIL", "");
-        System.out.println("=== RESPONSE ===");
-        System.out.println(result);
-    }
+//    public static void main(String[] args) throws Exception {
+//        System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
+//
+//        String result = getBOMExplosionAsString("0J-HUA42548", "BIL", "");
+//        System.out.println("=== RESPONSE ===");
+//        System.out.println(result);
+//    }
 }
