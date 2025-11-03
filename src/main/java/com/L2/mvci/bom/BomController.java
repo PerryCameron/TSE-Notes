@@ -21,7 +21,7 @@ public class BomController extends Controller<BomMessage> {
 
     @Override
     public Region getView() {
-        return null;
+        return bomView.build();
     }
 
     @Override

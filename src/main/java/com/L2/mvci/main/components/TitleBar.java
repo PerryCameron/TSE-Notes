@@ -233,9 +233,10 @@ public class TitleBar implements Builder<Region> {
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
 
-        MenuItem close = MenuFx.menuItemOf("Settings", x -> mainView.getAction().accept(MainMessage.OPEN_SETTINGS), null);
+        MenuItem settings = MenuFx.menuItemOf("Settings", x -> mainView.getAction().accept(MainMessage.OPEN_SETTINGS), null);
+        MenuItem bom = MenuFx.menuItemOf("BOM", x -> mainView.getAction().accept(MainMessage.OPEN_BOM), null);
         MenuItem changeSet = MenuFx.menuItemOf("Change Set", x -> mainView.getAction().accept(MainMessage.LAUNCH_CHANGE_SET_ALERT), null);
-        menu.getItems().addAll(close, changeSet);
+        menu.getItems().addAll(settings, bom, changeSet);
         return menu;
     }
 

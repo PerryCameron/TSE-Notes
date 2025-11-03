@@ -1,5 +1,7 @@
 package com.L2.mvci.bom;
 
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.util.Builder;
 
@@ -16,6 +18,13 @@ public class BomView implements Builder<Region> {
 
     @Override
     public Region build() {
-        return null;
+        BorderPane borderPane = new BorderPane();
+        borderPane.getStyleClass().add("base-vbox");
+        borderPane.setLeft(new Label("Left"));
+        borderPane.setCenter(new Label("Center"));
+        borderPane.setRight(new Label("Right"));
+        borderPane.setBottom(new Label("Bottom"));
+        borderPane.setTop(new Label("Top"));
+        return borderPane;
     }
 }

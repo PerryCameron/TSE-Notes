@@ -3,6 +3,7 @@ package com.L2.mvci.main;
 import com.L2.dto.NoteFx;
 import com.L2.dto.UserDTO;
 import com.L2.interfaces.Controller;
+import com.L2.mvci.bom.BomController;
 import com.L2.mvci.changeset.ChangeController;
 import com.L2.mvci.note.NoteController;
 import com.L2.mvci.note.NoteMessage;
@@ -33,6 +34,7 @@ public class MainController extends Controller<MainMessage> {
     private NoteController noteController = null;
     private SettingsController settingsController = null;
     private NoteListController noteListController = null;
+    private BomController bomController = null;
 
     public MainController() {
         mainModel = new MainModel();
@@ -53,6 +55,7 @@ public class MainController extends Controller<MainMessage> {
         switch (action) {
             case OPEN_NOTE_TAB -> openNoteTab();
             case OPEN_SETTINGS -> openSettingsTab();
+            case OPEN_BOM -> openBomTab();
             case OPEN_NOTESLIST_TAB -> openNoteListTab();
             case PREVIOUS_NOTE -> noteListController.action(NoteListMessage.PREVIOUS_NOTE);
             case NEXT_NOTE -> noteListController.action(NoteListMessage.NEXT_NOTE);
@@ -122,6 +125,11 @@ public class MainController extends Controller<MainMessage> {
     private void openNoteListTab() {
         noteListController = new NoteListController(this);
         mainView.addNewTab("Notes", noteListController.getView(), false, ImageResources.LIST);
+    }
+
+    private void openBomTab() {
+        bomController = new BomController(this);
+        mainView.addNewTab("BOM", bomController.getView(), false, ImageResources.NOTES);
     }
 
     private void openChangeSetAlert() {
