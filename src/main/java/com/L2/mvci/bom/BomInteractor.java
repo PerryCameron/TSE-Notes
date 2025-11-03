@@ -1,6 +1,6 @@
 package com.L2.mvci.bom;
 
-import com.L2.mvci.note.NoteInteractor;
+import com.L2.static_tools.BOMExploderClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,5 +10,15 @@ public class BomInteractor {
 
     public BomInteractor(BomModel bomModel) {
         this.bomModel = bomModel;
+    }
+
+    public void searchForComponentBom()  {
+        System.out.println("Searching for component: " + bomModel.searchComponentProperty().get());
+        try {
+            String output = BOMExploderClient.getBOMExplosionAsString(bomModel.searchComponentProperty().get(), "BIL", "");
+            System.out.println(output);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 }

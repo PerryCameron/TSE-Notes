@@ -27,7 +27,7 @@ public class BomController extends Controller<BomMessage> {
     @Override
     public void action(BomMessage actionEnum) {
         switch (actionEnum) {
-
+            case SEARCH -> bomInteractor.searchForComponentBom();
         }
     }
 }

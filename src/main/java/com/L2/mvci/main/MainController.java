@@ -129,7 +129,7 @@ public class MainController extends Controller<MainMessage> {
 
     private void openBomTab() {
         bomController = new BomController(this);
-        mainView.addNewTab("BOM", bomController.getView(), false, ImageResources.NOTES);
+        mainView.addNewTab("BOM", bomController.getView(), false, ImageResources.BOM);
     }
 
     private void openChangeSetAlert() {

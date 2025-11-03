@@ -3,6 +3,7 @@ package com.L2.static_tools;
 import jakarta.xml.soap.*;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 public class BOMExploderClient {
 
@@ -48,14 +49,14 @@ public class BOMExploderClient {
         // === DEBUG: Print EXACT packet ===
         java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
         request.writeTo(baos);
-        String xmlContent = baos.toString("UTF-8");
+//        String xmlContent = baos.toString("UTF-8");
 
         // Remove auto-added <?xml...> and fix spacing
-        String cleanXml = xmlContent
-                .replaceFirst("<\\?xml[^>]*>\\s*", "")
-                .replaceAll("\\s+", " ")
-                .replace("> <", "><")
-                .trim();
+//        String cleanXml = xmlContent
+//                .replaceFirst("<\\?xml[^>]*>\\s*", "")
+//                .replaceAll("\\s+", " ")
+//                .replace("> <", "><")
+//                .trim();
 
         // Rebuild exact XML
         String expectedXml =
@@ -108,14 +109,6 @@ public class BOMExploderClient {
     private static String soapMessageToString(SOAPMessage msg) throws Exception {
         java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
         msg.writeTo(out);
-        return out.toString("UTF-8");
+        return out.toString(StandardCharsets.UTF_8);
     }
-
-//    public static void main(String[] args) throws Exception {
-//        System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
-//
-//        String result = getBOMExplosionAsString("0J-HUA42548", "BIL", "");
-//        System.out.println("=== RESPONSE ===");
-//        System.out.println(result);
-//    }
 }
