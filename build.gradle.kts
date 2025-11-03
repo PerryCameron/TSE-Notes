@@ -69,6 +69,11 @@ dependencies {
 //    implementation(files("libs/jacob-1.21.jar"))
     // https://mvnrepository.com/artifact/io.github.osobolev/jacob -this is a child repo to the main, not sure why the main doesn't have a repo in Maven Central
     implementation("io.github.osobolev:jacob:1.21")
+
+    implementation("jakarta.xml.ws:jakarta.xml.ws-api:4.0.2")
+    runtimeOnly    ("com.sun.xml.ws:jaxws-rt:4.0.2")
+
+
     testImplementation("ch.qos.logback:logback-classic:1.5.6")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
