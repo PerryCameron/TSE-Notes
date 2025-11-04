@@ -8,9 +8,7 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.w3c.dom.Node;
 
@@ -48,6 +46,7 @@ public class ParseTester extends Application {
         private List<Component> components = new ArrayList<>();
 
         // Reference designators – will be turned into a CSV string
+        @XmlElement(name = "refdeslist")
         @XmlJavaTypeAdapter(RefDesAdapter.class)
         private String refdesCsv;               // <-- final result
 
@@ -96,7 +95,7 @@ public class ParseTester extends Application {
         }
 
         @Override
-        public Object marshal(String v) throws Exception {
+        public Object marshal(String v) {
             throw new UnsupportedOperationException("marshalling not needed");
         }
     }
@@ -122,7 +121,7 @@ public class ParseTester extends Application {
         if (wrapper.components.isEmpty()) {
             throw new IllegalStateException("No top-level component found");
         }
-        return wrapper.components.get(0);
+        return wrapper.components.getFirst();
     }
 
     @XmlRootElement(name = "bomexploder_response")
@@ -252,12 +251,48 @@ public class ParseTester extends Application {
         colRef.setCellValueFactory(p -> p.getValue().getValue().refDesProperty());
         colRef.setPrefWidth(150);
 
-        treeTable.getColumns().addAll(
+        treeTable.getColumns().addAll(Arrays.asList(
                 colItem, colItemId, colLevel, colDesc, colRev,
-                colUom, colQty, colType, colRef
+                colUom, colQty, colType, colRef)
         );
 
-        treeTable.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+        colItem.setCellFactory(tc -> new TreeTableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                    return;
+                }
+
+                // Get the ComponentDTO from the row
+                TreeTableRow<ComponentDTO> row = getTableRow();
+                if (row == null || row.getItem() == null) {
+                    setText(item);
+                    setStyle("");
+                    return;
+                }
+
+                int level = row.getItem().levelProperty().get();
+                String color;
+                String fontWeight = level == 1 ? "bold" : "normal";
+
+                color = switch (level) {
+                    case 1 -> "#1976D2";
+                    case 2 -> "#388E3C";
+                    case 3 -> "#F57C00";
+                    case 4 -> "#7B1FA2";
+                    default -> "#000000"; // black for level 5+
+                };
+
+                setText(item);
+                setStyle("-fx-font-weight: " + fontWeight + "; -fx-text-fill: " + color + ";");
+            }
+        });
+
+        treeTable.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
         Scene scene = new Scene(treeTable, 1000, 700);
         primaryStage.setTitle("BOM TreeTableView");

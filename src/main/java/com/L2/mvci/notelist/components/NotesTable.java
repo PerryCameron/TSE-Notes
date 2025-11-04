@@ -189,7 +189,7 @@ public class NotesTable implements Component<Region> {
                         NoteFx note = getTableRow().getItem(); // Get the current NoteFx item
                         if (empty || note == null) {
                             setGraphic(null); // No icon if empty
-                        } else if (note.isCompleted() == true) {
+                        } else if (note.isCompleted()) {
                             flagImageView.setFitWidth(16);
                             flagImageView.setFitHeight(16);
                             setGraphic(flagImageView);
