@@ -1,12 +1,12 @@
 package com.L2.static_tools.bom;
 
+import com.L2.dto.bom.ComponentXML;
+import com.L2.dto.bom.ComponentDTO;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javafx.application.Application;
-import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -23,53 +23,6 @@ import java.util.stream.Collectors;
  * ParseTester – test harness for the BOM XML parser + JavaFX TreeTableView
  */
 public class ParseTester extends Application {
-
-    /* --------------------------------------------------------------------- *
-     * 1. POJO model – one class for every <component> node (original JAXB)
-     * --------------------------------------------------------------------- */
-    @XmlRootElement(name = "component")
-    @XmlAccessorType(XmlAccessType.FIELD)
-    public static class Component {
-
-        private String item;
-        private long   itemid;
-        private int    level;
-        private String desc;
-        private String rev;
-        private String uom;
-        private double quantity;
-        @XmlElement(name = "item_type")
-        private String itemType;
-
-        // Nested components (0…n)
-        @XmlElement(name = "component")
-        private List<Component> components = new ArrayList<>();
-
-        // Reference designators – will be turned into a CSV string
-        @XmlElement(name = "refdeslist")
-        @XmlJavaTypeAdapter(RefDesAdapter.class)
-        private String refdesCsv;               // <-- final result
-
-        // -----------------------------------------------------------------
-        // Helper for debugging / pretty-print
-        // -----------------------------------------------------------------
-        @Override
-        public String toString() {
-            return String.format(
-                    "%s (lvl=%d, qty=%.3f, type=%s) %s",
-                    item, level, quantity, itemType,
-                    refdesCsv != null ? "refs=" + refdesCsv : ""
-            );
-        }
-
-        public void prettyPrint(int indent) {
-            String pad = "  ".repeat(indent);
-            System.out.printf("%s%s%n", pad, this);
-            for (Component c : components) {
-                c.prettyPrint(indent + 1);
-            }
-        }
-    }
 
     /* --------------------------------------------------------------------- *
      * 2. Adapter that turns <refdeslist><refdes>R1</refdes>…</refdeslist>
@@ -103,7 +56,7 @@ public class ParseTester extends Application {
     /* --------------------------------------------------------------------- *
      * 3. Helper to strip the SOAP envelope and feed the inner payload to JAXB.
      * --------------------------------------------------------------------- */
-    private static Component parseBomXml(String xml) throws Exception {
+    private static ComponentXML parseBomXml(String xml) throws Exception {
         int start = xml.indexOf("<bomexploder_response");
         if (start == -1) throw new IllegalArgumentException("No <bomexploder_response> found");
         int end = xml.lastIndexOf("</bomexploder_response>") + "</bomexploder_response>".length();
@@ -128,7 +81,7 @@ public class ParseTester extends Application {
     @XmlAccessorType(XmlAccessType.FIELD)
     private static class BomWrapper {
         @XmlElement(name = "component")
-        List<Component> components = new ArrayList<>();
+        List<ComponentXML> components = new ArrayList<>();
     }
 
     /* --------------------------------------------------------------------- *
@@ -143,59 +96,22 @@ public class ParseTester extends Application {
         }
     }
 
-    /* --------------------------------------------------------------------- *
-     * 5. JavaFX DTO – renamed to avoid conflict
-     * --------------------------------------------------------------------- */
-    public static class ComponentDTO {
-        private final StringProperty item = new SimpleStringProperty();
-        private final LongProperty itemId = new SimpleLongProperty();
-        private final IntegerProperty level = new SimpleIntegerProperty();
-        private final StringProperty description = new SimpleStringProperty();
-        private final StringProperty revision = new SimpleStringProperty();
-        private final StringProperty uom = new SimpleStringProperty();
-        private final DoubleProperty quantity = new SimpleDoubleProperty();
-        private final StringProperty itemType = new SimpleStringProperty();
-        private final StringProperty refDes = new SimpleStringProperty();
-
-        public ComponentDTO(Component comp) {
-            item.set(comp.item);
-            itemId.set(comp.itemid);
-            level.set(comp.level);
-            description.set(comp.desc);
-            revision.set(comp.rev);
-            uom.set(comp.uom);
-            quantity.set(comp.quantity);
-            itemType.set(comp.itemType);
-            refDes.set(comp.refdesCsv);
-        }
-
-        // Getters for properties
-        public StringProperty itemProperty() { return item; }
-        public LongProperty itemIdProperty() { return itemId; }
-        public IntegerProperty levelProperty() { return level; }
-        public StringProperty descriptionProperty() { return description; }
-        public StringProperty revisionProperty() { return revision; }
-        public StringProperty uomProperty() { return uom; }
-        public DoubleProperty quantityProperty() { return quantity; }
-        public StringProperty itemTypeProperty() { return itemType; }
-        public StringProperty refDesProperty() { return refDes; }
-    }
 
     /* --------------------------------------------------------------------- *
      * 6. Build TreeItem<ComponentDTO> from Component hierarchy
      * --------------------------------------------------------------------- */
-    private static TreeItem<ComponentDTO> buildTree(Component root) {
+    private static TreeItem<ComponentDTO> buildTree(ComponentXML root) {
         TreeItem<ComponentDTO> rootItem = new TreeItem<>(new ComponentDTO(root));
-        addChildren(rootItem, root.components);
+        addChildren(rootItem, root.getComponents());
         return rootItem;
     }
 
-    private static void addChildren(TreeItem<ComponentDTO> parentItem, List<Component> children) {
-        for (Component child : children) {
+    private static void addChildren(TreeItem<ComponentDTO> parentItem, List<ComponentXML> children) {
+        for (ComponentXML child : children) {
             TreeItem<ComponentDTO> childItem = new TreeItem<>(new ComponentDTO(child));
             parentItem.getChildren().add(childItem);
-            if (!child.components.isEmpty()) {
-                addChildren(childItem, child.components);
+            if (!child.getComponents().isEmpty()) {
+                addChildren(childItem, child.getComponents());
             }
         }
     }
@@ -206,8 +122,8 @@ public class ParseTester extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         String xml = readBomXml();
-        Component rootComponent = parseBomXml(xml);
-        TreeItem<ComponentDTO> root = buildTree(rootComponent);
+        ComponentXML rootComponentXML = parseBomXml(xml);
+        TreeItem<ComponentDTO> root = buildTree(rootComponentXML);
         root.setExpanded(true); // Expand top level by default
 
         TreeTableView<ComponentDTO> treeTable = new TreeTableView<>(root);
@@ -306,13 +222,15 @@ public class ParseTester extends Application {
     public static void main(String[] args) {
         // For testing console output only:
         try {
+            // using test XML
             String xml = readBomXml();
-            Component root = parseBomXml(xml);
+            // to parse
+            ComponentXML root = parseBomXml(xml);
 
             System.out.println("=== BOM hierarchy (pretty printed) ===");
             root.prettyPrint(0);
 
-            List<Component> flat = new ArrayList<>();
+            List<ComponentXML> flat = new ArrayList<>();
             flatten(root, flat);
             System.out.println("\n=== Flattened list size: " + flat.size() + " ===");
 
@@ -323,9 +241,9 @@ public class ParseTester extends Application {
         }
     }
 
-    private static void flatten(Component c, List<Component> out) {
+    private static void flatten(ComponentXML c, List<ComponentXML> out) {
         out.add(c);
-        for (Component child : c.components) {
+        for (ComponentXML child : c.getComponents()) {
             flatten(child, out);
         }
     }
