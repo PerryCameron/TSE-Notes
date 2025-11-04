@@ -1,6 +1,6 @@
 package com.L2.mvci.bom;
 
-import com.L2.static_tools.BOMExploderClient;
+import com.L2.static_tools.bom.BOMExploderClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package com.L2.static_tools;
+package com.L2.static_tools.bom;
 
 import jakarta.xml.soap.*;
 
