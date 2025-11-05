@@ -1,6 +1,6 @@
 package com.L2.dto.bom;
 
-import com.L2.static_tools.bom.ParseTester;
+import com.L2.static_tools.bom.XMLChomper;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -37,7 +37,7 @@ public class ComponentXML {
 
     // Reference designators – will be turned into a CSV string
     @XmlElement(name = "refdeslist")
-    @XmlJavaTypeAdapter(ParseTester.RefDesAdapter.class)
+    @XmlJavaTypeAdapter(XMLChomper.RefDesAdapter.class)
     private String refdesCsv;               // <-- final result
 
     // -----------------------------------------------------------------

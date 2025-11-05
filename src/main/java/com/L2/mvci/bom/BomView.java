@@ -1,5 +1,6 @@
 package com.L2.mvci.bom;
 
+import com.L2.mvci.bom.components.BomTreeTableView;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.TitleBarFx;
 import javafx.geometry.Insets;
@@ -32,10 +33,11 @@ public class BomView implements Builder<Region> {
     public Region build() {
         BorderPane borderPane = new BorderPane();
         borderPane.getStyleClass().add("base-vbox");
-        borderPane.setLeft(new Label("Left"));
-        borderPane.setCenter(new Label("Center"));
-        borderPane.setRight(new Label("Right"));
-        borderPane.setBottom(new Label("Bottom"));
+//        borderPane.setLeft(new Label("Left"));
+        BomTreeTableView bomTreeTableView = new BomTreeTableView(bomModel);
+        borderPane.setCenter(bomTreeTableView.build());
+//        borderPane.setRight(new Label("Right"));
+//        borderPane.setBottom(new Label("Bottom"));
         borderPane.setTop(navigation());
         return borderPane;
     }
