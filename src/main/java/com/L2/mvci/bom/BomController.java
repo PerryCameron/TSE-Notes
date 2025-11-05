@@ -2,14 +2,15 @@ package com.L2.mvci.bom;
 
 import com.L2.interfaces.Controller;
 import com.L2.mvci.main.MainController;
+import com.L2.widgetFx.DialogueFx;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BomController extends Controller<BomMessage> {
-    private MainController mainController;
-    private BomInteractor bomInteractor;
-    private BomView bomView;
+    private final MainController mainController;
+    private final BomInteractor bomInteractor;
+    private final BomView bomView;
     private static final Logger logger = LoggerFactory.getLogger(BomController.class);
 
     public BomController(MainController mainController) {
@@ -27,7 +28,8 @@ public class BomController extends Controller<BomMessage> {
     @Override
     public void action(BomMessage actionEnum) {
         switch (actionEnum) {
-            case SEARCH -> bomInteractor.searchForComponentBom();
+            case SEARCH -> bomInteractor.searchForComponentBom(mainController.getExecutorService());
+            default -> DialogueFx.errorAlert("Unable to perform BOM", "This will probably never pop up");
         }
     }
 }
