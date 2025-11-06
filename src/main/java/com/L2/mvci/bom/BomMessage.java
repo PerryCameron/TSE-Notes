@@ -1,5 +1,5 @@
 package com.L2.mvci.bom;
 
 public enum BomMessage {
-    SEARCH
+    LOAD_BOM_FROM_XML, SEARCH
 }

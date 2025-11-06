@@ -21,10 +21,6 @@ public class BomInteractor {
         this.bomModel = bomModel;
     }
 
-    public void searchForComponentBom(ExecutorService executorService) {
-
-    }
-
     public void logBomCall() {
         logger.info("Searching bom for {}", bomModel.searchComponentProperty().get());
     }

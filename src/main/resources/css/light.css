@@ -1003,6 +1003,165 @@ Label.service-plan-details {
 
 /*******************************************************************************
  *                                                                             *
+ * TreeTableView – same look as TableView                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+/* -------------------------------------------------
+   Root TreeTableView
+   ------------------------------------------------- */
+.tree-table-view {
+    -fx-background-radius: 4;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-table-cell-border;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-font-size: 14px;
+}
+
+/* -------------------------------------------------
+   Header
+   ------------------------------------------------- */
+.tree-table-view .column-header-background {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -fx-focus-accent !important;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.tree-table-view .column-header {
+    -fx-background-color: -fx-table-header;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 2;
+    -fx-pref-height: 40;
+}
+
+.tree-table-view .column-header .label {
+    -fx-text-fill: -fx-text-color;
+    -fx-alignment: CENTER-LEFT;
+    -fx-font-size: 14px;
+    -fx-padding: 0;
+}
+
+/* -------------------------------------------------
+   TreeTableRow & TreeTableCell
+   ------------------------------------------------- */
+.tree-table-view .tree-table-row-cell {
+    -fx-background-color: -fx-primary-bg;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 2;
+    /*-fx-border-color: transparent transparent -fx-table-cell-border transparent;*/
+    -fx-background-insets: 0;
+    /*-fx-border-width: 1;*/
+}
+
+/* Selection */
+.tree-table-view .tree-table-row-cell:selected,
+.tree-table-view .tree-table-row-cell:selected:focused {
+    -fx-text-fill: -fx-selected-text !important;
+}
+
+.tree-table-view .tree-table-row-cell:selected .tree-table-cell,
+.tree-table-view .tree-table-row-cell:selected:focused .tree-table-cell {
+    -fx-background-color: -fx-light-accent !important;
+    -fx-text-fill: -fx-selected-text !important;
+}
+
+/* Individual cells (including the tree-disclosure node) */
+.tree-table-view .tree-table-cell {
+    -fx-background-color: -fx-primary-bg;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 2;
+    -fx-border-color: transparent transparent -fx-table-cell-border transparent;
+    -fx-background-insets: 0;
+    -fx-border-width: 1;
+}
+
+/* -------------------------------------------------
+   Focus
+   ------------------------------------------------- */
+.tree-table-view:focused {
+    -fx-background-color: -fx-primary-bg;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+}
+
+/* -------------------------------------------------
+   ScrollPane & Viewport
+   ------------------------------------------------- */
+.tree-table-view .scroll-pane {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.tree-table-view .scroll-pane .viewport {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+}
+
+/* -------------------------------------------------
+   ScrollBars
+   ------------------------------------------------- */
+.tree-table-view .scroll-bar:vertical,
+.tree-table-view .scroll-bar:horizontal {
+    -fx-background-color: -fx-primary-bg;
+    -fx-background-radius: 4;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-table-cell-border;
+    -fx-background-insets: 0;
+}
+
+.tree-table-view .scroll-bar .thumb {
+    -fx-background-color: -fx-scroll-thumb;
+    -fx-background-radius: 4;
+}
+
+.tree-table-view .scroll-bar .thumb:hover {
+    -fx-background-color: -fx-scroll-thumb-hover;
+}
+
+/* -------------------------------------------------
+   Corner & Filler
+   ------------------------------------------------- */
+.tree-table-view .column-header-background .filler {
+    -fx-background-color: -fx-table-header !important;
+}
+
+.tree-table-view .scroll-pane .corner {
+    -fx-background-color: transparent;
+}
+
+/* -------------------------------------------------
+   Placeholder (empty table)
+   ------------------------------------------------- */
+.tree-table-view .placeholder {
+    -fx-text-fill: -fx-prompt-text-color;
+    -fx-font-size: 14px;
+}
+
+/* -------------------------------------------------
+   Tree disclosure node (the little arrow)
+   ------------------------------------------------- */
+.tree-table-view .tree-disclosure-node .arrow {
+    -fx-background-color: -fx-text-color;
+    -fx-shape: "M 0,-4 L 4,0 L 0,4 Z";
+    -fx-scale-shape: true;
+}
+
+/* Optional: keep the same hover/focus look for rows */
+.tree-table-view .tree-table-row-cell:hover {
+    -fx-background-color: derive(-fx-primary-bg, 8%);
+}
+
+/*******************************************************************************
+ *                                                                             *
  * ContextMenu                                                                  *
  *                                                                             *
  ******************************************************************************/

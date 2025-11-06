@@ -26,6 +26,7 @@ public class BomController extends Controller<BomMessage> {
         BomModel bomModel = new BomModel();
         bomInteractor = new BomInteractor(bomModel);
         this.bomView = new BomView(bomModel, this::action);
+        action(BomMessage.LOAD_BOM_FROM_XML);
     }
 
     @Override
@@ -37,6 +38,7 @@ public class BomController extends Controller<BomMessage> {
     public void action(BomMessage actionEnum) {
         switch (actionEnum) {
             case SEARCH -> getBom(false);
+            case LOAD_BOM_FROM_XML -> getBom(true);
             default -> DialogueFx.errorAlert("Unable to perform BOM", "This will probably never pop up");
         }
     }
@@ -49,10 +51,16 @@ public class BomController extends Controller<BomMessage> {
             protected TreeItem<ComponentDTO> call() {
                 try {
                     bomInteractor.logBomCall();
-                    // search for component typed in text field
-                    String output = BOMExploderClient.getBOMExplosionAsString(bomInteractor.getTest(), "BIL", "");
-                    // save XML in text file for persistence
-                    XMLChomper.saveToBomXml(output, ApplicationPaths.secondaryDbDirectory.resolve("bom.XML"));
+                    String output;
+                    if(fisrtStart) {
+                        output = XMLChomper.readXMLFromFile(ApplicationPaths.secondaryDbDirectory.resolve("bom.XML"));
+                        if(output.isEmpty()) return null;
+                    } else {
+                        // search for component typed in text field
+                        output = BOMExploderClient.getBOMExplosionAsString(bomInteractor.getTest(), "BIL", "");
+                        // save XML in text file for persistence
+                        XMLChomper.saveToBomXml(output, ApplicationPaths.secondaryDbDirectory.resolve("bom.XML"));
+                    }
                     // create an XML component, with nested Lists
                     ComponentXML xmlRoot = XMLChomper.parseBomXml(output);
                     // create the root tree Item from the XML Component object
@@ -70,6 +78,8 @@ public class BomController extends Controller<BomMessage> {
         };
         addToBottomTask.setOnSucceeded(event -> {
             TreeItem<ComponentDTO> treeItemRoot = addToBottomTask.getValue();
+            // we have never used it before so we do not have a bom.xml file
+            if(treeItemRoot == null) return;
             bomInteractor.setRoot(treeItemRoot);
             mainController.showLoadingSpinner(false);
         });
