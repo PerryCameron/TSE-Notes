@@ -22,32 +22,18 @@ public class BomInteractor {
     }
 
     public void searchForComponentBom(ExecutorService executorService) {
-        Task<TreeItem<ComponentDTO>> addToBottomTask = new Task<>() {
-            @Override
-            protected TreeItem<ComponentDTO> call() {
-                try {
-                    logger.info("Searching bom for {}", bomModel.searchComponentProperty().get());
-                    // search for component typed in text field
-                    String output = BOMExploderClient.getBOMExplosionAsString(bomModel.searchComponentProperty().get(), "BIL", "");
-                    // create an XML component, with nested Lists
-                    ComponentXML xmlRoot = XMLChomper.parseBomXml(output);
-                    // create the root tree Item from the XML Component object
-                    TreeItem<ComponentDTO> treeItemRoot = XMLChomper.buildTree(xmlRoot);
-                    // set expanded
-                    treeItemRoot.setExpanded(true);
-                    // set root to tree
-                    return treeItemRoot;
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                    Platform.runLater(() -> DialogueFx.errorAlert("Unable to get BOM", e.getMessage()));
-                }
-                return null;
-            }
-        };
-        addToBottomTask.setOnSucceeded(event -> {
-            TreeItem<ComponentDTO> treeItemRoot = addToBottomTask.getValue();
-            bomModel.getTreeTable().setRoot(treeItemRoot);
-        });
-        executorService.submit(addToBottomTask);
+
+    }
+
+    public void logBomCall() {
+        logger.info("Searching bom for {}", bomModel.searchComponentProperty().get());
+    }
+
+    public String getTest() {
+        return bomModel.searchComponentProperty().get();
+    }
+
+    public void setRoot(TreeItem<ComponentDTO> treeItemRoot) {
+        bomModel.getTreeTable().setRoot(treeItemRoot);
     }
 }

@@ -5,6 +5,7 @@ import com.L2.dto.UserDTO;
 import com.L2.interfaces.Controller;
 import com.L2.mvci.bom.BomController;
 import com.L2.mvci.changeset.ChangeController;
+import com.L2.mvci.load.LoadingController;
 import com.L2.mvci.note.NoteController;
 import com.L2.mvci.note.NoteMessage;
 import com.L2.mvci.notelist.NoteListController;
@@ -15,9 +16,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +38,8 @@ public class MainController extends Controller<MainMessage> {
     private SettingsController settingsController = null;
     private NoteListController noteListController = null;
     private BomController bomController = null;
+    private LoadingController loadingController;
+
 
     public MainController() {
         mainModel = new MainModel();
@@ -43,6 +48,7 @@ public class MainController extends Controller<MainMessage> {
         logger.info("Main controller loaded");
         mainInteractor.loadAppSettings();
         logger.info("Default Locale: {}", Locale.getDefault());
+        createLoadingController();
     }
 
     @Override
@@ -138,6 +144,18 @@ public class MainController extends Controller<MainMessage> {
         alert.ifPresent(Dialog::showAndWait);
     }
 
+    public void showLoadingSpinner(boolean isVisible) {
+        loadingController.showLoadSpinner(isVisible);
+    }
+
+    public void setSpinnerOffset(double x, double y) {
+        loadingController.setOffset(x, y);
+    }
+
+    public void createLoadingController() {
+        loadingController = new LoadingController();
+        loadingController.getStage().setScene(new Scene(loadingController.getView(), Color.TRANSPARENT));
+    }
     public NoteController getNoteController() {
         return noteController;
     }
