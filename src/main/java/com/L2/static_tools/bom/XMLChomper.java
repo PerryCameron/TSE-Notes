@@ -2,6 +2,7 @@ package com.L2.static_tools.bom;
 
 import com.L2.dto.bom.ComponentDTO;
 import com.L2.dto.bom.ComponentXML;
+import com.L2.widgetFx.DialogueFx;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -15,6 +16,9 @@ import org.w3c.dom.Node;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,5 +137,22 @@ public class XMLChomper {
                 addChildren(childItem, child.getComponents());
             }
         }
+    }
+
+    public static void saveToBomXml(String content, Path filePath) {
+        try {
+            Files.writeString(filePath, content, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            DialogueFx.errorAlert("Can not write bom.XML", e.getMessage());
+        }
+    }
+
+    public static String readXMLFromFile(Path filePath) {
+        try {
+            return Files.readString(filePath, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            DialogueFx.errorAlert("Can not read bom.XML", e.getMessage());
+        }
+        return "";
     }
 }
