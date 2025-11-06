@@ -6,10 +6,10 @@ import javafx.stage.Stage;
 public class LoadingModel {
 
     protected Stage loadingStage = new Stage();
-    private SimpleDoubleProperty primaryXProperty = new SimpleDoubleProperty();
-    private SimpleDoubleProperty primaryYProperty = new SimpleDoubleProperty();
-    private SimpleDoubleProperty offsetX = new SimpleDoubleProperty();
-    private SimpleDoubleProperty offsetY = new SimpleDoubleProperty();
+    private final SimpleDoubleProperty primaryXProperty = new SimpleDoubleProperty();
+    private final SimpleDoubleProperty primaryYProperty = new SimpleDoubleProperty();
+    private final SimpleDoubleProperty offsetX = new SimpleDoubleProperty();
+    private final SimpleDoubleProperty offsetY = new SimpleDoubleProperty();
 
 
     public double getOffsetX() {

@@ -43,7 +43,7 @@ public class BomController extends Controller<BomMessage> {
         }
     }
 
-    private void getBom(boolean fisrtStart) {
+    private void getBom(boolean firstStart) {
         mainController.setSpinnerOffset(50, 50);
         mainController.showLoadingSpinner(true);
         Task<TreeItem<ComponentDTO>> addToBottomTask = new Task<>() {
@@ -52,7 +52,7 @@ public class BomController extends Controller<BomMessage> {
                 try {
                     bomInteractor.logBomCall();
                     String output;
-                    if(fisrtStart) {
+                    if(firstStart) {
                         output = XMLChomper.readXMLFromFile(ApplicationPaths.secondaryDbDirectory.resolve("bom.XML"));
                         if(output.isEmpty()) return null;
                     } else {

@@ -6,6 +6,8 @@ import com.L2.interfaces.Component;
 import com.L2.mvci.bom.BomModel;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 import java.util.Arrays;
 
@@ -29,6 +31,7 @@ public class BomTreeTableView implements Component {
     @Override
     public Node build() {
         bomModel.setTreeTable(new TreeTableView<>());
+        VBox.setVgrow(bomModel.getTreeTable(), Priority.ALWAYS);
 
         // Columns
         TreeTableColumn<ComponentDTO, String> colItem = new TreeTableColumn<>("Item");

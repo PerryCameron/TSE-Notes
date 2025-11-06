@@ -1,13 +1,13 @@
 package com.L2.mvci.bom;
 
 import com.L2.mvci.bom.components.BomTreeTableView;
+import com.L2.mvci.notelist.NoteListMessage;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.TitleBarFx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -31,15 +31,11 @@ public class BomView implements Builder<Region> {
 
     @Override
     public Region build() {
-        BorderPane borderPane = new BorderPane();
-        borderPane.getStyleClass().add("base-vbox");
-//        borderPane.setLeft(new Label("Left"));
-        BomTreeTableView bomTreeTableView = new BomTreeTableView(bomModel);
-        borderPane.setCenter(bomTreeTableView.build());
-//        borderPane.setRight(new Label("Right"));
-//        borderPane.setBottom(new Label("Bottom"));
-        borderPane.setTop(navigation());
-        return borderPane;
+        VBox root = new VBox(10);
+        root.getStyleClass().add("base-vbox");
+        root.setPadding(new Insets(10, 10, 0, 10));
+        root.getChildren().addAll(navigation(), new BomTreeTableView(bomModel).build());
+        return root;
     }
 
     private Node navigation() {
@@ -64,7 +60,7 @@ public class BomView implements Builder<Region> {
         Button button = new Button("Search");
         button.setOnAction(event -> {
             if(!bomModel.searchComponentProperty().get().isEmpty())
-            action.accept(BomMessage.SEARCH);
+                action.accept(BomMessage.SEARCH);
         });
         return button;
     }
