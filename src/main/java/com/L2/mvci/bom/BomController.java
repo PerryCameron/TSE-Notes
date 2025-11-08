@@ -1,14 +1,9 @@
 package com.L2.mvci.bom;
 
 import com.L2.dto.bom.ComponentDTO;
-import com.L2.dto.bom.ComponentXML;
 import com.L2.interfaces.Controller;
 import com.L2.mvci.main.MainController;
-import com.L2.static_tools.ApplicationPaths;
-import com.L2.static_tools.bom.BOMExploderClient;
-import com.L2.static_tools.bom.XMLChomper;
 import com.L2.widgetFx.DialogueFx;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Region;
@@ -49,31 +44,7 @@ public class BomController extends Controller<BomMessage> {
         Task<TreeItem<ComponentDTO>> addToBottomTask = new Task<>() {
             @Override
             protected TreeItem<ComponentDTO> call() {
-                try {
-                    bomInteractor.logBomCall();
-                    String output;
-                    if(firstStart) {
-                        output = XMLChomper.readXMLFromFile(ApplicationPaths.secondaryDbDirectory.resolve("bom.XML"));
-                        if(output.isEmpty()) return null;
-                    } else {
-                        // search for component typed in text field
-                        output = BOMExploderClient.getBOMExplosionAsString(bomInteractor.getTest(), "BIL", "");
-                        // save XML in text file for persistence
-                        XMLChomper.saveToBomXml(output, ApplicationPaths.secondaryDbDirectory.resolve("bom.XML"));
-                    }
-                    // create an XML component, with nested Lists
-                    ComponentXML xmlRoot = XMLChomper.parseBomXml(output);
-                    // create the root tree Item from the XML Component object
-                    TreeItem<ComponentDTO> treeItemRoot = XMLChomper.buildTree(xmlRoot);
-                    // set expanded
-                    treeItemRoot.setExpanded(true);
-                    // set root to tree
-                    return treeItemRoot;
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                    Platform.runLater(() -> DialogueFx.errorAlert("Unable to get BOM", e.getMessage()));
-                }
-                return null;
+                    return bomInteractor.buildTreeRoot(firstStart);
             }
         };
         addToBottomTask.setOnSucceeded(event -> {

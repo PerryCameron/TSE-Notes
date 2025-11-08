@@ -1,7 +1,6 @@
 package com.L2.mvci.bom;
 
 import com.L2.mvci.bom.components.BomTreeTableView;
-import com.L2.mvci.notelist.NoteListMessage;
 import com.L2.widgetFx.TextFieldFx;
 import com.L2.widgetFx.TitleBarFx;
 import javafx.geometry.Insets;
@@ -9,7 +8,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;

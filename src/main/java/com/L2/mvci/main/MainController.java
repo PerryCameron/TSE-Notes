@@ -40,7 +40,6 @@ public class MainController extends Controller<MainMessage> {
     private BomController bomController = null;
     private LoadingController loadingController;
 
-
     public MainController() {
         mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);
@@ -135,7 +134,7 @@ public class MainController extends Controller<MainMessage> {
 
     private void openBomTab() {
         bomController = new BomController(this);
-        mainView.addNewTab("BOM", bomController.getView(), false, ImageResources.BOM);
+        mainView.addNewTab("BOM", bomController.getView(), true, ImageResources.BOM);
     }
 
     private void openChangeSetAlert() {

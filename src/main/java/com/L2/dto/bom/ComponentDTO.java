@@ -25,6 +25,9 @@ public class ComponentDTO {
         refDes.set(comp.getRefdesCsv());
     }
 
+    public ComponentDTO() {
+    }
+
     // Getters for properties
     public StringProperty itemProperty() { return item; }
     public LongProperty itemIdProperty() { return itemId; }
@@ -35,4 +38,19 @@ public class ComponentDTO {
     public DoubleProperty quantityProperty() { return quantity; }
     public StringProperty itemTypeProperty() { return itemType; }
     public StringProperty refDesProperty() { return refDes; }
+
+    @Override
+    public String toString() {
+        return "ComponentDTO{" +
+                "item=" + item +
+                ", itemId=" + itemId +
+                ", level=" + level +
+                ", description=" + description +
+                ", revision=" + revision +
+                ", uom=" + uom +
+                ", quantity=" + quantity +
+                ", itemType=" + itemType +
+                ", refDes=" + refDes +
+                '}';
+    }
 }

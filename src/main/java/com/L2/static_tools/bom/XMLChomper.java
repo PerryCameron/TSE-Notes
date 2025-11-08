@@ -2,6 +2,7 @@ package com.L2.static_tools.bom;
 
 import com.L2.dto.bom.ComponentDTO;
 import com.L2.dto.bom.ComponentXML;
+import com.L2.mvci.bom.BomModel;
 import com.L2.widgetFx.DialogueFx;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
@@ -65,11 +66,12 @@ public class XMLChomper {
      * </ol>
      * </p>
      *
-     * @param xml the full SOAP XML response as a String
+     * @param xml      the full SOAP XML response as a String
+     * @param bomModel
      * @return the root {@link ComponentXML} representing the top-level assembly
      * @throws Exception if parsing fails, envelope is missing, or no component is found
      */
-    public static ComponentXML parseBomXml(String xml) throws Exception {
+    public static ComponentXML parseBomXml(String xml, BomModel bomModel) throws Exception {
 
         // Step 1: Locate the start of the actual payload inside the SOAP envelope
         // The BOM data is wrapped in <bomexploder_response>...</bomexploder_response>
@@ -124,7 +126,8 @@ public class XMLChomper {
     }
 
     public static TreeItem<ComponentDTO> buildTree(ComponentXML root) {
-        TreeItem<ComponentDTO> rootItem = new TreeItem<>(new ComponentDTO(root));
+        ComponentDTO component = new ComponentDTO(root);
+        TreeItem<ComponentDTO> rootItem = new TreeItem<>(component);
         addChildren(rootItem, root.getComponents());
         return rootItem;
     }
