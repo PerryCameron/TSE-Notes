@@ -2,7 +2,6 @@ package com.L2.static_tools.bom;
 
 import com.L2.dto.bom.ComponentDTO;
 import com.L2.dto.bom.ComponentXML;
-import com.L2.mvci.bom.BomController;
 import com.L2.widgetFx.DialogueFx;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
@@ -101,6 +100,7 @@ public class XMLChomper {
      */
     public static ComponentXML parseBomXml(String xml) throws Exception {
 
+
         // Step 1: Locate the start of the actual payload inside the SOAP envelope
         // The BOM data is wrapped in <bomexploder_response>...</bomexploder_response>
         int start = xml.indexOf("<bomexploder_response");
@@ -186,5 +186,25 @@ public class XMLChomper {
             //Platform.runLater(() -> DialogueFx.errorAlert("Can not read bom.XML", e.getMessage()));
         }
         return "";
+    }
+
+    /**
+     * Checks if the given XML string starts with "<env:Envelope" to verify if it's a return packet.
+     *
+     * @param xml The XML content as a string.
+     * @return True if the string starts with "<env:Envelope", false otherwise.
+     */
+    public static boolean isReturnPacket(String xml) {
+        return xml.startsWith("<env:Envelope");
+    }
+
+    /**
+     * Checks if the substring "<component>" appears at least once in the given XML string.
+     *
+     * @param xml The XML content as a string.
+     * @return True if "<component>" is found, false otherwise.
+     */
+    public static boolean hasComponent(String xml) {
+        return xml.contains("<component>");
     }
 }

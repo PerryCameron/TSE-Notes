@@ -34,6 +34,19 @@ public class BomInteractor {
             } else {
                 // search for component typed in text field
                 output = BOMExploderClient.getBOMExplosionAsString(bomModel.searchComponentProperty().get(), "BIL", "");
+            }
+            // check to make sure we have received valid XML
+            if(!XMLChomper.isReturnPacket(output)) {
+                Platform.runLater(() -> DialogueFx.errorAlert("Unable to communicate with server", "Are you sure you are on the VPN?"));
+                return null;
+            }
+            // check to make sure our packet has components
+            if(!XMLChomper.hasComponent(output)) {
+                Platform.runLater(() -> DialogueFx.errorAlert("Unable to retrieve part", "The part number can not be found, are you sure you typed it correctly?"));
+                return null;
+            }
+            // save XML if we get this far
+            if(!firstStart) {
                 // save XML in text file for persistence
                 XMLChomper.saveToBomXml(output, ApplicationPaths.secondaryDbDirectory.resolve("bom.XML"));
             }
