@@ -15,7 +15,7 @@ public class BomModel {
     TreeItem<ComponentDTO> root;
     ComponentDTO selectedComponent = new ComponentDTO();
     ObjectProperty<ComponentDTO> selectedComponentProperty = new SimpleObjectProperty<>();
-    Integer[] levels = new Integer[15];
+    ObjectProperty<Integer[]> levels = new SimpleObjectProperty<>();
 
 
 
@@ -49,16 +49,14 @@ public class BomModel {
     }
 
     public Integer[] getLevels() {
+        return levels.get();
+    }
+
+    public ObjectProperty<Integer[]> levelsProperty() {
         return levels;
     }
 
     public void setLevels(Integer[] levels) {
-        this.levels = levels;
-    }
-
-    public void resetLevels() {
-        for (int i = 0; i < levels.length; i++) {
-            levels[i] = 0;
-        }
+        this.levels.set(levels);
     }
 }

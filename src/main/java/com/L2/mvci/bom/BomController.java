@@ -50,9 +50,15 @@ public class BomController extends Controller<BomMessage> {
         addToBottomTask.setOnSucceeded(event -> {
             TreeItem<ComponentDTO> treeItemRoot = addToBottomTask.getValue();
             // we have never used it before so we do not have a bom.xml file
+            mainController.showLoadingSpinner(false);
             if(treeItemRoot == null) return;
             bomInteractor.setRoot(treeItemRoot);
-            mainController.showLoadingSpinner(false);
+        });
+        addToBottomTask.setOnFailed(event -> {
+            mainController.showLoadingSpinner(false);  // Hide on failure too
+            Throwable ex = addToBottomTask.getException();
+            logger.error("Task failed: {}", ex.getMessage(), ex);
+            DialogueFx.errorAlert("BOM task failed", ex.getMessage());
         });
         mainController.getExecutorService().submit(addToBottomTask);
     }

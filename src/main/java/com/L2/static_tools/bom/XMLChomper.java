@@ -2,7 +2,7 @@ package com.L2.static_tools.bom;
 
 import com.L2.dto.bom.ComponentDTO;
 import com.L2.dto.bom.ComponentXML;
-import com.L2.mvci.bom.BomModel;
+import com.L2.mvci.bom.BomController;
 import com.L2.widgetFx.DialogueFx;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
@@ -11,7 +11,10 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
+import javafx.application.Platform;
 import javafx.scene.control.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 import javax.xml.stream.XMLInputFactory;
@@ -21,9 +24,34 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class XMLChomper {
+    private static final Logger logger = LoggerFactory.getLogger(XMLChomper.class);
+
+    public static Integer[] getStats(TreeItem<ComponentDTO> treeItemRoot) {
+        Integer[] stats = new Integer[11]; // Indices 0-9 for levels 1-10; extra slot for safety
+        Arrays.fill(stats, 0);
+        countLevels(treeItemRoot, stats);
+        return stats;
+    }
+
+    private static void countLevels(TreeItem<ComponentDTO> item, Integer[] stats) {
+        if (item == null || item.getValue() == null) {
+            return;
+        }
+
+        ComponentDTO dto = item.getValue();
+        Integer level = dto.levelProperty().get();
+        if (level != null && level >= 1 && level <= 10) {
+            stats[level - 1]++;
+        }
+
+        for (TreeItem<ComponentDTO> child : item.getChildren()) {
+            countLevels(child, stats);
+        }
+    }
 
     /* --------------------------------------------------------------------- *
      *    Adapter that turns <refdeslist><refdes>R1</refdes>…</refdeslist>
@@ -71,7 +99,7 @@ public class XMLChomper {
      * @return the root {@link ComponentXML} representing the top-level assembly
      * @throws Exception if parsing fails, envelope is missing, or no component is found
      */
-    public static ComponentXML parseBomXml(String xml, BomModel bomModel) throws Exception {
+    public static ComponentXML parseBomXml(String xml) throws Exception {
 
         // Step 1: Locate the start of the actual payload inside the SOAP envelope
         // The BOM data is wrapped in <bomexploder_response>...</bomexploder_response>
@@ -146,7 +174,7 @@ public class XMLChomper {
         try {
             Files.writeString(filePath, content, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            DialogueFx.errorAlert("Can not write bom.XML", e.getMessage());
+            Platform.runLater(() -> DialogueFx.errorAlert("Can not write bom.XML", e.getMessage()));
         }
     }
 
@@ -154,7 +182,8 @@ public class XMLChomper {
         try {
             return Files.readString(filePath, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            DialogueFx.errorAlert("Can not read bom.XML", e.getMessage());
+            logger.error("Can not read bom.XML", e.getMessage());
+            //Platform.runLater(() -> DialogueFx.errorAlert("Can not read bom.XML", e.getMessage()));
         }
         return "";
     }
