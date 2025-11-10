@@ -11,6 +11,7 @@ import javafx.scene.control.TreeTableView;
 
 public class BomModel {
     StringProperty searchComponent = new SimpleStringProperty();
+    StringProperty searchInBom = new SimpleStringProperty();
     TreeTableView<ComponentDTO> treeTable;
     TreeItem<ComponentDTO> root;
     ComponentDTO selectedComponent = new ComponentDTO();
@@ -58,5 +59,17 @@ public class BomModel {
 
     public void setLevels(Integer[] levels) {
         this.levels.set(levels);
+    }
+
+    public String getSearchInBom() {
+        return searchInBom.get();
+    }
+
+    public StringProperty searchInBomProperty() {
+        return searchInBom;
+    }
+
+    public void setSearchInBom(String searchInBom) {
+        this.searchInBom.set(searchInBom);
     }
 }

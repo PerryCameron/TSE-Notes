@@ -34,6 +34,7 @@ public class BomController extends Controller<BomMessage> {
         switch (actionEnum) {
             case SEARCH -> getBom(false);
             case LOAD_BOM_FROM_XML -> getBom(true);
+            case SEARCH_CURRENT -> bomInteractor.searchTree();
             default -> DialogueFx.errorAlert("Unable to perform BOM", "This will probably never pop up");
         }
     }

@@ -1,9 +1,8 @@
 package com.L2.mvci.bom;
 
 import com.L2.mvci.bom.components.BomTreeTableView;
-import com.L2.mvci.bom.components.LevelBarChart;
+import com.L2.mvci.bom.components.LevelPieChart;
 import com.L2.widgetFx.TextFieldFx;
-import com.L2.widgetFx.TitleBarFx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -37,29 +36,46 @@ public class BomView implements Builder<Region> {
     }
 
     private Node navigation() {
-        VBox vBox = new VBox();
         HBox hBox = new HBox(10);
-        vBox.getStyleClass().add("decorative-hbox");
-        Button[] buttons = new Button[]{};
-        vBox.getChildren().addAll(TitleBarFx.of("Part/Model number", buttons), hBox);
+        hBox.getStyleClass().add("decorative-hbox");
         hBox.setPadding(new Insets(5, 0, 5, 5));
         hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.getChildren().addAll(searchBox(), searchButton(), new LevelBarChart(bomModel).build());
-        return vBox;
+        hBox.getChildren().addAll(searchBox(), new LevelPieChart(bomModel).build());
+        return hBox;
     }
 
     private Node searchBox() {
-        TextField textField = TextFieldFx.of(200, "Find BOM");
-        textField.textProperty().bindBidirectional(bomModel.searchComponentProperty());
-        return textField;
+        VBox vBox = new VBox(10);
+        vBox.getStyleClass().add("search-box");
+        vBox.getChildren().addAll(bomTextField(), searchBomTextField());
+        return vBox;
     }
 
-    private Node searchButton() {
-        Button button = new Button("Search");
+    private Node bomTextField() {
+        HBox hBox = new HBox(10);
+        TextField textField = TextFieldFx.of(200, "Part Number");
+        textField.textProperty().bindBidirectional(bomModel.searchComponentProperty());
+        Button button = new Button("Find BOM");
         button.setOnAction(event -> {
             if (!bomModel.searchComponentProperty().get().isEmpty())
                 action.accept(BomMessage.SEARCH);
         });
-        return button;
+        hBox.getChildren().addAll(textField, button);
+        return hBox;
     }
+
+    private Node searchBomTextField() {
+        HBox hBox = new HBox(10);
+        TextField textField = TextFieldFx.of(200, "");
+        textField.textProperty().bindBidirectional(bomModel.searchInBomProperty());
+        Button button = new Button("Search");
+        button.setOnAction(event -> {
+            if (!bomModel.searchInBomProperty().get().isEmpty())
+                action.accept(BomMessage.SEARCH_CURRENT);
+        });
+        hBox.getChildren().addAll(textField, button);
+        return hBox;
+    }
+
+
 }
