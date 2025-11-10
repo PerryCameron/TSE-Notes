@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.layout.StackPane;
 
 public class BomModel {
     StringProperty searchComponent = new SimpleStringProperty();
@@ -17,6 +18,7 @@ public class BomModel {
     ComponentDTO selectedComponent = new ComponentDTO();
     ObjectProperty<ComponentDTO> selectedComponentProperty = new SimpleObjectProperty<>();
     ObjectProperty<Integer[]> levels = new SimpleObjectProperty<>();
+    ObjectProperty<StackPane> stackPane = new SimpleObjectProperty<>();
 
 
 
@@ -71,5 +73,17 @@ public class BomModel {
 
     public void setSearchInBom(String searchInBom) {
         this.searchInBom.set(searchInBom);
+    }
+
+    public StackPane getStackPane() {
+        return stackPane.get();
+    }
+
+    public ObjectProperty<StackPane> stackPaneProperty() {
+        return stackPane;
+    }
+
+    public void setStackPane(StackPane stackPane) {
+        this.stackPane.set(stackPane);
     }
 }

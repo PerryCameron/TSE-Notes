@@ -25,6 +25,13 @@ public class ButtonFx {
         return button;
     }
 
+    public static Button of(String text, double width, String className) {
+        Button button = new Button(text);
+        button.setPrefWidth(width);
+        button.getStyleClass().add(className);
+        return button;
+    }
+
     public static Button of(String text, double width, Runnable runnable) {
         Button button = new Button(text);
         button.setPrefWidth(width);

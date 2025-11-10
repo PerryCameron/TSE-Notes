@@ -243,6 +243,10 @@ public class PartFinderView implements Builder<Alert> {
         // Set the default selected button AFTER adding to the scene graph
         photoButton.setSelected(true);
         toggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            if (newToggle == null) {
+                toggleGroup.selectToggle(oldToggle);  // Prevent deselecting by re-selecting the old toggle
+                return;
+            }
             // Hide all panes
             familyPane.setVisible(false);
             notePane.setVisible(false);

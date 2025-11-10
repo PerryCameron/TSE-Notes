@@ -108,6 +108,7 @@ public class BomInteractor {
         logger.info("Searching bom for {}", bomModel.searchComponentProperty().get());
         String output;
         try {
+            // when starting up app, lets read from the last XML file we saved for first time persistence
             if (firstStart) {
                 output = XMLChomper.readXMLFromFile(ApplicationPaths.secondaryDbDirectory.resolve("bom.XML"));
                 if (output.isEmpty()) return null;
