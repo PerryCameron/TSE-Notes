@@ -7,13 +7,13 @@ import com.L2.static_tools.bom.BOMExploderClient;
 import com.L2.static_tools.bom.XMLChomper;
 import com.L2.widgetFx.DialogueFx;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.scene.control.TreeItem;
 import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -31,42 +31,34 @@ public class BomInteractor {
 
     // we don't need a parameter because when this is called it pulls the terms strait from the model
     public void searchTree() {
-        System.out.println("Searching Tree...");
 
+        // return if no search terms provided
         if (bomModel.getSearchInBom() == null || bomModel.getSearchInBom().trim().isEmpty()) {
-            System.out.println("No search terms provided.");
             return;
         }
-
+        // return if tree has not been set
         if (bomModel.getRoot() == null) {
-            System.out.println("Root is null.");
             return;
         }
-
+        // split our terms by spaces
         String[] terms = bomModel.getSearchInBom().split("\\s+");
-        System.out.println("Terms: ");
-        Arrays.stream(terms).forEach(System.out::println);
-
         List<Pair<ComponentDTO, Integer>> matches = new ArrayList<>();
         int nodeCount = collectMatches(bomModel.getRoot(), terms, matches);
-
-        System.out.println("Visited " + nodeCount + " nodes.");
-
+        logger.debug("Visited {} nodes.", nodeCount);
         // Sort by hits descending
         matches.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
 
-        // Extract results
+        // Extract results (found from search)
         List<ComponentDTO> results = new ArrayList<>();
         for (Pair<ComponentDTO, Integer> pair : matches) {
             results.add(pair.getKey());
         }
 
-        // Print to console
-        for (ComponentDTO dto : results) {
-            System.out.println("Item: " + dto.itemProperty().get() + ", Description: "
-                    + dto.descriptionProperty().get() + ", RefDes: " + dto.refDesProperty().get());
-        }
-        System.out.println("Found " + results.size() + " matches.");
+        bomModel.getComponentTable().setItems(FXCollections.observableList(results));
+//        bomModel.setSearchedComponents(FXCollections.observableArrayList(results));
+//        for(ComponentDTO component : bomModel.getSearchedComponents()) {
+//            System.out.println(component);
+//        }
     }
 
     private int collectMatches(TreeItem<ComponentDTO> node, String[] terms, List<Pair<ComponentDTO, Integer>> matches) {
@@ -81,9 +73,6 @@ public class BomInteractor {
             String itemStr = (dto.itemProperty().get() != null ? dto.itemProperty().get().toLowerCase() : "");
             String descStr = (dto.descriptionProperty().get() != null ? dto.descriptionProperty().get().toLowerCase() : "");
             String refStr = (dto.refDesProperty().get() != null ? dto.refDesProperty().get().toLowerCase() : "");
-
-            // Debug print for each DTO
-            System.out.println("Checking DTO - Item: " + itemStr + ", Desc: " + descStr + ", Ref: " + refStr);
 
             int hits = 0;
             for (String term : terms) {

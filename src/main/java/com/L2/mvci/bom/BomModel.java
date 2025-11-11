@@ -6,6 +6,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.StackPane;
@@ -19,9 +21,8 @@ public class BomModel {
     ObjectProperty<ComponentDTO> selectedComponentProperty = new SimpleObjectProperty<>();
     ObjectProperty<Integer[]> levels = new SimpleObjectProperty<>();
     ObjectProperty<StackPane> stackPane = new SimpleObjectProperty<>();
-
-
-
+    ObservableList<ComponentDTO> searchedComponents;
+    TableView<ComponentDTO> componentTable;
 
     public StringProperty searchComponentProperty() {
         return searchComponent;
@@ -85,5 +86,21 @@ public class BomModel {
 
     public void setStackPane(StackPane stackPane) {
         this.stackPane.set(stackPane);
+    }
+
+    public ObservableList<ComponentDTO> getSearchedComponents() {
+        return searchedComponents;
+    }
+
+    public void setSearchedComponents(ObservableList<ComponentDTO> searchedComponents) {
+        this.searchedComponents = searchedComponents;
+    }
+
+    public TableView<ComponentDTO> getComponentTable() {
+        return componentTable;
+    }
+
+    public void setComponentTable(TableView<ComponentDTO> componentTable) {
+        this.componentTable = componentTable;
     }
 }
