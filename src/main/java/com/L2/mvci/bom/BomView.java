@@ -75,6 +75,7 @@ public class BomView implements Builder<Region> {
 
     private Node bomSearchBox() {
         VBox vBox = new VBox(10);
+        vBox.getStyleClass().add("decorative-hbox");
         bomModel.setComponentTable(new ComponentTableView(bomModel).build());
         vBox.getChildren().addAll(searchBomTextField(), bomModel.getComponentTable());
         return vBox;
