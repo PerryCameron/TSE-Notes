@@ -47,6 +47,14 @@ public class ButtonFx {
         return button;
     }
 
+    public static ToggleButton TabOf(String text, double width, ToggleGroup tg) {
+        ToggleButton button = new ToggleButton(text);
+        button.getStyleClass().add("horizontal-tab-button");
+        button.setPrefWidth(width);
+        button.setToggleGroup(tg);
+        return button;
+    }
+
     public static Button of(ImageView image, String cssClass) {
         Button button = new Button();
         button.setGraphic(image);

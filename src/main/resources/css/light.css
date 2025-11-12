@@ -3,7 +3,8 @@
     -fx-primary-bg: #ffffff;
     -fx-secondary-bg: #f5f6f6;
     -fx-tertiary-bg: #e2e1e1;
-    -fx-quaternary-bg: #cd3131;
+    -fx-quaternary-bg: #c8c8c8;
+    /*-fx-quaternary-bg: #cd3131;*/
     -fx-text-color: #020202;
     -fx-alternate-text-color: #f4f2f2;
     -fx-prompt-text-color: #A0A0A0;
@@ -29,116 +30,25 @@
  *                                                                             *
  ******************************************************************************/
 
-/* Base styles for unselected state */
-.bom-level1 { -fx-text-fill: #44e3e3; -fx-font-weight: bold; } /* Black, bold for top level */
-.bom-level2 { -fx-text-fill: #aa2222; } /* Dark gray */
-.bom-level3 { -fx-text-fill: #274059; } /* Medium gray */
-.bom-level4 { -fx-text-fill: #667e7e; } /* Light gray */
-.bom-level5, .bom-level6, .bom-level7, .bom-default { -fx-text-fill: #efcc17; } /* Black for deeper/default */
-
-/* Selected state: Repeat colors to override defaults, adjust for contrast on blue bg */
-.tree-table-row:selected .bom-level1 {
-    -fx-text-fill: #FFFFFF; /* White for contrast if bg is blue; or keep #000000 if you lighten bg */
-    -fx-background-color: -fx-selection-bar;
-}
-.tree-table-row:selected .bom-level2 { -fx-text-fill: #FFFFFF; }
-.tree-table-row:selected .bom-level3 { -fx-text-fill: #FFFFFF; }
-.tree-table-row:selected .bom-level4 { -fx-text-fill: #DDDDDD; } /* Lighter gray for visibility */
-.tree-table-row:selected .bom-level5,
-.tree-table-row:selected .bom-level6,
-.tree-table-row:selected .bom-level7,
-.tree-table-row:selected .bom-default { -fx-text-fill: #FFFFFF; }
-
-/*.tree-table-cell.bom-level1 {*/
-/*    -fx-font-weight: bold;*/
-/*    -fx-text-fill: #1976D2 !important;*/
-/*}*/
-
-/*!*.tree-table-row-cell:selected .tree-table-cell.bom-level1 {*!*/
-/*!*    -fx-text-fill: #1976D2;  !* Overrides selection default (e.g., white) *!*!*/
-/*!*}*!*/
-
-/*.tree-table-cell.bom-level2 {*/
-/*    -fx-text-fill: #388E3C !important;*/
-/*}*/
-
-/*!*.tree-table-row-cell:selected .tree-table-cell.bom-level2 {*!*/
-/*!*    -fx-text-fill: #388E3C;*!*/
-/*!*}*!*/
-
-/*.tree-table-cell.bom-level3 {*/
-/*    -fx-text-fill: #F57C00 !important;*/
-/*}*/
-
-/*!*.tree-table-row-cell:selected .tree-table-cell.bom-level3 {*!*/
-/*!*    -fx-text-fill: #F57C00;*!*/
-/*!*}*!*/
-
-/*.tree-table-cell.bom-level4 {*/
-/*    -fx-text-fill: #7B1FA2 !important;*/
-/*}*/
-
-/*!*.tree-table-row-cell:selected .tree-table-cell.bom-level4 {*!*/
-/*!*    -fx-text-fill: #7B1FA2;*!*/
-/*!*}*!*/
-
-/*.tree-table-cell.bom-level5 {*/
-/*    -fx-text-fill: #efcc17 !important;*/
-/*}*/
-
-/*!*.tree-table-row-cell:selected .tree-table-cell.bom-level5 {*!*/
-/*!*    -fx-text-fill: #efcc17;*!*/
-/*!*}*!*/
-
-/*.tree-table-cell.bom-level6 {*/
-/*    -fx-text-fill: #052845 !important;*/
-/*}*/
-
-/*!*.tree-table-row-cell:selected .tree-table-cell.bom-level6 {*!*/
-/*!*    -fx-text-fill: #052845;*!*/
-/*!*}*!*/
-
-/*.tree-table-cell.bom-level7 {*/
-/*    -fx-text-fill: #5c1200 !important;*/
-/*}*/
-
-/*.tree-table-row-cell:selected .tree-table-cell.bom-level7 {*/
-/*    -fx-text-fill: #5c1200;*/
-/*}*/
-
-/*.bom-level1 {*/
-/*    -fx-font-weight: bold;*/
-/*    -fx-text-fill: #1976D2;*/
-/*}*/
-
-/*.bom-level2 {*/
-/*    -fx-text-fill: #388E3C;*/
-/*}*/
-
-/*.bom-level3 {*/
-/*    -fx-text-fill: #F57C00;*/
-/*}*/
-
-/*.bom-level4 {*/
-/*    -fx-text-fill: #7B1FA2;*/
-/*}*/
-
-/*.bom-level5 {*/
-/*    -fx-text-fill: #efcc17;*/
-/*}*/
-
-/*.bom-level6 {*/
-/*    -fx-text-fill: #052845;*/
-/*}*/
-
-/*.bom-level7 {*/
-/*    -fx-text-fill: #5c1200;*/
-/*}*/
-
 .drop-region {
     -fx-background-color: -fx-tertiary-bg;
     -fx-border-color: -fx-textfield-border;
     -fx-border-width: 2;
+}
+
+.horizontal-tab-button {
+    -fx-background-color: -fx-tertiary-bg;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4 0 0 4;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent; /* Make the border invisible */
+}
+
+.horizontal-tab-button:selected {
+    -fx-background-color: -fx-secondary-bg;
+    -fx-text-fill: -fx-text-color;
 }
 
 .app-button {
@@ -210,6 +120,17 @@ Label.service-plan-details {
     -fx-background-color: -fx-secondary-bg;
     -fx-background-radius: 5;
 }
+
+.decorative-hbox2 {
+    -fx-background-color: -fx-quaternary-bg;
+    -fx-background-radius: 5;
+}
+
+.horizontal-tab-body-hbox {
+    -fx-background-color: -fx-secondary-bg;
+    -fx-background-radius: 0 5 0 0;
+}
+
 
 .decorative-hbox .label {
     -fx-font-size: 12px;

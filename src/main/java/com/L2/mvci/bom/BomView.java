@@ -37,7 +37,9 @@ public class BomView implements Builder<Region> {
     }
 
     private Node navigation() {
-        HBox hBox = new HBox(10);
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(5, 5, 5, 5));
+        hBox.getStyleClass().add("decorative-hbox2");
         bomModel.setStackPane(new StackPane());
         Node buttonStack = buttonStack(bomModel.getStackPane(),
                 bomFindBox(),
@@ -50,11 +52,12 @@ public class BomView implements Builder<Region> {
 
     private Node infoBox() {
         return new HBox(10);
+
     }
 
     private Node bomFindBox() {
         HBox hBox = HBoxFx.of(Pos.CENTER, new Insets(10,10,10,10));
-        hBox.getStyleClass().add("decorative-hbox");
+        hBox.getStyleClass().add("horizontal-tab-body-hbox");
         hBox.getChildren().addAll(bomTextField(), new LevelPieChart(bomModel).build());
         return hBox;
     }
@@ -75,14 +78,15 @@ public class BomView implements Builder<Region> {
 
     private Node bomSearchBox() {
         VBox vBox = new VBox(10);
-        vBox.getStyleClass().add("decorative-hbox");
+        vBox.setPadding(new Insets(10,10,10,10));
+        vBox.getStyleClass().add("horizontal-tab-body-hbox");
         bomModel.setComponentTable(new ComponentTableView(bomModel).build());
         vBox.getChildren().addAll(searchBomTextField(), bomModel.getComponentTable());
         return vBox;
     }
 
     private Node searchBomTextField() {
-        HBox hBox = new HBox(10);
+        HBox hBox = HBoxFx.of(new Insets(5,5,5,5), 10.0);
         hBox.getStyleClass().add("decorative-hbox");
         TextField textField = TextFieldFx.of(200, "");
         textField.textProperty().bindBidirectional(bomModel.searchInBomProperty());
@@ -99,9 +103,9 @@ public class BomView implements Builder<Region> {
         VBox buttonStack = new VBox(2);
         buttonStack.setMinWidth(150);
         ToggleGroup toggleGroup = new ToggleGroup();
-        ToggleButton bomButton = ButtonFx.toggleof("BOM", 150, toggleGroup);
-        ToggleButton searchButton = ButtonFx.toggleof("Search BOM", 150, toggleGroup);
-        ToggleButton infoButton = ButtonFx.toggleof("Part Info", 150, toggleGroup);
+        ToggleButton bomButton = ButtonFx.TabOf("BOM", 150, toggleGroup);
+        ToggleButton searchButton = ButtonFx.TabOf("Search BOM", 150, toggleGroup);
+        ToggleButton infoButton = ButtonFx.TabOf("Part Info", 150, toggleGroup);
         // Add all buttons to the VBox first
         buttonStack.getChildren().addAll(bomButton, searchButton, infoButton);
         // Set default content in the StackPane
