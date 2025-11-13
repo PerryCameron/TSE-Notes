@@ -53,6 +53,8 @@ public class BomTreeTableView implements Component<Node> {
         TreeTableColumn<ComponentDTO, Number> colLevel = new TreeTableColumn<>("Level");
         colLevel.setCellValueFactory(p -> p.getValue().getValue().levelProperty());
         colLevel.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.10));
+        // how do I align cells to center content?
+
 
         TreeTableColumn<ComponentDTO, String> colDesc = new TreeTableColumn<>("Description");
         colDesc.setCellValueFactory(p -> p.getValue().getValue().descriptionProperty());
@@ -104,25 +106,23 @@ public class BomTreeTableView implements Component<Node> {
                 }
 
                 int level = row.getItem().levelProperty().get();
-                String styleClass;
                 String fontWeight = level == 1 ? "bold" : "normal";
 
-                styleClass = switch (level) {
-                    case 1 -> "-fx-text-fill: #1976D2;";
-                    case 2 -> "-fx-text-fill: #388E3C;";
-                    case 3 -> "-fx-text-fill: #F57C00;";
-                    case 4 -> "-fx-text-fill: #7B1FA2;";
-                    case 5 -> "-fx-text-fill: #efcc17;";
-                    case 6 -> "-fx-text-fill: #5c1200;";
-                    case 7 -> "-fx-text-fill: #44e3e3;";
-                    case 8 -> "-fx-text-fill: #023bf8;";
-                    case 9 -> "-fx-text-fill: #e34469;";
-                    default -> "#000000"; // black for level 5+
+                String color = switch (level) {
+                    case 1 -> "-fx-component-color1";
+                    case 2 -> "-fx-component-color2";
+                    case 3 -> "-fx-component-color3";
+                    case 4 -> "-fx-component-color4";
+                    case 5 -> "-fx-component-color5";
+                    case 6 -> "-fx-component-color6";
+                    case 7 -> "-fx-component-color7";
+                    case 8 -> "-fx-component-color8";
+                    case 9 -> "-fx-component-color9";
+                    default -> "black"; // fallback
                 };
 
                 setText(item);
-                getStyleClass().add(styleClass);
-                setStyle("-fx-font-weight: " + fontWeight + ";" + styleClass);
+                setStyle("-fx-font-weight: " + fontWeight + "; -fx-text-fill: " + color + ";");
             }
         });
 

@@ -20,6 +20,8 @@ public class ComponentTableView {
 
     public TableView<ComponentDTO> build() {
         TableView<ComponentDTO> tableView = new TableView<>();
+        tableView.setPrefHeight(200);
+        tableView.setEditable(false);
 
         TableView.TableViewSelectionModel<ComponentDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {

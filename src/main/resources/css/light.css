@@ -22,6 +22,15 @@
     -fx-table-cell-border: -fx-tertiary-bg;
     -fx-field-border: #d0d7de;
     -fx-delete: #FF0000FF;
+    -fx-component-color1: #1976D2;
+    -fx-component-color2: #388E3C;
+    -fx-component-color3: #F57C00;
+    -fx-component-color4: #7B1FA2;
+    -fx-component-color5: #efcc17;
+    -fx-component-color6: #5c1200;
+    -fx-component-color7: #44e3e3;
+    -fx-component-color8: #aa2222;
+    -fx-component-color9: #020202;
 }
 
 /*******************************************************************************
@@ -1559,3 +1568,26 @@ Label.service-plan-details {
     -fx-background-color: -fx-focus-accent; /* Background for selected cells (blue) */
     -fx-text-fill: -fx-alternate-text-color; /* Text color for selected cells (white) */
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * PieChart                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+.default-color0.chart-pie { -fx-pie-color: -fx-component-color1; }
+.default-color1.chart-pie { -fx-pie-color: -fx-component-color2; }
+.default-color2.chart-pie { -fx-pie-color: -fx-component-color3; }
+.default-color3.chart-pie { -fx-pie-color: -fx-component-color4; }
+.default-color4.chart-pie { -fx-pie-color: -fx-component-color5; }
+.default-color5.chart-pie { -fx-pie-color: -fx-component-color6; }
+.default-color6.chart-pie { -fx-pie-color: -fx-component-color7; }
+.default-color7.chart-pie { -fx-pie-color: -fx-component-color8; }
+.default-color8.chart-pie { -fx-pie-color: -fx-component-color9; }
+
+/*.pie-chart .chart-legend {*/
+/*    -fx-border-color: transparent !important;*/
+/*    -fx-border-width: 0 !important;*/
+/*    -fx-stroke: transparent !important;*/
+/*    -fx-background-insets: 0 !important;*/
+/*}*/
+
