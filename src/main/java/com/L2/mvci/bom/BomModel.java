@@ -2,10 +2,7 @@ package com.L2.mvci.bom;
 
 import com.L2.dto.bom.ComponentDTO;
 import com.L2.dto.bom.ComponentXML;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
@@ -18,7 +15,6 @@ public class BomModel {
     TreeTableView<ComponentDTO> treeTable;
     TreeItem<ComponentDTO> root;
     ComponentDTO selectedComponent = new ComponentDTO();
-    ObjectProperty<ComponentDTO> selectedComponentProperty = new SimpleObjectProperty<>();
     ObjectProperty<Integer[]> levels = new SimpleObjectProperty<>();
     ObjectProperty<StackPane> stackPane = new SimpleObjectProperty<>();
     ObservableList<ComponentDTO> searchedComponents;
@@ -50,6 +46,18 @@ public class BomModel {
 
     public void setSelectedComponent(ComponentDTO selectedComponent) {
         this.selectedComponent = selectedComponent;
+    }
+
+    public void copyToSelectedComponent(ComponentDTO newComponent) {
+        selectedComponent.itemProperty().set(newComponent.itemProperty().get());
+        selectedComponent.itemIdProperty().set(newComponent.itemIdProperty().get());
+        selectedComponent.levelProperty().set(newComponent.levelProperty().get());
+        selectedComponent.descriptionProperty().set(newComponent.descriptionProperty().get());
+        selectedComponent.revisionProperty().set(newComponent.revisionProperty().get());
+        selectedComponent.uomProperty().set(newComponent.uomProperty().get());
+        selectedComponent.quantityProperty().set(newComponent.quantityProperty().get());
+        selectedComponent.itemTypeProperty().set(newComponent.itemTypeProperty().get());
+        selectedComponent.refDesProperty().set(newComponent.refDesProperty().get());
     }
 
     public Integer[] getLevels() {

@@ -1,6 +1,10 @@
 package com.L2.widgetFx;
 
 import com.L2.static_tools.ImageResources;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -26,6 +30,50 @@ public class LabelFx {
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add("semi-prominent-label");
         Label textLabel = new Label(text);
+        hbox.getChildren().addAll(titleLabel, textLabel);
+        return hbox;
+    }
+
+    public static Node boundLabel(String title, StringProperty stringProperty) {
+        HBox hbox = new HBox(5.0);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("bound-label");
+        Label textLabel = new Label();
+        textLabel.textProperty().bind(stringProperty);
+        hbox.getChildren().addAll(titleLabel, textLabel);
+        return hbox;
+    }
+
+    public static Node boundLabel(String title, LongProperty longProperty) {
+        HBox hbox = new HBox(5.0);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("bound-label");
+        Label textLabel = new Label();
+        textLabel.textProperty().bind(longProperty.asString());
+        hbox.getChildren().addAll(titleLabel, textLabel);
+        return hbox;
+    }
+
+    public static Node boundLabel(String title, IntegerProperty integerProperty) {
+        HBox hbox = new HBox(5.0);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("bound-label");
+        Label textLabel = new Label();
+        textLabel.textProperty().bind(integerProperty.asString());
+        hbox.getChildren().addAll(titleLabel, textLabel);
+        return hbox;
+    }
+
+    public static Node boundLabel(String title, DoubleProperty doubleProperty) {
+        HBox hbox = new HBox(5.0);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("bound-label");
+        Label textLabel = new Label();
+        textLabel.textProperty().bind(doubleProperty.asString());
         hbox.getChildren().addAll(titleLabel, textLabel);
         return hbox;
     }

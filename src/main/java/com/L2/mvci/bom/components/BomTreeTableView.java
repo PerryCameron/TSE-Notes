@@ -35,7 +35,7 @@ public class BomTreeTableView implements Component<Node> {
         TreeTableView.TreeTableViewSelectionModel<ComponentDTO> selectionModel = bomModel.getTreeTable().getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                bomModel.setSelectedComponent(newSelection.getValue());
+                bomModel.copyToSelectedComponent(newSelection.getValue());
                 System.out.println("set: " +bomModel.getSelectedComponent());
             }
         });
@@ -58,7 +58,7 @@ public class BomTreeTableView implements Component<Node> {
 
         TreeTableColumn<ComponentDTO, String> colDesc = new TreeTableColumn<>("Description");
         colDesc.setCellValueFactory(p -> p.getValue().getValue().descriptionProperty());
-        colDesc.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.40));
+        colDesc.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.30));
 
 //        TreeTableColumn<ComponentDTO, String> colRev = new TreeTableColumn<>("Rev");
 //        colRev.setCellValueFactory(p -> p.getValue().getValue().revisionProperty());
@@ -73,9 +73,9 @@ public class BomTreeTableView implements Component<Node> {
         colQty.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.10));
         colQty.setStyle("-fx-alignment: CENTER-RIGHT;");
 
-//        TreeTableColumn<ComponentDTO, String> colType = new TreeTableColumn<>("Type");
-//        colType.setCellValueFactory(p -> p.getValue().getValue().itemTypeProperty());
-//        colType.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.10));
+        TreeTableColumn<ComponentDTO, String> colType = new TreeTableColumn<>("Type");
+        colType.setCellValueFactory(p -> p.getValue().getValue().itemTypeProperty());
+        colType.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.10));
 
 //        TreeTableColumn<ComponentDTO, String> colRef = new TreeTableColumn<>("Ref Des");
 //        colRef.setCellValueFactory(p -> p.getValue().getValue().refDesProperty());
@@ -83,7 +83,7 @@ public class BomTreeTableView implements Component<Node> {
 
         bomModel.getTreeTable().getColumns().addAll(Arrays.asList(
                 colItem, colLevel, colDesc,
-                colUom, colQty)
+                colUom, colQty, colType)
         );
 
         colItem.setCellFactory(tc -> new TreeTableCell<>() {

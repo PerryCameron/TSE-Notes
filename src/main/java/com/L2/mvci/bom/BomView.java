@@ -5,6 +5,7 @@ import com.L2.mvci.bom.components.ComponentTableView;
 import com.L2.mvci.bom.components.LevelPieChart;
 import com.L2.widgetFx.ButtonFx;
 import com.L2.widgetFx.HBoxFx;
+import com.L2.widgetFx.LabelFx;
 import com.L2.widgetFx.TextFieldFx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -51,25 +52,45 @@ public class BomView implements Builder<Region> {
     }
 
     private Node infoBox() {
-        return new HBox(10);
+        HBox hBox = HBoxFx.of(Pos.CENTER, new Insets(10,10,10,10));
+        hBox.setSpacing(30);
+        hBox.getStyleClass().add("horizontal-tab-body-hbox");
 
+        hBox.getChildren().add(bomPartInfoBox());
+        return hBox;
+    }
+
+    private Node bomPartInfoBox() {
+        VBox vBox = new VBox(5.0);
+        Node item = LabelFx.boundLabel("Part Number", bomModel.selectedComponent.itemProperty());
+        Node itemId = LabelFx.boundLabel("Part ID", bomModel.selectedComponent.itemIdProperty());
+        Node level = LabelFx.boundLabel("Level", bomModel.selectedComponent.levelProperty());
+        Node description = LabelFx.boundLabel("Description", bomModel.selectedComponent.descriptionProperty());
+        Node revision = LabelFx.boundLabel("Revision", bomModel.selectedComponent.revisionProperty());
+        Node uom = LabelFx.boundLabel("Unit Of Measurement", bomModel.selectedComponent.uomProperty());
+        Node qty = LabelFx.boundLabel("Quantity", bomModel.selectedComponent.quantityProperty());
+        Node type = LabelFx.boundLabel("Item Type", bomModel.selectedComponent.itemTypeProperty());
+        Node referenceDesignator = LabelFx.boundLabel("Refrence Designator", bomModel.selectedComponent.refDesProperty());
+        vBox.getChildren().addAll(item, itemId, level, description, revision, uom, qty, type, referenceDesignator);
+        return vBox;
     }
 
     private Node bomFindBox() {
         HBox hBox = HBoxFx.of(Pos.CENTER, new Insets(10,10,10,10));
+        hBox.setSpacing(30);
         hBox.getStyleClass().add("horizontal-tab-body-hbox");
         hBox.getChildren().addAll(bomTextField(), new LevelPieChart(bomModel).build());
         return hBox;
     }
 
     private Node bomTextField() {
-        HBox hBox = new HBox(10);
-        hBox.setAlignment(Pos.CENTER_LEFT);
+        HBox hBox = new HBox(5.0);
+        hBox.setAlignment(Pos.CENTER);
         TextField textField = TextFieldFx.of(200, "Part Number");
         textField.textProperty().bindBidirectional(bomModel.searchComponentProperty());
         Button button = ButtonFx.of("Find Bom", 100, "app-button");
         button.setOnAction(event -> {
-            if (!bomModel.searchComponentProperty().get().isEmpty())
+            if (!bomModel.searchComponentProperty().get().isEmpty() || bomModel.searchComponentProperty().get() != null)
                 action.accept(BomMessage.SEARCH);
         });
         hBox.getChildren().addAll(textField, button);
@@ -103,18 +124,16 @@ public class BomView implements Builder<Region> {
         VBox buttonStack = new VBox(2);
         buttonStack.setMinWidth(150);
         ToggleGroup toggleGroup = new ToggleGroup();
-        ToggleButton bomButton = ButtonFx.TabOf("BOM", 150, toggleGroup);
-        ToggleButton searchButton = ButtonFx.TabOf("Search BOM", 150, toggleGroup);
-        ToggleButton infoButton = ButtonFx.TabOf("Part Info", 150, toggleGroup);
-        // Add all buttons to the VBox first
-        buttonStack.getChildren().addAll(bomButton, searchButton, infoButton);
-        // Set default content in the StackPane
-        // Assume familyPane, notePane, keywordsPane, infoPane, photoPane are already created
-        stackPane.getChildren().addAll(bomBox, searchBox);
+        ToggleButton bomTab = ButtonFx.TabOf("BOM", 150, toggleGroup);
+        ToggleButton searchTab = ButtonFx.TabOf("Search BOM", 150, toggleGroup);
+        ToggleButton infoTab = ButtonFx.TabOf("Part Info", 150, toggleGroup);
+        buttonStack.getChildren().addAll(bomTab, searchTab, infoTab);
+        stackPane.getChildren().addAll(bomBox, searchBox, infoBox);
         bomBox.setVisible(true);
         searchBox.setVisible(false);
+        infoBox.setVisible(false);
         // Set the default selected button AFTER adding to the scene graph
-        bomButton.setSelected(true);
+        bomTab.setSelected(true);
         toggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
             if (newToggle == null) {
                 toggleGroup.selectToggle(oldToggle);  // Prevent deselecting by re-selecting the old toggle
@@ -123,11 +142,14 @@ public class BomView implements Builder<Region> {
             // Hide all panes
             bomBox.setVisible(false);
             searchBox.setVisible(false);
+            infoBox.setVisible(false);
             // Show the selected pane
-            if (newToggle == null || newToggle == bomButton) {
+            if (newToggle == null || newToggle == bomTab) {
                 bomBox.setVisible(true);
-            } else if (newToggle == searchButton) {
+            } else if (newToggle == searchTab) {
                 searchBox.setVisible(true);
+            } else if (newToggle == infoTab) {
+                infoBox.setVisible(true);
             }
         });
         return buttonStack;

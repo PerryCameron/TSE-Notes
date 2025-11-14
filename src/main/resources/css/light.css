@@ -242,6 +242,11 @@ Label.service-plan-details {
     -fx-font-weight: bold;
 }
 
+.bound-label {
+    -fx-text-fill: -fx-text-color;
+    -fx-font-weight: bold;
+}
+
 .prominent-answer {
     -fx-font-size: 16 !important;         /* Ensures font size is 16 */
     -fx-font-weight: bold;     /* Ensures bold font */
