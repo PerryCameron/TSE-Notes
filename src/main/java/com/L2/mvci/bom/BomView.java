@@ -53,7 +53,7 @@ public class BomView implements Builder<Region> {
 
     private Node infoBox() {
         HBox hBox = HBoxFx.of(Pos.CENTER, new Insets(10,10,10,10));
-        hBox.setSpacing(30);
+        hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.getStyleClass().add("horizontal-tab-body-hbox");
 
         hBox.getChildren().add(bomPartInfoBox());

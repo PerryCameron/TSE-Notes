@@ -9,10 +9,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.util.Objects;
 
@@ -34,14 +38,27 @@ public class LabelFx {
         return hbox;
     }
 
+
     public static Node boundLabel(String title, StringProperty stringProperty) {
         HBox hbox = new HBox(5.0);
         hbox.setAlignment(Pos.CENTER_LEFT);
+
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add("bound-label");
-        Label textLabel = new Label();
-        textLabel.textProperty().bind(stringProperty);
-        hbox.getChildren().addAll(titleLabel, textLabel);
+
+        TextField textField = new TextField();
+        textField.setEditable(false); // Prevent editing
+        textField.textProperty().bind(stringProperty); // make inline css to make textField look like a label
+        textField.setPrefWidth(200);
+
+        // Inline CSS to make TextField look like a Label
+        textField.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-border-width: 0;" +
+                        "-fx-padding: 0;"
+        );
+
+        hbox.getChildren().addAll(titleLabel, textField);
         return hbox;
     }
 

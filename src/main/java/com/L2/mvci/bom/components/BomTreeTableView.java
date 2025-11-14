@@ -40,29 +40,17 @@ public class BomTreeTableView implements Component<Node> {
             }
         });
 
-        // Columns
         TreeTableColumn<ComponentDTO, String> colItem = new TreeTableColumn<>("Item");
         colItem.setCellValueFactory(p -> p.getValue().getValue().itemProperty());
         colItem.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.30));
 
-
-//        TreeTableColumn<ComponentDTO, Number> colItemId = new TreeTableColumn<>("Item ID");
-//        colItemId.setCellValueFactory(p -> p.getValue().getValue().itemIdProperty());
-//        colItemId.setPrefWidth(80);
-
         TreeTableColumn<ComponentDTO, Number> colLevel = new TreeTableColumn<>("Level");
         colLevel.setCellValueFactory(p -> p.getValue().getValue().levelProperty());
         colLevel.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.10));
-        // how do I align cells to center content?
-
 
         TreeTableColumn<ComponentDTO, String> colDesc = new TreeTableColumn<>("Description");
         colDesc.setCellValueFactory(p -> p.getValue().getValue().descriptionProperty());
-        colDesc.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.30));
-
-//        TreeTableColumn<ComponentDTO, String> colRev = new TreeTableColumn<>("Rev");
-//        colRev.setCellValueFactory(p -> p.getValue().getValue().revisionProperty());
-//        colRev.setPrefWidth(60);
+        colDesc.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.40));
 
         TreeTableColumn<ComponentDTO, String> colUom = new TreeTableColumn<>("UOM");
         colUom.setCellValueFactory(p -> p.getValue().getValue().uomProperty());
@@ -73,17 +61,9 @@ public class BomTreeTableView implements Component<Node> {
         colQty.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.10));
         colQty.setStyle("-fx-alignment: CENTER-RIGHT;");
 
-        TreeTableColumn<ComponentDTO, String> colType = new TreeTableColumn<>("Type");
-        colType.setCellValueFactory(p -> p.getValue().getValue().itemTypeProperty());
-        colType.prefWidthProperty().bind(bomModel.getTreeTable().widthProperty().multiply(0.10));
-
-//        TreeTableColumn<ComponentDTO, String> colRef = new TreeTableColumn<>("Ref Des");
-//        colRef.setCellValueFactory(p -> p.getValue().getValue().refDesProperty());
-//        colRef.setPrefWidth(150);
-
         bomModel.getTreeTable().getColumns().addAll(Arrays.asList(
                 colItem, colLevel, colDesc,
-                colUom, colQty, colType)
+                colUom, colQty)
         );
 
         colItem.setCellFactory(tc -> new TreeTableCell<>() {
