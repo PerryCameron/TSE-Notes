@@ -1,6 +1,8 @@
 package com.L2.widgetFx;
 
+import com.L2.enums.BomItemType;
 import com.L2.static_tools.ImageResources;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
@@ -59,6 +61,20 @@ public class LabelFx {
         );
 
         hbox.getChildren().addAll(titleLabel, textField);
+        return hbox;
+    }
+
+    public static Node typeLabel(String title, StringProperty stringProperty) {
+        HBox hbox = new HBox(5.0);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("bound-label");
+        Label textLabel = new Label();
+        textLabel.textProperty().bind(Bindings.createStringBinding(
+                () -> BomItemType.getMeaningByCode(stringProperty.get()),
+                stringProperty
+        ));
+        hbox.getChildren().addAll(titleLabel, textLabel);
         return hbox;
     }
 

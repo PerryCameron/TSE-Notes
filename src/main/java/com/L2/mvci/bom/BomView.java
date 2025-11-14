@@ -69,7 +69,7 @@ public class BomView implements Builder<Region> {
         Node revision = LabelFx.boundLabel("Revision", bomModel.selectedComponent.revisionProperty());
         Node uom = LabelFx.boundLabel("Unit Of Measurement", bomModel.selectedComponent.uomProperty());
         Node qty = LabelFx.boundLabel("Quantity", bomModel.selectedComponent.quantityProperty());
-        Node type = LabelFx.boundLabel("Item Type", bomModel.selectedComponent.itemTypeProperty());
+        Node type = LabelFx.typeLabel("Item Type", bomModel.selectedComponent.itemTypeProperty());
         Node referenceDesignator = LabelFx.boundLabel("Refrence Designator", bomModel.selectedComponent.refDesProperty());
         vBox.getChildren().addAll(item, itemId, level, description, revision, uom, qty, type, referenceDesignator);
         return vBox;

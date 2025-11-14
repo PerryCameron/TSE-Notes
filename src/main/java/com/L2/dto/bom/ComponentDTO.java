@@ -12,6 +12,7 @@ public class ComponentDTO {
     private final DoubleProperty quantity = new SimpleDoubleProperty();
     private final StringProperty itemType = new SimpleStringProperty();
     private final StringProperty refDes = new SimpleStringProperty();
+    private final BooleanProperty inSpares = new SimpleBooleanProperty(false);
 
     public ComponentDTO(ComponentXML comp) {
         item.set(comp.getItem());
@@ -38,6 +39,8 @@ public class ComponentDTO {
     public DoubleProperty quantityProperty() { return quantity; }
     public StringProperty itemTypeProperty() { return itemType; }
     public StringProperty refDesProperty() { return refDes; }
+    public BooleanProperty inSparesProperty() { return inSpares; }
+
 
     @Override
     public String toString() {
